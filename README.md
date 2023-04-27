@@ -1,0 +1,1 @@
+`Python` library-validator of the setup template file, *written* in `Rust` (**description provisional**)
