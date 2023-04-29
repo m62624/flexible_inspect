@@ -16,3 +16,5 @@ venv.bak/
 /.записи_проекта
 # only for github
 /.github
+# VsCode
+/.vscode
