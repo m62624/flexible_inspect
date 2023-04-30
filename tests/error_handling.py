@@ -1,14 +1,13 @@
 import pystval
-from pystval import Validator, throw_error
-
-# Шаблон ошибки
+from pystval import Validator
 
 
 class BaseError(Exception):
     template = ""
 
-    def __init__(self, message: str = None, **extra):
+    def __init__(self, message: str = None, rules: list[str] = None, **extra):
         self._extra = extra
+        self._rules = rules
         if message is None:
             self._message = self.template.format(**extra)
         else:
@@ -22,32 +21,20 @@ class BaseError(Exception):
     def extra(self):
         return self._extra
 
-# Последующие две ошибки является тестовыми, необходимы для проверки
-# функций поглощение ошибок на основе BaseError
+    @property
+    def rules(self):
+        return self._rules
 
 
 class AvatarMissingError(BaseError):
     template = "Avatar is missing or has invalid dimensions (width: {width}, height: {height})"
+    rules = ["regex template"]
 
 
 class UsernameFieldMissingError(BaseError):
     template = "Error: username field is missing or invalid (current name : {name})"
+    rules = ["regex template"]
 
 
-class QALS:
-    pass
-
-
-# Dict, является набором флажков и ошибок для `фабрики pystval`
-element_keys = {
-    'avatar': AvatarMissingError,
-    'username_field': UsernameFieldMissingError,
-    "aboba error": QALS,
-}
-
-# e = AvatarMissingError(width=100, height=200)
-# message = e.message
-# print(message)
-error_true = True
-# x = Validator(element_keys, BaseError)
-print(throw_error(AvatarMissingError))
+# error_true = True
+validator = Validator([AvatarMissingError, UsernameFieldMissingError])
