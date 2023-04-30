@@ -9,6 +9,12 @@ name = "pystval"
 crate-type = ["cdylib"]
 
 [dependencies]
-pyo3 = "0.18.1"
+pyo3 = {version="0.18.1",features = ["abi3", "abi3-py310"]}
 pyo3-asyncio = { version = "0.18", features = ["attributes", "async-std-runtime"] }
 async-std = "1.12.0"
+thiserror = "1.0.40"
+[package.metadata.maturin]
+category = "tool"
+
+[package.metadata.maturin.sdist]
+include = ["*.pyi"]
