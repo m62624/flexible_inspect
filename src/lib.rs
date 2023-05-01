@@ -5,11 +5,11 @@ mod pyst_errors;
 // Модуль отвечает за регулярные выражения, являются сердцем валидатора
 mod regex_init;
 // Crate py03 позволяет работать `Rust` вместе с `Python`
+use async_std;
 use pyo3::exceptions::{self};
 use pyo3::prelude::*;
 use pyo3::types::{PyList, PyType};
 use std::str;
-
 //==============================================
 // хранит само сообщение и **extra переменные
 const MESSAGE_EXTRA: &'static str = "template";
@@ -18,13 +18,15 @@ const REGEGX_RULES: &'static str = "rules";
 //==============================================
 
 /// Класс содержит List ошибок по которым будет проходить обработка (re-export -> Python)
+#[derive(Debug, Clone)]
 #[pyclass]
-struct Validator {
+pub struct Validator {
     factory_data: Vec<(PyObject, Vec<String>)>,
 }
 
 /// Модуль для инициализации `Validator`
 mod init_validator {
+
     use super::*;
 
     #[pymethods]
@@ -43,7 +45,6 @@ mod init_validator {
                             regex_init::get_extra(item, MESSAGE_EXTRA)?,
                         ));
                     }
-                    // dbg!(&factory_data);
                     Validator { factory_data }
                 }),
                 Err(_) => Err(PyErr::new::<exceptions::PyTypeError, _>(
@@ -51,32 +52,33 @@ mod init_validator {
                 )),
             })
         }
-        pub fn validate(&self, raw_data: &[u8]) -> PyResult<()> {
+        pub fn validate<'py>(&self, raw_data: &'py [u8]) -> PyResult<()> {
             // проверка на конвертацию из byte в String (UTF8)
             match str::from_utf8(raw_data) {
-                Ok(text) => {
-                    // Используем привязку `GIL` для безопасной обраотки переменных из python
-                    Python::with_gil(|py| -> PyResult<()> {
-                        for (class, extra) in &self.factory_data {
-                            let rules = match class
-                                .downcast::<PyType>(py)?
-                                .getattr(REGEGX_RULES)?
-                                .downcast::<PyList>()
-                            {
-                                Ok(value) => value,
-                                Err(_) => {
-                                    return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                                        "'{}' must be a List[ string, string... ]",
-                                        REGEGX_RULES
-                                    )))
-                                }
-                            };
-                            let rules = convert::pylist_to_vec_string(rules);
-                            dbg!(rules);
+                Ok(text) => Python::with_gil(|py| -> PyResult<()> {
+                    for (class, extra) in &self.factory_data {
+                        let rules = match class
+                            .downcast::<PyType>(py)?
+                            .getattr(REGEGX_RULES)?
+                            .downcast::<PyList>()
+                        {
+                            Ok(value) => value,
+                            Err(_) => {
+                                return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+                                    "'{}' must be a List[ string, string... ]",
+                                    REGEGX_RULES
+                                )))
+                            }
+                        };
+
+                        let rules = convert::pylist_to_vec_string(rules);
+                        for regex in rules {
+                            
                         }
-                        Ok(())
-                    })?
-                }
+                        // dbg!(rules);
+                    }
+                    Ok(())
+                })?,
                 Err(_) => {
                     return Err(PyErr::new::<exceptions::PyTypeError, _>(
                         "'text' must be an array bytes (UTF8)",
@@ -95,6 +97,7 @@ mod init_validator {
         }
     }
 }
+
 // Модуль export необходим для импортирования : функций, методов, классов в `Python`
 mod export {
     use super::*;

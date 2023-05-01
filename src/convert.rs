@@ -1,5 +1,3 @@
-use pyo3::exceptions::PyTypeError;
-
 use crate::*;
 pub fn pylist_to_vec_string(pylist: &PyList) -> Vec<String> {
     let mut vec_string = Vec::new();

@@ -10,7 +10,7 @@ pub fn get_regex<T: AsRef<str> + Send + Sync>(regex_template: T) -> PyResult<Reg
         Err(_) => Err(PyErr::new::<PyTypeError, _>("Invalid regular expression")),
     }
 }
-
+pub fn regex_validate<'py>(raw_data: &'py [u8], regex: Regex) {}
 /*
     `get_extra`
     так как мы получаем сам класс а не его экземлпяр, мы не можем узнать какие extra
