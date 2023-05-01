@@ -4,18 +4,18 @@ mod convert;
 mod pyst_errors;
 // Модуль отвечает за регулярные выражения, являются сердцем валидатора
 mod regex_init;
-// Модуль отвечает за конвертацию ошибок `Rust` -> `Python`
-use pyo3::exceptions::{self};
 // Crate py03 позволяет работать `Rust` вместе с `Python`
+use pyo3::exceptions::{self};
 use pyo3::prelude::*;
-// Структуры для работы с `python` переменными
 use pyo3::types::{PyList, PyType};
 use std::str;
+
 /// Класс содержит List ошибок по которым будет проходить обработка (re-export -> Python)
 #[pyclass]
 struct Validator {
     factory_data: Vec<(PyObject, Vec<String>)>,
 }
+
 /// Модуль для инициализации `Validator`
 mod init_validator {
     use super::*;
@@ -46,7 +46,6 @@ mod init_validator {
             match str::from_utf8(raw_data) {
                 Ok(text) => {
                     // Используем привязку `GIL` для безопасной обраотки переменных из python
-                    // downcast служит проверкой типа объекта Python
                     Python::with_gil(|py| {
                         for (class, extra) in &self.factory_data {
                             // convert::py_any_to_py_type(py, class);
