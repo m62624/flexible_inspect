@@ -28,13 +28,26 @@ class BaseError(Exception):
 
 class AvatarMissingError(BaseError):
     template = "Avatar is missing or has invalid dimensions (width: {width}, height: {height})"
-    rules = ["regex template"]
+    rules = ["^hello"]
 
 
 class UsernameFieldMissingError(BaseError):
     template = "Error: username field is missing or invalid (current name : {name})"
-    rules = ["regex template"]
+    rules = ["src=<.+\.>"]
 
 
-# error_true = True
-validator = Validator([AvatarMissingError, UsernameFieldMissingError])
+class CustomError(BaseError):
+    template = "{x}"
+    rules = ["aboba"]
+
+
+# error_true     = True
+# x = AvatarMissingError("sdasdad {xl}",)
+# try:
+#     # throw_error(AvatarMissingError)
+# except BaseError as e:
+#     print(e.message)
+validator1 = Validator([AvatarMissingError, UsernameFieldMissingError])
+validator2 = Validator([CustomError])
+validator1.validate(b"id=aboba, src=image.pgj")
+validator2.validate(b"xxx");
