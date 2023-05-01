@@ -1,16 +1,16 @@
-/// Модуль отвечает за конвертацию `Python Type` в `Rust Type` и обратно
+// Модуль отвечает за конвертацию `Python Type` в `Rust Type` и обратно
 mod convert;
-/// Модуль отвеччает за получение кастомных ошибок и после проброс их же в `Python`
+// Модуль отвеччает за создание кастомных ошибок и после проброс их же в `Python`
 mod pyst_errors;
-use pyo3::{
-    exceptions::{self},
-    prelude::*,
-    types::{PyList, PyType},
-};
-/// Регулярные выражени, является сердцем валидатора (вся логика обработки это Regex)
-use regex::Regex;
+// Модуль отвечает за регулярные выражения, являются сердцем валидатора
+mod regex_init;
+// Модуль отвечает за конвертацию ошибок `Rust` -> `Python`
+use pyo3::exceptions::{self};
+// Crate py03 позволяет работать `Rust` вместе с `Python`
+use pyo3::prelude::*;
+// Структуры для работы с `python` переменными
+use pyo3::types::{PyList, PyType};
 use std::str;
-
 /// Класс содержит List ошибок по которым будет проходить обработка (re-export -> Python)
 #[pyclass]
 struct Validator {
@@ -30,10 +30,8 @@ mod init_validator {
                 Ok(list_error_class) => Ok({
                     let mut factory_data: Vec<(Py<PyAny>, Vec<String>)> = Vec::new();
                     for item in convert::py_list_to_py_types(list_error_class)? {
-                        factory_data.push((
-                            item.to_object(py),
-                            pyst_errors::info_data::get_extra(item, "template", r"\{.+?\}")?,
-                        ));
+                        factory_data
+                            .push((item.to_object(py), regex_init::get_extra(item, "template")?));
                     }
                     // dbg!(&factory_data);
                     Validator { factory_data }
