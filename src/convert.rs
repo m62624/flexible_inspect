@@ -10,7 +10,7 @@ pub fn pylist_to_vec_string(pylist: &PyList) -> Vec<String> {
     }
     vec_string
 }
-///Получаем `PyList` для конвертаций в `Iterator<PyType>` (проще работать с коллекций объектами)
+///Получаем `PyList` для конвертаций в `Iterator<PyType>` (проще работать с коллекций объектов)
 pub fn py_list_to_py_types<'py>(pylist: &'py PyList) -> PyResult<Vec<&'py PyType>> {
     let mut result = Vec::with_capacity(pylist.len());
     for element in pylist.iter() {

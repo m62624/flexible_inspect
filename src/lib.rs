@@ -42,7 +42,7 @@ mod init_validator {
             })
         }
         pub fn validate(&self, raw_data: &[u8]) -> PyResult<()> {
-            // проверка на конветрацию из byte в String (UTF8)
+            // проверка на конвертацию из byte в String (UTF8)
             match str::from_utf8(raw_data) {
                 Ok(text) => {
                     // Используем привязку `GIL` для безопасной обраотки переменных из python
