@@ -10,6 +10,13 @@ use pyo3::prelude::*;
 use pyo3::types::{PyList, PyType};
 use std::str;
 
+//==============================================
+// хранит само сообщение и **extra переменные
+const MESSAGE_EXTRA: &'static str = "template";
+// хранит регулярные выражения, является правилами обнаружения ошибок
+const REGEGX_RULES: &'static str = "rules";
+//==============================================
+
 /// Класс содержит List ошибок по которым будет проходить обработка (re-export -> Python)
 #[pyclass]
 struct Validator {
@@ -19,6 +26,7 @@ struct Validator {
 /// Модуль для инициализации `Validator`
 mod init_validator {
     use super::*;
+
     #[pymethods]
     impl Validator {
         /// Констуктор (re-export -> Python)
@@ -30,14 +38,16 @@ mod init_validator {
                 Ok(list_error_class) => Ok({
                     let mut factory_data: Vec<(Py<PyAny>, Vec<String>)> = Vec::new();
                     for item in convert::py_list_to_py_types(list_error_class)? {
-                        factory_data
-                            .push((item.to_object(py), regex_init::get_extra(item, "template")?));
+                        factory_data.push((
+                            item.to_object(py),
+                            regex_init::get_extra(item, MESSAGE_EXTRA)?,
+                        ));
                     }
                     // dbg!(&factory_data);
                     Validator { factory_data }
                 }),
                 Err(_) => Err(PyErr::new::<exceptions::PyTypeError, _>(
-                    "'factoryData' must be a dictionary",
+                    "'factoryData' must be a list[ class_error1, clas_error2... ]",
                 )),
             })
         }
@@ -46,17 +56,30 @@ mod init_validator {
             match str::from_utf8(raw_data) {
                 Ok(text) => {
                     // Используем привязку `GIL` для безопасной обраотки переменных из python
-                    Python::with_gil(|py| {
+                    Python::with_gil(|py| -> PyResult<()> {
                         for (class, extra) in &self.factory_data {
-                            // convert::py_any_to_py_type(py, class);
-                            // println!("{:#?}", );
-                            // println!("{:#?} | {:#?}", class, extra);
+                            let rules = match class
+                                .downcast::<PyType>(py)?
+                                .getattr(REGEGX_RULES)?
+                                .downcast::<PyList>()
+                            {
+                                Ok(value) => value,
+                                Err(_) => {
+                                    return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+                                        "'{}' must be a List[ string, string... ]",
+                                        REGEGX_RULES
+                                    )))
+                                }
+                            };
+                            let rules = convert::pylist_to_vec_string(rules);
+                            dbg!(rules);
                         }
-                    })
+                        Ok(())
+                    })?
                 }
                 Err(_) => {
                     return Err(PyErr::new::<exceptions::PyTypeError, _>(
-                        "'factoryData' must be a dictionary",
+                        "'text' must be an array bytes (UTF8)",
                     ))
                 }
             };
