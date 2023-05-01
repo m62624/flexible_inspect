@@ -30,3 +30,9 @@ pub fn get_regex<T: AsRef<str> + Send + Sync>(regex_template: T) -> PyResult<Reg
         Err(_) => Err(PyErr::new::<PyTypeError, _>("Invalid regular expression")),
     }
 }
+
+pub fn regex_find(regex: &Regex, text: &String) {
+    for capture in regex.captures_iter(text.as_str()) {
+        println!("{:#?}", capture);
+    }
+}
