@@ -1,7 +1,9 @@
 mod export_py;
 mod extra_init;
+mod pyst_errors;
 mod regex_init;
 use async_std;
+use async_std::channel;
 use pyo3::prelude::*;
 use pyo3::types;
 use regex::Regex;
@@ -79,7 +81,7 @@ mod init_validator {
             );
             // Переводим `Future` в `python` аналог
             pyo3_asyncio::async_std::future_into_py(py, async move {
-                slf.core_validate(text).await;
+                slf.core_validate(text).await?;
                 Ok(Python::with_gil(|py| py.None()))
             })
         }
@@ -98,11 +100,14 @@ mod validate_async {
 
     impl Validator {
         // Асинхронныый метод для проверки текста, основываясь на регулярных выражениях
-        pub async fn core_validate<'py>(&self, text_raw: Arc<String>) {
+        pub async fn core_validate<'py>(&self, text_raw: Arc<String>) -> PyResult<()> {
+            let channel_for_error = channel::unbounded();
+            let channel_clone = Arc::new(channel_for_error.0);
             // здесь будем хранить каждый класс ошибки для асинхронного выполнения
             let mut tasks = Vec::new();
             // Проходимся по каждой ошибке для проверки
             for item in self.inner.iter() {
+                let sender_clone = Arc::clone(&channel_clone);
                 // делаем ARC от item (одна ошибка) чтобы отправить в task
                 let item_clone = Arc::clone(&item);
                 // делаем ARC от text_raw (одна ошибка) чтобы отправить в task
@@ -111,7 +116,12 @@ mod validate_async {
                 let task = async_std::task::spawn(async move {
                     // получаем каждый regex для проверки
                     for pattern in &item_clone.regex_collection {
-                        regex_init::regex_find(pattern, &text_clone);
+                        if let Some(extra) =
+                            regex_init::regex_find(pattern, &text_clone, &item_clone.extra).await
+                        {
+                            let x = pyst_errors::throw_error(&item_clone.original_class, extra);
+                            sender_clone.send(x).await.unwrap();
+                        }
                     }
                 });
                 tasks.push(task);
@@ -119,7 +129,9 @@ mod validate_async {
             // Запускаем каждый task асинхронно
             for lazy_task in tasks {
                 lazy_task.await;
+                channel_for_error.1.recv().await.unwrap()?;
             }
+            Ok(())
         }
     }
 }

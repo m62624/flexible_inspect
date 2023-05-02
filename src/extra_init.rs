@@ -27,4 +27,4 @@ pub fn extra_from_class<T: AsRef<str> + Send + Sync>(
         )));
     }
 }
-// fn regex_from_class
+
