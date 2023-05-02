@@ -1,8 +1,8 @@
 mod export_py;
 mod global_const;
 mod init;
-mod move_not_copy;
 mod make_py_error;
+mod move_not_copy;
 use global_const::*;
 use pyo3::prelude::*;
 use pyo3::types;
@@ -55,3 +55,4 @@ impl Validator {
         })
     }
 }
+impl Validator {}
