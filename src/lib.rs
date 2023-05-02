@@ -3,10 +3,11 @@ mod extra_init;
 mod pyst_errors;
 mod regex_init;
 use async_std;
-use async_std::channel;
+use async_std::sync::Mutex;
 use pyo3::prelude::*;
 use pyo3::types;
 use regex::Regex;
+use std::collections::HashMap;
 use std::str;
 use std::sync::Arc;
 //==============================================
@@ -101,35 +102,46 @@ mod validate_async {
     impl Validator {
         // Асинхронныый метод для проверки текста, основываясь на регулярных выражениях
         pub async fn core_validate<'py>(&self, text_raw: Arc<String>) -> PyResult<()> {
-            let channel_for_error = channel::unbounded();
-            let channel_clone = Arc::new(channel_for_error.0);
             // здесь будем хранить каждый класс ошибки для асинхронного выполнения
             let mut tasks = Vec::new();
+            let mut index_class = -1;
+            let data = Arc::new(Mutex::new(HashMap::new()));
+            let flag = Arc::new(Mutex::new(false));
             // Проходимся по каждой ошибке для проверки
             for item in self.inner.iter() {
-                let sender_clone = Arc::clone(&channel_clone);
+                index_class += 1;
                 // делаем ARC от item (одна ошибка) чтобы отправить в task
                 let item_clone = Arc::clone(&item);
                 // делаем ARC от text_raw (одна ошибка) чтобы отправить в task
                 let text_clone = Arc::clone(&text_raw);
                 // создаем task, чтобы асинхронно выполнить каждую ошибку отдельно
+                let flag = Arc::clone(&flag);
+                let data = Arc::clone(&data);
                 let task = async_std::task::spawn(async move {
                     // получаем каждый regex для проверки
                     for pattern in &item_clone.regex_collection {
                         if let Some(extra) =
                             regex_init::regex_find(pattern, &text_clone, &item_clone.extra).await
                         {
-                            let x = pyst_errors::throw_error(&item_clone.original_class, extra);
-                            sender_clone.send(x).await.unwrap();
+                            *flag.lock().await = true;
+                            *data.lock().await = extra;
                         }
                     }
                 });
                 tasks.push(task);
             }
+            println!("working...");
             // Запускаем каждый task асинхронно
             for lazy_task in tasks {
                 lazy_task.await;
-                channel_for_error.1.recv().await.unwrap()?;
+            }
+            println!("{:#?} {:#?}", index_class, flag);
+            if index_class >= 0 && *flag.lock().await {
+                let index_class = index_class as usize;
+                pyst_errors::throw_error(
+                    &self.inner[index_class].original_class,
+                    data.lock().await.clone(),
+                )?;
             }
             Ok(())
         }
