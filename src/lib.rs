@@ -7,6 +7,7 @@ use global_const::*;
 use pyo3::prelude::*;
 use pyo3::types;
 use pyo3::ToPyObject;
+use std::str;
 use std::sync::Arc;
 // Реалзиуем Clone, так как необходимо передавать `self` в `async fn`
 #[derive(Debug, Clone)]
@@ -44,7 +45,10 @@ impl Validator {
                     // Обратно возращаем класс в `PyObject`, чтобы можно было в будущем использовать его снова
                     original_class: unboxed_class.to_object(py),
                     // Получаем все `**extra`
-                    extra: init::extra::extra_from_class(unboxed_class, EXTRA_FOR_ERROR_PY)?,
+                    extra: init::extra::extra_from_class(
+                        unboxed_class,
+                        MESSAGE_WITH_EXTRA_FROM_CLASS_PY,
+                    )?,
                     // Получаем все регулярные выражения
                     rgxs: init::regex::regex_from_class(unboxed_class)?,
                 }));
@@ -54,5 +58,39 @@ impl Validator {
             })
         })
     }
+    // Служит для запуска async метода
+    #[pyo3(name = "validate")]
+    #[pyo3(signature = (text_bytes))]
+    fn py_validate<'py>(
+        &self,
+        py: Python<'py>,
+        text_bytes: &types::PyBytes,
+    ) -> PyResult<&'py PyAny> {
+        // let slf = self.self_context(py)?;
+        let slf = self.clone();
+        let text = init::bytes_utf8::convert(text_bytes)?;
+        pyo3_asyncio::async_std::future_into_py(py, async move {
+            slf.core_validate(Arc::new(text)).await?;
+            Ok(Python::with_gil(|py| py.None()))
+        })
+    }
 }
-impl Validator {}
+impl Validator {
+    pub async fn core_validate<'py>(&self, text_raw: Arc<String>) -> PyResult<()> {
+        let mut result: Result<(), PyErr> = Ok(());
+        for obj in self.inner.iter() {
+            for rgx in &obj.rgxs {
+                if let Some(extra) =
+                    init::regex::regex_find(&init::regex::get_regex(rgx)?, &text_raw, &obj.extra)
+                        .await
+                {
+                    result = make_py_error::throw_error(&obj.original_class, extra);
+                }
+            }
+        }
+        result
+    }
+    pub fn self_context(&self, py: Python) -> PyResult<Validator> {
+        self.to_object(py).extract::<Validator>(py)
+    }
+}
