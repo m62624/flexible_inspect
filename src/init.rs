@@ -43,7 +43,7 @@ pub mod regex {
             Ok(pylist) => {
                 for item in pylist.iter() {
                     if let Ok(s) = item.extract::<String>() {
-                        result.push(s);
+                        result.push(check_regex(s)?);
                     }
                 }
                 Ok(result)
@@ -56,7 +56,12 @@ pub mod regex {
             }
         }
     }
-
+    pub fn check_regex<T: AsRef<str> + Send + Sync>(regex_template: T) -> PyResult<T> {
+        match Regex::new(regex_template.as_ref()) {
+            Ok(_) => return Ok(regex_template),
+            Err(_) => Err(PyErr::new::<PyTypeError, _>("Invalid regular expression")),
+        }
+    }
     pub fn get_regex<T: AsRef<str> + Send + Sync>(regex_template: T) -> PyResult<Regex> {
         match Regex::new(regex_template.as_ref()) {
             Ok(value) => return Ok(value),
@@ -90,6 +95,17 @@ pub mod regex {
             Some(result)
         } else {
             None
+        }
+    }
+}
+pub mod bytes_utf8 {
+    use super::*;
+    pub fn convert(text_raw: &types::PyBytes) -> PyResult<String> {
+        match str::from_utf8(text_raw.as_bytes()) {
+            Ok(str) => Ok(str.to_string()),
+            Err(_) => Err(PyErr::new::<PyTypeError, _>(
+                "text_raw must be UTF-8 encoded",
+            )),
         }
     }
 }
