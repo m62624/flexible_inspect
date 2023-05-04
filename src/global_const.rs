@@ -12,7 +12,7 @@ pub const RULES_FROM_CLASS_PY: &'static str = "rules";
 pub const CLASS_FOR_ERROR_PY: &'static str = "original_class";
 // имя атрибута, где хранится **extra для заполнения информаций ошибки
 pub const EXTRA_FOR_ERROR_PY: &'static str = "extra";
-// имя атрибута, где хранится регулярные обрабтки для обработки данных
+// имя атрибута, где хранится регулярные выражения для обработки данных
 pub const REGEX_FOR_CHECK_DATA: &'static str = "rgxs";
 // имя атрибута, где хранится коллекция для обработки в rust
 pub const DATA_FOR_RUST: &'static str = "inner";

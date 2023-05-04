@@ -1,4 +1,5 @@
 import pystval
+import asyncio
 from pystval import Validator
 
 
@@ -25,29 +26,33 @@ class BaseError(Exception):
     def rules(self):
         return self._rules
 
-
-class AvatarMissingError(BaseError):
-    template = "Avatar is missing or has invalid dimensions (width: {width}, height: {height})"
-    rules = ["^hello"]
+# =============================================
 
 
 class UsernameFieldMissingError(BaseError):
     template = "Error: username field is missing or invalid (current name : {name})"
-    rules = ["src=<.+\.>"]
+    rules = ["(?!+x)"]
 
 
 class CustomError(BaseError):
-    template = "{x}"
-    rules = ["aboba"]
+    template = "Не разрешенный импорт : {import}"
+    rules = [r"(?P<import>import aboba from .+)"]
+
+# ==============================================
 
 
-# error_true     = True
-# x = AvatarMissingError("sdasdad {xl}",)
-# try:
-#     # throw_error(AvatarMissingError)
-# except BaseError as e:
-#     print(e.message)
-validator1 = Validator([AvatarMissingError, UsernameFieldMissingError])
-validator2 = Validator([CustomError])
-validator1.validate(b"id=aboba, src=image.pgj")
-validator2.validate(b"xxx");
+async def init():
+    validator1 = Validator(
+        [CustomError, UsernameFieldMissingError])
+    text_bytes = str("import aboba ").encode('UTF-8')
+    try:
+        await validator1.validate(text_bytes)
+
+    except BaseError as e:
+        print(f"ERROR MESSAGE: '{e.message}'")
+
+# =============================================
+loop = asyncio.get_event_loop()
+task = loop.create_task(init())
+loop.run_until_complete(task)
+# ============================================
