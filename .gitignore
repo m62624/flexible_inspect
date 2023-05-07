@@ -19,3 +19,6 @@ venv.bak/
 /.github
 # VsCode
 /.vscode
+# coverage 
+/.build_rs_cov.profraw
+/coverage
