@@ -17,3 +17,4 @@ pub const REGEX_FOR_CHECK_DATA: &'static str = "rgxs";
 // имя атрибута, где хранится коллекция для обработки в rust
 pub const DATA_FOR_RUST: &'static str = "inner";
 //===================================================================
+pub const REGEX_FIND_ERROR :&'static str = "";

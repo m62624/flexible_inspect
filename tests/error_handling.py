@@ -31,28 +31,30 @@ class BaseError(Exception):
 
 class UsernameFieldMissingError(BaseError):
     template = "Error: username field is missing or invalid (current name : {name})"
-    rules = ["(?!+x)"]
+    rules = ["xxx", "yyy", "zzz", "sss", "ggg"]
 
 
 class CustomError(BaseError):
     template = "Не разрешенный импорт : {import}"
-    rules = [r"(?P<import>import aboba from .+)"]
+    rules = [r"(?P<import>import aboba from .+)", r"br br br", r"gh gh gh"]
 
 # ==============================================
 
 
-async def init():
-    validator1 = Validator(
-        [CustomError, UsernameFieldMissingError])
-    text_bytes = str("import aboba ").encode('UTF-8')
-    try:
-        await validator1.validate(text_bytes)
+validator_html = Validator(
+    flags_errors=[CustomError, UsernameFieldMissingError])
+# async def init():
+#     validator1 = Validator(
+#         [CustomError, UsernameFieldMissingError])
+#     text_bytes = str("import aboba ").encode('UTF-8')
+#     try:
+#         await validator1.validate(text_bytes)
 
-    except BaseError as e:
-        print(f"ERROR MESSAGE: '{e.message}'")
+#     except BaseError as e:
+#         print(f"ERROR MESSAGE: '{e.message}'")    
 
-# =============================================
-loop = asyncio.get_event_loop()
-task = loop.create_task(init())
-loop.run_until_complete(task)
+# # =============================================
+# loop = asyncio.get_event_loop()
+# task = loop.create_task(init())
+# loop.run_until_complete(task)
 # ============================================
