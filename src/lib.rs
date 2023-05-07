@@ -9,6 +9,8 @@ mod unit_tests;
 use constant::*;
 use pyo3::gc::{PyTraverseError, PyVisit};
 use pyo3::{prelude::*, types};
+
+use std::hash::Hash;
 use std::{collections::HashMap, str};
 
 // Используем разные виды regex для различной сложности выражений
@@ -19,22 +21,23 @@ use regex;
 
 /// Перечечисление, где даны варианты действия при положительном результате регулярных выражений
 #[pyclass]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum IfFound {
-    DoNothing,
+    AllRight,
     RaiseError,
 }
 
 /// Структура для хранения ошибок и статуса
-#[derive(Debug, Clone)]
-pub struct ShotStatus {
-    error: PyObject,
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+
+pub struct RuleStatus {
+    rule: String,
     status: IfFound,
 }
 
-impl ShotStatus {
-    pub fn new(error: PyObject, status: IfFound) -> Self {
-        Self { error, status }
+impl RuleStatus {
+    pub fn new(rule: String, status: IfFound) -> Self {
+        Self { rule, status }
     }
 }
 
@@ -44,11 +47,11 @@ impl ShotStatus {
 #[derive(Debug, Clone)]
 pub struct TemplateValidator {
     // хранит все ошибки ( KEY: `ID` и VALUE: `PyError` )
-    python_classes: HashMap<usize, ShotStatus>,
-    // хранит default regex ( KEY: `regex (string)` и VALUE: `ID` )
-    all_simple_rules: HashMap<String, usize>,
-    // хранит fancy regex ( KEY: `regex (string)` и VALUE: `ID` )
-    all_hard_rules: HashMap<String, usize>,
+    python_classes: HashMap<usize, PyObject>,
+    // хранит default regex ( KEY: `Regex & Status` и VALUE: `ID` )
+    all_simple_rules: HashMap<RuleStatus, usize>,
+    // хранит fancy regex ( KEY: `Regex & Status` и VALUE: `ID` )
+    all_hard_rules: HashMap<RuleStatus, usize>,
     // Собираем все default regex и *одним проходом* проверяем все регулярки
     selected_simple_rules: regex::RegexSet,
 }
@@ -61,10 +64,10 @@ impl TemplateValidator {
     /// **Может принимать сразу `class` без экземпляра**
     #[new]
     pub fn __new__(flags: PyObject) -> PyResult<Self> {
-        Ok(Python::with_gil(|py| -> PyResult<Self> {
-            let mut python_classes: HashMap<usize, ShotStatus> = HashMap::new();
-            let mut all_simple_rules: HashMap<String, usize> = HashMap::new();
-            let mut all_hard_rules: HashMap<String, usize> = HashMap::new();
+        Python::with_gil(|py| -> PyResult<Self> {
+            let mut python_classes: HashMap<usize, PyObject> = HashMap::new();
+            let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
+            let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
             let mut selected_simple_rules: Vec<String> = Vec::new();
             init::data_unpackaging(
                 py,
@@ -74,30 +77,31 @@ impl TemplateValidator {
                 &mut all_hard_rules,
                 &mut selected_simple_rules,
             )?;
-            Ok(Self {
-                python_classes,
-                all_simple_rules,
+            let x = Self {
                 all_hard_rules,
+                all_simple_rules,
+                python_classes,
                 selected_simple_rules: regex::RegexSet::new(selected_simple_rules).unwrap(),
-            })
-        })?)
+            };
+            dbg!(&x);
+            Ok(x)
+        })
     }
 
     //================== (РАБОТАЕТ ТОЛЬКО С `C API` (CPYTHON))==================
     /*
-    Метод `__traverse__` используется для рекурсивного обхода объекта и уведомления `Python` о всех вложенных объектах, которые должны быть добавлены в механизм управления памятью `Python`. В этой реализации метод `__traverse__` проходится по всем значениям в хэш-таблице `python_classes` и вызывает `visit.call()` для каждого объекта типа `PyObject` в свойстве `error` объекта типа `ShotStatus`. Это гарантирует, что объекты типа `PyObject` не будут освобождены Python'ом до тех пор, пока они не перестанут использоваться в `Rust`.
+    Метод `__traverse__` используется для рекурсивного обхода объекта и уведомления `Python` о всех вложенных объектах, которые должны быть добавлены в механизм управления памятью `Python`. В этой реализации метод `__traverse__` проходится по всем значениям в хэш-таблице `python_classes` и вызывает `visit.call()` для каждого объекта типа `PyObject` в свойстве `error` объекта типа `RuleStatus`. Это гарантирует, что объекты типа `PyObject` не будут освобождены Python'ом до тех пор, пока они не перестанут использоваться в `Rust`.
      */
     #[cfg(not(tarpaulin_include))]
     fn __traverse__(&self, visit: PyVisit<'_>) -> Result<(), PyTraverseError> {
-        for shot_status in self.python_classes.values() {
-            // Поскольку ShotStatus не является PyClass, мы вызываем visit.call() напрямую
-            visit.call(&shot_status.error)?;
+        for class_py in self.python_classes.values() {
+            visit.call(class_py)?;
         }
         Ok(())
     }
 
     /*
-    Метод `__clear__` используется для освобождения памяти, занятой объектом. В этой реализации метод `__clear__` очищает хэш-таблицу `python_classes`, что приводит к уменьшению счетчика ссылок на каждый объект типа PyObject в свойстве error объекта типа `ShotStatus`. Если количество ссылок на объект достигнет нуля, он будет автоматически удален Python'ом.
+    Метод `__clear__` используется для освобождения памяти, занятой объектом. В этой реализации метод `__clear__` очищает хэш-таблицу `python_classes`, что приводит к уменьшению счетчика ссылок на каждый объект типа PyObject в свойстве error объекта типа `RuleStatus`. Если количество ссылок на объект достигнет нуля, он будет автоматически удален Python'ом.
      */
     #[cfg(not(tarpaulin_include))]
     fn __clear__(&mut self) {

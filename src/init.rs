@@ -1,19 +1,18 @@
 use super::*;
 use pyo3::exceptions;
-
-/// Расфасовка всех элементов из `PyObject` в структуры
 pub fn data_unpackaging(
     py: Python,
     obj: PyObject,
-    python_classes: &mut HashMap<usize, ShotStatus>,
-    all_simple_rules: &mut HashMap<String, usize>,
-    all_hard_rules: &mut HashMap<String, usize>,
+    python_classes: &mut HashMap<usize, PyObject>,
+    all_simple_rules: &mut HashMap<RuleStatus, usize>,
+    all_hard_rules: &mut HashMap<RuleStatus, usize>,
     selected_simple_rules: &mut Vec<String>,
 ) -> PyResult<()> {
+    // Проверяем что переданый объект является списком
     if let Ok(dict) = obj.downcast::<types::PyList>(py) {
-        let mut id_class = 0;
-        for (key, value) in dict.iter() {
-            if let Ok(class_py) = key.downcast::<types::PyType>() {
+        let mut id_class: usize = 0;
+        for class_py in dict {
+            if let Ok(class_py) = class_py.downcast::<types::PyType>() {
                 get_any_regex_from_class(
                     class_py,
                     id_class,
@@ -21,27 +20,20 @@ pub fn data_unpackaging(
                     all_hard_rules,
                     selected_simple_rules,
                 )?;
-                if let Ok(flag) = value.extract::<IfFound>() {
-                    python_classes.insert(id_class, ShotStatus::new(value.to_object(py), flag));
-                } else {
-                    return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                        "'{}' must be a 'IfFound'",
-                        value
-                    )));
-                }
-                // повышаем id_class для следующего класса
+                python_classes.insert(id_class, class_py.to_object(py));
+
                 id_class += 1;
             } else {
                 return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                     "'{}' must be a 'Class'",
-                    key
+                    class_py
                 )));
             }
         }
     } else {
         return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-            "'{}' must be a 'dict =  {{class(Error): enum (IfFound)}}'",
-            RULES_FROM_CLASS_PY
+            "'{}' must be a 'List[ Class, Class... ]'",
+            obj
         )));
     }
     Ok(())
@@ -50,32 +42,51 @@ pub fn data_unpackaging(
 pub fn get_any_regex_from_class(
     class_py: &types::PyType,
     id_class: usize,
-    all_simple_rules: &mut HashMap<String, usize>,
-    all_hard_rules: &mut HashMap<String, usize>,
+    all_simple_rules: &mut HashMap<RuleStatus, usize>,
+    all_hard_rules: &mut HashMap<RuleStatus, usize>,
     selected_simple_rules: &mut Vec<String>,
 ) -> PyResult<()> {
-    let rgxs: Vec<String> = class_py
-        .getattr(RULES_FROM_CLASS_PY)
-        .unwrap()
-        .extract()
-        .map_err(|_| {
-            PyErr::new::<exceptions::PyAttributeError, _>(format!(
-                "Class must have a '{}' attribute containing a list of regex strings",
-                RULES_FROM_CLASS_PY
-            ))
-        })?;
-    for rgx in rgxs {
-        if check::is_default_regex_fisrt_step(&rgx) {
-            all_simple_rules.insert(rgx.to_string(), id_class);
-            selected_simple_rules.push(rgx);
-        } else if check::is_fancy_regex_second_step(&rgx) {
-            all_hard_rules.insert(rgx, id_class);
+    if let Ok(py_dict) = class_py.getattr(RULES_FROM_CLASS_PY) {
+        if let Ok(dict) = py_dict.downcast::<types::PyDict>() {
+            for (key, value) in dict {
+                if let Ok(key) = key.extract::<String>() {
+                    if let Ok(value) = value.extract::<IfFound>() {
+                        if check::is_default_regex_fisrt_step(&key) {
+                            all_simple_rules
+                                .insert(RuleStatus::new(key.to_string(), value), id_class);
+                            selected_simple_rules.push(key);
+                        } else if check::is_fancy_regex_second_step(&key) {
+                            all_hard_rules.insert(RuleStatus::new(key, value), id_class);
+                        } else {
+                            return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+                                "{} --- Invalid regular expression",
+                                key
+                            )));
+                        }
+                    } else {
+                        return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+                            "'{}' must be a 'Enum'",
+                            value
+                        )));
+                    }
+                } else {
+                    return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+                        "'{}' must be a 'String'",
+                        key
+                    )));
+                }
+            }
         } else {
-            return Err(PyErr::new::<exceptions::PyValueError, _>(format!(
-                "{} --- Invalid regular expression",
-                rgx
+            return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+                "'{}' must be a 'dict {{ Class: Enum }}'",
+                py_dict
             )));
         }
+    } else {
+        return Err(PyErr::new::<exceptions::PyAttributeError, _>(format!(
+            "There is no '{}' attribute for getting rules",
+            RULES_FROM_CLASS_PY
+        )));
     }
     Ok(())
 }

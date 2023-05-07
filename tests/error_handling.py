@@ -1,12 +1,12 @@
 import pystval
 import asyncio
-from pystval import Validator, IfFound
+from pystval import TemplateValidator, IfFound
 
 
 class BaseError(Exception):
     template = ""
 
-    def __init__(self, message: str = None, rules: list[str] = None, **extra):
+    def __init__(self, message: str = None, rules: dict[str, enumerate] = None, **extra):
         self._extra = extra
         self._rules = rules
         if message is None:
@@ -30,19 +30,29 @@ class BaseError(Exception):
 
 
 class UsernameFieldMissingError(BaseError):
-    template = "Error: username field is missing or invalid (current name : {name})"
-    rules = {"rule1"}
+    template = "messsage message message"
+    rules = {r"rule1": IfFound.AllRight,
+             r"rule2": IfFound.RaiseError,
+             r"rule3": IfFound.RaiseError,
+             r"rule4": IfFound.AllRight, }
 
 
 class CustomError(BaseError):
-    template = "Не разрешенный импорт : {import}"
-    rules = [r"(?P<import>import aboba from .+)", r"br br br", r"gh gh gh"]
+    template = "messsage message message"
+    rules = {r"rule5##": IfFound.RaiseError,
+             r"(\w+?)(.+\1)": IfFound.AllRight,
+             r"rule7##": IfFound.RaiseError,
+             r"rule8##": IfFound.AllRight,
+             }
 
 # ==============================================
 
 
-validator_html = Validator(
-    flags_errors=[CustomError, UsernameFieldMissingError])
+try:
+    validator_html = TemplateValidator(
+        flags=[UsernameFieldMissingError, CustomError])
+except Exception as e:
+    print(f"Произошла ошибка: {e}")
 # async def init():
 #     validator1 = Validator(
 #         [CustomError, UsernameFieldMissingError])
