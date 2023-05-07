@@ -14,6 +14,16 @@ impl TemplateValidator {
     }
 }
 
+/// Проверяем объект, что он является `PyList`
+fn is_convertible_to_pylist(py_obj: &PyAny) -> bool {
+    <types::PyList as pyo3::PyTryFrom>::try_from(py_obj).is_ok()
+}
+
+/// Проверяем объект, что он является `PyType`
+fn is_convertible_to_pytype(py_obj: &PyAny) -> bool {
+    <types::PyType as pyo3::PyTryFrom>::try_from(py_obj).is_ok()
+}
+
 // Эти unit тесты не находятся по пути `src/tests.rs`, потому что `Private` методы нельзя тестировать
 // вне модуля, в котором они находятся
 #[cfg(test)]
