@@ -134,4 +134,66 @@ mod tests {
             }
         }
     }
+    mod check_tests {
+        use super::*;
+
+        mod fn_is_default_regex_fisrt_step {
+            use super::*;
+
+            #[test]
+            fn is_default_regex_fisrt_step_t_0() {
+                assert_eq!(check::is_default_regex_fisrt_step("[0-9]+"), true);
+            }
+
+            #[test]
+            fn is_default_regex_fisrt_step_t_1() {
+                assert_eq!(
+                    check::is_default_regex_fisrt_step(
+                        r"\QThis is not a valid regex!@#$%^&*()_+\E"
+                    ),
+                    false
+                );
+            }
+
+            #[test]
+            fn is_default_regex_fisrt_step_t_2() {
+                assert_eq!(
+                    check::is_default_regex_fisrt_step(r"(\b\w+\b)(?=.+?\1)"),
+                    false
+                );
+            }
+        }
+
+        mod fn_fancy_regex_second_step {
+            use super::*;
+
+            #[test]
+            fn is_fancy_regex_second_step_t_0() {
+                assert_eq!(check::is_fancy_regex_second_step("[0-9]+"), true);
+            }
+
+            #[test]
+            fn is_fancy_regex_second_step_t_1() {
+                assert_eq!(
+                    check::is_fancy_regex_second_step(r"\QThis is not a valid regex!@#$%^&*()_+\E"),
+                    false
+                );
+            }
+
+            #[test]
+            fn is_fancy_regex_second_step_t_2() {
+                assert_eq!(
+                    check::is_fancy_regex_second_step(r"(\b\w+\b)(?=.+?\1)"),
+                    true
+                );
+            }
+        }
+    }
+    mod init_tests {
+        use super::*;
+
+        mod fn__TemplateValidator_Constructor {
+            use super::*;
+        }
+    }
 }

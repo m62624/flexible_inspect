@@ -8,7 +8,7 @@ mod unit_tests;
 
 use constant::*;
 use pyo3::gc::{PyTraverseError, PyVisit};
-use pyo3::{prelude::*, types, ToPyObject};
+use pyo3::{prelude::*, types};
 use std::{collections::HashMap, str};
 
 // Используем разные виды regex для различной сложности выражений
@@ -57,7 +57,7 @@ pub struct TemplateValidator {
 #[pymethods]
 impl TemplateValidator {
     /// Создаем экземлпяр с заданными параметрами проверки\
-    /// Принимает `PyList [class,class,class]`\
+    /// Принимает `PyDict {class,status_throw}`\
     /// **Может принимать сразу `class` без экземпляра**
     #[new]
     pub fn __new__(flags: PyObject) -> PyResult<Self> {

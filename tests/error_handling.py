@@ -1,6 +1,6 @@
 import pystval
 import asyncio
-from pystval import Validator
+from pystval import Validator, IfFound
 
 
 class BaseError(Exception):
@@ -31,7 +31,7 @@ class BaseError(Exception):
 
 class UsernameFieldMissingError(BaseError):
     template = "Error: username field is missing or invalid (current name : {name})"
-    rules = ["xxx", "yyy", "zzz", "sss", "ggg"]
+    rules = {"rule1"}
 
 
 class CustomError(BaseError):
@@ -51,7 +51,7 @@ validator_html = Validator(
 #         await validator1.validate(text_bytes)
 
 #     except BaseError as e:
-#         print(f"ERROR MESSAGE: '{e.message}'")    
+#         print(f"ERROR MESSAGE: '{e.message}'")
 
 # # =============================================
 # loop = asyncio.get_event_loop()

@@ -1,4 +1,5 @@
 from typing import Any, Dict, List
+import enum
 
 
 class Validator:
@@ -19,20 +20,13 @@ class Validator:
             Указан иной тип данных
         """
         pass
+    pass
 
-    @classmethod
-    def classMethod(self, text_raw: bytearray):
-        """
-        Parameters
-        ----------
-        `text_raw` : `bytearray`
-        Массив байтов
-        Raises
-        ------
-        `TypeError`
-        Указан иной тип данных
-        `CustomError(your errors)`
-        Кастомные ошибки, которые были загружены в конструктор (`flags_errors`)
-        """
-        pass
+
+class IfFound(enum.Enum):
+    DoNothing = 0,
+    RaiseError = 1,
+    """
+    Перечечисление, где даны варианты действия при положительном результате регулярных выражений
+    """
     pass

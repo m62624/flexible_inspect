@@ -10,11 +10,11 @@ pub fn data_unpackaging(
     all_hard_rules: &mut HashMap<String, usize>,
     selected_simple_rules: &mut Vec<String>,
 ) -> PyResult<()> {
-    if let Ok(dict) = obj.downcast::<types::PyDict>(py) {
+    if let Ok(dict) = obj.downcast::<types::PyList>(py) {
         let mut id_class = 0;
         for (key, value) in dict.iter() {
             if let Ok(class_py) = key.downcast::<types::PyType>() {
-                regex_init::get_any_regex_from_class(
+                get_any_regex_from_class(
                     class_py,
                     id_class,
                     all_simple_rules,
@@ -29,6 +29,7 @@ pub fn data_unpackaging(
                         value
                     )));
                 }
+                // повышаем id_class для следующего класса
                 id_class += 1;
             } else {
                 return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
@@ -46,33 +47,35 @@ pub fn data_unpackaging(
     Ok(())
 }
 
-mod regex_init {
-    use super::*;
-    pub fn get_any_regex_from_class(
-        class_py: &types::PyType,
-        id_class: usize,
-        all_simple_rules: &mut HashMap<String, usize>,
-        all_hard_rules: &mut HashMap<String, usize>,
-        selected_simple_rules: &mut Vec<String>,
-    ) -> PyResult<()> {
-        let rgxs: Vec<String> = class_py.getattr("regex").unwrap().extract().map_err(|_| {
-            PyErr::new::<exceptions::PyAttributeError, _>(
-                "Class must have a 'regex' attribute containing a list of regex strings",
-            )
+pub fn get_any_regex_from_class(
+    class_py: &types::PyType,
+    id_class: usize,
+    all_simple_rules: &mut HashMap<String, usize>,
+    all_hard_rules: &mut HashMap<String, usize>,
+    selected_simple_rules: &mut Vec<String>,
+) -> PyResult<()> {
+    let rgxs: Vec<String> = class_py
+        .getattr(RULES_FROM_CLASS_PY)
+        .unwrap()
+        .extract()
+        .map_err(|_| {
+            PyErr::new::<exceptions::PyAttributeError, _>(format!(
+                "Class must have a '{}' attribute containing a list of regex strings",
+                RULES_FROM_CLASS_PY
+            ))
         })?;
-        for rgx in rgxs {
-            if check::is_default_regex_fisrt_step(&rgx) {
-                all_simple_rules.insert(rgx.to_string(), id_class);
-                selected_simple_rules.push(rgx);
-            } else if check::is_fancy_regex_second_step(&rgx) {
-                all_hard_rules.insert(rgx, id_class);
-            } else {
-                return Err(PyErr::new::<exceptions::PyValueError, _>(format!(
-                    "{} --- Invalid regular expression",
-                    rgx
-                )));
-            }
+    for rgx in rgxs {
+        if check::is_default_regex_fisrt_step(&rgx) {
+            all_simple_rules.insert(rgx.to_string(), id_class);
+            selected_simple_rules.push(rgx);
+        } else if check::is_fancy_regex_second_step(&rgx) {
+            all_hard_rules.insert(rgx, id_class);
+        } else {
+            return Err(PyErr::new::<exceptions::PyValueError, _>(format!(
+                "{} --- Invalid regular expression",
+                rgx
+            )));
         }
-        Ok(())
     }
+    Ok(())
 }
