@@ -1,6 +1,7 @@
 //! `Pystval` - `Rust` библиотека для `Python`. Выполняет валидацию каких либо данных (строки) с помощью регулярных выражений
 mod export_py;
 mod global_const;
+mod init;
 use global_const::*;
 use pyo3::{prelude::*, types, ToPyObject};
 // Регуярные выражения
@@ -21,3 +22,6 @@ pub struct TemplateValidator {
     // Храним KEY: `ID` и VALUE: `ClassError`
     python_classes: HashMap<usize, PyObject>,
 }
+
+#[pymethods]
+impl TemplateValidator {}
