@@ -204,7 +204,7 @@ mod tests {
     mod init_tests {
         use super::*;
         fn fn_core_get_any_regex_from_class(
-            rules: &[(&str, IfFound)],
+            rules: &[(&str, It)],
             all_simple_rules: &mut HashMap<RuleStatus, usize>,
             all_hard_rules: &mut HashMap<RuleStatus, usize>,
             selected_simple_rules: &mut Vec<String>,
@@ -260,9 +260,9 @@ mod tests {
                 let mut selected_simple_rules = Vec::new();
                 fn_core_get_any_regex_from_class(
                     &[
-                        ("rule1", IfFound::AllRight),
-                        ("rule2", IfFound::RaiseError),
-                        (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                        ("rule1", It::MustBeFoundHere),
+                        ("rule2", It::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
                     ],
                     &mut all_simple_rules,
                     &mut all_hard_rules,
@@ -280,12 +280,12 @@ mod tests {
                 let mut selected_simple_rules = Vec::new();
                 fn_core_get_any_regex_from_class(
                     &[
-                        ("rule1", IfFound::AllRight),
-                        ("rule2", IfFound::AllRight),
-                        ("rule3", IfFound::AllRight),
-                        ("rule4", IfFound::AllRight),
-                        ("rule2", IfFound::RaiseError),
-                        (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                        ("rule1", It::MustBeFoundHere),
+                        ("rule2", It::MustBeFoundHere),
+                        ("rule3", It::MustBeFoundHere),
+                        ("rule4", It::MustBeFoundHere),
+                        ("rule2", It::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
                     ],
                     &mut all_simple_rules,
                     &mut all_hard_rules,
@@ -304,15 +304,15 @@ mod tests {
                 let mut selected_simple_rules = Vec::new();
                 fn_core_get_any_regex_from_class(
                     &[
-                        ("rule1", IfFound::AllRight),
-                        ("rule2", IfFound::AllRight),
-                        ("rule3", IfFound::AllRight),
-                        ("rule4", IfFound::AllRight),
+                        ("rule1", It::MustBeFoundHere),
+                        ("rule2", It::MustBeFoundHere),
+                        ("rule3", It::MustBeFoundHere),
+                        ("rule4", It::MustBeFoundHere),
                         (
                             r"\QThis is not a valid regex!@#$%^&*()_+\E",
-                            IfFound::RaiseError,
+                            It::NotToBeFoundHere,
                         ),
-                        (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
                     ],
                     &mut all_simple_rules,
                     &mut all_hard_rules,
@@ -329,7 +329,7 @@ mod tests {
             fn fn_get_any_regex_from_class_e_1() {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| {
-                    let rules = [(py.None(), IfFound::AllRight)];
+                    let rules = [(py.None(), It::MustBeFoundHere)];
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {
                         dict.set_item(key, Py::new(py, value.to_owned()).unwrap())
@@ -399,7 +399,7 @@ mod tests {
                     let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
                     let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
                     let mut selected_simple_rules: Vec<String> = Vec::new();
-                    let fake_class = types::PyType::new::<IfFound>(py);
+                    let fake_class = types::PyType::new::<It>(py);
                     init::get_any_regex_from_class(
                         &fake_class,
                         0,
@@ -424,9 +424,9 @@ mod tests {
                     let mut python_classes: HashMap<usize, PyObject> = HashMap::new();
 
                     let rules = &[
-                        ("rule1", IfFound::AllRight),
-                        ("rule2", IfFound::RaiseError),
-                        (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                        ("rule1", It::MustBeFoundHere),
+                        ("rule2", It::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
                     ];
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {
@@ -450,9 +450,9 @@ mod tests {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| -> PyResult<()> {
                     let rules = &[
-                        ("rule1", IfFound::AllRight),
-                        ("rule2", IfFound::RaiseError),
-                        (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                        ("rule1", It::MustBeFoundHere),
+                        ("rule2", It::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
                     ];
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {
@@ -467,7 +467,7 @@ mod tests {
             }
 
             #[test]
-            #[should_panic(expected = r#"'None' must be a 'List[ Class, Class... ]'")"#)]
+            #[should_panic(expected = r"'None' must be a 'List[ Class, Class... ]")]
             fn data_unpackaging_e_0() {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| {

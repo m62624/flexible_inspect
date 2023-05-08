@@ -1,15 +1,23 @@
 //! `Pystval` - `Rust` библиотека для `Python`. Выполняет валидацию данных (строки) с помощью регулярных выражений
 
+// Проверка и конвертация данных из Python в Rust и обратно
 mod check_convert;
+// Глобальные переменные, необходимые для определеения атрибутов класса
 mod constant;
+// Компоненты необходимые для конструктора `TemplateValidator`
 mod init;
+// Компоненты для метода, где проходит сама валидация
+mod validate;
+// Все юнит тесты выненсены в отдельный модуль
 mod unit_tests;
 
 use constant::*;
+// Отвечает за взаимодействие сборщика мусора СPython с Rust
 use pyo3::gc::{PyTraverseError, PyVisit};
+
 use pyo3::{prelude::*, types};
-use std::hash::Hash;
-use std::{collections::HashMap, str};
+use std::sync::Arc;
+use std::{collections::HashMap, hash::Hash, str};
 
 // Используем разные виды regex для различной сложности выражений
 //=============================
@@ -20,9 +28,9 @@ use regex;
 /// Перечечисление, где даны варианты действия при положительном результате регулярных выражений
 #[pyclass]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub enum IfFound {
-    AllRight,
-    RaiseError,
+pub enum It {
+    MustBeFoundHere,
+    NotToBeFoundHere,
 }
 
 /// Структура для хранения ошибок и статуса
@@ -30,11 +38,11 @@ pub enum IfFound {
 
 pub struct RuleStatus {
     rule: String,
-    status: IfFound,
+    status: It,
 }
 
 impl RuleStatus {
-    pub fn new(rule: String, status: IfFound) -> Self {
+    pub fn new(rule: String, status: It) -> Self {
         Self { rule, status }
     }
 }
@@ -53,6 +61,17 @@ pub struct TemplateValidator {
     // Собираем все default regex и *одним проходом* проверяем все регулярки
     selected_simple_rules: regex::RegexSet,
 }
+
+// fn sleep_for<'p>(py: Python<'p>, secs: &'p PyAny) -> PyResult<&'p PyAny> {
+//     pyo3_asyncio::async_std::future_into_py_with_locals(
+//         py,
+//         pyo3_asyncio::async_std::get_current_locals(py)?,
+//         async move {
+//             // async_std::task::sleep(Duration::from_secs(secs)).await;
+//             Python::with_gil(|py| Ok(py.None()))
+//         },
+//     )
+// }
 
 // Реализация методов для TemplateValidator которые будут доступны в `Python`
 #[pymethods]
@@ -75,18 +94,36 @@ impl TemplateValidator {
                 &mut all_hard_rules,
                 &mut selected_simple_rules,
             )?;
-            Ok(Self {
+            let rsl_info = Self {
                 all_hard_rules,
                 all_simple_rules,
                 python_classes,
                 selected_simple_rules: regex::RegexSet::new(selected_simple_rules).unwrap(),
-            })
+            };
+            dbg!(&rsl_info);
+            Ok(rsl_info)
         })
     }
 
+    // Служит для запуска async метода
+    #[pyo3(name = "validate")]
+    fn validate<'py>(&self, py: Python<'py>, text_bytes: &types::PyBytes) -> PyResult<&'py PyAny> {
+        let unsafe_self = unsafe { &*(&*self as *const Self) };
+        // let unsafe_self = self.clone();
+        let text = check_convert::convert::bytes_to_string_utf8(text_bytes.as_bytes())?;
+        pyo3_asyncio::async_std::future_into_py(py, async move {
+            unsafe_self.core_validate(text).await?;
+            Ok(Python::with_gil(|py| py.None()))
+        })
+    }
     //================== (РАБОТАЕТ ТОЛЬКО С `C API` (CPYTHON))==================
     /*
-    Метод `__traverse__` используется для рекурсивного обхода объекта и уведомления `Python` о всех вложенных объектах, которые должны быть добавлены в механизм управления памятью `Python`. В этой реализации метод `__traverse__` проходится по всем значениям в хэш-таблице `python_classes` и вызывает `visit.call()` для каждого объекта типа `PyObject` в свойстве `error` объекта типа `RuleStatus`. Это гарантирует, что объекты типа `PyObject` не будут освобождены Python'ом до тех пор, пока они не перестанут использоваться в `Rust`.
+    Метод `__traverse__` используется для рекурсивного обхода объекта и уведомления `Python` о всех
+    вложенных объектах, которые должны быть добавлены в механизм управления памятью `Python`. В этой
+    реализации метод `__traverse__` проходится по всем значениям в хэш-таблице `python_classes` и вызывает
+    `visit.call()` для каждого объекта типа `PyObject` в свойстве `error` объекта типа `RuleStatus`.
+    Это гарантирует, что объекты типа `PyObject` не будут освобождены Python'ом до тех пор,
+    пока они не перестанут использоваться в `Rust`.
      */
     #[cfg(not(tarpaulin_include))]
     fn __traverse__(&self, visit: PyVisit<'_>) -> Result<(), PyTraverseError> {
@@ -97,7 +134,10 @@ impl TemplateValidator {
     }
 
     /*
-    Метод `__clear__` используется для освобождения памяти, занятой объектом. В этой реализации метод `__clear__` очищает хэш-таблицу `python_classes`, что приводит к уменьшению счетчика ссылок на каждый объект типа PyObject в свойстве error объекта типа `RuleStatus`. Если количество ссылок на объект достигнет нуля, он будет автоматически удален Python'ом.
+    Метод `__clear__` используется для освобождения памяти, занятой объектом. В этой реализации метод
+    `__clear__` очищает хэш-таблицу `python_classes`, что приводит к уменьшению счетчика ссылок на каждый
+    объект типа PyObject в свойстве error объекта типа `RuleStatus`. Если количество ссылок на объект
+    достигнет нуля, он будет автоматически удален Python'ом.
      */
     #[cfg(not(tarpaulin_include))]
     fn __clear__(&mut self) {
@@ -107,9 +147,6 @@ impl TemplateValidator {
     //================== (РАБОТАЕТ ТОЛЬКО С `C API` (CPYTHON))==================
 }
 
-// Реализация методов для TemplateValidator которые доступны в Rust
-impl TemplateValidator {}
-
 // Импортируем всё необходимое в `Python`
 #[cfg(not(tarpaulin_include))]
 mod export {
@@ -117,7 +154,7 @@ mod export {
     #[pymodule]
     fn pystval(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         m.add_class::<TemplateValidator>()?;
-        m.add_class::<IfFound>()?;
+        m.add_class::<It>()?;
         Ok(())
     }
 }

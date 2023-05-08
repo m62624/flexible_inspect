@@ -56,7 +56,7 @@ pub fn get_any_regex_from_class(
                 // Проверяем что ключ является строкой, иначе ошибка типа переменной
                 if let Ok(key) = key.extract::<String>() {
                     // Проверяем что значение является Enum, иначе ошибка типа переменной
-                    if let Ok(value) = value.extract::<IfFound>() {
+                    if let Ok(value) = value.extract::<It>() {
                         // Проверяем что ключ является валидным регулярным выражением (простого типа)
                         if check_convert::check::is_default_regex_fisrt_step(&key) {
                             all_simple_rules

@@ -20,13 +20,28 @@ class TemplateValidator:
             Указан иной тип данных
         """
         pass
+
+    async def validate(self, text: str):
+        """
+        Parameters
+        ----------
+        `text` : `str`
+            Текст для проверки
+        """
+        pass
     pass
 
 
-class IfFound(enum.Enum):
+class It(enum.Enum):
     """
     Перечечисление, где даны варианты действия при положительном результате регулярных выражений
     """
-    AllRight = 0,
-    RaiseError = 1,
+    MustBeFoundHere = 0,
+    """
+    Должно быть найдено, иначе будет вызвано исключение
+    """
+    NotToBeFoundHere = 1,
+    """
+    Не должно быть найдено, иначе будет вызвано исключение
+    """
     pass
