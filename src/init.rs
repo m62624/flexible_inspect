@@ -1,5 +1,6 @@
 use super::*;
 use pyo3::exceptions;
+// Расфасовка данных
 pub fn data_unpackaging(
     py: Python,
     obj: PyObject,
@@ -8,10 +9,11 @@ pub fn data_unpackaging(
     all_hard_rules: &mut HashMap<RuleStatus, usize>,
     selected_simple_rules: &mut Vec<String>,
 ) -> PyResult<()> {
-    // Проверяем что переданый объект является списком
+    // Проверяем что переданый объект является списком, иначе ошибка типа переменной
     if let Ok(dict) = obj.downcast::<types::PyList>(py) {
         let mut id_class: usize = 0;
         for class_py in dict {
+            // Проверяем что элемент списка является классом, иначе ошибка типа переменной
             if let Ok(class_py) = class_py.downcast::<types::PyType>() {
                 get_any_regex_from_class(
                     class_py,
@@ -46,16 +48,22 @@ pub fn get_any_regex_from_class(
     all_hard_rules: &mut HashMap<RuleStatus, usize>,
     selected_simple_rules: &mut Vec<String>,
 ) -> PyResult<()> {
+    // Проверяем что класс имеет атрибут RULES_FROM_CLASS_PY, иначе ошибка атрибута
     if let Ok(py_dict) = class_py.getattr(RULES_FROM_CLASS_PY) {
+        // Проверяем что атрибут является словарем, иначе ошибка типа переменной
         if let Ok(dict) = py_dict.downcast::<types::PyDict>() {
             for (key, value) in dict {
+                // Проверяем что ключ является строкой, иначе ошибка типа переменной
                 if let Ok(key) = key.extract::<String>() {
+                    // Проверяем что значение является Enum, иначе ошибка типа переменной
                     if let Ok(value) = value.extract::<IfFound>() {
-                        if check::is_default_regex_fisrt_step(&key) {
+                        // Проверяем что ключ является валидным регулярным выражением (простого типа)
+                        if check_convert::check::is_default_regex_fisrt_step(&key) {
                             all_simple_rules
                                 .insert(RuleStatus::new(key.to_string(), value), id_class);
                             selected_simple_rules.push(key);
-                        } else if check::is_fancy_regex_second_step(&key) {
+                            // Проверяем что ключ является валидным регулярным выражением (сложного типа)
+                        } else if check_convert::check::is_fancy_regex_second_step(&key) {
                             all_hard_rules.insert(RuleStatus::new(key, value), id_class);
                         } else {
                             return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(

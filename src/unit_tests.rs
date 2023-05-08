@@ -65,7 +65,6 @@ mod tests {
 
         mod fn_bytes_to_string_utf8 {
             use super::*;
-
             #[test]
             fn bytes_to_string_utf8_t_0() {
                 assert_eq!(
@@ -204,127 +203,301 @@ mod tests {
     }
     mod init_tests {
         use super::*;
+        fn fn_core_get_any_regex_from_class(
+            rules: &[(&str, IfFound)],
+            all_simple_rules: &mut HashMap<RuleStatus, usize>,
+            all_hard_rules: &mut HashMap<RuleStatus, usize>,
+            selected_simple_rules: &mut Vec<String>,
+            count_all_simple_rules: usize,
+            count_all_hard_rules: usize,
+            count_selected_simple_rules: usize,
+        ) -> PyResult<()> {
+            pyo3::prepare_freethreaded_python();
+            Python::with_gil(|py| -> PyResult<()> {
+                let dict = types::PyDict::new(py);
+                for (key, value) in rules.iter() {
+                    dict.set_item(key, Py::new(py, value.to_owned()).unwrap())?;
+                }
+                let class = types::PyType::new::<TemplateValidator>(py);
+                class.setattr(RULES_FROM_CLASS_PY, dict)?;
+                init::get_any_regex_from_class(
+                    &class,
+                    1,
+                    all_simple_rules,
+                    all_hard_rules,
+                    selected_simple_rules,
+                )?;
+                assert_eq!(all_simple_rules.len(), count_all_simple_rules);
+                assert_eq!(all_hard_rules.len(), count_all_hard_rules);
+                assert_eq!(selected_simple_rules.len(), count_selected_simple_rules);
+                Ok(())
+            })
+        }
 
-        mod fn_new {
+        mod fn_get_any_regex_from_class {
+            #[pyclass]
+            struct FakeObj {
+                status: bool,
+            }
+            #[pymethods]
+            impl FakeObj {
+                #[new]
+                fn __new__() -> Self {
+                    FakeObj { status: true }
+                }
+            }
+            impl ToPyObject for FakeObj {
+                fn to_object(&self, py: Python<'_>) -> PyObject {
+                    self.status.to_object(py)
+                }
+            }
+            use super::*;
+            #[test]
+            fn fn_get_any_regex_from_class_t_0() -> PyResult<()> {
+                pyo3::prepare_freethreaded_python();
+                let mut all_simple_rules = HashMap::new();
+                let mut all_hard_rules = HashMap::new();
+                let mut selected_simple_rules = Vec::new();
+                fn_core_get_any_regex_from_class(
+                    &[
+                        ("rule1", IfFound::AllRight),
+                        ("rule2", IfFound::RaiseError),
+                        (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                    ],
+                    &mut all_simple_rules,
+                    &mut all_hard_rules,
+                    &mut selected_simple_rules,
+                    2,
+                    1,
+                    2,
+                )
+            }
+            #[test]
+            fn fn_get_any_regex_from_class_t_1() -> PyResult<()> {
+                pyo3::prepare_freethreaded_python();
+                let mut all_simple_rules = HashMap::new();
+                let mut all_hard_rules = HashMap::new();
+                let mut selected_simple_rules = Vec::new();
+                fn_core_get_any_regex_from_class(
+                    &[
+                        ("rule1", IfFound::AllRight),
+                        ("rule2", IfFound::AllRight),
+                        ("rule3", IfFound::AllRight),
+                        ("rule4", IfFound::AllRight),
+                        ("rule2", IfFound::RaiseError),
+                        (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                    ],
+                    &mut all_simple_rules,
+                    &mut all_hard_rules,
+                    &mut selected_simple_rules,
+                    4,
+                    1,
+                    4,
+                )
+            }
+            #[test]
+            #[should_panic(expected = r"PyErr { type: <class 'TypeError'>")]
+            fn fn_get_any_regex_from_class_e_0() {
+                pyo3::prepare_freethreaded_python();
+                let mut all_simple_rules = HashMap::new();
+                let mut all_hard_rules = HashMap::new();
+                let mut selected_simple_rules = Vec::new();
+                fn_core_get_any_regex_from_class(
+                    &[
+                        ("rule1", IfFound::AllRight),
+                        ("rule2", IfFound::AllRight),
+                        ("rule3", IfFound::AllRight),
+                        ("rule4", IfFound::AllRight),
+                        (
+                            r"\QThis is not a valid regex!@#$%^&*()_+\E",
+                            IfFound::RaiseError,
+                        ),
+                        (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                    ],
+                    &mut all_simple_rules,
+                    &mut all_hard_rules,
+                    &mut selected_simple_rules,
+                    4,
+                    1,
+                    4,
+                )
+                .unwrap()
+            }
 
-            fn test_core(
-                rules: &[(&str, IfFound)],
-                all_simple_rules: &mut HashMap<RuleStatus, usize>,
-                all_hard_rules: &mut HashMap<RuleStatus, usize>,
-                selected_simple_rules: &mut Vec<String>,
-                count_all_simple_rules: usize,
-                count_all_hard_rules: usize,
-                count_selected_simple_rules: usize,
-            ) -> PyResult<()> {
+            #[test]
+            #[should_panic(expected = r#"'None' must be a 'String"#)]
+            fn fn_get_any_regex_from_class_e_1() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| {
+                    let rules = [(py.None(), IfFound::AllRight)];
+                    let dict = types::PyDict::new(py);
+                    for (key, value) in rules.iter() {
+                        dict.set_item(key, Py::new(py, value.to_owned()).unwrap())
+                            .unwrap();
+                    }
+                    let class = types::PyType::new::<TemplateValidator>(py);
+                    class.setattr(RULES_FROM_CLASS_PY, dict).unwrap();
+                    TemplateValidator::__new__(
+                        types::PyList::new(py, [class.to_object(py).to_object(py)].iter())
+                            .to_object(py),
+                    )
+                })
+                .unwrap();
+            }
+            #[test]
+            #[should_panic(expected = r#"'True' must be a 'Enum'"#)]
+            fn fn_core_get_any_regex_from_class_e_2() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| {
+                    let rules = &[("rule1", FakeObj::__new__())];
+                    let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut selected_simple_rules: Vec<String> = Vec::new();
+                    let dict = types::PyDict::new(py);
+                    for (key, value) in rules.iter() {
+                        dict.set_item(key, value).unwrap();
+                    }
+                    let class = types::PyType::new::<TemplateValidator>(py);
+                    class.setattr(RULES_FROM_CLASS_PY, dict).unwrap();
+                    init::get_any_regex_from_class(
+                        &class,
+                        1,
+                        &mut all_simple_rules,
+                        &mut all_hard_rules,
+                        &mut selected_simple_rules,
+                    )
+                    .unwrap();
+                });
+            }
+            #[test]
+            #[should_panic(expected = r#" must be a 'dict"#)]
+            fn fn_core_get_any_regex_from_class_e_3() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| {
+                    let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut selected_simple_rules: Vec<String> = Vec::new();
+                    let no_dict = types::PyBool::new(py, true);
+                    let class = types::PyType::new::<TemplateValidator>(py);
+                    class.setattr(RULES_FROM_CLASS_PY, no_dict).unwrap();
+                    init::get_any_regex_from_class(
+                        &class,
+                        1,
+                        &mut all_simple_rules,
+                        &mut all_hard_rules,
+                        &mut selected_simple_rules,
+                    )
+                    .unwrap();
+                });
+            }
+
+            #[test]
+            #[should_panic(expected = r"AttributeError")]
+            fn fn_core_get_any_regex_from_class_e_4() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| {
+                    let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut selected_simple_rules: Vec<String> = Vec::new();
+                    let fake_class = types::PyType::new::<IfFound>(py);
+                    init::get_any_regex_from_class(
+                        &fake_class,
+                        0,
+                        &mut all_simple_rules,
+                        &mut all_hard_rules,
+                        &mut selected_simple_rules,
+                    )
+                    .unwrap()
+                });
+            }
+        }
+        mod fn_data_unpackaging {
+            use super::*;
+
+            #[test]
+            fn data_unpackaging_t_0() -> PyResult<()> {
+                pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| -> PyResult<()> {
+                    let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut selected_simple_rules: Vec<String> = Vec::new();
+                    let mut python_classes: HashMap<usize, PyObject> = HashMap::new();
+
+                    let rules = &[
+                        ("rule1", IfFound::AllRight),
+                        ("rule2", IfFound::RaiseError),
+                        (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                    ];
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {
                         dict.set_item(key, Py::new(py, value.to_owned()).unwrap())?;
                     }
                     let class = types::PyType::new::<TemplateValidator>(py);
-                    class.setattr("rules", dict)?;
-                    init::get_any_regex_from_class(
-                        &class,
-                        1,
-                        all_simple_rules,
-                        all_hard_rules,
-                        selected_simple_rules,
-                    )?;
-                    assert_eq!(all_simple_rules.len(), count_all_simple_rules);
-                    assert_eq!(all_hard_rules.len(), count_all_hard_rules);
-                    assert_eq!(selected_simple_rules.len(), count_selected_simple_rules);
+                    class.setattr(RULES_FROM_CLASS_PY, dict)?;
+                    let obj_main = types::PyList::new(py, [class].iter());
+                    init::data_unpackaging(
+                        py,
+                        obj_main.to_object(py),
+                        &mut python_classes,
+                        &mut all_simple_rules,
+                        &mut all_hard_rules,
+                        &mut selected_simple_rules,
+                    )
+                })
+            }
+            #[test]
+            fn data_unpackaging_t_1() -> PyResult<()> {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| -> PyResult<()> {
+                    let rules = &[
+                        ("rule1", IfFound::AllRight),
+                        ("rule2", IfFound::RaiseError),
+                        (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                    ];
+                    let dict = types::PyDict::new(py);
+                    for (key, value) in rules.iter() {
+                        dict.set_item(key, Py::new(py, value.to_owned()).unwrap())?;
+                    }
+                    let class = types::PyType::new::<TemplateValidator>(py);
+                    class.setattr(RULES_FROM_CLASS_PY, dict)?;
+                    let obj_main = types::PyList::new(py, [class].iter());
+                    TemplateValidator::__new__(obj_main.to_object(py))?;
                     Ok(())
                 })
             }
 
-            use super::*;
-
-            #[test]
-            fn __new_t_1() -> PyResult<()> {
-                pyo3::prepare_freethreaded_python();
-                Python::with_gil(|_| -> PyResult<()> {
-                    let mut all_simple_rules = HashMap::new();
-                    let mut all_hard_rules = HashMap::new();
-                    let mut selected_simple_rules = Vec::new();
-                    test_core(
-                        &[
-                            ("rule1", IfFound::AllRight),
-                            ("rule2", IfFound::RaiseError),
-                            (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
-                        ],
-                        &mut all_simple_rules,
-                        &mut all_hard_rules,
-                        &mut selected_simple_rules,
-                        2,
-                        1,
-                        2,
-                    )
-                })
-            }
-            #[test]
-            fn __new_t_2() -> PyResult<()> {
-                pyo3::prepare_freethreaded_python();
-                Python::with_gil(|_| -> PyResult<()> {
-                    let mut all_simple_rules = HashMap::new();
-                    let mut all_hard_rules = HashMap::new();
-                    let mut selected_simple_rules = Vec::new();
-                    test_core(
-                        &[
-                            ("rule1", IfFound::AllRight),
-                            ("rule2", IfFound::AllRight),
-                            ("rule3", IfFound::AllRight),
-                            ("rule4", IfFound::AllRight),
-                            ("rule2", IfFound::RaiseError),
-                            (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
-                        ],
-                        &mut all_simple_rules,
-                        &mut all_hard_rules,
-                        &mut selected_simple_rules,
-                        4,
-                        1,
-                        4,
-                    )
-                })
-            }
-            #[test]
-            #[should_panic(expected = r"PyErr { type: <class 'TypeError'>")]
-            fn __new_e_0() {
-                pyo3::prepare_freethreaded_python();
-                Python::with_gil(|py| {
-                    let mut all_simple_rules = HashMap::new();
-                    let mut all_hard_rules = HashMap::new();
-                    let mut selected_simple_rules = Vec::new();
-                    test_core(
-                        &[
-                            ("rule1", IfFound::AllRight),
-                            ("rule2", IfFound::AllRight),
-                            ("rule3", IfFound::AllRight),
-                            ("rule4", IfFound::AllRight),
-                            (
-                                r"\QThis is not a valid regex!@#$%^&*()_+\E",
-                                IfFound::RaiseError,
-                            ),
-                            (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
-                        ],
-                        &mut all_simple_rules,
-                        &mut all_hard_rules,
-                        &mut selected_simple_rules,
-                        4,
-                        1,
-                        4,
-                    )
-                })
-                .unwrap()
-            }
             #[test]
             #[should_panic(expected = r#"'None' must be a 'List[ Class, Class... ]'")"#)]
-            fn __new_e_1() {
+            fn data_unpackaging_e_0() {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| {
                     let empty_obj = py.None();
                     TemplateValidator::__new__(empty_obj)
                 })
                 .unwrap();
+            }
+            #[test]
+            #[should_panic(expected = r"must be a 'Class'")]
+            fn data_unpackaging_e_1() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| {
+                    let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut selected_simple_rules: Vec<String> = Vec::new();
+                    let mut python_classes: HashMap<usize, PyObject> = HashMap::new();
+                    let obj1 = types::PyBool::new(py, true);
+                    let obj_main = types::PyList::new(py, [obj1].iter());
+
+                    init::data_unpackaging(
+                        py,
+                        obj_main.to_object(py),
+                        &mut python_classes,
+                        &mut all_simple_rules,
+                        &mut all_hard_rules,
+                        &mut selected_simple_rules,
+                    )
+                    .unwrap()
+                });
             }
         }
     }

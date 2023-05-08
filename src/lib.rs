@@ -1,15 +1,13 @@
 //! `Pystval` - `Rust` библиотека для `Python`. Выполняет валидацию данных (строки) с помощью регулярных выражений
 
-mod check;
+mod check_convert;
 mod constant;
-mod convert;
 mod init;
 mod unit_tests;
 
 use constant::*;
 use pyo3::gc::{PyTraverseError, PyVisit};
 use pyo3::{prelude::*, types};
-
 use std::hash::Hash;
 use std::{collections::HashMap, str};
 
@@ -77,14 +75,12 @@ impl TemplateValidator {
                 &mut all_hard_rules,
                 &mut selected_simple_rules,
             )?;
-            let x = Self {
+            Ok(Self {
                 all_hard_rules,
                 all_simple_rules,
                 python_classes,
                 selected_simple_rules: regex::RegexSet::new(selected_simple_rules).unwrap(),
-            };
-            dbg!(&x);
-            Ok(x)
+            })
         })
     }
 
