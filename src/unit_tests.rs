@@ -60,7 +60,7 @@ mod tests {
     use crate::*;
 
     #[cfg(test)]
-    mod convert_tests {
+    mod convert {
         use super::*;
 
         mod fn_bytes_to_string_utf8 {
@@ -69,7 +69,8 @@ mod tests {
             #[test]
             fn bytes_to_string_utf8_t_0() {
                 assert_eq!(
-                    convert::bytes_to_string_utf8("!!! 😊 😎 & 🚀".as_bytes()).unwrap(),
+                    check_convert::convert::bytes_to_string_utf8("!!! 😊 😎 & 🚀".as_bytes())
+                        .unwrap(),
                     "!!! 😊 😎 & 🚀"
                 );
             }
@@ -78,7 +79,7 @@ mod tests {
             #[should_panic]
             fn bytes_to_string_utf8_f_0() {
                 pyo3::prepare_freethreaded_python();
-                convert::bytes_to_string_utf8(b"\xF0\x90\x80").unwrap();
+                check_convert::convert::bytes_to_string_utf8(b"\xF0\x90\x80").unwrap();
             }
         }
 
@@ -88,7 +89,8 @@ mod tests {
             #[test]
             fn string_to_default_regex_t_0() {
                 assert_eq!(
-                    convert::string_to_default_regex(String::from("[0-9]+?")).to_string(),
+                    check_convert::convert::string_to_default_regex(String::from("[0-9]+?"))
+                        .to_string(),
                     regex::Regex::new("[0-9]+?").unwrap().to_string()
                 );
             }
@@ -96,7 +98,7 @@ mod tests {
             #[test]
             #[should_panic]
             fn string_to_default_regex_f_0() {
-                convert::string_to_default_regex(String::from(
+                check_convert::convert::string_to_default_regex(String::from(
                     r"\QThis is not a valid regex!@#$%^&*()_+\E",
                 ));
             }
@@ -106,7 +108,9 @@ mod tests {
                 expected = "error: look-around, including look-ahead and look-behind, is not supported"
             )]
             fn string_to_default_regex_f_1() {
-                convert::string_to_default_regex(String::from(r"(\b\w+\b)(?=.+?\1)"));
+                check_convert::convert::string_to_default_regex(String::from(
+                    r"(\b\w+\b)(?=.+?\1)",
+                ));
             }
         }
 
@@ -115,20 +119,21 @@ mod tests {
             #[test]
             fn string_to_fancy_regex_t_0() {
                 assert_eq!(
-                    convert::string_to_default_regex(String::from("[0-9]+?")).to_string(),
+                    check_convert::convert::string_to_default_regex(String::from("[0-9]+?"))
+                        .to_string(),
                     regex::Regex::new("[0-9]+?").unwrap().to_string()
                 );
             }
 
             #[test]
             fn string_to_fancy_regex_t_1() {
-                convert::string_to_fancy_regex(String::from(r"(\b\w+\b)(?=.+?\1)"));
+                check_convert::convert::string_to_fancy_regex(String::from(r"(\b\w+\b)(?=.+?\1)"));
             }
 
             #[test]
             #[should_panic]
             fn string_to_fancy_regex_f_0() {
-                convert::string_to_fancy_regex(String::from(
+                check_convert::convert::string_to_fancy_regex(String::from(
                     r"\QThis is not a valid regex!@#$%^&*()_+\E",
                 ));
             }
@@ -142,13 +147,16 @@ mod tests {
 
             #[test]
             fn is_default_regex_fisrt_step_t_0() {
-                assert_eq!(check::is_default_regex_fisrt_step("[0-9]+"), true);
+                assert_eq!(
+                    check_convert::check::is_default_regex_fisrt_step("[0-9]+"),
+                    true
+                );
             }
 
             #[test]
             fn is_default_regex_fisrt_step_t_1() {
                 assert_eq!(
-                    check::is_default_regex_fisrt_step(
+                    check_convert::check::is_default_regex_fisrt_step(
                         r"\QThis is not a valid regex!@#$%^&*()_+\E"
                     ),
                     false
@@ -158,7 +166,7 @@ mod tests {
             #[test]
             fn is_default_regex_fisrt_step_t_2() {
                 assert_eq!(
-                    check::is_default_regex_fisrt_step(r"(\b\w+\b)(?=.+?\1)"),
+                    check_convert::check::is_default_regex_fisrt_step(r"(\b\w+\b)(?=.+?\1)"),
                     false
                 );
             }
@@ -169,13 +177,18 @@ mod tests {
 
             #[test]
             fn is_fancy_regex_second_step_t_0() {
-                assert_eq!(check::is_fancy_regex_second_step("[0-9]+"), true);
+                assert_eq!(
+                    check_convert::check::is_fancy_regex_second_step("[0-9]+"),
+                    true
+                );
             }
 
             #[test]
             fn is_fancy_regex_second_step_t_1() {
                 assert_eq!(
-                    check::is_fancy_regex_second_step(r"\QThis is not a valid regex!@#$%^&*()_+\E"),
+                    check_convert::check::is_fancy_regex_second_step(
+                        r"\QThis is not a valid regex!@#$%^&*()_+\E"
+                    ),
                     false
                 );
             }
@@ -183,7 +196,7 @@ mod tests {
             #[test]
             fn is_fancy_regex_second_step_t_2() {
                 assert_eq!(
-                    check::is_fancy_regex_second_step(r"(\b\w+\b)(?=.+?\1)"),
+                    check_convert::check::is_fancy_regex_second_step(r"(\b\w+\b)(?=.+?\1)"),
                     true
                 );
             }
@@ -192,8 +205,127 @@ mod tests {
     mod init_tests {
         use super::*;
 
-        mod fn__TemplateValidator_Constructor {
+        mod fn_new {
+
+            fn test_core(
+                rules: &[(&str, IfFound)],
+                all_simple_rules: &mut HashMap<RuleStatus, usize>,
+                all_hard_rules: &mut HashMap<RuleStatus, usize>,
+                selected_simple_rules: &mut Vec<String>,
+                count_all_simple_rules: usize,
+                count_all_hard_rules: usize,
+                count_selected_simple_rules: usize,
+            ) -> PyResult<()> {
+                Python::with_gil(|py| -> PyResult<()> {
+                    let dict = types::PyDict::new(py);
+                    for (key, value) in rules.iter() {
+                        dict.set_item(key, Py::new(py, value.to_owned()).unwrap())?;
+                    }
+                    let class = types::PyType::new::<TemplateValidator>(py);
+                    class.setattr("rules", dict)?;
+                    init::get_any_regex_from_class(
+                        &class,
+                        1,
+                        all_simple_rules,
+                        all_hard_rules,
+                        selected_simple_rules,
+                    )?;
+                    assert_eq!(all_simple_rules.len(), count_all_simple_rules);
+                    assert_eq!(all_hard_rules.len(), count_all_hard_rules);
+                    assert_eq!(selected_simple_rules.len(), count_selected_simple_rules);
+                    Ok(())
+                })
+            }
+
             use super::*;
+
+            #[test]
+            fn __new_t_1() -> PyResult<()> {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|_| -> PyResult<()> {
+                    let mut all_simple_rules = HashMap::new();
+                    let mut all_hard_rules = HashMap::new();
+                    let mut selected_simple_rules = Vec::new();
+                    test_core(
+                        &[
+                            ("rule1", IfFound::AllRight),
+                            ("rule2", IfFound::RaiseError),
+                            (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                        ],
+                        &mut all_simple_rules,
+                        &mut all_hard_rules,
+                        &mut selected_simple_rules,
+                        2,
+                        1,
+                        2,
+                    )
+                })
+            }
+            #[test]
+            fn __new_t_2() -> PyResult<()> {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|_| -> PyResult<()> {
+                    let mut all_simple_rules = HashMap::new();
+                    let mut all_hard_rules = HashMap::new();
+                    let mut selected_simple_rules = Vec::new();
+                    test_core(
+                        &[
+                            ("rule1", IfFound::AllRight),
+                            ("rule2", IfFound::AllRight),
+                            ("rule3", IfFound::AllRight),
+                            ("rule4", IfFound::AllRight),
+                            ("rule2", IfFound::RaiseError),
+                            (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                        ],
+                        &mut all_simple_rules,
+                        &mut all_hard_rules,
+                        &mut selected_simple_rules,
+                        4,
+                        1,
+                        4,
+                    )
+                })
+            }
+            #[test]
+            #[should_panic(expected = r"PyErr { type: <class 'TypeError'>")]
+            fn __new_e_0() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| {
+                    let mut all_simple_rules = HashMap::new();
+                    let mut all_hard_rules = HashMap::new();
+                    let mut selected_simple_rules = Vec::new();
+                    test_core(
+                        &[
+                            ("rule1", IfFound::AllRight),
+                            ("rule2", IfFound::AllRight),
+                            ("rule3", IfFound::AllRight),
+                            ("rule4", IfFound::AllRight),
+                            (
+                                r"\QThis is not a valid regex!@#$%^&*()_+\E",
+                                IfFound::RaiseError,
+                            ),
+                            (r"(\b\w+\b)(?=.+?\1)", IfFound::RaiseError),
+                        ],
+                        &mut all_simple_rules,
+                        &mut all_hard_rules,
+                        &mut selected_simple_rules,
+                        4,
+                        1,
+                        4,
+                    )
+                })
+                .unwrap()
+            }
+            #[test]
+            #[should_panic(expected = r#"'None' must be a 'List[ Class, Class... ]'")"#)]
+            fn __new_e_1() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| {
+                    let empty_obj = py.None();
+                    TemplateValidator::__new__(empty_obj)
+                })
+                .unwrap();
+            }
         }
     }
 }
