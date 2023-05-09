@@ -29,32 +29,32 @@ class BaseError(Exception):
 # =============================================
 
 
-class Exploit(BaseError):
-    template = "detected exploit {x}"
-    rules = {r"(?P<x>virus)": It.MustBeFoundHere}
+class AvatarMissing(BaseError):
+    template = "Должен быть найден элемент Avatar {x}"
+    rules = {r"Avatar": It.MustBeFoundHere}
 
 
-class CustomError(BaseError):
-    template = "messsage message message"
-    rules = {r"rule5##": It.NotToBeFoundHere,
-             r"(\w+?)(.+\1)": It.MustBeFoundHere,
-             r"rule7##": It.NotToBeFoundHere,
-             r"rule8##": It.MustBeFoundHere,
-             }
+# class CustomError(BaseError):
+#     template = "messsage message message"
+#     rules = {r"rule5##": It.NotToBeFoundHere,
+#              r"(\w+?)(.+\1)": It.MustBeFoundHere,
+#              r"rule7##": It.NotToBeFoundHere,
+#              r"text": It.MustBeFoundHere,
+#              }
 
 # ==============================================
 
 
 # try:
 #     validator_html = TemplateValidator(
-#         flags=[Exploit, CustomError])
+#         flags=[AvatarMissing, CustomError])
 # except Exception as e:
-#     print(f"Произошла ошибка: {e}")
+#     print(f"Произошла Avatarошибка: {e}")
 async def init():
     validator_sample = TemplateValidator(
-        [Exploit, CustomError])
+        [AvatarMissing])
     text_bytes = str(
-        "text text text new_connect_2450 vrus text").encode('UTF-8')
+        " text text text vatar text").encode('UTF-8')
     try:
         await validator_sample.validate(text_bytes)
 
