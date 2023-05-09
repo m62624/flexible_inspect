@@ -1,18 +1,21 @@
 //! `Pystval` - `Rust` библиотека для `Python`. Выполняет валидацию данных (строки) с помощью регулярных выражений
 
+// имя атрибута, где хранится само сообщение и **extra переменные из класса Python
+pub const MESSAGE_WITH_EXTRA_FROM_CLASS_PY: &'static str = "template";
+// имя атрибута, где хранится регулярные выражения из класса Python
+pub const RULES_FROM_CLASS_PY: &'static str = "rules";
+
 // Проверка и конвертация данных из Python в Rust и обратно
 mod check_convert;
-// Глобальные переменные, необходимые для определеения атрибутов класса
-mod constant;
 // Компоненты необходимые для конструктора `TemplateValidator`
 mod init;
+// Создание и получение данных ошибок
 mod make_errors;
 // Компоненты для метода, где проходит сама валидация
 mod validate;
 // Все юнит тесты выненсены в отдельный модуль
 mod unit_tests;
 
-use constant::*;
 // Отвечает за взаимодействие сборщика мусора СPython с Rust
 use pyo3::gc::{PyTraverseError, PyVisit};
 

@@ -1,7 +1,3 @@
-use std::sync::Arc;
-
-use pyo3::exceptions;
-
 use super::*;
 impl TemplateValidator {
     pub fn core_validate(&self, text: String) -> PyResult<()> {
