@@ -30,8 +30,8 @@ class BaseError(Exception):
 
 
 class AvatarMissing(BaseError):
-    template = "Должен быть найден элемент Avatar {x}"
-    rules = {r"Avatar": It.MustBeFoundHere}
+    template = "Присутсвует: {aboba}"
+    rules = {r"(?P<aboba>key=\d{4})": It.MustBeFoundHere}
 
 
 # class CustomError(BaseError):
@@ -54,7 +54,7 @@ async def init():
     validator_sample = TemplateValidator(
         [AvatarMissing])
     text_bytes = str(
-        " text text text vatar text").encode('UTF-8')
+        " text text text key=2134 text").encode('UTF-8')
     try:
         await validator_sample.validate(text_bytes)
 

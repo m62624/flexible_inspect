@@ -44,8 +44,8 @@ pub fn extra_from_class<'a, T: AsRef<str>>(
                 })
             })
             .collect::<Vec<_>>())
-    } else {
-        Ok(Vec::new())
+    }else {
+    Ok(Vec::new())
     }
 }
 
