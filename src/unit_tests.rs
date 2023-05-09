@@ -502,36 +502,187 @@ mod tests {
         }
     }
     mod make_errors_tests {
-
-        use super::*;
-        #[test]
-        fn reate_error_t_0() {
-            pyo3::prepare_freethreaded_python();
-            Python::with_gil(|py| {
-                let obj = py.eval("object()", None, None).unwrap();
-                let result = make_errors::create_error(&obj.to_object(py), None).is_err();
-                assert_eq!(result, true);
+        fn create_obj(rules: Option<&[(&str, It)]>, msg: &str) -> PyResult<PyObject> {
+            Python::with_gil(|py| -> PyResult<PyObject> {
+                let dict = types::PyDict::new(py);
+                if let Some(rules) = rules {
+                    for (key, value) in rules.iter() {
+                        dict.set_item(key, Py::new(py, value.to_owned()).unwrap())?;
+                    }
+                }
+                let class = types::PyType::new::<TemplateValidator>(py);
+                class.setattr(RULES_FROM_CLASS_PY, dict)?;
+                class.setattr(
+                    MESSAGE_WITH_EXTRA_FROM_CLASS_PY,
+                    types::PyString::new(py, format!("{}", msg).as_str()),
+                )?;
+                Ok(class.to_object(py))
             })
         }
+        use super::*;
+        mod fn_create_error {
+            use super::*;
+            #[test]
+            fn create_error_t_0() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| {
+                    let obj = py.eval("object()", None, None).unwrap();
+                    let result = make_errors::create_error(&obj.to_object(py), None).is_err();
+                    assert_eq!(result, true);
+                })
+            }
 
-        #[test]
-        #[should_panic]
-        fn create_error_e_0() {
-            pyo3::prepare_freethreaded_python();
-            Python::with_gil(|py| {
-                let empty_obj = py.None();
-                make_errors::create_error(&empty_obj, None).unwrap();
-            });
+            #[test]
+            #[should_panic]
+            fn create_error_e_0() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| {
+                    let empty_obj = py.None();
+                    make_errors::create_error(&empty_obj, None).unwrap();
+                });
+            }
         }
-        #[test]
-        #[should_panic]
-        fn create_error_e_1() {
-            pyo3::prepare_freethreaded_python();
-            Python::with_gil(|py| {
-                let empty_obj = py.None();
-                let extra_hm: HashMap<String, String> = HashMap::new();
-                make_errors::create_error(&empty_obj, Some(extra_hm)).unwrap();
-            });
+        mod fn_extra_from_class {
+            use super::*;
+
+            #[test]
+            fn extra_from_class_t_1() -> PyResult<()> {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| -> PyResult<()> {
+                    let rules = &[
+                        (r"(?P<x>rule1)", It::MustBeFoundHere),
+                        ("rule2", It::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                    ];
+                    let class_py = create_obj(Some(rules), "message {x}")?;
+                    let extra = make_errors::extra_from_class(
+                        &class_py.to_object(py).downcast(py).unwrap(),
+                        MESSAGE_WITH_EXTRA_FROM_CLASS_PY,
+                    )?;
+                    assert_eq!(extra[0], "x");
+                    Ok(())
+                })
+            }
+            #[test]
+            fn extra_from_class_e_0() -> PyResult<()> {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| -> PyResult<()> {
+                    let rules = &[
+                        (r"(?P<x>rule1)", It::MustBeFoundHere),
+                        ("rule2", It::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                    ];
+                    let class_py = create_obj(Some(rules), "message")?;
+                    let extra = make_errors::extra_from_class(
+                        &class_py.to_object(py).downcast(py).unwrap(),
+                        MESSAGE_WITH_EXTRA_FROM_CLASS_PY,
+                    )?;
+                    Ok(())
+                })
+            }
+        }
+        mod fn_error_or_ok {
+            use super::*;
+
+            #[test]
+            // (It::MustBeFoundHere, true) => Ok(())
+            fn error_or_ok_t_0() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|_| {
+                    let class_py = create_obj(None, "x").unwrap();
+                    make_errors::error_or_ok(
+                        &class_py,
+                        HashMap::new(),
+                        &RuleStatus {
+                            id: 1,
+                            status: It::MustBeFoundHere,
+                        },
+                        true,
+                    )
+                    .unwrap();
+                });
+            }
+
+            // (It::NotToBeFoundHere, false) => Ok(())
+            #[test]
+            fn error_or_ok_t_1() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|_| {
+                    let class_py = create_obj(None, "x").unwrap();
+                    make_errors::error_or_ok(
+                        &class_py,
+                        HashMap::new(),
+                        &RuleStatus {
+                            id: 1,
+                            status: It::NotToBeFoundHere,
+                        },
+                        false,
+                    )
+                    .unwrap();
+                });
+            }
+
+            #[test]
+            #[should_panic]
+            // (It::MustBeFoundHere, false) =>  error()
+            fn error_or_ok_e_0() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|_| {
+                    let class_py = create_obj(None, "x").unwrap();
+                    make_errors::error_or_ok(
+                        &class_py,
+                        HashMap::new(),
+                        &RuleStatus {
+                            id: 1,
+                            status: It::MustBeFoundHere,
+                        },
+                        false,
+                    )
+                    .unwrap();
+                });
+            }
+
+            #[test]
+            #[should_panic]
+            // (It::NotToBeFoundHere, true) =>  error()
+            fn error_or_ok_e_1() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|_| {
+                    let class_py = create_obj(None, "x").unwrap();
+                    make_errors::error_or_ok(
+                        &class_py,
+                        HashMap::new(),
+                        &RuleStatus {
+                            id: 1,
+                            status: It::NotToBeFoundHere,
+                        },
+                        true,
+                    )
+                    .unwrap();
+                });
+            }
+
+            #[test]
+            #[should_panic]
+            // (It::NotToBeFoundHere, true) =>  error() // some extra
+            fn error_or_ok_e_2() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|_| {
+                    let class_py = create_obj(None, "x").unwrap();
+                    let mut extra: HashMap<String, String> = HashMap::new();
+                    extra.insert(String::from("x"), String::from("101"));
+                    make_errors::error_or_ok(
+                        &class_py,
+                        extra,
+                        &RuleStatus {
+                            id: 1,
+                            status: It::NotToBeFoundHere,
+                        },
+                        true,
+                    )
+                    .unwrap();
+                });
+            }
         }
     }
 }

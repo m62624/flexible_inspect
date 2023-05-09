@@ -14,11 +14,13 @@ pub fn create_error(obj: &PyObject, extra_hm: Option<HashMap<String, String>>) -
                 extra.set_item(key, value)?;
             }
         }
-        let obj = obj
-            .downcast::<PyAny>(py)?
-            .call(PyTuple::empty(py), Some(extra))?;
+        let obj = obj.downcast::<types::PyType>(py)?;
+        obj.setattr(EXTRA_FROM_CLASS_PY, extra)?;
+        // let obj = obj
+        //     .downcast::<PyAny>(py)?
+        //     .call(PyTuple::empty(py), Some(extra))?;
         // Создаем объект класса & Возвращаем ошибку
-        Err(PyErr::new::<PyException, _>(obj.into_py(py)))
+        Err(PyErr::new::<PyException, _>(obj.to_object(py)))
     })
 }
 pub fn extra_from_class<'a, T: AsRef<str>>(

@@ -4,7 +4,7 @@
 pub const MESSAGE_WITH_EXTRA_FROM_CLASS_PY: &'static str = "template";
 // имя атрибута, где хранится регулярные выражения из класса Python
 pub const RULES_FROM_CLASS_PY: &'static str = "rules";
-
+pub const EXTRA_FROM_CLASS_PY: &'static str = "extra";
 // Проверка и конвертация данных из Python в Rust и обратно
 mod check_convert;
 // Компоненты необходимые для конструктора `TemplateValidator`
