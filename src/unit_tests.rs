@@ -501,11 +501,37 @@ mod tests {
             }
         }
     }
-    // mod validate_tests {
-    //     use super::*;
-    //     #[test]
-    //     fn validate_test() -> PyResult<()> {
-    //         }
-    //     }
-    // }
+    mod make_errors_tests {
+
+        use super::*;
+        #[test]
+        fn reate_error_t_0() {
+            pyo3::prepare_freethreaded_python();
+            Python::with_gil(|py| {
+                let obj = py.eval("object()", None, None).unwrap();
+                let result = make_errors::create_error(&obj.to_object(py), None).is_err();
+                assert_eq!(result, true);
+            })
+        }
+
+        #[test]
+        #[should_panic]
+        fn create_error_e_0() {
+            pyo3::prepare_freethreaded_python();
+            Python::with_gil(|py| {
+                let empty_obj = py.None();
+                make_errors::create_error(&empty_obj, None).unwrap();
+            });
+        }
+        #[test]
+        #[should_panic]
+        fn create_error_e_1() {
+            pyo3::prepare_freethreaded_python();
+            Python::with_gil(|py| {
+                let empty_obj = py.None();
+                let extra_hm: HashMap<String, String> = HashMap::new();
+                make_errors::create_error(&empty_obj, Some(extra_hm)).unwrap();
+            });
+        }
+    }
 }
