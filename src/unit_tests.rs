@@ -877,5 +877,136 @@ mod tests {
             )
             .unwrap();
         }
+        // Тестирование функций fn_just_look_at_this
+        mod fn_just_look_at_this {
+            use super::*;
+
+            // Проверка запуска switch_loop_regex из just_look_at_this
+            #[test]
+            fn just_look_at_this_t_0() -> PyResult<()> {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| -> PyResult<()> {
+                    let rules = &[
+                        ("rule1", It::MustBeFoundHere),
+                        ("rule2", It::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                    ];
+                    let dict = types::PyDict::new(py);
+                    for (key, value) in rules.iter() {
+                        dict.set_item(key, Py::new(py, value.to_owned()).unwrap())?;
+                    }
+                    let class = types::PyType::new::<TemplateValidator>(py);
+                    class.setattr(RULES_FROM_CLASS_PY, dict)?;
+                    let obj_main = types::PyList::new(py, [class].iter());
+
+                    let tmpv = TemplateValidator::__new__(obj_main.into())?;
+                    validate::just_look_at_this(
+                        py,
+                        &tmpv,
+                        &"111".to_string(),
+                        true,
+                        &RuleStatus {
+                            id: 0,
+                            status: It::MustBeFoundHere,
+                        },
+                        "111",
+                    )?;
+                    Ok(())
+                })
+            }
+
+            // Проверка запуска switch_loop_regex из just_look_at_this
+            // и заполнение пустым вектором
+            #[test]
+            #[should_panic]
+            fn just_look_at_this_t_1() {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| {
+                    let rules = &[
+                        ("rule1", It::MustBeFoundHere),
+                        ("rule2", It::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                    ];
+                    let dict = types::PyDict::new(py);
+                    for (key, value) in rules.iter() {
+                        dict.set_item(key, Py::new(py, value.to_owned()).unwrap())
+                            .unwrap();
+                    }
+                    let class = types::PyType::new::<TemplateValidator>(py);
+                    class.setattr(RULES_FROM_CLASS_PY, dict).unwrap();
+                    let obj_main = types::PyList::new(py, [class].iter());
+
+                    let tmpv = TemplateValidator::__new__(obj_main.into()).unwrap();
+                    validate::just_look_at_this(
+                        py,
+                        &tmpv,
+                        &"___".to_string(),
+                        true,
+                        &RuleStatus {
+                            id: 0,
+                            status: It::MustBeFoundHere,
+                        },
+                        "111",
+                    )
+                    .unwrap();
+                })
+            }
+        }
+        // тестирование функций fn_core_validate
+        mod core_validate_tests {
+            use super::*;
+
+            #[test]
+            fn core_validate_tests_t_0() -> PyResult<()> {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| -> PyResult<()> {
+                    let rules = &[
+                        ("rule1", It::MustBeFoundHere),
+                        ("rule2", It::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                    ];
+                    let dict = types::PyDict::new(py);
+                    for (key, value) in rules.iter() {
+                        dict.set_item(key, Py::new(py, value.to_owned()).unwrap())?;
+                    }
+                    let class = types::PyType::new::<TemplateValidator>(py);
+                    class.setattr(RULES_FROM_CLASS_PY, dict)?;
+                    let obj_main = types::PyList::new(py, [class].iter());
+
+                    let tmpv = TemplateValidator::__new__(obj_main.into())?;
+                    tmpv.core_validate("rule1".to_string())?;
+                    Ok(())
+                })
+            }
+        }
+
+        // Тестирование функций fn_validate
+        // пока не ясно как запускать event loop из теста
+        // в будущем может быть тест обновлен и запущен
+        mod validate_test {
+            use super::*;
+            #[allow(dead_code)]
+            fn run_validate_test_t_0() -> PyResult<()> {
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| -> PyResult<()> {
+                    let rules = &[
+                        ("rule1", It::MustBeFoundHere),
+                        ("rule2", It::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                    ];
+                    let dict = types::PyDict::new(py);
+                    for (key, value) in rules.iter() {
+                        dict.set_item(key, Py::new(py, value.to_owned()).unwrap())?;
+                    }
+                    let class = types::PyType::new::<TemplateValidator>(py);
+                    class.setattr(RULES_FROM_CLASS_PY, dict)?;
+                    let obj_main = types::PyList::new(py, [class].iter());
+
+                    let tmpv = TemplateValidator::__new__(obj_main.into())?;
+                    tmpv.validate(py, types::PyBytes::new(py, &[0x41u8, 0x41u8, 0x42u8]))?;
+                    Ok(())
+                })
+            }
+        }
     }
 }
