@@ -34,12 +34,12 @@ pub mod convert {
     // а значит, можно позже произвести конвертацию сразу, когда необходим будет `regex` для валидаций,
 
     /// Конвертация `String` в `default regex`
-    pub fn string_to_default_regex(line: String) -> regex::Regex {
-        regex::Regex::new(&line).unwrap()
+    pub fn string_to_default_regex(line: &String) -> regex::Regex {
+        regex::Regex::new(line).unwrap()
     }
 
     /// Конвертация `String` в `fancy regex`
-    pub fn string_to_fancy_regex(line: String) -> fancy_regex::Regex {
-        fancy_regex::Regex::new(&line).unwrap()
+    pub fn string_to_fancy_regex(line: &String) -> fancy_regex::Regex {
+        fancy_regex::Regex::new(line).unwrap()
     }
 }

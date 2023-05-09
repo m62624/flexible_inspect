@@ -5,8 +5,8 @@ pub fn data_unpackaging(
     py: Python,
     obj: PyObject,
     python_classes: &mut HashMap<usize, PyObject>,
-    all_simple_rules: &mut HashMap<RuleStatus, usize>,
-    all_hard_rules: &mut HashMap<RuleStatus, usize>,
+    all_simple_rules: &mut HashMap<String, RuleStatus>,
+    all_hard_rules: &mut HashMap<String, RuleStatus>,
     selected_simple_rules: &mut Vec<String>,
 ) -> PyResult<()> {
     // Проверяем что переданый объект является списком, иначе ошибка типа переменной
@@ -44,8 +44,8 @@ pub fn data_unpackaging(
 pub fn get_any_regex_from_class(
     class_py: &types::PyType,
     id_class: usize,
-    all_simple_rules: &mut HashMap<RuleStatus, usize>,
-    all_hard_rules: &mut HashMap<RuleStatus, usize>,
+    all_simple_rules: &mut HashMap<String, RuleStatus>,
+    all_hard_rules: &mut HashMap<String, RuleStatus>,
     selected_simple_rules: &mut Vec<String>,
 ) -> PyResult<()> {
     // Проверяем что класс имеет атрибут RULES_FROM_CLASS_PY, иначе ошибка атрибута
@@ -60,11 +60,12 @@ pub fn get_any_regex_from_class(
                         // Проверяем что ключ является валидным регулярным выражением (простого типа)
                         if check_convert::check::is_default_regex_fisrt_step(&key) {
                             all_simple_rules
-                                .insert(RuleStatus::new(key.to_string(), value), id_class);
+                                .insert(key.to_string(), RuleStatus::new(id_class, value));
                             selected_simple_rules.push(key);
                             // Проверяем что ключ является валидным регулярным выражением (сложного типа)
                         } else if check_convert::check::is_fancy_regex_second_step(&key) {
-                            all_hard_rules.insert(RuleStatus::new(key, value), id_class);
+                            all_hard_rules
+                                .insert(key.to_string(), RuleStatus::new(id_class, value));
                         } else {
                             return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                                 "{} --- Invalid regular expression",

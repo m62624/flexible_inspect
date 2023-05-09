@@ -88,7 +88,7 @@ mod tests {
             #[test]
             fn string_to_default_regex_t_0() {
                 assert_eq!(
-                    check_convert::convert::string_to_default_regex(String::from("[0-9]+?"))
+                    check_convert::convert::string_to_default_regex(&String::from("[0-9]+?"))
                         .to_string(),
                     regex::Regex::new("[0-9]+?").unwrap().to_string()
                 );
@@ -97,7 +97,7 @@ mod tests {
             #[test]
             #[should_panic]
             fn string_to_default_regex_f_0() {
-                check_convert::convert::string_to_default_regex(String::from(
+                check_convert::convert::string_to_default_regex(&String::from(
                     r"\QThis is not a valid regex!@#$%^&*()_+\E",
                 ));
             }
@@ -107,7 +107,7 @@ mod tests {
                 expected = "error: look-around, including look-ahead and look-behind, is not supported"
             )]
             fn string_to_default_regex_f_1() {
-                check_convert::convert::string_to_default_regex(String::from(
+                check_convert::convert::string_to_default_regex(&String::from(
                     r"(\b\w+\b)(?=.+?\1)",
                 ));
             }
@@ -118,7 +118,7 @@ mod tests {
             #[test]
             fn string_to_fancy_regex_t_0() {
                 assert_eq!(
-                    check_convert::convert::string_to_default_regex(String::from("[0-9]+?"))
+                    check_convert::convert::string_to_default_regex(&String::from("[0-9]+?"))
                         .to_string(),
                     regex::Regex::new("[0-9]+?").unwrap().to_string()
                 );
@@ -126,13 +126,13 @@ mod tests {
 
             #[test]
             fn string_to_fancy_regex_t_1() {
-                check_convert::convert::string_to_fancy_regex(String::from(r"(\b\w+\b)(?=.+?\1)"));
+                check_convert::convert::string_to_fancy_regex(&String::from(r"(\b\w+\b)(?=.+?\1)"));
             }
 
             #[test]
             #[should_panic]
             fn string_to_fancy_regex_f_0() {
-                check_convert::convert::string_to_fancy_regex(String::from(
+                check_convert::convert::string_to_fancy_regex(&String::from(
                     r"\QThis is not a valid regex!@#$%^&*()_+\E",
                 ));
             }
@@ -205,8 +205,8 @@ mod tests {
         use super::*;
         fn fn_core_get_any_regex_from_class(
             rules: &[(&str, It)],
-            all_simple_rules: &mut HashMap<RuleStatus, usize>,
-            all_hard_rules: &mut HashMap<RuleStatus, usize>,
+            all_simple_rules: &mut HashMap<String, RuleStatus>,
+            all_hard_rules: &mut HashMap<String, RuleStatus>,
             selected_simple_rules: &mut Vec<String>,
             count_all_simple_rules: usize,
             count_all_hard_rules: usize,
@@ -350,8 +350,8 @@ mod tests {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| {
                     let rules = &[("rule1", FakeObj::__new__())];
-                    let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
-                    let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut all_simple_rules: HashMap<String, RuleStatus> = HashMap::new();
+                    let mut all_hard_rules: HashMap<String, RuleStatus> = HashMap::new();
                     let mut selected_simple_rules: Vec<String> = Vec::new();
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {
@@ -374,8 +374,8 @@ mod tests {
             fn fn_core_get_any_regex_from_class_e_3() {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| {
-                    let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
-                    let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut all_simple_rules: HashMap<String, RuleStatus> = HashMap::new();
+                    let mut all_hard_rules: HashMap<String, RuleStatus> = HashMap::new();
                     let mut selected_simple_rules: Vec<String> = Vec::new();
                     let no_dict = types::PyBool::new(py, true);
                     let class = types::PyType::new::<TemplateValidator>(py);
@@ -396,8 +396,8 @@ mod tests {
             fn fn_core_get_any_regex_from_class_e_4() {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| {
-                    let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
-                    let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut all_simple_rules: HashMap<String, RuleStatus> = HashMap::new();
+                    let mut all_hard_rules: HashMap<String, RuleStatus> = HashMap::new();
                     let mut selected_simple_rules: Vec<String> = Vec::new();
                     let fake_class = types::PyType::new::<It>(py);
                     init::get_any_regex_from_class(
@@ -418,8 +418,8 @@ mod tests {
             fn data_unpackaging_t_0() -> PyResult<()> {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| -> PyResult<()> {
-                    let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
-                    let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut all_simple_rules: HashMap<String, RuleStatus> = HashMap::new();
+                    let mut all_hard_rules: HashMap<String, RuleStatus> = HashMap::new();
                     let mut selected_simple_rules: Vec<String> = Vec::new();
                     let mut python_classes: HashMap<usize, PyObject> = HashMap::new();
 
@@ -481,8 +481,8 @@ mod tests {
             fn data_unpackaging_e_1() {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| {
-                    let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
-                    let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
+                    let mut all_simple_rules: HashMap<String, RuleStatus> = HashMap::new();
+                    let mut all_hard_rules: HashMap<String, RuleStatus> = HashMap::new();
                     let mut selected_simple_rules: Vec<String> = Vec::new();
                     let mut python_classes: HashMap<usize, PyObject> = HashMap::new();
                     let obj1 = types::PyBool::new(py, true);

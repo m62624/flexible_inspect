@@ -29,12 +29,9 @@ class BaseError(Exception):
 # =============================================
 
 
-class UsernameFieldMissingError(BaseError):
-    template = "messsage message message"
-    rules = {r"rule1": It.MustBeFoundHere,
-             r"rule2": It.NotToBeFoundHere,
-             r"rule3": It.NotToBeFoundHere,
-             r"rule4": It.MustBeFoundHere, }
+class Exploit(BaseError):
+    template = "detected exploit {x}"
+    rules = {r"(?P<x>virus)": It.MustBeFoundHere}
 
 
 class CustomError(BaseError):
@@ -50,13 +47,14 @@ class CustomError(BaseError):
 
 # try:
 #     validator_html = TemplateValidator(
-#         flags=[UsernameFieldMissingError, CustomError])
+#         flags=[Exploit, CustomError])
 # except Exception as e:
 #     print(f"Произошла ошибка: {e}")
 async def init():
     validator_sample = TemplateValidator(
-        [CustomError, UsernameFieldMissingError])
-    text_bytes = str("rule1 qlwlw rule7###").encode('UTF-8')
+        [Exploit, CustomError])
+    text_bytes = str(
+        "text text text new_connect_2450 vrus text").encode('UTF-8')
     try:
         await validator_sample.validate(text_bytes)
 

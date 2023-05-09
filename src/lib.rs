@@ -6,6 +6,7 @@ mod check_convert;
 mod constant;
 // Компоненты необходимые для конструктора `TemplateValidator`
 mod init;
+mod make_errors;
 // Компоненты для метода, где проходит сама валидация
 mod validate;
 // Все юнит тесты выненсены в отдельный модуль
@@ -16,8 +17,7 @@ use constant::*;
 use pyo3::gc::{PyTraverseError, PyVisit};
 
 use pyo3::{prelude::*, types};
-use std::sync::Arc;
-use std::{collections::HashMap, hash::Hash, str};
+use std::{collections::HashMap, str};
 
 // Используем разные виды regex для различной сложности выражений
 //=============================
@@ -27,23 +27,22 @@ use regex;
 
 /// Перечечисление, где даны варианты действия при положительном результате регулярных выражений
 #[pyclass]
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone)]
 pub enum It {
     MustBeFoundHere,
     NotToBeFoundHere,
 }
 
 /// Структура для хранения ошибок и статуса
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-
+#[derive(Debug, Clone)]
 pub struct RuleStatus {
-    rule: String,
+    id: usize,
     status: It,
 }
 
 impl RuleStatus {
-    pub fn new(rule: String, status: It) -> Self {
-        Self { rule, status }
+    pub fn new(id: usize, status: It) -> Self {
+        Self { id, status }
     }
 }
 
@@ -54,24 +53,13 @@ impl RuleStatus {
 pub struct TemplateValidator {
     // хранит все ошибки ( KEY: `ID` и VALUE: `PyError` )
     python_classes: HashMap<usize, PyObject>,
-    // хранит default regex ( KEY: `Regex & Status` и VALUE: `ID` )
-    all_simple_rules: HashMap<RuleStatus, usize>,
-    // хранит fancy regex ( KEY: `Regex & Status` и VALUE: `ID` )
-    all_hard_rules: HashMap<RuleStatus, usize>,
-    // Собираем все default regex и *одним проходом* проверяем все регулярки
+    // хранит default regex (KEY `Regex` и VALUE `ID CLASS & STATUS`)
+    all_simple_rules: HashMap<String, RuleStatus>,
+    // хранит fancy regex (KEY `Regex` и VALUE `ID CLASS & STATUS`)
+    all_hard_rules: HashMap<String, RuleStatus>,
+    // Собираем все default regex и *одним проходом* проверяем всё
     selected_simple_rules: regex::RegexSet,
 }
-
-// fn sleep_for<'p>(py: Python<'p>, secs: &'p PyAny) -> PyResult<&'p PyAny> {
-//     pyo3_asyncio::async_std::future_into_py_with_locals(
-//         py,
-//         pyo3_asyncio::async_std::get_current_locals(py)?,
-//         async move {
-//             // async_std::task::sleep(Duration::from_secs(secs)).await;
-//             Python::with_gil(|py| Ok(py.None()))
-//         },
-//     )
-// }
 
 // Реализация методов для TemplateValidator которые будут доступны в `Python`
 #[pymethods]
@@ -83,8 +71,8 @@ impl TemplateValidator {
     pub fn __new__(flags: PyObject) -> PyResult<Self> {
         Python::with_gil(|py| -> PyResult<Self> {
             let mut python_classes: HashMap<usize, PyObject> = HashMap::new();
-            let mut all_simple_rules: HashMap<RuleStatus, usize> = HashMap::new();
-            let mut all_hard_rules: HashMap<RuleStatus, usize> = HashMap::new();
+            let mut all_simple_rules: HashMap<String, RuleStatus> = HashMap::new();
+            let mut all_hard_rules: HashMap<String, RuleStatus> = HashMap::new();
             let mut selected_simple_rules: Vec<String> = Vec::new();
             init::data_unpackaging(
                 py,
@@ -109,10 +97,9 @@ impl TemplateValidator {
     #[pyo3(name = "validate")]
     fn validate<'py>(&self, py: Python<'py>, text_bytes: &types::PyBytes) -> PyResult<&'py PyAny> {
         let unsafe_self = unsafe { &*(&*self as *const Self) };
-        // let unsafe_self = self.clone();
         let text = check_convert::convert::bytes_to_string_utf8(text_bytes.as_bytes())?;
         pyo3_asyncio::async_std::future_into_py(py, async move {
-            unsafe_self.core_validate(text).await?;
+            unsafe_self.core_validate(text)?;
             Ok(Python::with_gil(|py| py.None()))
         })
     }
