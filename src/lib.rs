@@ -1,10 +1,14 @@
 //! `Pystval` - `Rust` библиотека для `Python`. Выполняет валидацию данных (строки) с помощью регулярных выражений
 
+//===============================================================================
 // имя атрибута, где хранится само сообщение и **extra переменные из класса Python
 pub const MESSAGE_WITH_EXTRA_FROM_CLASS_PY: &'static str = "template";
 // имя атрибута, где хранится регулярные выражения из класса Python
 pub const RULES_FROM_CLASS_PY: &'static str = "rules";
+// имя атрибута, где хранится **extra переменные для заполнения из класса Python
 pub const EXTRA_FROM_CLASS_PY: &'static str = "extra";
+//===============================================================================
+
 // Проверка и конвертация данных из Python в Rust и обратно
 mod check_convert;
 // Компоненты необходимые для конструктора `TemplateValidator`
@@ -18,7 +22,7 @@ mod unit_tests;
 
 // Отвечает за взаимодействие сборщика мусора СPython с Rust
 use pyo3::gc::{PyTraverseError, PyVisit};
-
+// Используем для получения данных из Python
 use pyo3::{prelude::*, types};
 use std::{collections::HashMap, str};
 
@@ -32,7 +36,9 @@ use regex;
 #[pyclass]
 #[derive(Debug, Clone)]
 pub enum It {
+    /// * `MustBeFoundHere` - Должно быть найдено, иначе будет вызвано исключение
     MustBeFoundHere,
+    /// * `NotToBeFoundHere` - Не должно быть найдено, иначе будет вызвано исключение
     NotToBeFoundHere,
 }
 

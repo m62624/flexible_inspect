@@ -36,7 +36,7 @@ class KeyMissing(BaseError):
 
 
 class CustomError(BaseError):
-    template = "Опасность отсутсвует повторение"
+    template = "Опасность отсутствует повторение"
     rules = {
         r"(\w+?)(.+\1)": It.MustBeFoundHere,
         r"(\w)(.+\1)": It.MustBeFoundHere,
@@ -45,11 +45,6 @@ class CustomError(BaseError):
 # ==============================================
 
 
-# try:
-#     validator_html = TemplateValidator(
-#         flags=[KeyMissing, CustomError])
-# except Exception as e:
-#     print(f"Произошла Avatarошибка: {e}")
 async def init():
     validator_sample = TemplateValidator(
         [CustomError])
@@ -60,6 +55,7 @@ async def init():
 
     except BaseError as e:
         print(f"ERROR MESSAGE: '{e.message}'")
+
 
 # =============================================
 loop = asyncio.get_event_loop()

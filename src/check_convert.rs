@@ -1,4 +1,6 @@
 use super::*;
+
+// Модуль для проверки конвертации
 pub mod check {
     use super::*;
 
@@ -14,6 +16,8 @@ pub mod check {
         fancy_regex::Regex::new(&line).is_ok()
     }
 }
+
+// Модуль для конвертации
 pub mod convert {
     use super::*;
     use pyo3::exceptions;

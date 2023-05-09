@@ -4,6 +4,7 @@ use pyo3::exceptions::PyException;
 use pyo3::types::PyDict;
 use std::collections::HashMap;
 
+/// Создаем ошибку с переданными параметрами
 pub fn create_error(obj: &PyObject, extra_hm: Option<HashMap<String, String>>) -> PyResult<()> {
     Python::with_gil(|py| {
         dbg!(&extra_hm);
@@ -20,6 +21,8 @@ pub fn create_error(obj: &PyObject, extra_hm: Option<HashMap<String, String>>) -
         Err(PyErr::new::<PyException, _>(obj.to_object(py)))
     })
 }
+
+/// Получаем extra из класса (MESSAGE_WITH_EXTRA_FROM_CLASS_PY)
 pub fn extra_from_class<'a, T: AsRef<str>>(
     class_template: &types::PyType,
     attr: T,
@@ -42,6 +45,7 @@ pub fn extra_from_class<'a, T: AsRef<str>>(
     }
 }
 
+/// Зависимо от условий проверки возвращаем `Error()` или `ОК()`
 pub fn error_or_ok(
     obj: &PyObject,
     extra_values: HashMap<String, String>,

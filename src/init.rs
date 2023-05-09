@@ -41,6 +41,7 @@ pub fn data_unpackaging(
     Ok(())
 }
 
+// Получаем все регулярные выражения из класса
 pub fn get_any_regex_from_class(
     class_py: &types::PyType,
     id_class: usize,
