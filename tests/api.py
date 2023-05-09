@@ -54,7 +54,7 @@ async def init():
     validator_sample = TemplateValidator(
         [CustomError])
     text_bytes = str(
-        "wql;").encode('UTF-8')
+        "wql wql;").encode('UTF-8')
     try:
         await validator_sample.validate(text_bytes)
 

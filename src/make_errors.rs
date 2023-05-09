@@ -33,19 +33,13 @@ pub fn extra_from_class<'a, T: AsRef<str>>(
         Ok(RE
             .captures_iter(&attr_value)
             .map(|cap| {
-                println!(
-                    "CAP : {:#?}",
-                    cap.get(0).map_or(String::new(), |m| {
-                        m.as_str().trim_matches('{').trim_matches('}').to_string()
-                    })
-                );
                 cap.get(0).map_or(String::new(), |m| {
                     m.as_str().trim_matches('{').trim_matches('}').to_string()
                 })
             })
             .collect::<Vec<_>>())
-    }else {
-    Ok(Vec::new())
+    } else {
+        Ok(Vec::new())
     }
 }
 
