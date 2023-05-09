@@ -59,12 +59,15 @@
 mod tests {
     use crate::*;
 
+    // Тестируем модуль конвертаций
     #[cfg(test)]
     mod convert {
         use super::*;
 
+        // Тесты для функций fn_bytes_to_string_utf8
         mod fn_bytes_to_string_utf8 {
             use super::*;
+            // Проверка UTF8
             #[test]
             fn bytes_to_string_utf8_t_0() {
                 assert_eq!(
@@ -74,6 +77,7 @@ mod tests {
                 );
             }
 
+            // Проверка UTF8
             #[test]
             #[should_panic]
             fn bytes_to_string_utf8_f_0() {
@@ -82,9 +86,11 @@ mod tests {
             }
         }
 
+        // Тесты для функций fn_string_to_default_regex
         mod fn_string_to_default_regex {
             use super::*;
 
+            // Проверка корректной конветраций в Default Regex
             #[test]
             fn string_to_default_regex_t_0() {
                 assert_eq!(
@@ -94,6 +100,7 @@ mod tests {
                 );
             }
 
+            // Проверка корректной конветраций в Default Regex
             #[test]
             #[should_panic]
             fn string_to_default_regex_f_0() {
@@ -102,6 +109,7 @@ mod tests {
                 ));
             }
 
+            // Проверка корректной конветраций в Default Regex
             #[test]
             #[should_panic(
                 expected = "error: look-around, including look-ahead and look-behind, is not supported"
@@ -113,8 +121,11 @@ mod tests {
             }
         }
 
+        // Тесты для функций fn_string_to_fancy_regex
         mod fn_string_to_fancy_regex {
             use super::*;
+
+            // Проверка корректной конветраций в Fancy Regex
             #[test]
             fn string_to_fancy_regex_t_0() {
                 assert_eq!(
@@ -124,11 +135,13 @@ mod tests {
                 );
             }
 
+            // Проверка корректной конветраций в Fancy Regex
             #[test]
             fn string_to_fancy_regex_t_1() {
                 check_convert::convert::string_to_fancy_regex(&String::from(r"(\b\w+\b)(?=.+?\1)"));
             }
 
+            // Проверка корректной конветраций в Fancy Regex
             #[test]
             #[should_panic]
             fn string_to_fancy_regex_f_0() {
@@ -138,12 +151,16 @@ mod tests {
             }
         }
     }
+
+    // Тестируем модуль проверки
     mod check_tests {
         use super::*;
 
+        // Тесты для функций fn_is_default_regex_fisrt_step
         mod fn_is_default_regex_fisrt_step {
             use super::*;
 
+            // Проверка на возможность конвертаций в Default Regex
             #[test]
             fn is_default_regex_fisrt_step_t_0() {
                 assert_eq!(
@@ -152,6 +169,7 @@ mod tests {
                 );
             }
 
+            // Проверка на возможность конвертаций в Default Regex
             #[test]
             fn is_default_regex_fisrt_step_t_1() {
                 assert_eq!(
@@ -162,6 +180,7 @@ mod tests {
                 );
             }
 
+            // Проверка на возможность конвертаций в Default Regex
             #[test]
             fn is_default_regex_fisrt_step_t_2() {
                 assert_eq!(
@@ -171,9 +190,11 @@ mod tests {
             }
         }
 
+        // Тесты для функций fn_fancy_regex_second_step
         mod fn_fancy_regex_second_step {
             use super::*;
 
+            // Проверка на возможность конвертаций в Fancy Regex
             #[test]
             fn is_fancy_regex_second_step_t_0() {
                 assert_eq!(
@@ -182,6 +203,7 @@ mod tests {
                 );
             }
 
+            // Проверка на возможность конвертаций в Fancy Regex
             #[test]
             fn is_fancy_regex_second_step_t_1() {
                 assert_eq!(
@@ -192,6 +214,7 @@ mod tests {
                 );
             }
 
+            // Проверка на возможность конвертаций в Fancy Regex
             #[test]
             fn is_fancy_regex_second_step_t_2() {
                 assert_eq!(
@@ -201,8 +224,12 @@ mod tests {
             }
         }
     }
+
+    // Тестируем модуль инициализаций данных
     mod init_tests {
         use super::*;
+
+        // Функция для использования повторно
         fn fn_core_get_any_regex_from_class(
             rules: &[(&str, It)],
             all_simple_rules: &mut HashMap<String, RuleStatus>,
@@ -234,7 +261,10 @@ mod tests {
             })
         }
 
+        // Тесты для функций fn_get_any_regex_from_class
         mod fn_get_any_regex_from_class {
+
+            // Структура для теста на иного объект
             #[pyclass]
             struct FakeObj {
                 status: bool,
@@ -251,6 +281,9 @@ mod tests {
                     self.status.to_object(py)
                 }
             }
+
+            // Проверка на правильное распределение
+            // регулярных выражений между HashMap в fn_get_any_regex_from_class
             use super::*;
             #[test]
             fn fn_get_any_regex_from_class_t_0() -> PyResult<()> {
@@ -272,6 +305,9 @@ mod tests {
                     2,
                 )
             }
+
+            // Проверка на правильное распределение
+            // регулярных выражений между HashMap в fn_get_any_regex_from_class
             #[test]
             fn fn_get_any_regex_from_class_t_1() -> PyResult<()> {
                 pyo3::prepare_freethreaded_python();
@@ -295,6 +331,10 @@ mod tests {
                     4,
                 )
             }
+
+            // Проверка на правильное распределение
+            // регулярных выражений между HashMap, при
+            // других типах переменных в fn_get_any_regex_from_class
             #[test]
             #[should_panic(expected = r"PyErr { type: <class 'TypeError'>")]
             fn fn_get_any_regex_from_class_e_0() {
@@ -324,6 +364,9 @@ mod tests {
                 .unwrap()
             }
 
+            // Проверка на правильное распределение
+            // регулярных выражений между HashMap, при
+            // других типах переменных в fn_get_any_regex_from_class
             #[test]
             #[should_panic(expected = r#"'None' must be a 'String"#)]
             fn fn_get_any_regex_from_class_e_1() {
@@ -344,6 +387,10 @@ mod tests {
                 })
                 .unwrap();
             }
+
+            // Проверка на правильное распределение
+            // регулярных выражений между HashMap, при
+            // других типах переменных в fn_get_any_regex_from_class
             #[test]
             #[should_panic(expected = r#"'True' must be a 'Enum'"#)]
             fn fn_core_get_any_regex_from_class_e_2() {
@@ -369,6 +416,10 @@ mod tests {
                     .unwrap();
                 });
             }
+
+            // Проверка на правильное распределение
+            // регулярных выражений между HashMap, при
+            // других типах переменных в fn_get_any_regex_from_class
             #[test]
             #[should_panic(expected = r#" must be a 'dict"#)]
             fn fn_core_get_any_regex_from_class_e_3() {
@@ -391,6 +442,7 @@ mod tests {
                 });
             }
 
+            // Проверка на отсутствие атрибута (элемент конструктора)
             #[test]
             #[should_panic(expected = r"AttributeError")]
             fn fn_core_get_any_regex_from_class_e_4() {
@@ -411,9 +463,12 @@ mod tests {
                 });
             }
         }
+
+        // Тесты для функций fn_data_unpackaging
         mod fn_data_unpackaging {
             use super::*;
 
+            // Проверка элемента конструктора (расфасовка данных)
             #[test]
             fn data_unpackaging_t_0() -> PyResult<()> {
                 pyo3::prepare_freethreaded_python();
@@ -445,6 +500,8 @@ mod tests {
                     )
                 })
             }
+
+            // Проверка элемента конструктора (расфасовка данных)
             #[test]
             fn data_unpackaging_t_1() -> PyResult<()> {
                 pyo3::prepare_freethreaded_python();
@@ -466,6 +523,7 @@ mod tests {
                 })
             }
 
+            // Проверка входных данных с Python для конструктора
             #[test]
             #[should_panic(expected = r"'None' must be a 'List[ Class, Class... ]")]
             fn data_unpackaging_e_0() {
@@ -476,6 +534,8 @@ mod tests {
                 })
                 .unwrap();
             }
+
+            // Проверка входных данных с Python для конструктора
             #[test]
             #[should_panic(expected = r"must be a 'Class'")]
             fn data_unpackaging_e_1() {
@@ -501,7 +561,11 @@ mod tests {
             }
         }
     }
+
+    // Тестируем модуль по созданию ошибок
     mod make_errors_tests {
+
+        // Вспомогательная  функция по создание  Py объектов
         fn create_obj(rules: Option<&[(&str, It)]>, msg: &str) -> PyResult<PyObject> {
             Python::with_gil(|py| -> PyResult<PyObject> {
                 let dict = types::PyDict::new(py);
@@ -520,8 +584,12 @@ mod tests {
             })
         }
         use super::*;
+
+        // Тесты для функций fn_create_error
         mod fn_create_error {
             use super::*;
+
+            // Проверяем статус, что ошибка создана
             #[test]
             fn create_error_t_0() {
                 pyo3::prepare_freethreaded_python();
@@ -532,6 +600,7 @@ mod tests {
                 })
             }
 
+            // Проверяем статус, что ошибка создана и можно сделать проброс
             #[test]
             #[should_panic]
             fn create_error_e_0() {
@@ -542,9 +611,12 @@ mod tests {
                 });
             }
         }
+
+        // Тесты для функций fn_extra_from_class
         mod fn_extra_from_class {
             use super::*;
 
+            // Проврка получения **extra значений
             #[test]
             fn extra_from_class_t_1() -> PyResult<()> {
                 pyo3::prepare_freethreaded_python();
@@ -563,6 +635,8 @@ mod tests {
                     Ok(())
                 })
             }
+
+            // Проврка получения **extra значений
             #[test]
             fn extra_from_class_e_0() -> PyResult<()> {
                 pyo3::prepare_freethreaded_python();
@@ -573,7 +647,7 @@ mod tests {
                         (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
                     ];
                     let class_py = create_obj(Some(rules), "message")?;
-                    let extra = make_errors::extra_from_class(
+                    make_errors::extra_from_class(
                         &class_py.to_object(py).downcast(py).unwrap(),
                         MESSAGE_WITH_EXTRA_FROM_CLASS_PY,
                     )?;
@@ -581,10 +655,13 @@ mod tests {
                 })
             }
         }
+
+        // Тесты функций fn_error_or_ok
         mod fn_error_or_ok {
             use super::*;
 
             #[test]
+            // Проверка результата при условий
             // (It::MustBeFoundHere, true) => Ok(())
             fn error_or_ok_t_0() {
                 pyo3::prepare_freethreaded_python();
@@ -603,6 +680,7 @@ mod tests {
                 });
             }
 
+            // Проверка результата при условий
             // (It::NotToBeFoundHere, false) => Ok(())
             #[test]
             fn error_or_ok_t_1() {
@@ -622,9 +700,10 @@ mod tests {
                 });
             }
 
+            // Проверка результата при условий
+            // (It::MustBeFoundHere, false) =>  error()
             #[test]
             #[should_panic]
-            // (It::MustBeFoundHere, false) =>  error()
             fn error_or_ok_e_0() {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|_| {
@@ -642,9 +721,10 @@ mod tests {
                 });
             }
 
+            // Проверка результата при условий
+            // (It::NotToBeFoundHere, true) =>  error()
             #[test]
             #[should_panic]
-            // (It::NotToBeFoundHere, true) =>  error()
             fn error_or_ok_e_1() {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|_| {
@@ -662,9 +742,10 @@ mod tests {
                 });
             }
 
+            // Проверка результата при условий
+            // (It::NotToBeFoundHere, true) =>  error() // some extra
             #[test]
             #[should_panic]
-            // (It::NotToBeFoundHere, true) =>  error() // some extra
             fn error_or_ok_e_2() {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|_| {

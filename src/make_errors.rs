@@ -16,9 +16,6 @@ pub fn create_error(obj: &PyObject, extra_hm: Option<HashMap<String, String>>) -
         }
         let obj = obj.downcast::<types::PyType>(py)?;
         obj.setattr(EXTRA_FROM_CLASS_PY, extra)?;
-        // let obj = obj
-        //     .downcast::<PyAny>(py)?
-        //     .call(PyTuple::empty(py), Some(extra))?;
         // Создаем объект класса & Возвращаем ошибку
         Err(PyErr::new::<PyException, _>(obj.to_object(py)))
     })
