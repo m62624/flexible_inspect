@@ -39,7 +39,7 @@ class CustomError(BaseError):
     template = "Опасность отсутствует повторение"
     rules = {
         r"(\w+?)(.+\1)": It.MustBeFoundHere,
-        r"(\w)(.+\1)": It.MustBeFoundHere,
+        r"(aboba)(.+\1)": It.NotToBeFoundHere,
     }
 
 # ==============================================
@@ -47,7 +47,7 @@ class CustomError(BaseError):
 
 async def init():
     validator_sample = TemplateValidator(
-        [CustomError])
+        flags=[CustomError])
     text_bytes = str(
         "wql;").encode('UTF-8')
     try:

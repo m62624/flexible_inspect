@@ -1,6 +1,8 @@
 [package]
 name = "pystval"
 version = "0.4.0"
+authors = ["Mansur Azatbek <mansur62624@gmail.com>"]
+description = "Библиотека для создания кастомного валидатора"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html

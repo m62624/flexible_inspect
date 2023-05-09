@@ -1,10 +1,11 @@
-from typing import Any, Dict, List
+"""`Pystval` - `Rust` библиотека для `Python`, служит для создания собственного валидатора"""
 import enum
+from typing import Any, Dict, List
 
 
 class TemplateValidator:
     """
-    Класс для создания собственного валидатора
+    Класс для создания валидатора
     """
 
     def __init__(self, flags: List[Any]):
@@ -18,6 +19,8 @@ class TemplateValidator:
         ------
         `TypeError`
             Указан иной тип данных
+        `AttributeError`
+            Указан неверный атрибут (отсутствует)
         """
         pass
 
@@ -27,6 +30,11 @@ class TemplateValidator:
         ----------
         `text` : `str`
             Текст для проверки
+
+        Raises
+        ------
+        `Кастомная ошибка`
+            Ошибка, которая была указана в `flags`
         """
         pass
     pass

@@ -102,7 +102,7 @@ impl TemplateValidator {
         })
     }
 
-    // Служит для запуска async метода
+    /// Служит для запуска async метода
     #[cfg(not(tarpaulin_include))]
     #[pyo3(name = "validate")]
     fn validate<'py>(&self, py: Python<'py>, text_bytes: &types::PyBytes) -> PyResult<&'py PyAny> {
