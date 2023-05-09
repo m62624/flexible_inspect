@@ -3,9 +3,9 @@ impl TemplateValidator {
     // Работает только один цикл, в один момент времени
     pub fn core_validate(&self, text: String) -> PyResult<()> {
         Python::with_gil(|py| -> PyResult<()> {
-            // Первый цикл - простые запросы (не включает в себя)
+            // Первый цикл - простые запросы (не включает в себя : look-around, including look-ahead & look-behind)
             for match_idx in self.selected_simple_rules.matches(&text).iter() {
-                dbg!("Цикл - Простой запрос +");
+                // dbg!("Цикл - Простой запрос +");
                 let rule = &self.selected_simple_rules.patterns()[match_idx];
                 just_look_at_this(
                     py,
@@ -18,12 +18,12 @@ impl TemplateValidator {
             }
             // Второй цикл - простые запросы (проверка тех что не включены в `selected_simple_rules`)
             for (rule, rule_status) in self.all_simple_rules.iter() {
-                dbg!("Цикл -  Точный поиск +");
+                // dbg!("Цикл -  Точный поиск +");
                 just_look_at_this(py, self, rule, true, rule_status, &text)?;
             }
             //  Третий цикл - сложные запросы (всё что входит : look-around, including look-ahead & look-behind)
             for (rule, rule_status) in self.all_hard_rules.iter() {
-                dbg!("Цикл -  Сложный поиск +");
+                // dbg!("Цикл -  Сложный поиск +");
                 just_look_at_this(py, self, rule, false, rule_status, &text)?;
             }
             Ok(())
@@ -31,7 +31,7 @@ impl TemplateValidator {
     }
 }
 
-fn just_look_at_this(
+pub fn just_look_at_this(
     py: Python,
     slf: &TemplateValidator,
     regex: &String,
@@ -73,7 +73,7 @@ fn just_look_at_this(
     make_errors::error_or_ok(&obj, extra_values, rule_status, flag)
 }
 
-fn switch_loop_regex(
+pub fn switch_loop_regex(
     regex: &String,
     extra_names: &Vec<String>,
     extra_values: &mut HashMap<String, String>,

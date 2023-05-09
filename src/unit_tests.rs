@@ -766,4 +766,116 @@ mod tests {
             }
         }
     }
+    // Тестирование модуля валидаций
+    mod validate_tests {
+        use super::*;
+
+        // Праверка на совпадение, успешный возращение результата Ok(),
+        #[test]
+        fn switch_loop_regex_t_0() {
+            let d_regex = r"[0-9]+?".to_string();
+            // let f_rege = r"(\b\w+\b)(?=.+?\1)";
+            let extra_names: Vec<String> = Vec::new();
+            let mut extra_values: HashMap<String, String> = HashMap::new();
+            let mut flag_status: bool = true;
+            let def_regex: bool = true;
+            let text: &str = "123";
+            validate::switch_loop_regex(
+                &d_regex,
+                &extra_names,
+                &mut extra_values,
+                &mut flag_status,
+                def_regex,
+                text,
+            )
+            .unwrap();
+        }
+        // (DEFAULT REGEX) Праверка на совпадение, успешный возращение результата Ok(),
+        // успешное совпадение **extra
+        #[test]
+        fn switch_loop_regex_t_1() {
+            let d_regex = r"(?P<x>[0-9]+?)".to_string();
+            // let f_rege = r"(\b\w+\b)(?=.+?\1)";
+            let mut extra_names: Vec<String> = Vec::new();
+            let mut extra_values: HashMap<String, String> = HashMap::new();
+            let text: &str = "123";
+            extra_names.push("x".to_string());
+            let mut flag_status: bool = true;
+            let def_regex: bool = true;
+            validate::switch_loop_regex(
+                &d_regex,
+                &extra_names,
+                &mut extra_values,
+                &mut flag_status,
+                def_regex,
+                text,
+            )
+            .unwrap();
+        }
+        // (DEFAULT REGEX) Праверка на совпадение, успешный возращение результата Ok(),
+        // отсутсвует **extra, заполняем пустышкой "___"
+        #[test]
+        fn switch_loop_regex_t_2() {
+            let d_regex = r"(?P<x>[0-9]+?)".to_string();
+            // let f_rege = r"(\b\w+\b)(?=.+?\1)";
+            let mut extra_names: Vec<String> = Vec::new();
+            let mut extra_values: HashMap<String, String> = HashMap::new();
+            let text: &str = "123";
+            extra_names.push("y".to_string());
+            let mut flag_status: bool = true;
+            let def_regex: bool = true;
+            validate::switch_loop_regex(
+                &d_regex,
+                &extra_names,
+                &mut extra_values,
+                &mut flag_status,
+                def_regex,
+                text,
+            )
+            .unwrap();
+        }
+        // (FANCY REGEX) Праверка на совпадение, успешный возращение результата Ok(),
+        // успешное совпадение **extra
+        #[test]
+        fn switch_loop_regex_t_3() {
+            // let d_regex = r"(?P<x>[0-9]+?)".to_string();
+            let f_regex = r"(?P<x>[0-9]+?)".to_string();
+            let mut extra_names: Vec<String> = Vec::new();
+            let mut extra_values: HashMap<String, String> = HashMap::new();
+            let text: &str = "123";
+            extra_names.push("x".to_string());
+            let mut flag_status: bool = true;
+            let def_regex: bool = false;
+            validate::switch_loop_regex(
+                &f_regex,
+                &extra_names,
+                &mut extra_values,
+                &mut flag_status,
+                def_regex,
+                text,
+            )
+            .unwrap();
+        }
+        // (FANCY REGEX) Праверка на совпадение, успешный возращение результата Ok(),
+        // отсутсвует **extra, заполняем пустышкой "___"
+        #[test]
+        fn switch_loop_regex_t_4() {
+            let f_regex = r"(\b\w+\b)(?=.+?\1)".to_string();
+            let mut extra_names: Vec<String> = Vec::new();
+            let mut extra_values: HashMap<String, String> = HashMap::new();
+            let text: &str = "text text";
+            extra_names.push("y".to_string());
+            let mut flag_status: bool = true;
+            let def_regex: bool = false;
+            validate::switch_loop_regex(
+                &f_regex,
+                &extra_names,
+                &mut extra_values,
+                &mut flag_status,
+                def_regex,
+                text,
+            )
+            .unwrap();
+        }
+    }
 }

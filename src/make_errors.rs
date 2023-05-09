@@ -1,7 +1,7 @@
 use crate::*;
 use lazy_static::lazy_static;
 use pyo3::exceptions::PyException;
-use pyo3::types::{PyDict, PyTuple};
+use pyo3::types::PyDict;
 use std::collections::HashMap;
 
 pub fn create_error(obj: &PyObject, extra_hm: Option<HashMap<String, String>>) -> PyResult<()> {
