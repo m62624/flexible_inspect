@@ -29,32 +29,32 @@ class BaseError(Exception):
 # =============================================
 
 
-class AvatarMissing(BaseError):
-    template = "Присутсвует: {aboba}"
+class KeyMissing(BaseError):
+    template = "Не найден ключ"
     rules = {r"(?P<aboba>key=\d{4})": It.MustBeFoundHere}
+    rules = {r"key=\d{4}-\d{4}-\d{4}": It.MustBeFoundHere}
 
 
-# class CustomError(BaseError):
-#     template = "messsage message message"
-#     rules = {r"rule5##": It.NotToBeFoundHere,
-#              r"(\w+?)(.+\1)": It.MustBeFoundHere,
-#              r"rule7##": It.NotToBeFoundHere,
-#              r"text": It.MustBeFoundHere,
-#              }
+class CustomError(BaseError):
+    template = "Опасность отсутсвует повторение"
+    rules = {
+        r"(\w+?)(.+\1)": It.MustBeFoundHere,
+        r"(\w)(.+\1)": It.MustBeFoundHere,
+    }
 
 # ==============================================
 
 
 # try:
 #     validator_html = TemplateValidator(
-#         flags=[AvatarMissing, CustomError])
+#         flags=[KeyMissing, CustomError])
 # except Exception as e:
 #     print(f"Произошла Avatarошибка: {e}")
 async def init():
     validator_sample = TemplateValidator(
-        [AvatarMissing])
+        [CustomError])
     text_bytes = str(
-        " text text text key=2134 text").encode('UTF-8')
+        "wql;").encode('UTF-8')
     try:
         await validator_sample.validate(text_bytes)
 

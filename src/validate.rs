@@ -7,6 +7,7 @@ impl TemplateValidator {
     pub fn core_validate(&self, text: String) -> PyResult<()> {
         Python::with_gil(|py| -> PyResult<()> {
             for match_idx in self.selected_simple_rules.matches(&text).iter() {
+                dbg!("Цикл - Простой запрос +");
                 let rule = &self.selected_simple_rules.patterns()[match_idx];
                 just_look_at_this_simple(
                     py,
@@ -17,9 +18,11 @@ impl TemplateValidator {
                 )?;
             }
             for (rule, rule_status) in self.all_simple_rules.iter() {
+                dbg!("Цикл -  Точный поиск +");
                 just_look_at_this_simple(py, self, rule, rule_status, &text)?;
             }
-            for (rule, rule_status) in self.all_simple_rules.iter() {
+            for (rule, rule_status) in self.all_hard_rules.iter() {
+                dbg!("Цикл -  Сложный поиск +");
                 just_look_at_this_hard(py, self, rule, rule_status, &text)?;
             }
             Ok(())
@@ -89,6 +92,7 @@ fn just_look_at_this_hard(
     let mut flag = false;
     for capture in check_convert::convert::string_to_fancy_regex(regex).captures_iter(text) {
         flag = true;
+        dbg!(flag);
         for name in &extra_names {
             match capture.as_ref().unwrap().name(&name) {
                 Some(value) => {
