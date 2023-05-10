@@ -1,3 +1,4 @@
+import httpx
 import pystval
 import asyncio
 from pystval import TemplateValidator, It
@@ -29,32 +30,39 @@ class BaseError(Exception):
 # =============================================
 
 
-class KeyMissing(BaseError):
-    template = "Не найден ключ"
-    rules = {r"(?P<aboba>key=\d{4})": It.MustBeFoundHere}
-    rules = {r"key=\d{4}-\d{4}-\d{4}": It.MustBeFoundHere}
+async def get_bytes(url):
+    async with httpx.AsyncClient() as client:
+        response = await client.get(url)
+        response.raise_for_status()
+        return response.content
+
+# ==============(ERROR FLAGS)==================
 
 
-class CustomError(BaseError):
-    template = "Опасность отсутствует повторение"
+class MissingElementAvatar(BaseError):
+    template = ":: The `avatar` element was not found"
     rules = {
-        r"(\w+?)(.+\1)": It.MustBeFoundHere,
-        r"(aboba)(.+\1)": It.NotToBeFoundHere,
+        r"""<im id="avatar"\s?.+?\s?>""": It.MustBeFoundHere,
     }
 
-# ==============================================
+
+class MissingElementFollowers(BaseError):
+    template = ":: The `Followers` element was not found"
+    rules = {
+        r"""<a id="followers"\s?.+?>.+?</a>""": It.MustBeFoundHere,
+    }
+
+# ============================================
 
 
 async def init():
+    text = await get_bytes("https://test-cdn.yourbandy.com/profile_templates/b7888914-6356-4904-8950-774e3057e034_profile_template_28.html")
     validator_sample = TemplateValidator(
-        flags=[CustomError])
-    text_bytes = str(
-        "wql;").encode('UTF-8')
+        flags=[MissingElementAvatar])
     try:
-        await validator_sample.validate(text_bytes)
-
+        await validator_sample.validate(text)
     except BaseError as e:
-        print(f"ERROR MESSAGE: '{e.message}'")
+        print(f"ERROR VALIDATE: '{e.message}'")
 
 
 # =============================================

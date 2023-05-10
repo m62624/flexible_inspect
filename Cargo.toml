@@ -8,17 +8,21 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 [lib]
 name = "pystval"
-crate-type = ["cdylib"]
+crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 
 pyo3 = {version="0.18.1",features = ["abi3", "abi3-py310"]}
 pyo3-asyncio = { version = "0.18", features = ["attributes", "async-std-runtime"] }
-async-std = "1.12.0"
+async-std = {version = "1.12.0",features = ["attributes"]}
 
 fancy-regex = "0.11.0"
 regex = "1.8.1"
 lazy_static = "1.4.0"
+
+[dev-dependencies]
+reqwest = "0.11.17"
+tokio = { version = "1", features = ["full"] }
 
 [package.metadata.maturin]
 category = "tool"
