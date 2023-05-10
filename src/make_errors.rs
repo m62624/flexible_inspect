@@ -6,7 +6,7 @@ use std::collections::HashMap;
 
 /// Создаем ошибку с переданными параметрами
 pub fn create_error(obj: &PyObject, extra_hm: Option<HashMap<String, String>>) -> PyResult<()> {
-    Python::with_gil(|py| {
+    Python::with_gil(|py| -> PyResult<()> {
         dbg!(&extra_hm);
         // Создаем объект класса ошибки с переданными параметрами
         let extra = PyDict::new(py);
@@ -17,6 +17,9 @@ pub fn create_error(obj: &PyObject, extra_hm: Option<HashMap<String, String>>) -
         }
         let obj = obj.downcast::<types::PyType>(py)?;
         obj.setattr(EXTRA_FROM_CLASS_PY, extra)?;
+        let obj = obj
+            .downcast::<PyAny>()?
+            .call(types::PyTuple::empty(py), Some(extra))?;
         // Создаем объект класса & Возвращаем ошибку
         Err(PyErr::new::<PyException, _>(obj.to_object(py)))
     })

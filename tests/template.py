@@ -42,23 +42,51 @@ async def get_bytes(url):
 class MissingElementAvatar(BaseError):
     template = ":: The `avatar` element was not found"
     rules = {
-        r"""<im id="avatar"\s?.+?\s?>""": It.MustBeFoundHere,
+        r"""(?s)<img.+?id="avatar"\s?.+?\s?>""": It.MustBeFoundHere,
     }
 
 
 class MissingElementFollowers(BaseError):
-    template = ":: The `Followers` element was not found"
+    template = ":: The `followers` element was not found"
     rules = {
-        r"""<a id="followers"\s?.+?>.+?</a>""": It.MustBeFoundHere,
+        r"""(?s)<a.+?id="followers"\s?.+?>.+?</a>""": It.MustBeFoundHere,
     }
 
+
+class MissingElementFollowing(BaseError):
+    template = ":: The `following` element was not found"
+    rules = {
+        r"""(?s)<a.+?id="following"\s?.+?>.+?</a>""": It.MustBeFoundHere,
+    }
+
+
+class MissingElementFriends(BaseError):
+    template = ":: The `friends` element was not found"
+    rules = {
+        r"""(?s)<a.+?id="friends"\s?.+?>.+?</a>""": It.MustBeFoundHere,
+    }
+
+
+class UniqueDefaultElement(BaseError):
+    template = ":: More than one element is found : {one_element}"
+    rules = {
+        r"""(?s)(?P<one_element><a.+?id="followers"\s?.+?>.+?</a>)(?=\s*?.*?\k<one_element>)""": It.NotToBeFoundHere,
+        r"""(?s)(?P<one_element><a.+?id="following"\s?.+?>.+?</a>)(?=\s*?.*?\k<one_element>)""": It.NotToBeFoundHere,
+        r"""(?s)(?P<one_element>(?s)<a.+?id="friends"\s?.+?>.+?</a>)(?=\s*?.*?\k<one_element>)""": It.NotToBeFoundHere,
+    }
 # ============================================
 
 
 async def init():
-    text = await get_bytes("https://test-cdn.yourbandy.com/profile_templates/b7888914-6356-4904-8950-774e3057e034_profile_template_28.html")
+    # text = await get_bytes("-- link --")
+    with open('tests/tmp/body.html', 'rb') as file:
+        text = file.read()
     validator_sample = TemplateValidator(
-        flags=[MissingElementAvatar])
+        flags=[MissingElementAvatar,
+               MissingElementFollowers,
+               MissingElementFollowing,
+               MissingElementFriends,
+               UniqueDefaultElement])
     try:
         await validator_sample.validate(text)
     except BaseError as e:

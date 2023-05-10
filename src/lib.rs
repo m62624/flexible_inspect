@@ -97,7 +97,7 @@ impl TemplateValidator {
                 python_classes,
                 selected_simple_rules: regex::RegexSet::new(selected_simple_rules).unwrap(),
             };
-            dbg!(&rsl_info);
+            // dbg!(&rsl_info);
             Ok(rsl_info)
         })
     }
