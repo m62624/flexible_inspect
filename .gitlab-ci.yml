@@ -15,7 +15,11 @@ before_script:
   - rustup update
   - rustup component add rustfmt clippy
   - export PATH="$HOME/.cargo/bin:$PATH"
-  - apt-get update -yq && apt-get install -y ${PYTHON} ${PYTHON}-dev ${PYTHON}-distutils ${PYTHON}-venv && curl https://bootstrap.pypa.io/get-pip.py | ${PYTHON} && rm -rf /var/lib/apt/lists/*
+  - apt-get update -yq && \
+    apt-get install -y ${PYTHON} ${PYTHON}-dev ${PYTHON}-distutils ${PYTHON}-venv && \
+    apt-get install -y python-pip3 && \
+    curl https://bootstrap.pypa.io/get-pip.py | ${PYTHON} && \
+    rm -rf /var/lib/apt/lists/* && \
   - pip install maturin
 
 lint:
