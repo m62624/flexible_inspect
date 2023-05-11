@@ -1,7 +1,7 @@
 image: python:3.10
 
 stages:
-  - lint
+  - lint-test
   - test
   - build
   - publish
@@ -17,7 +17,7 @@ before_script:
   - pip install maturin
 
 lint:
-  stage: lint
+  stage: lint-test
   only:
     - merge_requests
   tags:
@@ -27,7 +27,7 @@ lint:
     - cargo clippy -- -D warnings
 
 test:
-  stage: test
+  stage: lint-test
   only:
     - merge_requests
   tags:
