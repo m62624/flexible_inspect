@@ -1,8 +1,10 @@
 image: rust:latest
 
 stages:
-  - lint-test
-  - build-publish
+  - lint
+  - test
+  - build
+  - publish
 
 variables:
   PYTHON: "python3.10"
@@ -17,7 +19,7 @@ before_script:
   - pip install maturin
 
 lint:
-  stage: lint-test
+  stage: lint
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
@@ -35,7 +37,7 @@ lint:
     - cargo clippy -- -D warnings
 
 run-tests:
-  stage: lint-test
+  stage: test
   rules:
     - if: $CI_MERGE_REQUEST_ID
       when: never
