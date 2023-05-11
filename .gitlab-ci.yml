@@ -15,7 +15,7 @@ before_script:
   - rustup update
   - rustup component add rustfmt clippy
   - export PATH="$HOME/.cargo/bin:$PATH"
-  - apt-get update -yq && apt-get install -yq ${PYTHON} ${PYTHON}-pip ${PYTHON}-dev
+  - apt-get update -yq && apt-get install -y ${PYTHON} ${PYTHON}-dev ${PYTHON}-distutils ${PYTHON}-venv && curl https://bootstrap.pypa.io/get-pip.py | ${PYTHON} && rm -rf /var/lib/apt/lists/*
   - pip install maturin
 
 lint:
@@ -28,7 +28,7 @@ lint:
     - cargo fmt -- --check
     - cargo clippy -- -D warnings
 
-run-tests:
+test:
   stage: test
   only:
     - merge_requests
