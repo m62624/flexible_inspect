@@ -1,4 +1,4 @@
-image: rust:latest
+image: python:3.10
 
 stages:
   - lint
@@ -10,12 +10,10 @@ variables:
   PYTHON: "python3.10"
 
 before_script:
-  - rustup default stable
   - curl https://sh.rustup.rs -sSf | sh -s -- -y
+  - export PATH="$HOME/.cargo/bin:$PATH"
   - rustup update
   - rustup component add rustfmt clippy
-  - export PATH="$HOME/.cargo/bin:$PATH"
-  - apt-get update && apt-get install -y python3 python3-pip
   - pip install maturin
 
 lint:
