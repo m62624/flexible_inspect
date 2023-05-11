@@ -27,3 +27,8 @@ venv.bak/
 #dk
 /.dockerignore
 /dockerfile
+
+# Jet Brains
+.idea
+.idea/
+.idea/*

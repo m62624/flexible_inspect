@@ -1,0 +1,53 @@
+image: rust:latest
+
+stages:
+  - test
+  - build
+  - publish
+
+variables:
+  PYTHON: "python3.10"
+
+before_script:
+  - rustup default stable
+  - curl https://sh.rustup.rs -sSf | sh -s -- -y
+  - rustup update
+  - rustup component add rustfmt clippy
+  - source $HOME/.cargo/env
+  - apt-get update -yq && apt-get install -yq ${PYTHON} ${PYTHON}-pip ${PYTHON}-dev
+  - pip install maturin
+
+lint:
+  stage: test
+  tags:
+    - production_runner
+  script:
+    - cargo fmt -- --check
+    - cargo clippy -- -D warnings
+
+run-tests:
+  stage: test
+  tags:
+    - production_runner
+  script:
+    - cargo test
+
+build:
+  stage: build
+  tags:
+    - production_runner
+  script:
+    - maturin build --release --strip --manylinux off --interpreter ${PYTHON}
+  artifacts:
+    paths:
+      - target/wheels/*.whl
+
+publish:
+  stage: publish
+  tags:
+    - production_runner
+  script:
+    - pip install gitlab-artifact-uploader
+    - gitlab-artifact-uploader --base-url $CI_API_V4_URL --token $CI_JOB_TOKEN --job-id $CI_JOB_ID --project-id $CI_PROJECT_ID --file target/wheels/*.whl
+  only:
+    - master
