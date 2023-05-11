@@ -15,7 +15,7 @@ before_script:
   - rustup update
   - rustup component add rustfmt clippy
   - export PATH="$HOME/.cargo/bin:$PATH"
-  - apt-get install -y python3 python3-pip
+  - apt-get update && apt-get install -y python3 python3-pip
   - pip install maturin
 
 lint:
