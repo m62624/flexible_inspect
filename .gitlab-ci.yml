@@ -1,9 +1,8 @@
 image: rust:latest
 
 stages:
-  - test
-  - build
-  - publish
+  - lint-test
+  - build-publish
 
 variables:
   PYTHON: "python3.10"
@@ -13,12 +12,22 @@ before_script:
   - curl https://sh.rustup.rs -sSf | sh -s -- -y
   - rustup update
   - rustup component add rustfmt clippy
-  - source $HOME/.cargo/env
+  - export PATH="$HOME/.cargo/bin:$PATH"
   - apt-get update -yq && apt-get install -yq ${PYTHON} ${PYTHON}-pip ${PYTHON}-dev
   - pip install maturin
 
 lint:
-  stage: test
+  stage: lint-test
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /release/
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /alpha/
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /beta/
+      when: always
+    - when: never
   tags:
     - production_runner
   script:
@@ -26,7 +35,17 @@ lint:
     - cargo clippy -- -D warnings
 
 run-tests:
-  stage: test
+  stage: lint-test
+  rules:
+    - if: $CI_MERGE_REQUEST_ID
+      when: never
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /release/
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /alpha/
+      when: always
+    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /beta/
+      when: always
+    - when: never
   tags:
     - production_runner
   script:
@@ -34,6 +53,8 @@ run-tests:
 
 build:
   stage: build
+  only:
+    - tags
   tags:
     - production_runner
   script:
@@ -50,4 +71,4 @@ publish:
     - pip install gitlab-artifact-uploader
     - gitlab-artifact-uploader --base-url $CI_API_V4_URL --token $CI_JOB_TOKEN --job-id $CI_JOB_ID --project-id $CI_PROJECT_ID --file target/wheels/*.whl
   only:
-    - master
+    - tags
