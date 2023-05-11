@@ -34,10 +34,10 @@ test:
   tags:
     - production_runner
   script:
-    - cargo tarpaulin --out Xml
+    - cargo tarpaulin --engine llvm --out Xml
   artifacts:
     reports:
-      cobertura: cobertura.xml
+      junit: cobertura.xml
   needs: ["lint"]
 
 build:
