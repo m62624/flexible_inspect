@@ -20,16 +20,8 @@ before_script:
 
 lint:
   stage: lint
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
-      when: never
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /release/
-      when: always
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /alpha/
-      when: always
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /beta/
-      when: always
-    - when: never
+  only:
+    - merge_requests
   tags:
     - production_runner
   script:
@@ -38,16 +30,8 @@ lint:
 
 run-tests:
   stage: test
-  rules:
-    - if: $CI_MERGE_REQUEST_ID
-      when: never
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /release/
-      when: always
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /alpha/
-      when: always
-    - if: $CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_NAME =~ /beta/
-      when: always
-    - when: never
+  only:
+    - merge_requests
   tags:
     - production_runner
   script:
