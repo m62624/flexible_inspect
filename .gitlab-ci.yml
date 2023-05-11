@@ -10,6 +10,12 @@ variables:
   PYTHON: "python3.10"
   CARGO_BUILD_JOBS: 1
 
+cache:
+  key: "${CI_JOB_NAME}"
+  paths:
+    - target/
+    - .cargo/
+
 before_script:
   - curl https://sh.rustup.rs -sSf | sh -s -- -y
   - export PATH="$HOME/.cargo/bin:$PATH"
