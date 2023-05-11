@@ -22,3 +22,8 @@ venv.bak/
 # coverage 
 /.build_rs_cov.profraw
 /coverage
+# builds
+/WHEELS
+#dk
+/.dockerignore
+/dockerfile
