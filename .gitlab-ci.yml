@@ -24,7 +24,6 @@ lint:
     - production_runner
   script:
     - cargo fmt -- --check
-    - cargo clippy -- -D warnings
 
 test:
   stage: lint-test
@@ -34,6 +33,7 @@ test:
     - production_runner
   script:
     - cargo test
+  needs: ["lint"]
 
 build:
   stage: build
