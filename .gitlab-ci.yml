@@ -8,12 +8,14 @@ stages:
 
 variables:
   PYTHON: "python3.10"
+  CARGO_BUILD_JOBS: 1
 
 before_script:
   - curl https://sh.rustup.rs -sSf | sh -s -- -y
   - export PATH="$HOME/.cargo/bin:$PATH"
   - rustup update
   - rustup component add rustfmt clippy
+  - cargo install cargo-tarpaulin
   - pip install maturin
 
 lint:
@@ -32,7 +34,10 @@ test:
   tags:
     - production_runner
   script:
-    - cargo test
+    - cargo tarpaulin --out Xml
+  artifacts:
+    reports:
+      cobertura: cobertura.xml
   needs: ["lint"]
 
 build:
