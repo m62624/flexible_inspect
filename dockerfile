@@ -18,6 +18,9 @@ RUN apt-get update && apt-get install -y build-essential zlib1g-dev \
     libncurses5-dev libgdbm-dev libnss3-dev libssl-dev \
     libreadline-dev libffi-dev libsqlite3-dev wget libbz2-dev
 
+# Linter
+RUN rustup component add clippy-preview 
+
 # Крейт для проверки покрывающих тестов
 RUN cargo install cargo-tarpaulin
 
@@ -27,7 +30,8 @@ RUN rustup target add x86_64-unknown-linux-gnu; \
     rustup target add x86_64-pc-windows-msvc; \ 
     rustup target add aarch64-pc-windows-msvc; \
     rustup target add x86_64-apple-darwin; \
-    rustup target add aarch64-apple-darwin;
+    rustup target add aarch64-apple-darwin; 
+
 
 # Версия пайтона указаны ниже cargo-tarpaulin (слои с tarpaulin долго обрабатывается) 
 # Версия питона
