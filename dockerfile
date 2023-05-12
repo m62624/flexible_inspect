@@ -8,6 +8,7 @@ SHELL ["/bin/bash", "-c"]
 RUN apt-get update;
 # ставим targets для develop & build
 RUN rustup target add x86_64-unknown-linux-gnu; \
+    rustup target add aarch64-unknown-linux-gnu; \
     rustup target add x86_64-pc-windows-msvc; \ 
     rustup target add aarch64-pc-windows-msvc; \
     rustup target add x86_64-apple-darwin; \
