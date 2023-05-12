@@ -1,0 +1,21 @@
+#==============
+stages:
+  - build
+  - run
+
+build image:
+  stage: build
+  image: docker:stable
+  services:
+    - docker:dind
+  script:
+    - docker build -t registry.gitlab.com/yourbandy-group/backend/pystval:latest .
+    - docker push registry.gitlab.com/yourbandy-group/backend/pystval:latest
+
+run:
+  stage: run
+  image: docker:stable
+  services:
+    - docker:dind
+  script:
+    - docker run --security-opt seccomp=unconfined registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin
