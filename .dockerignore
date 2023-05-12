@@ -2,7 +2,7 @@
 .vscode
 .github
 target
-dockerfile
 CHANGELOG.md
 README.md
 .gitlab-ci.yml
+Dockerfile
