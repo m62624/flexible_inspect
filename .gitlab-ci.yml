@@ -1,5 +1,5 @@
 stages:
-  - linter-test
+  - linter
 lint:
   image:
     name: registry.gitlab.com/yourbandy-group/backend/pystval
