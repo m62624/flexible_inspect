@@ -13,6 +13,7 @@ venv.bak/
 /.polygon
 /.Polygon
 /.temp
+/tests/tmp
 /.записи_проекта
 # only for github
 /.github
