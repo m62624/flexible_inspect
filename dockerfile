@@ -1,5 +1,5 @@
 # начальный образ
-FROM rust
+FROM rust:1.69
 # рабочая директория проекта
 WORKDIR /app
 # скопировать содерижмое проекта в контекст (WORKDIR), где находится конфиг dockerfile
@@ -21,6 +21,8 @@ RUN apt-get install build-essential zlib1g-dev \
 RUN apt-get install python3.10 python3-pip -y;
 # врубаем окружение & ставим для сборки в wheels
 RUN pip install maturin && pip install ziglang;
+# покрывающие тесты
+RUN cargo install cargo-tarpaulin;
 # делаем слои для всех зависимостей 
 COPY Cargo.toml Cargo.lock Makefile pyproject.toml .
 RUN mkdir src; touch src/lib.rs;
