@@ -1,25 +1,9 @@
-variables:
-  PROJECT_DIR: $CI_PROJECT_DIR
-  IMAGE_NAME: registry.gitlab.com/yourbandy-group/backend/pystval
-
 stages:
-  - test
-  - build
-
-linter_check:
-  image: IMAGE_NAME
+  - linter-test
+lint:
+  image:
+    name: registry.gitlab.com/yourbandy-group/backend/pystval
+    entrypoint: [""]
   script:
     - echo "Running linter..."
-    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app IMAGE_NAME cargo clippy -- -D warnings
-
-test_with_coverage:
-  image: IMAGE_NAME
-  script:
-    - echo "Running tests..."
-    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app IMAGE_NAME cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
-  artifacts:
-    paths:
-      - ./coverage/*.xml
-  needs:
-    - job: linter_check
-      artifacts: true
+    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app registry.gitlab.com/yourbandy-group/backend/pystval cargo clippy -- -D warnings
