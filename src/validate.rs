@@ -39,7 +39,7 @@ impl TemplateValidator {
 pub fn just_look_at_this(
     py: Python,
     slf: &TemplateValidator,
-    regex: &String,
+    regex: &str,
     def_regex: bool,
     rule_status: &RuleStatus,
     text: &str,
@@ -86,7 +86,7 @@ pub fn just_look_at_this(
 /// Функция для проверки текста на соответствие одного регулярного выражения
 /// Зависит от `def_regex` - если `true`, то используется `Default Regex`, если `false`, то используется `Fancy Regex`
 pub fn switch_loop_regex(
-    regex: &String,
+    regex: &str,
     extra_names: &Vec<String>,
     extra_values: &mut HashMap<String, String>,
     flag_status: &mut bool,
@@ -99,7 +99,7 @@ pub fn switch_loop_regex(
             // Если есть `extra_names`, то добавляем вместе с `extra_values`
             // Если нет, то добавляем заглушку
             for name in extra_names {
-                match capture.name(&name) {
+                match capture.name(name) {
                     Some(value) => {
                         extra_values.insert(name.to_string(), value.as_str().to_string());
                     }
@@ -115,7 +115,7 @@ pub fn switch_loop_regex(
             // Если есть `extra_names`, то добавляем вместе с `extra_values`
             // Если нет, то добавляем заглушку
             for name in extra_names {
-                match capture.as_ref().unwrap().name(&name) {
+                match capture.as_ref().unwrap().name(name) {
                     Some(value) => {
                         extra_values.insert(name.to_string(), value.as_str().to_string());
                     }

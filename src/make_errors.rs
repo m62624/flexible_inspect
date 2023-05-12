@@ -26,7 +26,7 @@ pub fn create_error(obj: &PyObject, extra_hm: Option<HashMap<String, String>>) -
 }
 
 /// Получаем extra из класса (MESSAGE_WITH_EXTRA_FROM_CLASS_PY)
-pub fn extra_from_class<'a, T: AsRef<str>>(
+pub fn extra_from_class<T: AsRef<str>>(
     class_template: &types::PyType,
     attr: T,
 ) -> PyResult<Vec<String>> {
@@ -57,9 +57,9 @@ pub fn error_or_ok(
 ) -> PyResult<()> {
     let error = || {
         if extra_values.is_empty() {
-            make_errors::create_error(&obj, None)
+            make_errors::create_error(obj, None)
         } else {
-            make_errors::create_error(&obj, Some(extra_values))
+            make_errors::create_error(obj, Some(extra_values))
         }
     };
     match (&rule_status.status, flag) {

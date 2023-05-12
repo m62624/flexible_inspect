@@ -13,7 +13,7 @@ pub mod check {
     /// Проверяем строку, является ли корректным регулярным выражением (`fancy regex`)\
     /// **Является вторым шагом проверки во время инициализаций конструктора**
     pub fn is_fancy_regex_second_step(line: &str) -> bool {
-        fancy_regex::Regex::new(&line).is_ok()
+        fancy_regex::Regex::new(line).is_ok()
     }
 }
 
@@ -38,12 +38,12 @@ pub mod convert {
     // а значит, можно позже произвести конвертацию сразу, когда необходим будет `regex` для валидаций,
 
     /// Конвертация `String` в `default regex`
-    pub fn string_to_default_regex(line: &String) -> regex::Regex {
+    pub fn string_to_default_regex(line: &str) -> regex::Regex {
         regex::Regex::new(line).unwrap()
     }
 
     /// Конвертация `String` в `fancy regex`
-    pub fn string_to_fancy_regex(line: &String) -> fancy_regex::Regex {
+    pub fn string_to_fancy_regex(line: &str) -> fancy_regex::Regex {
         fancy_regex::Regex::new(line).unwrap()
     }
 }

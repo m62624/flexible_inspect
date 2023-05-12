@@ -2,11 +2,11 @@
 
 //===============================================================================
 // имя атрибута, где хранится само сообщение и **extra переменные из класса Python
-pub const MESSAGE_WITH_EXTRA_FROM_CLASS_PY: &'static str = "template";
+pub const MESSAGE_WITH_EXTRA_FROM_CLASS_PY: &str = "template";
 // имя атрибута, где хранится регулярные выражения из класса Python
-pub const RULES_FROM_CLASS_PY: &'static str = "rules";
+pub const RULES_FROM_CLASS_PY: &str = "rules";
 // имя атрибута, где хранится **extra переменные для заполнения из класса Python
-pub const EXTRA_FROM_CLASS_PY: &'static str = "extra";
+pub const EXTRA_FROM_CLASS_PY: &str = "extra";
 //===============================================================================
 
 // Проверка и конвертация данных из Python в Rust и обратно
@@ -26,11 +26,6 @@ use pyo3::gc::{PyTraverseError, PyVisit};
 use pyo3::{prelude::*, types};
 use std::{collections::HashMap, str};
 
-// Используем разные виды regex для различной сложности выражений
-//=============================
-use fancy_regex;
-use regex;
-//=============================
 
 /// Перечечисление, где даны варианты действия при положительном результате регулярных выражений
 #[pyclass]
@@ -106,7 +101,7 @@ impl TemplateValidator {
     #[cfg(not(tarpaulin_include))]
     #[pyo3(name = "validate")]
     fn validate<'py>(&self, py: Python<'py>, text_bytes: &types::PyBytes) -> PyResult<&'py PyAny> {
-        let unsafe_self = unsafe { &*(&*self as *const Self) };
+        let unsafe_self = unsafe { &*(self as *const Self) };
         let text = check_convert::convert::bytes_to_string_utf8(text_bytes.as_bytes())?;
         pyo3_asyncio::async_std::future_into_py(py, async move {
             unsafe_self.core_validate(text)?;
