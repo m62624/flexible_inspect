@@ -1,6 +1,5 @@
 # Rust
 /target
-/Cargo.lock
 /src/main.rs
 # Python
 .env
