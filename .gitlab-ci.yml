@@ -1,5 +1,5 @@
-# ставим глобальную переменную image
 variables:
+  # ставим глобальную переменную image
   IMAGE: registry.gitlab.com/yourbandy-group/backend/pystval:latest
 
 # ступени работы
@@ -14,10 +14,14 @@ Build `Image` (dependencies):
   services:
     - docker:dind
   before_script:
+    # вводим данные для входа аккаунта
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
+    # получаем образ, если он существует, либо собираем по новой
     - docker pull $IMAGE || true
+    # если есть прошлый образ, используем кэш (самое главное для скорости)
     - docker build --cache-from $IMAGE --build-arg BUILDKIT_INLINE_CACHE=1 -t $IMAGE .
+    # заливаем образ в `Gitlab Contrainer Registry` для повторного использования
     - docker push $IMAGE
 
 # проверяем сематнику & правописание
@@ -27,9 +31,13 @@ Linter check (clippy):
   services:
     - docker:dind
   before_script:
+    # вводим данные для входа аккаунта
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
+    # получаем образ, если он существует, либо собираем по новой
     - docker pull $IMAGE || true
+    # запускаем контейнер с примонтированным разделом,
+    # где находится исходный код
     - docker run -v $CI_PROJECT_DIR:/app $IMAGE cargo clippy -- -D warnings
 #==========================================================================================
 # build image:
