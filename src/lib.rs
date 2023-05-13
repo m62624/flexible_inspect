@@ -26,7 +26,6 @@ use pyo3::gc::{PyTraverseError, PyVisit};
 use pyo3::{prelude::*, types};
 use std::{collections::HashMap, str};
 
-
 /// Перечечисление, где даны варианты действия при положительном результате регулярных выражений
 #[pyclass]
 #[derive(Debug, Clone)]
@@ -73,6 +72,7 @@ impl TemplateValidator {
     /// **Может принимать сразу `class` без экземпляра**
     #[new]
     pub fn __new__(flags: PyObject) -> PyResult<Self> {
+        let x: i32;
         Python::with_gil(|py| -> PyResult<Self> {
             let mut python_classes: HashMap<usize, PyObject> = HashMap::new();
             let mut all_simple_rules: HashMap<String, RuleStatus> = HashMap::new();
