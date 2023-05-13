@@ -2,23 +2,23 @@ variables:
   CACHE_PATH: /usr/local/cargo
 
 stages:
-  - build
+  # - build
   - run
 
-build image:
-  stage: build
-  image: docker:stable
-  services:
-    - docker:dind
-  script:
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - docker pull registry.gitlab.com/yourbandy-group/backend/pystval:latest
-    - docker build --cache-from registry.gitlab.com/yourbandy-group/backend/pystval:latest -t registry.gitlab.com/yourbandy-group/backend/pystval:latest .
-    - docker push registry.gitlab.com/yourbandy-group/backend/pystval:latest
-  cache:
-    key: cargo-dependencies
-    paths:
-      - $CACHE_PATH
+# build image:
+#   stage: build
+#   image: docker:stable
+#   services:
+#     - docker:dind
+#   script:
+#     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+#     - docker pull registry.gitlab.com/yourbandy-group/backend/pystval:latest
+#     - docker build --cache-from registry.gitlab.com/yourbandy-group/backend/pystval:latest -t registry.gitlab.com/yourbandy-group/backend/pystval:latest .
+#     - docker push registry.gitlab.com/yourbandy-group/backend/pystval:latest
+#   cache:
+#     key: cargo-dependencies
+#     paths:
+#       - $CACHE_PATH
 
 run:
   stage: run
@@ -27,5 +27,6 @@ run:
     - docker:dind
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app -v $CI_PROJECT_DIR/coverage:/app/coverage registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
-#    - docker run --security-opt seccomp=unconfined registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin
+    - docker pull registry.gitlab.com/yourbandy-group/backend/pystval:latest
+    - docker build --cache-from registry.gitlab.com/yourbandy-group/backend/pystval:latest -t registry.gitlab.com/yourbandy-group/backend/pystval:latest .
+    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
