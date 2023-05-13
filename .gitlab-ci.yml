@@ -1,13 +1,9 @@
+variables:
+  CACHE_PATH: /usr/local/cargo
+
 stages:
-  - cache
   - build
   - run
-
-cache:
-  key: cargo-dependencies
-  paths:
-    - /usr/local/cargo
-    - ./.cargo/
 
 build image:
   stage: build
@@ -19,6 +15,10 @@ build image:
     - docker pull registry.gitlab.com/yourbandy-group/backend/pystval:latest
     - docker build --cache-from registry.gitlab.com/yourbandy-group/backend/pystval:latest -t registry.gitlab.com/yourbandy-group/backend/pystval:latest .
     - docker push registry.gitlab.com/yourbandy-group/backend/pystval:latest
+  cache:
+    key: cargo-dependencies
+    paths:
+      - $CACHE_PATH
 
 run:
   stage: run
@@ -27,4 +27,5 @@ run:
     - docker:dind
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - docker run --security-opt seccomp=unconfined registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin
+    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin
+#    - docker run --security-opt seccomp=unconfined registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin
