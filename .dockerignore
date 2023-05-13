@@ -6,3 +6,5 @@ CHANGELOG.md
 README.md
 .gitlab-ci.yml
 Dockerfile
+WHEELS
+coverage

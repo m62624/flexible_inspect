@@ -4,16 +4,16 @@ variables:
 
 # ступени работы
 stages:
-  - build
-  - linter
-  - test
+  - BUILD
+  - LINTER
+  - TEST
 
 # Базовая сборка
 Build Image (dependencies):
-  stage: build
-  image: docker:stable
-  services:
-    - docker:dind
+  stage: BUILD
+  image: $IMAGE
+  tags:
+    - production_runner
   before_script:
     # вводим данные для входа аккаунта
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
@@ -22,31 +22,27 @@ Build Image (dependencies):
     - docker pull $IMAGE || true
     # если есть прошлый образ, используем кэш (самое главное для скорости)
     - docker build --cache-from $IMAGE --build-arg BUILDKIT_INLINE_CACHE=1 -t $IMAGE .
+    - ls -a
     # заливаем образ в `Gitlab Contrainer Registry` для повторного использования
     - docker push $IMAGE
 
 # Проверяем сематнику & правописани
 Linter check (clippy):
-  stage: linter
-  image: docker:stable
-  services:
-    - docker:dind
-  before_script:
-    # вводим данные для входа аккаунта
-    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  stage: LINTER
+  image: $IMAGE
+  tags:
+    - production_runner
   script:
-    # получаем образ, если он существует, либо собираем по новой
-    - docker pull $IMAGE || true
-    # запускаем контейнер с примонтированным разделом,
-    # где находится исходный код,
-    - docker run -v $CI_PROJECT_DIR:/app $IMAGE cargo clippy -- -D warnings
+    - cargo clippy -- -D warnings
 
 # Запускаем все тесты + их покрытие
 Coverage test:
-  stage: test
+  stage: TEST
   image: docker:stable
   services:
     - docker:dind
+  tags:
+    - production_runner
   before_script:
     # вводим данные для входа аккаунта
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
@@ -55,34 +51,11 @@ Coverage test:
     - docker pull $IMAGE || true
     # запускаем контейнер с примонтированным разделом,
     # где находится исходный код
-    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app $IMAGE cargo tarpaulin --engine llvm --out lcov --output-dir ./coverage/
+    - docker run --security-opt seccomp=unconfined $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
   artifacts:
+    name: ${CI_JOB_NAME}-${CI_COMMIT_REF_NAME}-${CI_COMMIT_SHA}
     # сохраняем результат покрытия
-    paths:
-      - ./coverage/
-#======================================================================
-# build image:
-#   stage: build
-#   image: docker:stable
-#   services:
-#     - docker:dind
-#   script:
-#     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-#     - docker pull $IMAGE
-#     - docker build --cache-from $IMAGE -t $IMAGE .
-#     - docker push $IMAGE
-#   cache:
-#     key: cargo-dependencies
-#     paths:
-#       - $CACHE_PATH
-
-# check:
-#   stage: test
-#   image: docker:stable
-#   services:
-#     - docker:dind
-#   script:
-#     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-#     - docker pull $IMAGE
-#     - docker build --cache-from $IMAGE -t $IMAGE .
-#     - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: ./coverage/cobertura.xml
