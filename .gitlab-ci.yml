@@ -1,9 +1,10 @@
+# ставим глобальную переменную для BUILDKIT
+variables:
+  IMAGE: registry.gitlab.com/yourbandy-group/backend/pystval:latest
+
 stages:
   - build
   - linter
-
-variables:
-  DOCKER_BUILDKIT: "1"
 
 Build Polygon:
   stage: build
@@ -12,9 +13,9 @@ Build Polygon:
     - docker:dind
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - docker pull registry.gitlab.com/yourbandy-group/backend/pystval:latest || true
-    - docker build --cache-from registry.gitlab.com/yourbandy-group/backend/pystval:latest --build-arg BUILDKIT_INLINE_CACHE=1 -t registry.gitlab.com/yourbandy-group/backend/pystval:latest .
-    - docker push registry.gitlab.com/yourbandy-group/backend/pystval:latest
+    - docker pull $IMAGE || true
+    - docker build --cache-from $IMAGE --build-arg BUILDKIT_INLINE_CACHE=1 -t $IMAGE .
+    - docker push $IMAGE
 
 Linter Polygon:
   stage: linter
@@ -23,8 +24,8 @@ Linter Polygon:
     - docker:dind
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - docker pull registry.gitlab.com/yourbandy-group/backend/pystval:latest || true
-    - docker run -v $CI_PROJECT_DIR:/app registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo clippy -- -D warnings
+    - docker pull $IMAGE || true
+    - docker run -v $CI_PROJECT_DIR:/app $IMAGE cargo clippy -- -D warnings
 # build image:
 #   stage: build
 #   image: docker:stable
@@ -32,9 +33,9 @@ Linter Polygon:
 #     - docker:dind
 #   script:
 #     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-#     - docker pull registry.gitlab.com/yourbandy-group/backend/pystval:latest
-#     - docker build --cache-from registry.gitlab.com/yourbandy-group/backend/pystval:latest -t registry.gitlab.com/yourbandy-group/backend/pystval:latest .
-#     - docker push registry.gitlab.com/yourbandy-group/backend/pystval:latest
+#     - docker pull $IMAGE
+#     - docker build --cache-from $IMAGE -t $IMAGE .
+#     - docker push $IMAGE
 #   cache:
 #     key: cargo-dependencies
 #     paths:
@@ -47,6 +48,6 @@ Linter Polygon:
 #     - docker:dind
 #   script:
 #     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-#     - docker pull registry.gitlab.com/yourbandy-group/backend/pystval:latest
-#     - docker build --cache-from registry.gitlab.com/yourbandy-group/backend/pystval:latest -t registry.gitlab.com/yourbandy-group/backend/pystval:latest .
-#     - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
+#     - docker pull $IMAGE
+#     - docker build --cache-from $IMAGE -t $IMAGE .
+#     - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
