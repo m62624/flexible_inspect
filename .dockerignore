@@ -8,3 +8,4 @@ README.md
 Dockerfile
 WHEELS
 coverage
+.env
