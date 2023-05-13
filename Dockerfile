@@ -56,7 +56,7 @@ RUN apt-get install python3-pip -y
 RUN pip3 install maturin && pip3 install ziglang
 
 # создаем слои для всех зависимостей 
-COPY Cargo.toml Cargo.lock Makefile pyproject.toml .
+COPY Cargo.toml Cargo.lock Makefile pyproject.toml ./
 RUN mkdir src && touch src/lib.rs
 
 # получаем кэш зависимостей 
