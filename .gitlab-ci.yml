@@ -6,9 +6,10 @@ variables:
 stages:
   - build
   - linter
+  - test
 
-# базовая сборка
-Build `Image` (dependencies):
+# Базовая сборка
+Build Image (dependencies):
   stage: build
   image: docker:stable
   services:
@@ -24,7 +25,7 @@ Build `Image` (dependencies):
     # заливаем образ в `Gitlab Contrainer Registry` для повторного использования
     - docker push $IMAGE
 
-# проверяем сематнику & правописание
+# Проверяем сематнику & правописани
 Linter check (clippy):
   stage: linter
   image: docker:stable
@@ -37,9 +38,29 @@ Linter check (clippy):
     # получаем образ, если он существует, либо собираем по новой
     - docker pull $IMAGE || true
     # запускаем контейнер с примонтированным разделом,
-    # где находится исходный код
+    # где находится исходный код,
     - docker run -v $CI_PROJECT_DIR:/app $IMAGE cargo clippy -- -D warnings
-#==========================================================================================
+
+# Запускаем все тесты + их покрытие
+Coverage test:
+  stage: test
+  image: docker:stable
+  services:
+    - docker:dind
+  before_script:
+    # вводим данные для входа аккаунта
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
+    # получаем образ, если он существует, либо собираем по новой
+    - docker pull $IMAGE || true
+    # запускаем контейнер с примонтированным разделом,
+    # где находится исходный код
+    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app $IMAGE cargo tarpaulin --engine llvm --out lcov --output-dir ./coverage/
+  artifacts:
+    # сохраняем результат покрытия
+    paths:
+      - ./coverage/
+#======================================================================
 # build image:
 #   stage: build
 #   image: docker:stable
