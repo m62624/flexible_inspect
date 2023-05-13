@@ -1,5 +1,6 @@
 stages:
   - build
+  - linter
 
 variables:
   DOCKER_BUILDKIT: "1"
@@ -14,6 +15,16 @@ Build Polygon:
     - docker pull registry.gitlab.com/yourbandy-group/backend/pystval:latest || true
     - docker build --cache-from registry.gitlab.com/yourbandy-group/backend/pystval:latest --build-arg BUILDKIT_INLINE_CACHE=1 -t registry.gitlab.com/yourbandy-group/backend/pystval:latest .
     - docker push registry.gitlab.com/yourbandy-group/backend/pystval:latest
+
+Linter Polygon:
+  stage: linter
+  image: docker:stable
+  services:
+    - docker:dind
+  script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+    - docker pull registry.gitlab.com/yourbandy-group/backend/pystval:latest || true
+    - docker run -v $CI_PROJECT_DIR:/app registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo clippy -- -D warnings
 # build image:
 #   stage: build
 #   image: docker:stable
