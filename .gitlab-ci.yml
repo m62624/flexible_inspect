@@ -27,5 +27,5 @@ run:
     - docker:dind
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin
+    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app -v $CI_PROJECT_DIR/coverage:/app/coverage registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
 #    - docker run --security-opt seccomp=unconfined registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin
