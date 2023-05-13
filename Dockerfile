@@ -65,4 +65,5 @@ RUN cargo fetch
 # headers загружаются только при сборке (либо я не нашел команду для maturin :D)
 RUN make all;
 RUN rm -rf *
+RUN mkdir coverage
 COPY . .
