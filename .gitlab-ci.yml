@@ -1,4 +1,5 @@
 stages:
+  - cache
   - build
   - run
 
@@ -24,4 +25,5 @@ run:
   services:
     - docker:dind
   script:
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
     - docker run --security-opt seccomp=unconfined registry.gitlab.com/yourbandy-group/backend/pystval:latest cargo tarpaulin
