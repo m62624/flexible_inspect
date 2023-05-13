@@ -1,21 +1,21 @@
-#==============
 stages:
   - build
   - run
+
+cache:
+  key: cargo-dependencies
+  paths:
+    - /usr/local/cargo
 
 build image:
   stage: build
   image: docker:stable
   services:
     - docker:dind
-  # эксперимент с использвонием кэша
   script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
-    # получим заранее образ
     - docker pull registry.gitlab.com/yourbandy-group/backend/pystval:latest
-      # на основе его пробуем сборку через кэш
     - docker build --cache-from registry.gitlab.com/yourbandy-group/backend/pystval:latest -t registry.gitlab.com/yourbandy-group/backend/pystval:latest .
-      #
     - docker push registry.gitlab.com/yourbandy-group/backend/pystval:latest
 
 run:

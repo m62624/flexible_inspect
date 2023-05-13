@@ -65,5 +65,4 @@ RUN cargo fetch
 # headers загружаются только при сборке (либо я не нашел команду для maturin :D)
 RUN make all
 COPY . .
-# очищаем рабочую директорию после сборки
-# RUN rm -rf *
+
