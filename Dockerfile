@@ -63,6 +63,4 @@ RUN mkdir src && touch src/lib.rs
 RUN cargo fetch
 # делаем один раз билд для каждой платформы, 
 # headers загружаются только при сборке (либо я не нашел команду для maturin :D)
-RUN make all
-COPY . .
-
+# RUN make all
