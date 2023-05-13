@@ -11,7 +11,9 @@ stages:
 # Базовая сборка
 Build Image (dependencies):
   stage: BUILD
-  image: $IMAGE
+  image: docker:stable
+  services:
+    - docker:dind
   tags:
     - production_runner
   before_script:
