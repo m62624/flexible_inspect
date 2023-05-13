@@ -1,31 +1,37 @@
-# ставим глобальную переменную для BUILDKIT
+# ставим глобальную переменную image
 variables:
   IMAGE: registry.gitlab.com/yourbandy-group/backend/pystval:latest
 
+# ступени работы
 stages:
   - build
   - linter
 
-Build Polygon:
+# базовая сборка
+Build `Image` (dependencies):
   stage: build
   image: docker:stable
   services:
     - docker:dind
-  script:
+  before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
     - docker pull $IMAGE || true
     - docker build --cache-from $IMAGE --build-arg BUILDKIT_INLINE_CACHE=1 -t $IMAGE .
     - docker push $IMAGE
 
-Linter Polygon:
+# проверяем сематнику & правописание
+Linter check (clippy):
   stage: linter
   image: docker:stable
   services:
     - docker:dind
-  script:
+  before_script:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
     - docker pull $IMAGE || true
     - docker run -v $CI_PROJECT_DIR:/app $IMAGE cargo clippy -- -D warnings
+#==========================================================================================
 # build image:
 #   stage: build
 #   image: docker:stable
