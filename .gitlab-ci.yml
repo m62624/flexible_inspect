@@ -54,13 +54,11 @@ Coverage test:
     # запускаем контейнер с примонтированным разделом,
     # где находится исходный код
     # -v $CI_PROJECT_DIR:/app
-    - docker run --security-opt seccomp=unconfined  -v $CI_PROJECT_DIR:/app $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
+    - docker run --security-opt seccomp=unconfined $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
   coverage: /^\d+.\d+% coverage/
   artifacts:
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: ./coverage/
+    paths:
+      - ./coverage/
 
   #         - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app $IMAGE cargo tarpaulin --engine llvm --out lcov --output-dir ./coverage/
   # artifacts:
