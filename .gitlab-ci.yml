@@ -57,10 +57,7 @@ Coverage test:
     - docker run --security-opt seccomp=unconfined $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
   coverage: /^\d+.\d+% coverage/
   artifacts:
-    paths:
-      - ./coverage/
-
-  #         - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app $IMAGE cargo tarpaulin --engine llvm --out lcov --output-dir ./coverage/
-  # artifacts:
-  #   paths:
-  #     - ./coverage/
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: $CI_PROJECT_DIR/coverage/cobertura.xml
