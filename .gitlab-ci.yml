@@ -55,9 +55,13 @@ Coverage test:
     # где находится исходный код
     # -v $CI_PROJECT_DIR:/app
     - docker run --security-opt seccomp=unconfined $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
+    - echo '==========(LS)============'
+    - ls -a
+    - echo '============(PWD)============='
+    - pwd
   coverage: /^\d+.\d+% coverage/
-  artifacts:
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: $CI_PROJECT_DIR/coverage/cobertura.xml
+  # artifacts:
+  #   reports:
+  #     coverage_report:
+  #       coverage_format: cobertura
+  #       path: ./coverage/cobertura.xml
