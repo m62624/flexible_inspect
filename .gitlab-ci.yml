@@ -63,4 +63,4 @@ Coverage test:
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: coverage/cobertura.xml
+        path: coverage/
