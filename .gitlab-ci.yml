@@ -7,6 +7,7 @@ stages:
   - BUILD
   - LINTER
   - TEST
+  - DEPLOY
 
 # Базовая сборка
 Build Image (dependencies):
@@ -56,8 +57,32 @@ Coverage test:
     # -v $CI_PROJECT_DIR:/app
     - docker run --security-opt seccomp=unconfined -v /var/run/docker.sock:/var/run/docker.sock $IMAGE cargo tarpaulin --engine llvm --out xml; echo "====DIND====="; ls .;pwd ;  echo "====pwd====";ls .; pwd;
   coverage: /^\d+.\d+% coverage/
-  # artifacts:
-  #   reports:
-  #     coverage_report:
-  #       coverage_format: cobertura
-  #       path: ./coverage/cobertura.xml
+  artifacts:
+    reports:
+      coverage_report:
+        coverage_format: cobertura
+        path: ./coverage/cobertura.xml
+
+# Собираем пакеты для разных платформ
+Packages:
+  stage: DEPLOY
+  image: $IMAGE
+  tags:
+    - production_runner
+  before_script:
+    # вводим данные для входа аккаунта
+    - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
+  script:
+    # получаем образ, если он существует, либо собираем по новой
+    - docker pull $IMAGE || true
+    # build packages
+    - make all
+  rules:
+    # если ветка main и это push или merge_request_event
+    # то выполняем этот job, иначе пропускаем
+    - if: '$CI_COMMIT_REF_NAME == "main" && ($CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event")'
+  artifacts:
+    paths:
+      - ARTIFACTS_LINUX/
+      - ARTIFACTS_MACOS/
+      - ARTIFACTS_WINDOWS/
