@@ -1,11 +1,11 @@
-"""`Pystval` - `Rust` библиотека для `Python`, служит для создания собственного валидатора"""
+"""`Pystval` is a `Rust' library for `Python', used to create your own validator."""
 import enum
 from typing import Any, Dict, List
 
 
 class TemplateValidator:
     """
-    Класс для создания валидатора
+    A class for creating a validator
     """
 
     def __init__(self, flags: List[Any]):
@@ -13,14 +13,14 @@ class TemplateValidator:
         Parameters
         ----------
         `flags` : `List[Any]`
-            Список классов
+            List of classes
 
         Raises
         ------
         `TypeError`
-            Указан иной тип данных
+            Specifies a different data type
         `AttributeError`
-            Указан неверный атрибут (отсутствует)
+            Incorrect attribute specified (missing)
         """
         pass
 
@@ -29,12 +29,12 @@ class TemplateValidator:
         Parameters
         ----------
         `text` : `str`
-            Текст для проверки
+            Text for verification
 
         Raises
         ------
-        `Кастомная ошибка`
-            Ошибка, которая была указана в `flags`
+        `Custom Error`
+            The error that was specified in `flags`
         """
         pass
     pass
@@ -42,14 +42,14 @@ class TemplateValidator:
 
 class It(enum.Enum):
     """
-    Перечечисление, где даны варианты действия при положительном результате регулярных выражений
+    A `enumeration` that gives options on what to do when you find a regex match 
     """
     MustBeFoundHere = 0,
     """
-    Должно быть найдено, иначе будет вызвано исключение
+    It must be found, otherwise an exception will be thrown
     """
     NotToBeFoundHere = 1,
     """
-    Не должно быть найдено, иначе будет вызвано исключение
+    It is not to Be found here, otherwise an exception will be raised
     """
     pass
