@@ -1,8 +1,8 @@
 PLATFORMS = x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu x86_64-pc-windows-msvc aarch64-pc-windows-msvc x86_64-apple-darwin aarch64-apple-darwin
 
-ARTIFACTS_DIR_LINUX := ARTIFACTS_LINUX
-ARTIFACTS_DIR_MACOS := ARTIFACTS_MACOS
-ARTIFACTS_DIR_WINDOWS := ARTIFACTS_WINDOWS
+ARTIFACTS_DIR_LINUX := Linux
+ARTIFACTS_DIR_MACOS := macOS
+ARTIFACTS_DIR_WINDOWS := Windows
 
 all: $(PLATFORMS)
 

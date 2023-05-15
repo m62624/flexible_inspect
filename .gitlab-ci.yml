@@ -76,6 +76,6 @@ Packages:
     - if: '$CI_COMMIT_REF_NAME == "main" && ($CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event")'
   artifacts:
     paths:
-      - ARTIFACTS_LINUX/
-      - ARTIFACTS_MACOS/
-      - ARTIFACTS_WINDOWS/
+      - Linux/
+      - macOS/
+      - Windows/
