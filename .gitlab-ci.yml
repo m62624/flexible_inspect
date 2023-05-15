@@ -53,13 +53,15 @@ Coverage test:
   script:
     # получаем образ, если он существует, либо собираем по новой
     - docker pull local_check || true
-    - docker run --security-opt seccomp=unconfined -v /var/run/docker.sock:/var/run/docker.sock $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
+    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app/coverage $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/ && ls -a
+    - echo "------"
+    - ls -a;
   coverage: /^\d+.\d+% coverage/
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: ./coverage/cobertura.xml
+        path: ./cobertura.xml
 
 # Собираем пакеты для разных платформ
 Packages:
