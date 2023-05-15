@@ -54,7 +54,6 @@ Coverage test:
     # получаем образ, если он существует, либо собираем по новой
     - docker pull $IMAGE || true
     - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
-    # - docker run --security-opt seccomp=unconfined -v $(pwd):/app/coverage --rm $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/ && ls
   coverage: /^\d+.\d+% coverage/
   artifacts:
     reports:
