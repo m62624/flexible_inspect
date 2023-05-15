@@ -9,3 +9,4 @@ Dockerfile
 WHEELS
 coverage
 .env
+.gitlab-ci-local
