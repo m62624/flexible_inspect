@@ -52,18 +52,17 @@ Coverage test:
     - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
     # получаем образ, если он существует, либо собираем по новой
-    - docker pull local_check || true
-    - pwd
-    - docker run --security-opt seccomp=unconfined --rm -v /var/run/docker.sock:/var/run/docker.sock -v $(pwd):/app/coverage $IMAGE cargo tarpaulin --out xml --output-dir /app/coverage
-    # - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app/coverage $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/ && ls -a
-    - echo "------"; pwd
-    - ls -a;
+    - docker pull $IMAGE || true
+    - docker run --security-opt seccomp=unconfined -v $(pwd):/app/coverage --rm $IMAGE cargo tarpaulin --out xml --output-dir ./coverage/ && ls
+    - echo "+=-=-=-=-=-=+"
+    - ls 
+    - ls coverage/
   coverage: /^\d+.\d+% coverage/
-  artifacts:
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        path: coverage/cobertura.xml
+  # artifacts:
+  #   reports:
+  #     coverage_report:
+  #       coverage_format: cobertura
+  #       path: coverage/cobertura.xml
 
 # Собираем пакеты для разных платформ
 Packages:
