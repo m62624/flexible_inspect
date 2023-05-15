@@ -55,13 +55,13 @@ Coverage test:
     # запускаем контейнер с примонтированным разделом,
     # где находится исходный код
     # -v $CI_PROJECT_DIR:/app
-    - docker run --security-opt seccomp=unconfined -v /var/run/docker.sock:/var/run/docker.sock $IMAGE cargo tarpaulin --engine llvm --out xml; echo "====DIND====="; ls .;pwd ;  echo "====pwd====";ls .; pwd;
+    - docker run --security-opt seccomp=unconfined -v /var/run/docker.sock:/var/run/docker.sock $IMAGE cargo tarpaulin --engine llvm --out xml; echo "====DIND====="; ls .;pwd ;  echo "====D====";ls .; pwd;
   coverage: /^\d+.\d+% coverage/
   artifacts:
     reports:
       coverage_report:
         coverage_format: cobertura
-        path: ./coverage/cobertura.xml
+        path: ./cobertura.xml
 
 # Собираем пакеты для разных платформ
 Packages:
@@ -69,12 +69,7 @@ Packages:
   image: $IMAGE
   tags:
     - production_runner
-  # before_script:
-    # вводим данные для входа аккаунта
-    # - docker login -u "$CI_REGISTRY_USER" -p "$CI_REGISTRY_PASSWORD" "$CI_REGISTRY"
   script:
-    # получаем образ, если он существует, либо собираем по новой
-    - docker pull $IMAGE || true
     # build packages
     - make all
   rules:

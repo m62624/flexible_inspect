@@ -16,6 +16,8 @@ venv.bak/
 /tests/tmp
 /.записи_проекта
 .gitlab-ci-local
+.gitlab-ci-local-env
+.gitlab-ci-locally.yml
 # only for github
 /.github
 # VsCode

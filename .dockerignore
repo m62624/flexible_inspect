@@ -10,3 +10,5 @@ WHEELS
 coverage
 .env
 .gitlab-ci-local
+.gitlab-ci-local-env
+.gitlab-ci-locally.yml
