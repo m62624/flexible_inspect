@@ -54,11 +54,7 @@ Coverage test:
     # запускаем контейнер с примонтированным разделом,
     # где находится исходный код
     # -v $CI_PROJECT_DIR:/app
-    - docker run --security-opt seccomp=unconfined $IMAGE cargo tarpaulin --engine llvm --out xml; echo "====dnd====="; ls .;  echo "====pwd===="; pwd
-    - echo '==========(LS)============'
-    - ls -a
-    - echo '============(PWD)============='
-    - pwd
+    - docker run --security-opt seccomp=unconfined -v /var/run/docker.sock:/var/run/docker.sock $IMAGE cargo tarpaulin --engine llvm --out xml; echo "====DIND====="; ls .;pwd ;  echo "====pwd====";ls .; pwd;
   coverage: /^\d+.\d+% coverage/
   # artifacts:
   #   reports:
