@@ -27,10 +27,12 @@ venv.bak/
 /coverage
 # builds
 /WHEELS
+/Windows
+/Linux
+/macOS
 #dk
 /.dockerignore
 /Dockerfile
-
 # Jet Brains
 .idea
 .idea/
