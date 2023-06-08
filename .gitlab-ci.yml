@@ -53,7 +53,7 @@ Coverage test:
   script:
     # получаем образ, если он существует, либо собираем по новой
     - docker pull $IMAGE || true
-    - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
+    - docker run --security-opt seccomp=unconfined $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
   coverage: /^\d+.\d+% coverage/
 
 # Собираем пакеты для разных платформ
