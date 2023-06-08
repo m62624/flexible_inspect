@@ -55,11 +55,6 @@ Coverage test:
     - docker pull $IMAGE || true
     - docker run --security-opt seccomp=unconfined -v $CI_PROJECT_DIR:/app $IMAGE cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
   coverage: /^\d+.\d+% coverage/
-  artifacts:
-    reports:
-      coverage_report:
-        coverage_format: cobertura
-        paths: ./coverage/
 
 # Собираем пакеты для разных платформ
 Packages:
