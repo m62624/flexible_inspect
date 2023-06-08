@@ -68,7 +68,7 @@ Packages:
   rules:
     # если ветка main и это push или merge_request_event
     # то выполняем этот job, иначе пропускаем
-    - if: '$CI_COMMIT_REF_NAME == "main" && ($CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event")'
+    # - if: '$CI_COMMIT_REF_NAME == "main" && ($CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event")'
   artifacts:
     paths:
       - Linux/
