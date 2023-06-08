@@ -4,6 +4,8 @@ ARTIFACTS_DIR_LINUX := Linux
 ARTIFACTS_DIR_MACOS := macOS
 ARTIFACTS_DIR_WINDOWS := Windows
 
+# Цель: all
+# Описание: Собирает все указанные платформы
 all: $(PLATFORMS)
 
 $(PLATFORMS):
@@ -18,5 +20,7 @@ $(PLATFORMS):
 		mkdir -p $(ARTIFACTS_DIR_MACOS); \
 		maturin build -i python3 --release --target $@ --zig -o $(ARTIFACTS_DIR_MACOS); \
 	fi
+# Цель: clean
+# Описание: Очищает созданные артефакты
 clean:
 	rm -rf $(ARTIFACTS_DIR_LINUX) $(ARTIFACTS_DIR_MACOS) $(ARTIFACTS_DIR_WINDOWS)
