@@ -58,6 +58,8 @@ Coverage test:
 
 # Собираем пакеты для разных платформ
 Packages:
+  needs:
+    ["Build Image (dependencies)", "Linter check (clippy)", "Coverage test"]
   stage: DEPLOY
   image: $IMAGE
   tags:
@@ -65,10 +67,7 @@ Packages:
   script:
     # build packages
     - make all
-  needs:
-    ["BUILD", "LINTER", "TEST"]
-    #["Build Image (dependencies)", "Linter check (clippy)", "Coverage test"]
-    # если ветка main и это push или merge_request_event 
+    # если ветка main и это push или merge_request_event
     # то выполняем этот job, иначе пропускаем
     # - if: '$CI_COMMIT_REF_NAME == "main" && ($CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event")'
   artifacts:
