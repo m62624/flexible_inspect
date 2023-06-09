@@ -65,15 +65,11 @@ Packages:
   script:
     # build packages
     - make all
-  rules:
-    # Устанавливаем зависимости на предыдущие этапы
-    - exists:
-        - Build Image (dependencies)
-        - Linter check (clippy)
-        - Coverage test
-      # если ветка main и это push или merge_request_event
-      # то выполняем этот job, иначе пропускаем
-      # - if: '$CI_COMMIT_REF_NAME == "main" && ($CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event")'
+  needs:
+    ["BUILD", "LINTER", "TEST"]
+    # если ветка main и это push или merge_request_event
+    # то выполняем этот job, иначе пропускаем
+    # - if: '$CI_COMMIT_REF_NAME == "main" && ($CI_PIPELINE_SOURCE == "push" || $CI_PIPELINE_SOURCE == "merge_request_event")'
   artifacts:
     paths:
       - Linux/
