@@ -1,5 +1,6 @@
 # Pystval 
 
+
 ---
 <p align="center">
   <kbd>
@@ -30,9 +31,10 @@ Thanks to its flexible and extensible architecture, you can easily integrate **P
 
 ## Supported systems
 
-|                     | Linux                    | Windows                | macOS                |
-| ------------------- | ------------------------ | ---------------------- | -------------------- |
-| System architecture | x86_64-unknown-linux-gnu | x86_64-pc-windows-msvc | aarch64-apple-darwin |
+|                     | Linux                     | Windows                 | macOS                |
+| ------------------- | ------------------------- | ----------------------- | -------------------- |
+| System architecture | x86_64-unknown-linux-gnu  | x86_64-pc-windows-msvc  | aarch64-apple-darwin |
+|                     | aarch64-unknown-linux-gnu | aarch64-pc-windows-msvc | x86_64-apple-darwin  |
 
 
 ## Installing
