@@ -1,5 +1,7 @@
+# Указываем название пайплайна
 name: CI/CD Pipeline
-
+# Указываем события, при которых будет запускаться пайплайн
+# Запускается при пуше в любую ветку и при создании пулл-реквеста
 on:
   push:
     branches:
@@ -7,50 +9,68 @@ on:
   pull_request:
     branches:
       - '*'
-
+# Указываем переменные окружения
 env:
   IMAGE: ghcr.io/${{ secrets.NAME_LOGIN }}/pystval:latest
 jobs:
   build:
     runs-on: ubuntu-latest
-
+    # Указываем шаги пайплайна
     steps:
+
+      # шаг для клонирования репозитория
       - name: Checkout code
         uses: actions/checkout@v2
 
+      # шаг для установки Docker
       - name: Log in to GitHub Docker Registry
         run: echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
 
+      # шаг для сборки и пуша образа
       - name: Build Image (dependencies)
         run: |
           docker pull ${{ env.IMAGE }} || true
           docker build --cache-from ${{ env.IMAGE }} --build-arg BUILDKIT_INLINE_CACHE=1 -t ${{ env.IMAGE }} .
           docker push ${{ env.IMAGE }}
 
-      # - name: Linter check (clippy)
-      #   run: cargo clippy -- -D warnings
+      # шаг для запуска линтера
+      - name: Linter check (clippy)
+        run: cargo clippy -- -D warnings
 
+      # шаг для запуска тестов
       - name: Coverage test
         run: |
           docker pull ${{ env.IMAGE }} || true
           docker run --security-opt seccomp=unconfined ${{ env.IMAGE }} cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
-      
+
+      # шаг для копирования отчета о покрытии из контейнера
       - name: Copy coverage report from container
         run: |
-          docker cp $(docker ps -lq):app/coverage/cobertura.xml .; ls -a
-      
+          docker cp $(docker ps -lq):app/coverage/cobertura.xml .
+
+      # шаг для загрузки отчета о покрытии 
       - name: Upload coverage report
         uses: actions/upload-artifact@v2
         with:
           name: cobertura-report
           path: cobertura.xml
 
+      # шаг для отправки отчета о покрытии в Codecov
+      - name: Send coverage report to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: cobertura.xml
+
+      # шаг для сборки пакетов
       - name: Packages
+      # шаг для установки зависимостей
         id: packages
         run: make all
-
+        # шаг выполняется только при пуше в ветку main или при создании пулл-реквеста
         if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'pull_request') }}
-    
+        
+      # шаг для загрузки пакетов в артефакты
       - name: Upload artifacts
         uses: actions/upload-artifact@v2
         with:
@@ -59,4 +79,5 @@ jobs:
             Linux/
             macOS/
             Windows/
+        # шаг выполняется только при успешном выполнении шага packages
         if: ${{ needs.packages.status == 'success' }}
