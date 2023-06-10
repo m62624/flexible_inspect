@@ -34,7 +34,13 @@ jobs:
         run: |
           docker pull ${{ env.IMAGE }} || true
           docker run --security-opt seccomp=unconfined ${{ env.IMAGE }} cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
-        
+      
+      - name: Save coverage artifacts
+        uses: actions/upload-artifact@v2
+        with:
+          name: coverage-report
+          path: ./coverage
+      
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
