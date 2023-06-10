@@ -1,0 +1,123 @@
+# Указываем название пайплайна
+name: CI/CD Pipeline
+
+# Указываем события, при которых будет запускаться пайплайн
+# Запускается при пуше в любую ветку и при создании пулл-реквеста
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+# Указываем переменные окружения
+env:
+  IMAGE: ghcr.io/${{ secrets.NAME_LOGIN }}/pystval:latest
+jobs:
+  #  # Job для клонирования репозитория
+  # clone:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+
+  # job для сборки образа (в нем будет происходит сборка и тестирование библиотеки)
+  build_image:
+    # needs: clone
+    runs-on: ubuntu-latest
+    steps:
+      # Шаг для входа в Docker Registry
+      - name: Log in to GitHub Docker Registry
+        run: echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+      # Шаг для клонирования репозитория
+      - name: Checkout code
+        uses: actions/checkout@v3
+      # Шаг для сборки и пуша образа
+      - name: Build Image (dependencies)
+        run: |
+          docker pull ${{ env.IMAGE }} || true
+          docker build --cache-from ${{ env.IMAGE }} --build-arg BUILDKIT_INLINE_CACHE=1 -t ${{ env.IMAGE }} .
+          docker push ${{ env.IMAGE }}
+
+  # Job для проверки кода линтером
+  linter_check:
+    needs: build_image
+    runs-on: ubuntu-latest
+    steps:
+      # Шаг для клонирования репозитория
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Шаг для запуска линтера
+      - name: Linter check (clippy)
+        run: cargo clippy -- -D warnings
+
+  # Job для тестирования кода
+  coverage_test:
+    needs: linter_check
+    runs-on: ubuntu-latest
+    steps:
+      # Шаг для входа в Docker Registry
+      - name: Log in to GitHub Docker Registry
+        run: echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+      # Шаг для клонирования репозитория
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      # Шаг для запуска контейнера с тестами
+      - name: Coverage test (tarpaulin)
+        run: |
+          docker pull ${{ env.IMAGE }} || true 
+          docker run --security-opt seccomp=unconfined ${{ env.IMAGE }} cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
+
+      # Шаг для копирования отчета о покрытии из контейнера
+      - name:  Copy coverage report from container
+        run: |
+          docker cp $(docker ps -lq):app/coverage/cobertura.xml .
+
+      # Шаг для загрузки отчета о покрытии в Codecov
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v2
+        with:
+          name: cobertura-report
+          path: cobertura.xml
+
+      # Шаг для отправки отчета о покрытии в Codecov
+      - name: Send coverage report to Codecov
+        uses: codecov/codecov-action@v2
+        with:
+          token: ${{ secrets.CODECOV_TOKEN }}
+          file: cobertura.xml
+
+  # Job для сборки пакетов
+  packages:
+    needs: coverage_test
+    runs-on: ubuntu-latest
+    # Проверяем, что пайплайн запущен в ветке main и что событие - пуш или пулл-реквест
+    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'pull_request') }}
+    steps:
+      # Шаг для входа в Docker Registry
+      - name: Log in to GitHub Docker Registry
+        run: echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+
+      # Шаг для сборки пакетов
+      - name: Build Packages
+        id: packages
+        run: |
+          docker pull ${{ env.IMAGE }} || true
+          docker run ${{ env.IMAGE }} make all
+          docker cp $(docker ps -lq):/app/Linux .
+          docker cp $(docker ps -lq):/app/macOS .
+          docker cp $(docker ps -lq):/app/Windows .
+          ls -al
+      
+      # Шаг для загрузки пакетов в артефакты
+      - name: Upload Packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: packages
+          path: |
+            Linux/
+            macOS/
+            Windows/
