@@ -26,8 +26,6 @@ Thanks to its flexible and extensible architecture, you can easily integrate **P
     - [Basic error pattern](#basic-error-pattern)
     - [New errors](#new-errors)
   - [Additional features](#additional-features)
-  - [Copyright note](#copyright-note)
-  - [**Consideration:**](#consideration)
 
 ## Supported systems
 
@@ -141,13 +139,3 @@ class BadWords(BaseError):
 ```
 > output : `this text should not contain : bad boy`
 
-## Copyright note
-
-All code in this repository is proprietary and copyrighted.
-
-## **Consideration:**
-
-- This code may not be used or distributed without obtaining explicit written permission from the [copyright owner](mailto:dzhurunovt@gmail.com).
-- Copyright infringement may result in legal consequences.
-
-To obtain permission to use the code, please contact the [copyright owner](mailto:dzhurunovt@gmail.com).
