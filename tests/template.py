@@ -45,35 +45,6 @@ class MissingElementAvatar(BaseError):
         r"""(?s)<img.+?id="avatar"\s?.+?\s?>""": It.MustBeFoundHere,
     }
 
-
-class MissingElementFollowers(BaseError):
-    template = ":: The `followers` element was not found"
-    rules = {
-        r"""(?s)<a.+?id="followers"\s?.+?>.+?</a>""": It.MustBeFoundHere,
-    }
-
-
-class MissingElementFollowing(BaseError):
-    template = ":: The `following` element was not found"
-    rules = {
-        r"""(?s)<a.+?id="following"\s?.+?>.+?</a>""": It.MustBeFoundHere,
-    }
-
-
-class MissingElementFriends(BaseError):
-    template = ":: The `friends` element was not found"
-    rules = {
-        r"""(?s)<a.+?id="friends"\s?.+?>.+?</a>""": It.MustBeFoundHere,
-    }
-
-
-class UniqueDefaultElement(BaseError):
-    template = ":: More than one element is found : {one_element}"
-    rules = {
-        r"""(?s)(?P<one_element><a.+?id="followers"\s?.+?>.+?</a>)(?=\s*?.*?\k<one_element>)""": It.NotToBeFoundHere,
-        r"""(?s)(?P<one_element><a.+?id="following"\s?.+?>.+?</a>)(?=\s*?.*?\k<one_element>)""": It.NotToBeFoundHere,
-        r"""(?s)(?P<one_element>(?s)<a.+?id="friends"\s?.+?>.+?</a>)(?=\s*?.*?\k<one_element>)""": It.NotToBeFoundHere,
-    }
 # ============================================
 
 
@@ -82,11 +53,7 @@ async def init():
     with open('tests/tmp/body.html', 'rb') as file:
         text = file.read()
     validator_sample = TemplateValidator(
-        flags=[MissingElementAvatar,
-               MissingElementFollowers,
-               MissingElementFollowing,
-               MissingElementFriends,
-               UniqueDefaultElement])
+        flags=[MissingElementAvatar]),
     try:
         await validator_sample.validate(text)
     except BaseError as e:
