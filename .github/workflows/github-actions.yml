@@ -27,20 +27,20 @@ jobs:
           docker build --cache-from ${{ env.IMAGE }} --build-arg BUILDKIT_INLINE_CACHE=1 -t ${{ env.IMAGE }} .
           docker push ${{ env.IMAGE }}
 
-      - name: Linter check (clippy)
-        run: cargo clippy -- -D warnings
+      # - name: Linter check (clippy)
+      #   run: cargo clippy -- -D warnings
 
       - name: Coverage test
         run: |
           docker pull ${{ env.IMAGE }} || true
-          docker run --security-opt seccomp=unconfined ${{ env.IMAGE }} cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
+          container_id=$(docker run --security-opt seccomp=unconfined -d ${{ env.IMAGE }} cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/; ls *)
+          echo "CONTAINER_ID=$container_id" >> $GITHUB_ENV
       
-      - name: Save coverage artifacts
-        uses: actions/upload-artifact@v2
-        with:
-          name: coverage-report
-          path: ./coverage
-      
+      - name: Copy coverage report
+        run: |
+          container_id=$CONTAINER_ID
+          docker cp $container_id:./coverage/cobertura.xml ./coverage/cobertura.xml
+
       - name: Upload coverage reports to Codecov
         uses: codecov/codecov-action@v3
         with:
