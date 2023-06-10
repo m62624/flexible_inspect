@@ -35,9 +35,9 @@ jobs:
           docker pull ${{ env.IMAGE }} || true
           docker run --security-opt seccomp=unconfined ${{ env.IMAGE }} cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
       
-      # - name: Copy coverage report from container
-      #   run: |
-      #     docker cp $(docker ps -lq):./coverage/cobertura.xml ./coverage/cobertura.xml
+      - name: Copy coverage report from container
+        run: |
+          docker cp $(docker ps -lq):app/coverage/cobertura.xml ./coverage/cobertura.xml
       
       - name: Upload coverage report
         uses: actions/upload-artifact@v2
