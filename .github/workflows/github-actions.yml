@@ -1,0 +1,51 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - '*'
+  pull_request:
+    branches:
+      - '*'
+
+env:
+  IMAGE: ghcr.io/${{ secrets.NAME_LOGIN }}/pystval:latest
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Log in to GitHub Docker Registry
+        run: echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+
+      - name: Build Image (dependencies)
+        run: |
+          docker pull ${{ env.IMAGE }} || true
+          docker build --cache-from ${{ env.IMAGE }} --build-arg BUILDKIT_INLINE_CACHE=1 -t ${{ env.IMAGE }} .
+          docker push ${{ env.IMAGE }}
+
+      - name: Linter check (clippy)
+        run: cargo clippy -- -D warnings
+
+      - name: Coverage test
+        run: |
+          docker pull ${{ env.IMAGE }} || true
+          docker run --security-opt seccomp=unconfined ${{ env.IMAGE }} cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
+
+      - name: Packages
+        run: make all
+
+        if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'pull_request') }}
+    
+      - name: Upload artifacts
+        uses: actions/upload-artifact@v2
+        with:
+         name: packages
+         path: |
+            Linux/
+            macOS/
+            Windows/
