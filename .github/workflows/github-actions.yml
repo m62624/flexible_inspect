@@ -10,7 +10,6 @@ on:
 
 env:
   IMAGE: ghcr.io/${{ secrets.NAME_LOGIN }}/pystval:latest
-
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -35,6 +34,13 @@ jobs:
         run: |
           docker pull ${{ env.IMAGE }} || true
           docker run --security-opt seccomp=unconfined ${{ env.IMAGE }} cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
+        
+      - name: Upload coverage reports to Codecov
+        uses: codecov/codecov-action@v3
+        with:
+          token : ${{ env.CODECOV_TOKEN }}
+          file: ./coverage/cobertura.xml
+          fail_ci_if_error: true
 
       - name: Packages
         run: make all
