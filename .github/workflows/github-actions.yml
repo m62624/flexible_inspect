@@ -15,12 +15,6 @@ on:
 env:
   IMAGE: ghcr.io/${{ secrets.NAME_LOGIN }}/pystval:latest
 jobs:
-  #  # Job для клонирования репозитория
-  # clone:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v3
 
   # job для сборки образа (в нем будет происходит сборка и тестирование библиотеки)
   build_image:
