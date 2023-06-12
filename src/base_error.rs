@@ -11,7 +11,6 @@ pub struct BaseError {
     rules: HashMap<String, usize>,
 }
 
-
 #[pyclass(subclass)]
 #[derive(Debug)]
 /// Обертка для исключения Python
@@ -26,6 +25,13 @@ impl BaseErrorWrapper {
     #[new]
     pub fn new(inner: PyObject) -> Self {
         BaseErrorWrapper { inner }
+    }
+    #[staticmethod]
+    pub fn __base__(_py: Python<'_>) -> PyResult<PyObject> {
+        // Python::with_gil(|py| {
+        let base_exception = PyModule::new(_py, "builtins")?.getattr("BaseException")?;
+        Ok(base_exception.to_object(_py))
+        // })
     }
 }
 
