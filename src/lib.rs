@@ -2,7 +2,7 @@
 
 //===============================================================================
 // имя атрибута, где хранится само сообщение и **extra переменные из класса Python
-pub const MESSAGE_WITH_EXTRA_FROM_CLASS_PY: &str = "template";
+pub const MESSAGE_WITH_EXTRA_FROM_CLASS_PY: &str = "message";
 // имя атрибута, где хранится регулярные выражения из класса Python
 pub const RULES_FROM_CLASS_PY: &str = "rules";
 // имя атрибута, где хранится **extra переменные для заполнения из класса Python
