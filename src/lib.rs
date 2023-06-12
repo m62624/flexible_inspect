@@ -13,6 +13,8 @@ pub const EXTRA_FROM_CLASS_PY: &str = "extra";
 mod check_convert;
 // Компоненты необходимые для конструктора `TemplateValidator`
 mod init;
+// Базовый класс для кастомных ошибок
+mod base_error;
 // Создание и получение данных ошибок
 mod make_errors;
 // Компоненты для метода, где проходит сама валидация
