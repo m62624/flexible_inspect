@@ -26,17 +26,17 @@ impl BaseError {
     }
 
     #[getter]
-    pub fn get_message(&self) -> PyResult<String> {
+    pub fn message(&self) -> PyResult<String> {
         Ok(self.message.clone())
     }
 
     #[getter]
-    pub fn get_extra(&self) -> PyResult<HashMap<String, String>> {
+    pub fn extra(&self) -> PyResult<HashMap<String, String>> {
         Ok(self.extra.clone())
     }
 
     #[getter]
-    pub fn get_rules(&self) -> PyResult<HashMap<String, usize>> {
+    pub fn rules(&self) -> PyResult<HashMap<String, usize>> {
         Ok(self.rules.clone())
     }
 }
