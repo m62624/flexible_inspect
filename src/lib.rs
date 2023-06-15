@@ -146,12 +146,12 @@ impl TemplateValidator {
 // Импортируем всё необходимое в `Python`
 #[cfg(not(tarpaulin_include))]
 mod export {
-
     use super::*;
     #[pymodule]
     fn pystval(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         m.add_class::<TemplateValidator>()?;
         m.add_class::<It>()?;
+        m.add(BASE_ERROR, base_error::init_base_error(_py))?;
         Ok(())
     }
 }

@@ -1,56 +1,25 @@
-use pyo3::{create_exception, exceptions::PyException, prelude::*};
+use super::{
+    BASE_ERROR, EXTRA_FROM_CLASS_PY, MESSAGE_WITH_EXTRA_FROM_CLASS_PY, MODULE_NAME,
+    RULES_FROM_CLASS_PY,
+};
+use pyo3::{prelude::*, types};
 use std::collections::HashMap;
 
-#[pyclass]
-#[derive(Debug)]
-/// Структура которая будет являться шаблоном класса в `python` для создание собственных ошибок
-pub struct BaseError {
-    message: String,
-    extra: HashMap<String, String>,
-    rules: HashMap<String, usize>,
+pub fn init_base_error(_py: Python) -> Py<PyAny> {
+    let dict = types::PyDict::new(_py);
+    dict.set_item(MESSAGE_WITH_EXTRA_FROM_CLASS_PY, String::default())
+        .unwrap();
+    dict.set_item(EXTRA_FROM_CLASS_PY, HashMap::<String, String>::default())
+        .unwrap();
+    dict.set_item(RULES_FROM_CLASS_PY, HashMap::<String, usize>::default())
+        .unwrap();
+    PyErr::new_type(
+        _py,
+        &format!("{}.{}", MODULE_NAME, BASE_ERROR),
+        None,
+        Some(_py.get_type::<pyo3::exceptions::PyException>()),
+        Some(dict.to_object(_py)),
+    )
+    .unwrap()
+    .to_object(_py)
 }
-#[pymethods]
-impl BaseError {
-    #[new]
-    #[pyo3(signature = (message = None, extra = None, rules = None))]
-    pub fn new(
-        message: Option<String>,
-        extra: Option<HashMap<String, String>>,
-        rules: Option<HashMap<String, usize>>,
-    ) -> Self {
-        BaseError {
-            message: message.unwrap_or_default(),
-            extra: extra.unwrap_or_default(),
-            rules: rules.unwrap_or_default(),
-        }
-    }
-
-    #[getter]
-    pub fn message(&self) -> PyResult<String> {
-        Ok(self.message.clone())
-    }
-
-    #[getter]
-    pub fn extra(&self) -> PyResult<HashMap<String, String>> {
-        Ok(self.extra.clone())
-    }
-
-    #[getter]
-    pub fn rules(&self) -> PyResult<HashMap<String, usize>> {
-        Ok(self.rules.clone())
-    }
-}
-
-// ======================== Импорт шаблонной ошибки в Python ===========================
-// create_exception!(pystval,BaseError,PyException);
-// fn temp_plug() {
-//     Python::with_gil(|py| {
-//         PyErr::new_type(
-//             py,
-//             "pystval",
-//             None,
-//             Some(py.get_type::<PyException>()),
-//             dict,
-//         );
-//     });
-// }
