@@ -1,12 +1,16 @@
 //! `Pystval` - `Rust` библиотека для `Python`. Выполняет валидацию данных (строки) с помощью регулярных выражений
 
 //===============================================================================
+// имя модуля для `Python`
+pub const MODULE_NAME: &str = "pystval";
 // имя атрибута, где хранится само сообщение и **extra переменные из класса Python
 pub const MESSAGE_WITH_EXTRA_FROM_CLASS_PY: &str = "message";
 // имя атрибута, где хранится регулярные выражения из класса Python
 pub const RULES_FROM_CLASS_PY: &str = "rules";
 // имя атрибута, где хранится **extra переменные для заполнения из класса Python
 pub const EXTRA_FROM_CLASS_PY: &str = "extra";
+// имя класса ошибки (базовый шаблон) для `Python`
+pub const BASE_ERROR: &str = "PystvalError";
 //===============================================================================
 
 // Проверка и конвертация данных из Python в Rust и обратно
@@ -144,30 +148,10 @@ impl TemplateValidator {
 mod export {
 
     use super::*;
-
+    #[pymodule]
     fn pystval(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
-        let body_base_error = || {
-            let dict = types::PyDict::new(_py);
-            dict.set_item(MESSAGE_WITH_EXTRA_FROM_CLASS_PY, String::default())
-                .unwrap();
-            dict.set_item(EXTRA_FROM_CLASS_PY, HashMap::<String, String>::default())
-                .unwrap();
-            dict.set_item(RULES_FROM_CLASS_PY, HashMap::<String, usize>::default())
-                .unwrap();
-            PyErr::new_type(
-                _py,
-                "BaseError",
-                None,
-                Some(_py.get_type::<pyo3::exceptions::PyException>()),
-                Some(dict.to_object(_py)),
-            )
-            .unwrap()
-            .to_object(_py)
-        };
-
         m.add_class::<TemplateValidator>()?;
         m.add_class::<It>()?;
-        // m.add("BaseError", _py.get_type::<>())?;
         Ok(())
     }
 }
