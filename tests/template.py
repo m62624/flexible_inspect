@@ -1,15 +1,12 @@
 import pystval
 import asyncio
-from pystval import TemplateValidator, It, throw_base_error,BaseErrorWrapper
+from pystval import TemplateValidator, It, PystvalError
 
-class check_error(BaseErrorWrapper):
-    pass
-
+print(PystvalError.__base__)
 
 
-
-class FindSomething(BaseErrorWrapper):
-    template = "Gotcha : {OS}"
+class FindSomething(PystvalError):
+    message = "Gotcha : {OS}"
     rules = {
         r"""(?P<OS>Linux)""": It.MustBeFoundHere,
     }
@@ -17,19 +14,18 @@ class FindSomething(BaseErrorWrapper):
 # # ============================================
 
 
-async def init():
-    # text = await get_bytes("-- link --")
-    with open('Makefile', 'rb') as file:
-        text = file.read()
-    validator_sample = TemplateValidator(
-        flags=[FindSomething]),
-    try:
-        await validator_sample.validate(text)
-    except BaseErrorWrapper as e:
-        print(f"ERROR VALIDATE: '{e.message}'")
+# async def init():
+#     # text = await get_bytes("-- link --")
+#     with open('Makefile', 'rb') as file:
+#         text = file.read()
+#     validator_sample = TemplateValidator(flags=[FindSomething])
+#     try:
+#         await validator_sample.validate(text)
+#     except PystvalError as e:
+#         print(f"ERROR VALIDATE: '{e.message}'")
 
 
-# # # =============================================
+# # # # =============================================
 # loop = asyncio.get_event_loop()
 # task = loop.create_task(init())
 # loop.run_until_complete(task)
