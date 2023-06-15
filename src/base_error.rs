@@ -1,4 +1,4 @@
-use pyo3::prelude::*;
+use pyo3::{create_exception, exceptions::PyException, prelude::*};
 use std::collections::HashMap;
 
 #[pyclass]
@@ -40,3 +40,17 @@ impl BaseError {
         Ok(self.rules.clone())
     }
 }
+
+// ======================== Импорт шаблонной ошибки в Python ===========================
+// create_exception!(pystval,BaseError,PyException);
+// fn temp_plug() {
+//     Python::with_gil(|py| {
+//         PyErr::new_type(
+//             py,
+//             "pystval",
+//             None,
+//             Some(py.get_type::<PyException>()),
+//             dict,
+//         );
+//     });
+// }
