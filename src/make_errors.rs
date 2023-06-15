@@ -63,9 +63,9 @@ pub fn error_or_ok(
         }
     };
     match (&rule_status.status, flag) {
-        (It::MustBeFoundHere, true) => Ok(()),
-        (It::NotToBeFoundHere, false) => Ok(()),
-        (It::MustBeFoundHere, false) => error(),
-        (It::NotToBeFoundHere, true) => error(),
+        (MatchRequirement::MustBeFoundHere, true) => Ok(()),
+        (MatchRequirement::NotToBeFoundHere, false) => Ok(()),
+        (MatchRequirement::MustBeFoundHere, false) => error(),
+        (MatchRequirement::NotToBeFoundHere, true) => error(),
     }
 }

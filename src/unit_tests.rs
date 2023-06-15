@@ -231,7 +231,7 @@ mod tests {
 
         // Функция для использования повторно
         fn fn_core_get_any_regex_from_class(
-            rules: &[(&str, It)],
+            rules: &[(&str, MatchRequirement)],
             all_simple_rules: &mut HashMap<String, RuleStatus>,
             all_hard_rules: &mut HashMap<String, RuleStatus>,
             selected_simple_rules: &mut Vec<String>,
@@ -293,9 +293,9 @@ mod tests {
                 let mut selected_simple_rules = Vec::new();
                 fn_core_get_any_regex_from_class(
                     &[
-                        ("rule1", It::MustBeFoundHere),
-                        ("rule2", It::NotToBeFoundHere),
-                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                        ("rule1", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", MatchRequirement::NotToBeFoundHere),
                     ],
                     &mut all_simple_rules,
                     &mut all_hard_rules,
@@ -316,12 +316,12 @@ mod tests {
                 let mut selected_simple_rules = Vec::new();
                 fn_core_get_any_regex_from_class(
                     &[
-                        ("rule1", It::MustBeFoundHere),
-                        ("rule2", It::MustBeFoundHere),
-                        ("rule3", It::MustBeFoundHere),
-                        ("rule4", It::MustBeFoundHere),
-                        ("rule2", It::NotToBeFoundHere),
-                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                        ("rule1", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::MustBeFoundHere),
+                        ("rule3", MatchRequirement::MustBeFoundHere),
+                        ("rule4", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", MatchRequirement::NotToBeFoundHere),
                     ],
                     &mut all_simple_rules,
                     &mut all_hard_rules,
@@ -344,15 +344,15 @@ mod tests {
                 let mut selected_simple_rules = Vec::new();
                 fn_core_get_any_regex_from_class(
                     &[
-                        ("rule1", It::MustBeFoundHere),
-                        ("rule2", It::MustBeFoundHere),
-                        ("rule3", It::MustBeFoundHere),
-                        ("rule4", It::MustBeFoundHere),
+                        ("rule1", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::MustBeFoundHere),
+                        ("rule3", MatchRequirement::MustBeFoundHere),
+                        ("rule4", MatchRequirement::MustBeFoundHere),
                         (
                             r"\QThis is not a valid regex!@#$%^&*()_+\E",
-                            It::NotToBeFoundHere,
+                            MatchRequirement::NotToBeFoundHere,
                         ),
-                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", MatchRequirement::NotToBeFoundHere),
                     ],
                     &mut all_simple_rules,
                     &mut all_hard_rules,
@@ -372,7 +372,7 @@ mod tests {
             fn fn_get_any_regex_from_class_e_1() {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| {
-                    let rules = [(py.None(), It::MustBeFoundHere)];
+                    let rules = [(py.None(), MatchRequirement::MustBeFoundHere)];
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {
                         dict.set_item(key, Py::new(py, value.to_owned()).unwrap())
@@ -451,7 +451,7 @@ mod tests {
                     let mut all_simple_rules: HashMap<String, RuleStatus> = HashMap::new();
                     let mut all_hard_rules: HashMap<String, RuleStatus> = HashMap::new();
                     let mut selected_simple_rules: Vec<String> = Vec::new();
-                    let fake_class = types::PyType::new::<It>(py);
+                    let fake_class = types::PyType::new::<MatchRequirement>(py);
                     init::get_any_regex_from_class(
                         &fake_class,
                         0,
@@ -479,9 +479,9 @@ mod tests {
                     let mut python_classes: HashMap<usize, PyObject> = HashMap::new();
 
                     let rules = &[
-                        ("rule1", It::MustBeFoundHere),
-                        ("rule2", It::NotToBeFoundHere),
-                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                        ("rule1", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", MatchRequirement::NotToBeFoundHere),
                     ];
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {
@@ -507,9 +507,9 @@ mod tests {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| -> PyResult<()> {
                     let rules = &[
-                        ("rule1", It::MustBeFoundHere),
-                        ("rule2", It::NotToBeFoundHere),
-                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                        ("rule1", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", MatchRequirement::NotToBeFoundHere),
                     ];
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {
@@ -566,7 +566,7 @@ mod tests {
     mod make_errors_tests {
 
         // Вспомогательная  функция по создание  Py объектов
-        fn create_obj(rules: Option<&[(&str, It)]>, msg: &str) -> PyResult<PyObject> {
+        fn create_obj(rules: Option<&[(&str, MatchRequirement)]>, msg: &str) -> PyResult<PyObject> {
             Python::with_gil(|py| -> PyResult<PyObject> {
                 let dict = types::PyDict::new(py);
                 if let Some(rules) = rules {
@@ -622,9 +622,9 @@ mod tests {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| -> PyResult<()> {
                     let rules = &[
-                        (r"(?P<x>rule1)", It::MustBeFoundHere),
-                        ("rule2", It::NotToBeFoundHere),
-                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                        (r"(?P<x>rule1)", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", MatchRequirement::NotToBeFoundHere),
                     ];
                     let class_py = create_obj(Some(rules), "message {x}")?;
                     let extra = make_errors::extra_from_class(
@@ -642,9 +642,9 @@ mod tests {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| -> PyResult<()> {
                     let rules = &[
-                        (r"(?P<x>rule1)", It::MustBeFoundHere),
-                        ("rule2", It::NotToBeFoundHere),
-                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                        (r"(?P<x>rule1)", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", MatchRequirement::NotToBeFoundHere),
                     ];
                     let class_py = create_obj(Some(rules), "message")?;
                     make_errors::extra_from_class(
@@ -662,7 +662,7 @@ mod tests {
 
             #[test]
             // Проверка результата при условий
-            // (It::MustBeFoundHere, true) => Ok(())
+            // (MatchRequirement::MustBeFoundHere, true) => Ok(())
             fn error_or_ok_t_0() {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|_| {
@@ -672,7 +672,7 @@ mod tests {
                         HashMap::new(),
                         &RuleStatus {
                             id: 1,
-                            status: It::MustBeFoundHere,
+                            status: MatchRequirement::MustBeFoundHere,
                         },
                         true,
                     )
@@ -681,7 +681,7 @@ mod tests {
             }
 
             // Проверка результата при условий
-            // (It::NotToBeFoundHere, false) => Ok(())
+            // (MatchRequirement::NotToBeFoundHere, false) => Ok(())
             #[test]
             fn error_or_ok_t_1() {
                 pyo3::prepare_freethreaded_python();
@@ -692,7 +692,7 @@ mod tests {
                         HashMap::new(),
                         &RuleStatus {
                             id: 1,
-                            status: It::NotToBeFoundHere,
+                            status: MatchRequirement::NotToBeFoundHere,
                         },
                         false,
                     )
@@ -701,7 +701,7 @@ mod tests {
             }
 
             // Проверка результата при условий
-            // (It::MustBeFoundHere, false) =>  error()
+            // (MatchRequirement::MustBeFoundHere, false) =>  error()
             #[test]
             #[should_panic]
             fn error_or_ok_e_0() {
@@ -713,7 +713,7 @@ mod tests {
                         HashMap::new(),
                         &RuleStatus {
                             id: 1,
-                            status: It::MustBeFoundHere,
+                            status: MatchRequirement::MustBeFoundHere,
                         },
                         false,
                     )
@@ -722,7 +722,7 @@ mod tests {
             }
 
             // Проверка результата при условий
-            // (It::NotToBeFoundHere, true) =>  error()
+            // (MatchRequirement::NotToBeFoundHere, true) =>  error()
             #[test]
             #[should_panic]
             fn error_or_ok_e_1() {
@@ -734,7 +734,7 @@ mod tests {
                         HashMap::new(),
                         &RuleStatus {
                             id: 1,
-                            status: It::NotToBeFoundHere,
+                            status: MatchRequirement::NotToBeFoundHere,
                         },
                         true,
                     )
@@ -743,7 +743,7 @@ mod tests {
             }
 
             // Проверка результата при условий
-            // (It::NotToBeFoundHere, true) =>  error() // some extra
+            // (MatchRequirement::NotToBeFoundHere, true) =>  error() // some extra
             #[test]
             #[should_panic]
             fn error_or_ok_e_2() {
@@ -757,7 +757,7 @@ mod tests {
                         extra,
                         &RuleStatus {
                             id: 1,
-                            status: It::NotToBeFoundHere,
+                            status: MatchRequirement::NotToBeFoundHere,
                         },
                         true,
                     )
@@ -887,9 +887,9 @@ mod tests {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| -> PyResult<()> {
                     let rules = &[
-                        ("rule1", It::MustBeFoundHere),
-                        ("rule2", It::NotToBeFoundHere),
-                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                        ("rule1", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", MatchRequirement::NotToBeFoundHere),
                     ];
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {
@@ -907,7 +907,7 @@ mod tests {
                         true,
                         &RuleStatus {
                             id: 0,
-                            status: It::MustBeFoundHere,
+                            status: MatchRequirement::MustBeFoundHere,
                         },
                         "111",
                     )?;
@@ -923,9 +923,9 @@ mod tests {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| {
                     let rules = &[
-                        ("rule1", It::MustBeFoundHere),
-                        ("rule2", It::NotToBeFoundHere),
-                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                        ("rule1", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", MatchRequirement::NotToBeFoundHere),
                     ];
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {
@@ -944,7 +944,7 @@ mod tests {
                         true,
                         &RuleStatus {
                             id: 0,
-                            status: It::MustBeFoundHere,
+                            status: MatchRequirement::MustBeFoundHere,
                         },
                         "111",
                     )
@@ -961,9 +961,9 @@ mod tests {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| -> PyResult<()> {
                     let rules = &[
-                        ("rule1", It::MustBeFoundHere),
-                        ("rule2", It::NotToBeFoundHere),
-                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                        ("rule1", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", MatchRequirement::NotToBeFoundHere),
                     ];
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {
@@ -990,9 +990,9 @@ mod tests {
                 pyo3::prepare_freethreaded_python();
                 Python::with_gil(|py| -> PyResult<()> {
                     let rules = &[
-                        ("rule1", It::MustBeFoundHere),
-                        ("rule2", It::NotToBeFoundHere),
-                        (r"(\b\w+\b)(?=.+?\1)", It::NotToBeFoundHere),
+                        ("rule1", MatchRequirement::MustBeFoundHere),
+                        ("rule2", MatchRequirement::NotToBeFoundHere),
+                        (r"(\b\w+\b)(?=.+?\1)", MatchRequirement::NotToBeFoundHere),
                     ];
                     let dict = types::PyDict::new(py);
                     for (key, value) in rules.iter() {

@@ -34,7 +34,7 @@ use std::{collections::HashMap, str};
 /// Перечечисление, где даны варианты действия при положительном результате регулярных выражений
 #[pyclass]
 #[derive(Debug, Clone)]
-pub enum It {
+pub enum MatchRequirement {
     /// * `MustBeFoundHere` - Должно быть найдено, иначе будет вызвано исключение
     MustBeFoundHere,
     /// * `NotToBeFoundHere` - Не должно быть найдено, иначе будет вызвано исключение
@@ -45,11 +45,11 @@ pub enum It {
 #[derive(Debug, Clone)]
 pub struct RuleStatus {
     id: usize,
-    status: It,
+    status: MatchRequirement,
 }
 
 impl RuleStatus {
-    pub fn new(id: usize, status: It) -> Self {
+    pub fn new(id: usize, status: MatchRequirement) -> Self {
         Self { id, status }
     }
 }
@@ -150,8 +150,9 @@ mod export {
     #[pymodule]
     fn pystval(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         m.add_class::<TemplateValidator>()?;
-        m.add_class::<It>()?;
-        m.add(BASE_ERROR, base_error::init_base_error(_py))?;
+        m.add_class::<MatchRequirement>()?;
+        // m.add(BASE_ERROR, base_error::init_base_error(_py))?;
+        PyModule::from_code(_py, &base_error::get_base_error(), "", MODULE_NAME)?;
         Ok(())
     }
 }
