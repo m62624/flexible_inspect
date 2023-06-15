@@ -1,4 +1,4 @@
-"""`Pystval` is a `Rust' library for `Python', used to create your own validator."""
+"""`Pystval` is a `Rust` library for `Python`, used to create your own validator."""
 import enum
 from typing import Any, Dict, List
 
@@ -33,7 +33,7 @@ class TemplateValidator:
 
         Raises
         ------
-        `Custom Error`
+        `Custom Error (PystvalError)`
             The error that was specified in `flags`
         """
         pass
