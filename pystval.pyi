@@ -62,7 +62,7 @@ class TemplateValidator:
         """
         pass
 
-    async def validate(self, text: str):
+    async def async_validate(self, text: str):
         """
         Parameters
         ----------
@@ -77,6 +77,20 @@ class TemplateValidator:
         pass
     pass
 
+    def validate(self, text: str):
+        """
+        Parameters
+        ----------
+        `text` : `str`
+            Text for verification
+
+        Raises
+        ------
+        `Custom Error (PystvalError)`
+            The error that was specified in `flags`
+        """
+        pass
+    pass
 
 class MatchRequirement(enum.Enum):
     """
