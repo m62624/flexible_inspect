@@ -102,15 +102,29 @@ impl TemplateValidator {
     }
 
     /// Служит для запуска async метода
+    /// Метод `async_validate` используется для запуска асинхронной функции `core_validate` внутри. Это позволяет выполнять асинхронную валидацию внутри `Python`
     #[cfg(not(tarpaulin_include))]
-    #[pyo3(name = "validate")]
-    fn validate<'py>(&self, py: Python<'py>, text_bytes: &types::PyBytes) -> PyResult<&'py PyAny> {
+    #[pyo3(name = "async_validate")]
+    fn async_validate<'py>(
+        &self,
+        py: Python<'py>,
+        text_bytes: &types::PyBytes,
+    ) -> PyResult<&'py PyAny> {
         let unsafe_self = unsafe { &*(self as *const Self) };
         let text = check_convert::convert::bytes_to_string_utf8(text_bytes.as_bytes())?;
         pyo3_asyncio::async_std::future_into_py(py, async move {
             unsafe_self.core_validate(text)?;
             Ok(Python::with_gil(|py| py.None()))
         })
+    }
+
+    /// Метод `validate` позволяет выполнять валидацию внутри `Python`
+    #[cfg(not(tarpaulin_include))]
+    #[pyo3(name = "validate")]
+    fn validate<'py>(&self, text_bytes: &types::PyBytes) -> PyResult<()> {
+        self.core_validate(check_convert::convert::bytes_to_string_utf8(
+            text_bytes.as_bytes(),
+        )?)
     }
     //================== (РАБОТАЕТ ТОЛЬКО С `C API` (CPYTHON))==================
     /*
