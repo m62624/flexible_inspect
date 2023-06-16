@@ -6,7 +6,16 @@ from typing import Any, Dict, List
 class PystvalError(Exception):
     """
     A class for creating your own exceptions
+    Parameters
+    ----------
+    `message` : `str`
+        Message for exception
+    `extra` : `Dict[str, Any]`
+        Additional data
+    `rules` : `Dict[str, Any]`
+        Rules for validation
     """
+
     message: str
     extra: Dict[str, Any]
     rules: Dict[str, Any]
@@ -21,6 +30,13 @@ class PystvalError(Exception):
             Additional data
         `rules` : `Dict[str, Any]`
             Rules for validation
+        """
+        ...
+
+    @property
+    def report(self) -> str:
+        """
+        Get the formatted error message for the exception.
         """
         ...
 
