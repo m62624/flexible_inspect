@@ -61,7 +61,7 @@ mod tests {
 
     // Тестируем модуль конвертаций
     #[cfg(test)]
-    mod convert {
+    mod convert_tests {
         use super::*;
 
         // Тесты для функций fn_bytes_to_string_utf8
@@ -587,6 +587,8 @@ mod tests {
 
         // Тесты для функций fn_create_error
         mod fn_create_error {
+            use pyo3::callback::IntoPyCallbackOutput;
+
             use super::*;
 
             // Проверяем статус, что ошибка создана
@@ -609,6 +611,71 @@ mod tests {
                     let empty_obj = py.None();
                     make_errors::create_error(&empty_obj, None).unwrap();
                 });
+            }
+            #[test]
+            #[should_panic]
+            fn create_error_e_1() {
+                #[pyclass]
+                struct CustomError {
+                    #[pyo3(get, set)]
+                    message: Option<String>,
+                    #[pyo3(get, set)]
+                    extra: Option<HashMap<String, String>>,
+                    #[pyo3(get, set)]
+                    rules: Option<HashMap<String, usize>>,
+                }
+
+                #[pymethods]
+                impl CustomError {
+                    #[new]
+                    #[pyo3(
+                        signature = (message = None, extra=  None, rules=  None)
+                    )]
+                    fn __new__(
+                        message: Option<String>,
+                        extra: Option<HashMap<String, String>>,
+                        rules: Option<HashMap<String, usize>>,
+                    ) -> Self {
+                        CustomError {
+                            message,
+                            extra,
+                            rules,
+                        }
+                    }
+                }
+
+                impl ToPyObject for CustomError {
+                    fn to_object(&self, py: Python<'_>) -> PyObject {
+                        let dict = types::PyDict::new(py);
+                        if let Some(extra) = &self.extra {
+                            for (key, value) in extra.iter() {
+                                dict.set_item(key, value).unwrap();
+                            }
+                        }
+                        if let Some(rules) = &self.rules {
+                            for (key, value) in rules.iter() {
+                                dict.set_item(key, value).unwrap();
+                            }
+                        }
+                        let class = types::PyType::new::<CustomError>(py);
+                        class
+                            .setattr(MESSAGE_WITH_EXTRA_FROM_CLASS_PY, self.message.clone())
+                            .unwrap();
+                        class.setattr(EXTRA_FROM_CLASS_PY, dict).unwrap();
+                        class.to_object(py)
+                    }
+                }
+
+                pyo3::prepare_freethreaded_python();
+                Python::with_gil(|py| {
+                    let empty_obj = CustomError::__new__(
+                        Some(String::from("message")),
+                        Some(HashMap::new()),
+                        Some(HashMap::new()),
+                    )
+                    .to_object(py);
+                    make_errors::create_error(&empty_obj, None).unwrap();
+                })
             }
         }
 
@@ -1007,6 +1074,18 @@ mod tests {
                     Ok(())
                 })
             }
+        }
+    }
+    #[cfg(test)]
+    mod base_error_tests {
+        use super::*;
+        #[test]
+        fn get_base_error_t_0() -> PyResult<()> {
+            pyo3::prepare_freethreaded_python();
+            Python::with_gil(|py| -> PyResult<()> {
+                PyModule::from_code(py, &base_error::get_base_error(), "", MODULE_NAME)?;
+                Ok(())
+            })
         }
     }
 }
