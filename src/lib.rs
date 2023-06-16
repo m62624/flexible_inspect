@@ -151,7 +151,6 @@ mod export {
     fn pystval(_py: Python<'_>, m: &PyModule) -> PyResult<()> {
         m.add_class::<TemplateValidator>()?;
         m.add_class::<MatchRequirement>()?;
-        // m.add(BASE_ERROR, base_error::init_base_error(_py))?;
         PyModule::from_code(_py, &base_error::get_base_error(), "", MODULE_NAME)?;
         Ok(())
     }
