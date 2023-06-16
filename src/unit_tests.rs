@@ -587,7 +587,6 @@ mod tests {
 
         // Тесты для функций fn_create_error
         mod fn_create_error {
-            use pyo3::callback::IntoPyCallbackOutput;
 
             use super::*;
 
@@ -1070,7 +1069,7 @@ mod tests {
                     let obj_main = types::PyList::new(py, [class].iter());
 
                     let tmpv = TemplateValidator::__new__(obj_main.into())?;
-                    tmpv.validate(py, types::PyBytes::new(py, &[0x41u8, 0x41u8, 0x42u8]))?;
+                    tmpv.async_validate(py, types::PyBytes::new(py, &[0x41u8, 0x41u8, 0x42u8]))?;
                     Ok(())
                 })
             }
