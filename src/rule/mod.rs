@@ -46,7 +46,7 @@ impl Rule {
                     self.rules_for_the_rule.as_mut().unwrap().push(rule);
                 } else {
                     return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                        "`{}` -- Expected `Rule` (from parent `{}`) --> List[Rule,Rule,Rule]",
+                        "Expected `Rule` in the list, the child error `{}` from the parent `{}`",
                         packed_rule.get_type().name().unwrap(),
                         self.inner.as_ref().unwrap()
                     )));
