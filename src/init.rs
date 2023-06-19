@@ -7,7 +7,7 @@ impl Rule {
         Rule {
             inner,
             requirements,
-            rule_for_the_rule: HashMap::new(),
+            rules_for_the_rule: HashMap::new(),
         }
     }
 }
