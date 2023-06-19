@@ -12,6 +12,7 @@ def check():
             Rule("Subrule-2 of Subrule-4",MatchRequirement.MustBeFound),
             Rule("Subrule-3 of Subrule-4",MatchRequirement.MustBeFound),
         ])
-        ]).show_tree()
+        ])
+
 
 check()

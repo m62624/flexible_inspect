@@ -53,7 +53,7 @@ class Rule:
     def __init__(self, inner: str, requirements: MatchRequirement) -> None:
         ...
     
-    def extend(self, key: str, child: Rule) -> None:
+    def extend(self, nested_rules: List[Rule]) -> None:
         ...
 
 
