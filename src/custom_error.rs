@@ -1,3 +1,5 @@
+use pyo3::{types::PyModule, Python};
+
 use super::{
     BASE_ERROR, EXTRA_FROM_CLASS_PY, MESSAGE_WITH_EXTRA_FROM_CLASS_PY, RULES_FROM_CLASS_PY,
 };
@@ -8,6 +10,7 @@ use super::{
  */
 pub fn py_code_base_exception() -> String {
     format!("
+from typing import List, Any
 class {BASE_ERROR}Meta(type):
         def __new__(cls, name, bases, attrs):
             if name == '{BASE_ERROR}':
@@ -16,16 +19,16 @@ class {BASE_ERROR}Meta(type):
                 if '{MESSAGE_WITH_EXTRA_FROM_CLASS_PY}' not in attrs or not attrs['{MESSAGE_WITH_EXTRA_FROM_CLASS_PY}']:
                     raise NotImplementedError(
                         \"Subclasses must provide a non-empty '{MESSAGE_WITH_EXTRA_FROM_CLASS_PY}' attribute.\")
-                if '{RULES_FROM_CLASS_PY}' not in attrs or not isinstance(attrs['{RULES_FROM_CLASS_PY}'], dict):
+                if '{RULES_FROM_CLASS_PY}' not in attrs or not isinstance(attrs['{RULES_FROM_CLASS_PY}'], List):
                     raise NotImplementedError(
-                        \"Subclasses must provide a '{RULES_FROM_CLASS_PY}' attribute of type 'dict'.\")
+                        \"Subclasses must provide a '{RULES_FROM_CLASS_PY}' attribute of type 'List[Rule,Rule,Rule]'.\")
             return super().__new__(cls, name, bases, attrs)
     
     
 class {BASE_ERROR}(Exception,metaclass={BASE_ERROR}Meta):
         {MESSAGE_WITH_EXTRA_FROM_CLASS_PY} = \"\"
     
-        def __init__(self, {MESSAGE_WITH_EXTRA_FROM_CLASS_PY}: str = None, {RULES_FROM_CLASS_PY}: list[{BASE_ERROR}] = None, **{EXTRA_FROM_CLASS_PY}):
+        def __init__(self, {MESSAGE_WITH_EXTRA_FROM_CLASS_PY}: str = None, {RULES_FROM_CLASS_PY}: List[Any] = None, **{EXTRA_FROM_CLASS_PY}):
             self.__{EXTRA_FROM_CLASS_PY} = {EXTRA_FROM_CLASS_PY}
             self.__{RULES_FROM_CLASS_PY} = {RULES_FROM_CLASS_PY}
             if {MESSAGE_WITH_EXTRA_FROM_CLASS_PY} is None:
@@ -47,4 +50,12 @@ class {BASE_ERROR}(Exception,metaclass={BASE_ERROR}Meta):
             return self.__{RULES_FROM_CLASS_PY}
 "
     )
+}
+
+#[test]
+fn test_py_code_base_exception() {
+    pyo3::prepare_freethreaded_python();
+    Python::with_gil(|py| {
+        PyModule::from_code(py, &py_code_base_exception(), "", "pystval").unwrap();
+    });
 }

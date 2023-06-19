@@ -23,7 +23,13 @@ mod export {
     use super::*;
     #[pymodule]
     fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
-        py_module.add("PystvalError", custom_error::py_code_base_exception())?;
+        // py_module.add("PystvalError", custom_error::py_code_base_exception())?;
+        PyModule::from_code(
+            _py,
+            &custom_error::py_code_base_exception(),
+            "",
+            MODULE_NAME,
+        )?;
         py_module.add_class::<match_requirement::MatchRequirement>()?;
         py_module.add_class::<rule::Rule>()?;
         py_module.add_class::<TemplateValidator>()?;

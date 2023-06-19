@@ -1,40 +1,14 @@
 """`Pystval` is a `Rust` library for `Python`, used to create your own validator."""
 import enum
-from typing import Any, Dict, List
+from typing import Type, TypeVar, List,Any
 
-
-class PystvalError(Exception):
-    """
-    A class for creating your own exceptions
-    Parameters
-    ----------
-    `message` : `str`
-        Message for exception
-    `rules` : `List[Any]`
-        Rules for validation
-    """
-
-    message: str
-    extra: Dict[str, Any]
-    rules: List[Any]
-
-    def __init__(self, message: str, extra: Dict[str, Any] = None, rules: List[Any] = None) -> None:
-        """
-        Parameters
-        ----------
-        `message` : `str`
-            Message for exception
-        `rules` : `List[Any]`
-            Rules for validation
-        """
+class PystvalErrorMeta(type):
+    def __new__(cls, name: str, bases: tuple[type], attrs: dict[str, any]) -> type:
         ...
 
-    @property
-    def report(self) -> str:
-        """
-        Get the formatted error message for the exception.
-        """
-        ...
+
+class PystvalError(Exception, metaclass=PystvalErrorMeta):
+    pass
 
 class MatchRequirement(enum.Enum):
     """
