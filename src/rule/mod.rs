@@ -31,7 +31,7 @@ impl Rule {
         Rule {
             inner: Some(inner),
             requirement: Some(requirements),
-            rules_for_the_rule: Some(Vec::new()),
+            rules_for_the_rule: None,
         }
     }
     /// Добавление дочерней строки
@@ -43,7 +43,11 @@ impl Rule {
                 // Проверяем, что это правило
                 if let Ok(rule) = packed_rule.extract::<Rule>() {
                     // Добавляем в вектор дочерних правил
-                    self.rules_for_the_rule.as_mut().unwrap().push(rule);
+                    if let Some(rules) = &mut self.rules_for_the_rule {
+                        rules.push(rule);
+                    } else {
+                        self.rules_for_the_rule = Some(vec![rule]);
+                    }
                 } else {
                     return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                         "Expected `Rule` in the list, the child error `{}` from the parent `{}`",

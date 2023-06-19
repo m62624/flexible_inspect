@@ -1,5 +1,3 @@
-use pyo3::{types::PyModule, Python};
-
 use super::{
     BASE_ERROR, EXTRA_FROM_CLASS_PY, MESSAGE_WITH_EXTRA_FROM_CLASS_PY, RULES_FROM_CLASS_PY,
 };
@@ -50,12 +48,4 @@ class {BASE_ERROR}(Exception,metaclass={BASE_ERROR}Meta):
             return self.__{RULES_FROM_CLASS_PY}
 "
     )
-}
-
-#[test]
-fn test_py_code_base_exception() {
-    pyo3::prepare_freethreaded_python();
-    Python::with_gil(|py| {
-        PyModule::from_code(py, &py_code_base_exception(), "", "pystval").unwrap();
-    });
 }

@@ -1,11 +1,11 @@
 use pyo3::prelude::*;
 use std::collections::HashMap;
 mod check_convert;
-mod contrainer_tree;
 mod custom_error;
 mod init;
 mod match_requirement;
 mod rule;
+mod template_validator;
 // имя модуля для `Python`
 pub const MODULE_NAME: &str = "pystval";
 // имя атрибута, где хранится само сообщение и **extra переменные из класса Python
@@ -23,7 +23,6 @@ mod export {
     use super::*;
     #[pymodule]
     fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
-        // py_module.add("PystvalError", custom_error::py_code_base_exception())?;
         PyModule::from_code(
             _py,
             &custom_error::py_code_base_exception(),
@@ -32,15 +31,7 @@ mod export {
         )?;
         py_module.add_class::<match_requirement::MatchRequirement>()?;
         py_module.add_class::<rule::Rule>()?;
-        py_module.add_class::<TemplateValidator>()?;
+        py_module.add_class::<template_validator::TemplateValidator>()?;
         Ok(())
     }
-}
-
-#[pyclass]
-#[derive(Debug, Clone)]
-pub struct TemplateValidator {
-    #[pyo3(get, set)]
-    py_classes: HashMap<usize, PyObject>,
-    isolated_environment: contrainer_tree::ContainerTree,
 }
