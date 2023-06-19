@@ -1,4 +1,5 @@
 use super::*;
+use std::collections::hash_map::RandomState;
 mod impl_eq;
 mod impl_hash;
 /// Структура для хранения вложенных строк

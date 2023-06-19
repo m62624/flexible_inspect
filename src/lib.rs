@@ -1,6 +1,7 @@
 use pyo3::prelude::*;
 use std::collections::HashMap;
 mod check_convert;
+mod contrainer_tree;
 mod init;
 mod match_requirement;
 mod rule;
@@ -9,12 +10,5 @@ mod rule;
 pub struct TemplateValidator {
     #[pyo3(get, set)]
     py_classes: HashMap<usize, PyObject>,
-    #[pyo3(get, set)]
-    rules: HashMap<rule::Rule, usize>,
-}
-
-#[pyclass]
-#[derive(Debug, Clone)]
-pub struct ContainerTree {
-    selected_rules: regex::RegexSet,
+    isolated_environment: contrainer_tree::ContainerTree,
 }
