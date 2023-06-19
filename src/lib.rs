@@ -1,5 +1,6 @@
 use pyo3::prelude::*;
 use std::collections::HashMap;
+mod check_convert;
 mod init;
 /// Перечисления для определения требований к строке
 #[pyclass]
@@ -9,24 +10,19 @@ pub enum MatchRequirement {
     MustNotBefound,
 }
 
-#[pyclass]
-#[derive(Debug, Clone)]
-pub struct TemplateValidator {
-    // хранит все ошибки ( KEY: `ID` и VALUE: `PyError` )
-    py_error_classes: HashMap<usize, PyObject>,
-    rules_from_py_error_classes: HashMap<usize, Rule>,
-}
-
 /// Структура для хранения вложенных строк
 #[pyclass]
 #[derive(Debug, Clone)]
 pub struct Rule {
-    pub inner: String,
-    pub requirements: MatchRequirement,
-    pub rule_for_the_rule: HashMap<String, Rule>,
+    inner: String,
+    requirements: MatchRequirement,
+    rule_for_the_rule: HashMap<String, Rule>,
 }
 
-/// Итератор для обхода дерева в глубину
-pub struct RuleIterator<'a> {
-    stack: Vec<&'a Rule>,
+#[pymethods]
+impl Rule {
+    /// Добавление дочерней вложенной строки
+    pub fn extend(&mut self, key: String, child: Rule) {
+        self.rule_for_the_rule.insert(key, child);
+    }
 }
