@@ -10,25 +10,21 @@ class PystvalError(Exception):
     ----------
     `message` : `str`
         Message for exception
-    `extra` : `Dict[str, Any]`
-        Additional data
-    `rules` : `Dict[str, Any]`
+    `rules` : `List[Any]`
         Rules for validation
     """
 
     message: str
     extra: Dict[str, Any]
-    rules: Dict[str, Any]
+    rules: List[Any]
 
-    def __init__(self, message: str, extra: Dict[str, Any] = None, rules: Dict[str, Any] = None) -> None:
+    def __init__(self, message: str, extra: Dict[str, Any] = None, rules: List[Any] = None) -> None:
         """
         Parameters
         ----------
         `message` : `str`
             Message for exception
-        `extra` : `Dict[str, Any]`
-            Additional data
-        `rules` : `Dict[str, Any]`
+        `rules` : `List[Any]`
             Rules for validation
         """
         ...
@@ -38,6 +34,26 @@ class PystvalError(Exception):
         """
         Get the formatted error message for the exception.
         """
+        ...
+
+class MatchRequirement(enum.Enum):
+    """
+    A `enumeration` that gives options on what to do when you find a regex match 
+    """
+    MustBeFound = 0,
+    """
+    It must be found, otherwise an exception will be thrown
+    """
+    MustNotBeFound = 1,
+    """
+    It is not to Be found here, otherwise an exception will be raised
+    """
+
+class Rule:
+    def __init__(self, inner: str, requirements: MatchRequirement) -> None:
+        ...
+    
+    def extend(self, key: str, child: Rule) -> None:
         ...
 
 
@@ -60,48 +76,35 @@ class TemplateValidator:
         `AttributeError`
             Incorrect attribute specified (missing)
         """
-        pass
 
-    async def async_validate(self, text: str):
-        """
-        Parameters
-        ----------
-        `text` : `str`
-            Text for verification
+    # async def async_validate(self, text: str):
+    #     """
+    #     Parameters
+    #     ----------
+    #     `text` : `str`
+    #         Text for verification
 
-        Raises
-        ------
-        `Custom Error (PystvalError)`
-            The error that was specified in `flags`
-        """
-        pass
-    pass
+    #     Raises
+    #     ------
+    #     `Custom Error (PystvalError)`
+    #         The error that was specified in `flags`
+    #     """
+    #     pass
+    # pass
 
-    def validate(self, text: str):
-        """
-        Parameters
-        ----------
-        `text` : `str`
-            Text for verification
+    # def validate(self, text: str):
+    #     """
+    #     Parameters
+    #     ----------
+    #     `text` : `str`
+    #         Text for verification
 
-        Raises
-        ------
-        `Custom Error (PystvalError)`
-            The error that was specified in `flags`
-        """
-        pass
-    pass
+    #     Raises
+    #     ------
+    #     `Custom Error (PystvalError)`
+    #         The error that was specified in `flags`
+    #     """
+    #     pass
+    # pass
 
-class MatchRequirement(enum.Enum):
-    """
-    A `enumeration` that gives options on what to do when you find a regex match 
-    """
-    MustBeFoundHere = 0,
-    """
-    It must be found, otherwise an exception will be thrown
-    """
-    NotToBeFoundHere = 1,
-    """
-    It is not to Be found here, otherwise an exception will be raised
-    """
-    pass
+
