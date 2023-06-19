@@ -2,10 +2,10 @@ use pyo3::prelude::*;
 use std::collections::HashMap;
 mod check_convert;
 mod contrainer_tree;
+mod custom_error;
 mod init;
 mod match_requirement;
 mod rule;
-
 // имя модуля для `Python`
 pub const MODULE_NAME: &str = "pystval";
 // имя атрибута, где хранится само сообщение и **extra переменные из класса Python
