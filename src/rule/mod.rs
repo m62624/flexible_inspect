@@ -52,6 +52,7 @@ impl Rule {
         }
         return Err(PyErr::new::<exceptions::PyTypeError, _>("Expected List"));
     }
+    /// Показать дерево конкретного правила
     pub fn show_tree(&self) {
         println!("{:#?}", self);
     }
