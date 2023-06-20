@@ -38,11 +38,10 @@ impl TemplateValidator {
                     )));
                 }
             }
-            let x = Self {
+            Ok(Self {
                 py_classes,
                 all_rules,
-            };
-            Ok(x)
+            })
         } else {
             return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                 "'{}' must be a 'List[ Class, Class... ]'",
