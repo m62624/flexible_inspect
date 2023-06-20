@@ -56,24 +56,31 @@ impl TemplateValidator {
 }
 
 impl TemplateValidator {
+    /// Получение всех правил из класса
     fn get_rules(
         class_py: &types::PyType,
         index: usize,
         all_rules: &mut HashMap<rule::Rule, usize>,
     ) -> PyResult<()> {
+        // Проверяем наличие атрибута с правилами
         if let Ok(py_list) = class_py.getattr(RULES_FROM_CLASS_PY) {
+            // Проверяем, что это список
             if let Ok(py_list) = py_list.downcast::<types::PyList>() {
-                for rule in py_list {
-                    if let Ok(rule) = rule.extract::<rule::Rule>() {
-                        all_rules.insert(rule, index);
-                    } else {
-                        return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                            "'{}' must be a 'Rule' from class `{}`",
-                            rule.get_type().name().unwrap(),
-                            class_py.name().unwrap()
-                        )));
-                    }
-                }
+                py_list
+                    .iter()
+                    .map(|rule| {
+                        if let Ok(rule) = rule.extract::<rule::Rule>() {
+                            all_rules.insert(rule, index);
+                            Ok(())
+                        } else {
+                            Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+                                "'{}' must be a 'Rule' from class `{}`",
+                                rule.get_type().name().unwrap(),
+                                class_py.name().unwrap()
+                            )))
+                        }
+                    })
+                    .collect::<PyResult<Vec<_>>>()?;
             } else {
                 return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                     "'{}' must be a 'List[ Rule, Rule... ]'",

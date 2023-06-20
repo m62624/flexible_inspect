@@ -53,7 +53,7 @@ impl Rule {
         // Проверяем, что это список
         if let Ok(list) = nested_rules.downcast::<types::PyList>(py) {
             // Итерируемся по списку для получения всех дочерних правил
-            list.into_iter().map(|packed_rule| {
+            list.iter().map(|packed_rule| {
                 if let Ok(rule) = packed_rule.extract::<Rule>() {
                     // Добавляем в вектор дочерних правил
                     if let Some(rules) = &mut self.rules_for_the_rule {
