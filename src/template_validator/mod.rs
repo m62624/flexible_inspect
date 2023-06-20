@@ -1,4 +1,5 @@
 use super::*;
+mod validate;
 use pyo3::{exceptions, types};
 #[pyclass]
 #[derive(Debug, Clone)]
@@ -21,8 +22,13 @@ impl TemplateValidator {
             for class_py in list {
                 // Проверяем, что все элементы списка - это классы
                 if let Ok(class_py) = class_py.downcast::<types::PyType>() {
-                    py_classes.insert(index, class_py.to_object(py));
+                    // 1 - Сохраняем от каждого класса все rules
                     Self::get_rules(class_py, index, &mut all_rules)?;
+                    // 2 - Теперь можем удалить от объектов их rules
+                    class_py.delattr(RULES_FROM_CLASS_PY)?;
+                    // 3 - Сохраняем тело класса для создания ошибки
+                    py_classes.insert(index, class_py.to_object(py));
+
                     index += 1;
                 } else {
                     return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
@@ -35,7 +41,6 @@ impl TemplateValidator {
                 py_classes,
                 all_rules,
             };
-            dbg!(x.clone());
             Ok(x)
         } else {
             return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
