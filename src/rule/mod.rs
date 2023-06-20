@@ -23,7 +23,7 @@ pub struct Rule {
     requirement: Option<MatchRequirement>,
     #[pyo3(get, set)]
     /// Вложенные правила, которые будут проверяться, если данное правило сработало
-    rules_for_the_rule: Option<Vec<Rule>>,
+    pub rules_for_the_rule: Option<Vec<Rule>>,
     /// Сет для быстрой проверки на совпадение
     regex_set: Option<regex::RegexSet>,
 }
@@ -72,7 +72,7 @@ impl Rule {
                     )));
                 }
             }).collect::<PyResult<Vec<_>>>()?;
-            self.regex_set = Self::get_regex_set(&self.rules_for_the_rule);
+            // self.regex_set = Self::get_regex_set(&self.rules_for_the_rule);
             // Возвращаем саму структуру
             return Ok(std::mem::take(self));
         }
