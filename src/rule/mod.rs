@@ -84,23 +84,24 @@ impl Rule {
 }
 
 impl Rule {
-    /// Получаем ближайшего родителя в дереве
-    pub fn find_parent(&self, rule: &Rule) -> Option<Rule> {
-        // Проверяем, является ли текущее правило родителем
+    pub fn get_regex_set(&self) -> Option<regex::RegexSet> {
         if let Some(rules) = &self.rules_for_the_rule {
-            if rules.contains(rule) {
-                return Some(self.clone());
-            }
+            let regexes: Vec<&str> = rules
+                .iter()
+                .filter_map(|rule| {
+                    if let Some((inner, regex_type)) = &rule.inner {
+                        if let regex_types::RGX::Default = regex_type {
+                            Some(inner.as_str())
+                        } else {
+                            None
+                        }
+                    } else {
+                        None
+                    }
+                })
+                .collect();
+            return Some(regex::RegexSet::new(regexes).unwrap());
         }
-        // Рекурсивно проверяем каждое дочернее правило
-        if let Some(rules) = &self.rules_for_the_rule {
-            for child_rule in rules {
-                if let Some(parent) = child_rule.find_parent(rule) {
-                    return Some(parent);
-                }
-            }
-        }
-        // Если не найден родитель, возвращаем None
         None
     }
 }
