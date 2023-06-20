@@ -50,6 +50,9 @@ impl TemplateValidator {
             )));
         }
     }
+    pub fn show_tree(&self) {
+        println!("{:#?}", self);
+    }
 }
 
 impl TemplateValidator {
