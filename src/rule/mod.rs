@@ -24,6 +24,7 @@ pub struct Rule {
     #[pyo3(get, set)]
     /// Вложенные правила, которые будут проверяться, если данное правило сработало
     rules_for_the_rule: Option<Vec<Rule>>,
+    regex_set: Option<regex::RegexSet>,
 }
 
 #[pymethods]
@@ -44,6 +45,7 @@ impl Rule {
             },
             requirement: Some(requirements),
             rules_for_the_rule: None,
+            regex_set: None,
         })
     }
     /// Добавление дочерней строки
@@ -51,14 +53,15 @@ impl Rule {
         // Проверяем, что это список
         if let Ok(list) = nested_rules.downcast::<types::PyList>(py) {
             // Итерируемся по списку для получения всех дочерних правил
-            for packed_rule in list.iter() {
-                // Проверяем, что это правило
+            list.into_iter().map(|packed_rule| {
                 if let Ok(rule) = packed_rule.extract::<Rule>() {
                     // Добавляем в вектор дочерних правил
                     if let Some(rules) = &mut self.rules_for_the_rule {
                         rules.push(rule);
+                        Ok(())
                     } else {
                         self.rules_for_the_rule = Some(vec![rule]);
+                        Ok(())
                     }
                 } else {
                     return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
@@ -67,7 +70,8 @@ impl Rule {
                         self.inner.as_ref().unwrap().0
                     )));
                 }
-            }
+            }).collect::<PyResult<Vec<_>>>()?;
+            self.regex_set = Self::get_regex_set(&self.rules_for_the_rule);
             // Возвращаем саму структуру
             return Ok(std::mem::take(self));
         }
@@ -84,8 +88,8 @@ impl Rule {
 }
 
 impl Rule {
-    pub fn get_regex_set(&self) -> Option<regex::RegexSet> {
-        if let Some(rules) = &self.rules_for_the_rule {
+    pub fn get_regex_set(subrules: &Option<Vec<Rule>>) -> Option<regex::RegexSet> {
+        if let Some(rules) = subrules {
             let regexes: Vec<&str> = rules
                 .iter()
                 .filter_map(|rule| {
@@ -100,6 +104,7 @@ impl Rule {
                     }
                 })
                 .collect();
+            println!("{:#?}", regexes);
             return Some(regex::RegexSet::new(regexes).unwrap());
         }
         None
