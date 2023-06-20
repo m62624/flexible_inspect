@@ -24,6 +24,7 @@ pub struct Rule {
     #[pyo3(get, set)]
     /// Вложенные правила, которые будут проверяться, если данное правило сработало
     rules_for_the_rule: Option<Vec<Rule>>,
+    /// Сет для быстрой проверки на совпадение
     regex_set: Option<regex::RegexSet>,
 }
 
@@ -90,22 +91,23 @@ impl Rule {
 impl Rule {
     pub fn get_regex_set(subrules: &Option<Vec<Rule>>) -> Option<regex::RegexSet> {
         if let Some(rules) = subrules {
-            let regexes: Vec<&str> = rules
-                .iter()
-                .filter_map(|rule| {
-                    if let Some((inner, regex_type)) = &rule.inner {
-                        if let regex_types::RGX::Default = regex_type {
-                            Some(inner.as_str())
-                        } else {
-                            None
-                        }
-                    } else {
-                        None
-                    }
-                })
-                .collect();
-            println!("{:#?}", regexes);
-            return Some(regex::RegexSet::new(regexes).unwrap());
+            return Some(
+                regex::RegexSet::new(
+                    rules
+                        .iter()
+                        .filter_map(|rule| {
+                            if let Some((inner, regex_type)) = &rule.inner {
+                                if let regex_types::RGX::Default = regex_type {
+                                    return Some(inner.as_str());
+                                }
+                                return None;
+                            }
+                            return None;
+                        })
+                        .collect::<Vec<&str>>(),
+                )
+                .unwrap(),
+            );
         }
         None
     }
