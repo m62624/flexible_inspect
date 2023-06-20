@@ -13,7 +13,7 @@ class CustomError_2(PystvalError):
     rules = [
         Rule("2 Root rule",MatchRequirement.MustBeFound).extend([
         Rule("2 Subrule-1 of Root",MatchRequirement.MustBeFound),
-        Rule("2 Subrule-2 of Root",MatchRequirement.MustBeFound).extend([
+        Rule("^a(?>bc|b)c$(?P<invalid)",MatchRequirement.MustBeFound).extend([
             Rule("2 Subrule-1 of Subrule-2",MatchRequirement.MustBeFound),
             Rule("2 Subrule-2 of Subrule-2",MatchRequirement.MustBeFound),
         ]).extend([

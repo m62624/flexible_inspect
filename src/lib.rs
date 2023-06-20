@@ -1,8 +1,7 @@
 use pyo3::prelude::*;
 use std::collections::HashMap;
+mod base_error;
 mod check_convert;
-mod custom_error;
-mod init;
 mod match_requirement;
 mod rule;
 mod template_validator;
@@ -23,12 +22,7 @@ mod export {
     use super::*;
     #[pymodule]
     fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
-        PyModule::from_code(
-            _py,
-            &custom_error::py_code_base_exception(),
-            "",
-            MODULE_NAME,
-        )?;
+        PyModule::from_code(_py, &base_error::py_code_base_exception(), "", MODULE_NAME)?;
         py_module.add_class::<match_requirement::MatchRequirement>()?;
         py_module.add_class::<rule::Rule>()?;
         py_module.add_class::<template_validator::TemplateValidator>()?;
