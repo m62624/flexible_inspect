@@ -7,7 +7,7 @@ use pyo3::{exceptions, types};
 pub struct TemplateValidator {
     #[pyo3(get, set)]
     py_classes: HashMap<usize, PyObject>,
-    all_rules: HashMap<rule::Rule, usize>,
+    all_rules: Vec<(rule::Rule, usize)>,
 }
 
 #[pymethods]
@@ -17,7 +17,7 @@ impl TemplateValidator {
         // Проверяем, что error_classes - это список
         if let Ok(list) = error_classes.downcast::<types::PyList>(py) {
             let mut py_classes: HashMap<usize, PyObject> = HashMap::new();
-            let mut all_rules: HashMap<rule::Rule, usize> = HashMap::new();
+            let mut all_rules: Vec<(rule::Rule, usize)> = Vec::new();
             let mut index = 0;
             // Проходимся по всем элементам списка
             for class_py in list {
@@ -59,7 +59,7 @@ impl TemplateValidator {
     fn get_rules(
         class_py: &types::PyType,
         index: usize,
-        all_rules: &mut HashMap<rule::Rule, usize>,
+        all_rules: &mut Vec<(rule::Rule, usize)>,
     ) -> PyResult<()> {
         // Проверяем наличие атрибута с правилами
         if let Ok(py_list) = class_py.getattr(RULES_FROM_CLASS_PY) {
@@ -69,7 +69,7 @@ impl TemplateValidator {
                     .iter()
                     .map(|rule| {
                         if let Ok(rule) = rule.extract::<rule::Rule>() {
-                            all_rules.insert(rule, index);
+                            all_rules.push((rule, index));
                             Ok(())
                         } else {
                             Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
