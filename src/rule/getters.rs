@@ -9,7 +9,7 @@ impl Rule {
     pub fn get_rules_for_the_rule(&self) -> &Option<Vec<Rule>> {
         &self.rules_for_the_rule
     }
-    pub fn get_regex_set(&self) -> &Option<regex::RegexSet> {
-        &self.regex_set
-    }
+    // pub fn get_regex_set(&self) -> &Option<regex::RegexSet> {
+    //     &self.regex_set
+    // }
 }

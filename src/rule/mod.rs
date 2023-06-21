@@ -25,8 +25,7 @@ pub struct Rule {
     #[pyo3(get)]
     /// Вложенные правила, которые будут проверяться, если данное правило сработало
     rules_for_the_rule: Option<Vec<Rule>>,
-    /// Сет для быстрой проверки на совпадение
-    regex_set: Option<regex::RegexSet>,
+    // regex_set: Option<regex::RegexSet>,
 }
 
 #[pymethods]
@@ -47,7 +46,7 @@ impl Rule {
             },
             requirement: Some(requirements),
             rules_for_the_rule: None,
-            regex_set: None,
+            // regex_set: None,
         })
     }
     /// Добавление дочерней строки
