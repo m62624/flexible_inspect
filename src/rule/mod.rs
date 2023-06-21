@@ -34,9 +34,9 @@ impl Rule {
     /// Создание корня дерева
     pub fn new(inner: String, requirements: MatchRequirement) -> PyResult<Self> {
         Ok(Rule {
-            inner: if check_convert::is_default_regex_fisrt_step(&inner) {
+            inner: if check_convert::check::is_default_regex_fisrt_step(&inner) {
                 Some((inner, regex_types::RGX::Default))
-            } else if check_convert::is_fancy_regex_second_step(&inner) {
+            } else if check_convert::check::is_fancy_regex_second_step(&inner) {
                 Some((inner, regex_types::RGX::Fancy))
             } else {
                 return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
