@@ -1,4 +1,5 @@
 use super::*;
+mod getters;
 /// Импорт модуля с имплементацией `__eq__`
 mod impl_eq;
 /// Импорт модуля с имплементацией `__hash__`
@@ -15,15 +16,15 @@ use pyo3::{exceptions, types};
 #[pyclass]
 #[derive(Debug, Clone, Default)]
 pub struct Rule {
-    #[pyo3(get, set)]
+    #[pyo3(get)]
     /// Строка является Regex выражением
     inner: Option<(String, regex_types::RGX)>,
-    #[pyo3(get, set)]
+    #[pyo3(get)]
     /// Какое требование при нахождении совпадений
     requirement: Option<MatchRequirement>,
-    #[pyo3(get, set)]
+    #[pyo3(get)]
     /// Вложенные правила, которые будут проверяться, если данное правило сработало
-    pub rules_for_the_rule: Option<Vec<Rule>>,
+    rules_for_the_rule: Option<Vec<Rule>>,
     /// Сет для быстрой проверки на совпадение
     regex_set: Option<regex::RegexSet>,
 }
@@ -89,7 +90,7 @@ impl Rule {
 }
 
 impl Rule {
-    pub fn get_regex_set(subrules: &Option<Vec<Rule>>) -> Option<regex::RegexSet> {
+    pub fn make_regex_set(subrules: &Option<Vec<Rule>>) -> Option<regex::RegexSet> {
         if let Some(rules) = subrules {
             return Some(
                 regex::RegexSet::new(
