@@ -1,5 +1,6 @@
 use super::*;
 mod c_python_garbage_collector;
+mod regex_capture;
 mod validate;
 use pyo3::{exceptions, types};
 #[pyclass]
