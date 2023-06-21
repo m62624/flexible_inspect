@@ -4,7 +4,7 @@ mod getters;
 mod impl_eq;
 /// Импорт модуля с имплементацией `__hash__`
 mod impl_hash;
-mod regex_types;
+pub mod regex_types;
 use match_requirement::MatchRequirement;
 use pyo3::{exceptions, types};
 
