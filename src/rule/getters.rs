@@ -12,12 +12,14 @@ impl Rule {
         }
         return Err(error_take());
     }
-    pub fn get_rules_for_the_rule(&self) -> PyResult<&Vec<Rule>> {
-        if let Some(value) = &self.rules_for_the_rule {
-            return Ok(value);
-        }
-        return Err(error_take());
+    pub fn get_rules_for_the_rule(&self) -> &Option<Vec<Rule>> {
+        &self.rules_for_the_rule
     }
+
+    pub fn is_exist_subrules(&self) -> bool {
+        self.rules_for_the_rule.is_some()
+    }
+
     // pub fn get_regex_set(&self) -> &Option<regex::RegexSet> {
     //     &self.regex_set
     // }
