@@ -111,4 +111,23 @@ impl Rule {
         }
         None
     }
+    // pub fn init_regex_set(subrules: &Vec<(Rule, usize)>) -> Option<regex::RegexSet> {
+    //     return Some(
+    //         regex::RegexSet::new(
+    //             rules
+    //                 .iter()
+    //                 .filter_map(|rule| {
+    //                     if let Some((inner, regex_type)) = &rule.inner {
+    //                         if let regex_types::RGX::Default = regex_type {
+    //                             return Some(inner.as_str());
+    //                         }
+    //                         return None;
+    //                     }
+    //                     return None;
+    //                 })
+    //                 .collect::<Vec<&str>>(),
+    //         )
+    //         .unwrap(),
+    //     );
+    // }
 }
