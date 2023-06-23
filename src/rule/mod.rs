@@ -4,8 +4,9 @@ mod getters;
 mod impl_eq;
 /// Импорт модуля с имплементацией `__hash__`
 mod impl_hash;
+mod match_requirement;
 pub mod regex_types;
-use match_requirement::MatchRequirement;
+pub use match_requirement::MatchRequirement;
 use pyo3::{exceptions, types};
 /// Структура для хранения вложенных строк
 /// Ставим всё в Option, чтобы можно было использовать `take`.
@@ -23,7 +24,6 @@ pub struct Rule {
     #[pyo3(get)]
     /// Вложенные правила, которые будут проверяться, если данное правило сработало
     rules_for_the_rule: Option<Vec<Rule>>,
-    // regex_set: Option<regex::RegexSet>,
 }
 
 #[pymethods]
@@ -44,7 +44,6 @@ impl Rule {
             },
             requirement: Some(requirements),
             rules_for_the_rule: None,
-            // regex_set: None,
         })
     }
     /// Добавление дочерней строки
@@ -70,8 +69,6 @@ impl Rule {
                     )));
                 }
             }).collect::<PyResult<Vec<_>>>()?;
-            // self.regex_set = Self::get_regex_set(&self.rules_for_the_rule);
-            // Возвращаем саму структуру
             return Ok(std::mem::take(self));
         }
         Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
