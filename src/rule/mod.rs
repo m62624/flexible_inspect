@@ -7,7 +7,6 @@ mod impl_hash;
 pub mod regex_types;
 use match_requirement::MatchRequirement;
 use pyo3::{exceptions, types};
-
 /// Структура для хранения вложенных строк
 /// Ставим всё в Option, чтобы можно было использовать `take`.
 /// `take` - забирает значение из переменной, а вместо него ставит `None`
@@ -16,9 +15,8 @@ use pyo3::{exceptions, types};
 #[pyclass]
 #[derive(Debug, Clone, Default)]
 pub struct Rule {
-    #[pyo3(get)]
     /// Строка является Regex выражением
-    inner: Option<(String, regex_types::RGX)>,
+    rule_raw: Option<(Box<str>, regex_types::RGX)>,
     #[pyo3(get)]
     /// Какое требование при нахождении совпадений
     requirement: Option<MatchRequirement>,
@@ -32,16 +30,16 @@ pub struct Rule {
 impl Rule {
     #[new]
     /// Создание корня дерева
-    pub fn new(inner: String, requirements: MatchRequirement) -> PyResult<Self> {
+    pub fn new(rule_raw: String, requirements: MatchRequirement) -> PyResult<Self> {
         Ok(Rule {
-            inner: if check_convert::check::is_default_regex_fisrt_step(&inner) {
-                Some((inner, regex_types::RGX::Default))
-            } else if check_convert::check::is_fancy_regex_second_step(&inner) {
-                Some((inner, regex_types::RGX::Fancy))
+            rule_raw: if check_convert::check::is_default_regex_fisrt_step(&rule_raw) {
+                Some((rule_raw.into_boxed_str(), regex_types::RGX::Default))
+            } else if check_convert::check::is_fancy_regex_second_step(&rule_raw) {
+                Some((rule_raw.into_boxed_str(), regex_types::RGX::Fancy))
             } else {
                 return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                     "Expected `Regex` or `FancyRegex`, got `{}`",
-                    inner
+                    rule_raw
                 )));
             },
             requirement: Some(requirements),
@@ -68,7 +66,7 @@ impl Rule {
                     return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                         "Expected `Rule` in the list, the child error `{}` from the parent rule `{}`",
                         packed_rule.get_type().name().unwrap(),
-                        self.inner.as_ref().unwrap().0
+                        self.rule_raw.as_ref().unwrap().0
                     )));
                 }
             }).collect::<PyResult<Vec<_>>>()?;
@@ -96,15 +94,15 @@ impl Rule {
                     rules
                         .iter()
                         .filter_map(|rule| {
-                            if let Some((inner, regex_type)) = &rule.inner {
+                            if let Some((rule_raw, regex_type)) = &rule.rule_raw {
                                 if let regex_types::RGX::Default = regex_type {
-                                    return Some(inner.as_str());
+                                    return Some(rule_raw);
                                 }
                                 return None;
                             }
                             return None;
                         })
-                        .collect::<Vec<&str>>(),
+                        .collect::<Vec<_>>(),
                 )
                 .unwrap(),
             );
@@ -117,9 +115,9 @@ impl Rule {
     //             rules
     //                 .iter()
     //                 .filter_map(|rule| {
-    //                     if let Some((inner, regex_type)) = &rule.inner {
+    //                     if let Some((rule_raw, regex_type)) = &rule.rule_raw {
     //                         if let regex_types::RGX::Default = regex_type {
-    //                             return Some(inner.as_str());
+    //                             return Some(rule_raw.as_str());
     //                         }
     //                         return None;
     //                     }
