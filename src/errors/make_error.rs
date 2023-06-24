@@ -4,7 +4,7 @@ use pyo3::types;
 use std::collections::HashMap;
 
 /// Создаем ошибку с переданными параметрами
-pub fn init_error(obj: &PyObject, extra_hm: Option<HashMap<String, String>>) -> PyResult<PyObject> {
+pub fn init_error(obj: &PyObject, extra_hm: Option<HashMap<&str, &str>>) -> PyResult<PyObject> {
     Python::with_gil(|py| -> PyResult<PyObject> {
         dbg!(&extra_hm);
         // Создаем объект класса ошибки с переданными параметрами
