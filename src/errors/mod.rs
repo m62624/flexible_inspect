@@ -1,8 +1,8 @@
 use super::{
     BASE_ERROR, EXTRA_FROM_CLASS_PY, MESSAGE_WITH_EXTRA_FROM_CLASS_PY, RULES_FROM_CLASS_PY,
 };
-mod extra_collection;
-mod make_error;
+pub mod extra_collection;
+pub mod make_error;
 /// Функция для получения базового класса ошибки
 // Почему именно такая реализация ?
 /*
