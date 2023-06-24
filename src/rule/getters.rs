@@ -1,12 +1,5 @@
 use super::*;
 impl Rule {
-    /// Получение строки (`Regex`) из `Rule`
-    pub fn get_str(&self) -> PyResult<&Box<str>> {
-        if let Some(value) = self.get_inner() {
-            return Ok(&value.0);
-        }
-        return Err(error_take());
-    }
     /// Получение строки и Regex типа строки из `Rule`
     pub fn get_inner(
         &self,
@@ -17,7 +10,19 @@ impl Rule {
     )> {
         &self.rule_raw
     }
-
+    /// Получение строки (`Regex`) из `Rule`
+    pub fn get_str(&self) -> PyResult<&Box<str>> {
+        if let Some(value) = self.get_inner() {
+            return Ok(&value.0);
+        }
+        return Err(error_take());
+    }
+    pub fn get_type(&self) -> PyResult<&regex_types::RGX> {
+        if let Some(value) = &self.get_inner() {
+            return Ok(&value.1);
+        }
+        return Err(error_take());
+    }
     /// Получение `MatchRequirement` из `Rule`
     pub fn get_requirement(&self) -> PyResult<&MatchRequirement> {
         if let Some(value) = &self.get_inner() {
@@ -25,7 +30,9 @@ impl Rule {
         }
         return Err(error_take());
     }
-
+    pub fn get_subrules(&self) -> &Option<Vec<Rule>> {
+        &self.rules_for_the_rule
+    }
     /// Проверка на существование подправил
     pub fn is_exist_subrules(&self) -> bool {
         self.rules_for_the_rule.is_some()
