@@ -6,9 +6,9 @@ use pyo3::{exceptions, types};
 #[pyclass]
 #[derive(Debug, Clone)]
 pub struct TemplateValidator {
-    #[pyo3(get, set)]
     py_classes: HashMap<usize, PyObject>,
-    all_rules: Vec<(rule::Rule, usize)>,
+    default_rules: Vec<(rule::Rule, usize)>,
+    fancy_rules: Vec<(rule::Rule, usize)>,
 }
 
 #[pymethods]
@@ -18,14 +18,15 @@ impl TemplateValidator {
         // Проверяем, что error_classes - это список
         if let Ok(list) = error_classes.downcast::<types::PyList>(py) {
             let mut py_classes: HashMap<usize, PyObject> = HashMap::new();
-            let mut all_rules: Vec<(rule::Rule, usize)> = Vec::new();
+            let mut default_rules: Vec<(rule::Rule, usize)> = Vec::new();
+            let mut fancy_rules: Vec<(rule::Rule, usize)> = Vec::new();
             let mut index = 0;
             // Проходимся по всем элементам списка
             for class_py in list {
                 // Проверяем, что все элементы списка - это классы
                 if let Ok(class_py) = class_py.downcast::<types::PyType>() {
                     // 1 - Сохраняем от каждого класса все rules
-                    Self::get_rules(class_py, index, &mut all_rules)?;
+                    Self::get_rules(class_py, index, &mut default_rules, &mut fancy_rules)?;
                     // 2 - Теперь можем удалить от объектов их rules
                     class_py.delattr(RULES_FROM_CLASS_PY)?;
                     // 3 - Сохраняем тело класса для создания ошибки
@@ -41,7 +42,8 @@ impl TemplateValidator {
             }
             Ok(Self {
                 py_classes,
-                all_rules,
+                default_rules,
+                fancy_rules,
             })
         } else {
             return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
@@ -60,7 +62,8 @@ impl TemplateValidator {
     fn get_rules(
         class_py: &types::PyType,
         index: usize,
-        all_rules: &mut Vec<(rule::Rule, usize)>,
+        default_rules: &mut Vec<(rule::Rule, usize)>,
+        fancy_rules: &mut Vec<(rule::Rule, usize)>,
     ) -> PyResult<()> {
         // Проверяем наличие атрибута с правилами
         if let Ok(py_list) = class_py.getattr(RULES_FROM_CLASS_PY) {
@@ -70,7 +73,16 @@ impl TemplateValidator {
                     .iter()
                     .map(|rule| {
                         if let Ok(rule) = rule.extract::<rule::Rule>() {
-                            all_rules.push((rule, index));
+                            if let Some(rule_type) = rule.get_inner() {
+                                match rule_type.1 {
+                                    rule::regex_types::RGX::Default => {
+                                        default_rules.push((rule, index));
+                                    }
+                                    rule::regex_types::RGX::Fancy => {
+                                        fancy_rules.push((rule, index));
+                                    }
+                                }
+                            }
                             Ok(())
                         } else {
                             Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
