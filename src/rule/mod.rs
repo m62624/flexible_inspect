@@ -5,22 +5,20 @@ mod impl_eq;
 /// Импорт модуля с имплементацией `__hash__`
 mod impl_hash;
 mod match_requirement;
+mod regex_set;
 pub mod regex_types;
 pub use match_requirement::MatchRequirement;
 use pyo3::{exceptions, types};
+
 /// Структура для хранения вложенных строк
 /// Ставим всё в Option, чтобы можно было использовать `take`.
 /// `take` - забирает значение из переменной, а вместо него ставит `None`
 /// тем самым мы сможем каждый раз перемещать значение из переменной в переменную без копирования
-
 #[pyclass]
 #[derive(Debug, Clone, Default)]
 pub struct Rule {
     /// Строка является Regex выражением
-    rule_raw: Option<(Box<str>, regex_types::RGX)>,
-    #[pyo3(get)]
-    /// Какое требование при нахождении совпадений
-    requirement: Option<MatchRequirement>,
+    rule_raw: Option<(Box<str>, regex_types::RGX, MatchRequirement)>,
     #[pyo3(get)]
     /// Вложенные правила, которые будут проверяться, если данное правило сработало
     rules_for_the_rule: Option<Vec<Rule>>,
@@ -33,16 +31,23 @@ impl Rule {
     pub fn new(rule_raw: String, requirements: MatchRequirement) -> PyResult<Self> {
         Ok(Rule {
             rule_raw: if check_convert::check::is_default_regex_fisrt_step(&rule_raw) {
-                Some((rule_raw.into_boxed_str(), regex_types::RGX::Default))
+                Some((
+                    rule_raw.into_boxed_str(),
+                    regex_types::RGX::Default,
+                    requirements,
+                ))
             } else if check_convert::check::is_fancy_regex_second_step(&rule_raw) {
-                Some((rule_raw.into_boxed_str(), regex_types::RGX::Fancy))
+                Some((
+                    rule_raw.into_boxed_str(),
+                    regex_types::RGX::Fancy,
+                    requirements,
+                ))
             } else {
                 return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                     "Expected `Regex` or `FancyRegex`, got `{}`",
                     rule_raw
                 )));
             },
-            requirement: Some(requirements),
             rules_for_the_rule: None,
         })
     }
@@ -81,48 +86,4 @@ impl Rule {
     pub fn show_tree(&self) {
         println!("{:#?}", self);
     }
-}
-
-impl Rule {
-    pub fn make_regex_set(subrules: &Option<Vec<Rule>>) -> Option<regex::RegexSet> {
-        if let Some(rules) = subrules {
-            return Some(
-                regex::RegexSet::new(
-                    rules
-                        .iter()
-                        .filter_map(|rule| {
-                            if let Some((rule_raw, regex_type)) = &rule.rule_raw {
-                                if let regex_types::RGX::Default = regex_type {
-                                    return Some(rule_raw);
-                                }
-                                return None;
-                            }
-                            return None;
-                        })
-                        .collect::<Vec<_>>(),
-                )
-                .unwrap(),
-            );
-        }
-        None
-    }
-    // pub fn init_regex_set(subrules: &Vec<(Rule, usize)>) -> Option<regex::RegexSet> {
-    //     return Some(
-    //         regex::RegexSet::new(
-    //             rules
-    //                 .iter()
-    //                 .filter_map(|rule| {
-    //                     if let Some((rule_raw, regex_type)) = &rule.rule_raw {
-    //                         if let regex_types::RGX::Default = regex_type {
-    //                             return Some(rule_raw.as_str());
-    //                         }
-    //                         return None;
-    //                     }
-    //                     return None;
-    //                 })
-    //                 .collect::<Vec<&str>>(),
-    //         )
-    //         .unwrap(),
-    //     );
-    // }
 }
