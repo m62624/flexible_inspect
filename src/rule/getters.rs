@@ -3,21 +3,21 @@ use pyo3::exceptions;
 impl Rule {
     fn error_take() -> PyErr {
         PyErr::new::<exceptions::PyValueError, _>(format!(
-            "* If you saved `Rule` in a variable, but used `extend` afterwards on the variable itself:
-    
-            x = Rule(\"X\")
-            x.extend(Rule(\"Y\"))
-            
-            * Please use this syntax:
-            
-            x = Rule(\"X\").extend(Rule(\"Y\"))
-            * or 
-            x = Rule(\"X\")
-            x = x.extend(Rule(\"Y\"))"
-        ))
+           "* If you saved `Rule` in a variable, but used `extend` afterwards on the variable itself:
+   
+           x = Rule(\"X\")
+           x.extend(Rule(\"Y\"))
+           
+           * Please use this syntax:
+           
+           x = Rule(\"X\").extend(Rule(\"Y\"))
+           * or 
+           x = Rule(\"X\")
+           x = x.extend(Rule(\"Y\"))"
+       ))
     }
-    pub fn get_op_rule_raw(&self) -> &Option<RuleType> {
-        &self.rule_raw
+    pub fn get_op_str_raw(&self) -> &Option<RegexRaw> {
+        &self.str_raw
     }
     pub fn get_op_requirement(&self) -> &Option<MatchRequirement> {
         &self.requirement
@@ -25,8 +25,8 @@ impl Rule {
     pub fn get_op_subrules(&self) -> &Option<Vec<Rule>> {
         &self.subrules
     }
-    pub fn get_rule_raw(&self) -> PyResult<&RuleType> {
-        if let Some(rule_raw) = &self.rule_raw {
+    pub fn get_str_raw(&self) -> PyResult<&RegexRaw> {
+        if let Some(rule_raw) = &self.str_raw {
             Ok(rule_raw)
         } else {
             Err(Rule::error_take())
@@ -41,11 +41,11 @@ impl Rule {
     }
 }
 
-impl RuleType {
-    fn get_str(&self) -> &Box<str> {
+impl RegexRaw {
+    pub fn get_str(&self) -> &Box<str> {
         match self {
-            RuleType::DefaultRegex(str_value) => str_value,
-            RuleType::FancyRegex(str_value) => str_value,
+            RegexRaw::DefaultR(value) => value,
+            RegexRaw::FancyR(value) => value,
         }
     }
 }

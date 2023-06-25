@@ -1,6 +1,8 @@
 use pyo3::prelude::*;
 //=====================================================================
+mod py_exception;
 mod rule;
+mod template_validator;
 // ============================= CONST ================================
 
 // имя модуля для `Python`
@@ -22,7 +24,15 @@ mod export {
     use super::*;
     #[pymodule]
     fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
+        PyModule::from_code(
+            _py,
+            &py_exception::py_code_base_exception(),
+            "",
+            MODULE_NAME,
+        )?;
+        py_module.add_class::<rule::MatchRequirement>()?;
         py_module.add_class::<rule::Rule>()?;
+        py_module.add_class::<template_validator::TemplateValidator>()?;
         Ok(())
     }
 }
