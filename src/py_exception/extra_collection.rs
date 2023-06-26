@@ -5,10 +5,15 @@ use pyo3::types;
 use std::collections::HashMap;
 /// Получаем extra из класса (MESSAGE_WITH_EXTRA_FROM_CLASS_PY)
 pub fn extra_from_class<'a>(
-    class_template: &'a types::PyType,
+    py: Python<'a>,
+    class_template: &'a PyObject,
     attr: &str,
 ) -> PyResult<Vec<&'a str>> {
-    let attr_value = class_template.getattr(attr)?.extract::<&str>()?;
+    let attr_value = class_template
+        .downcast::<types::PyType>(py)
+        .unwrap()
+        .getattr(attr)?
+        .extract::<&str>()?;
     lazy_static! {
         static ref RE: regex::Regex = regex::Regex::new(r"\{.+?\}").unwrap();
     }

@@ -94,4 +94,7 @@ impl ExceptionContainer {
     pub fn get_fancy_rules(&self) -> &Vec<Rule> {
         &self.fancy_r
     }
+    pub fn get_obj(&self) -> &PyObject {
+        &self.inner
+    }
 }

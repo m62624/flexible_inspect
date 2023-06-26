@@ -1,5 +1,6 @@
 use pyo3::{exceptions, types};
 mod getters;
+mod regexset;
 use super::*;
 
 #[pyclass]
@@ -23,6 +24,7 @@ pub enum MatchRequirement {
     MustBeFound,
     MustNotBefound,
 }
+
 #[pymethods]
 impl Rule {
     #[new]

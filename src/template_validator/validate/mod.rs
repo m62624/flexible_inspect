@@ -14,7 +14,7 @@ impl TemplateValidator {
         self.exceptions
             .iter()
             .map(|exception_container| {
-                runners::sync_work::step_by_step_in_the_class(
+                runners::single_work::step_by_step_in_the_class(
                     py,
                     &mut errors,
                     exception_container,
