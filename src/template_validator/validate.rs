@@ -1,39 +1,36 @@
 use super::*;
+use std::collections::VecDeque;
 #[pymethods]
 impl TemplateValidator {
     fn validate(&self, text: &types::PyBytes) -> PyResult<()> {
         let text = bytes_to_string_utf8(text.as_bytes())?;
-        let err = self
-            .exceptions
+        self.exceptions
             .iter()
-            .map(|exception_container| {
-                if let Some(selected_rules) = exception_container.get_selected_rules(&text) {
-                    selected_rules
-                        .iter()
-                        .map(|rule_root| {
-                            //validator_core(Vec<&Rule>)
-
-                            Ok(())
-                        })
-                        .collect::<PyResult<Vec<_>>>()?;
-                }
-                exception_container
-                    .get_fancy_rules()
-                    .iter()
-                    .map(|rule| {
-                        // validator_core(FancyRegex)
-                        Ok(())
-                    })
-                    .collect::<PyResult<Vec<_>>>()?;
-                Ok(())
-            })
+            .map(|exception_container| Self::step_by_step_on_the_class(exception_container, &text))
             .collect::<PyResult<Vec<_>>>()?;
         Ok(())
     }
 }
 
 impl TemplateValidator {
-    pub fn step_by_step_on_the_rule(rule: &rule::Rule) -> PyResult<()> {
+    pub fn step_by_step_on_the_class(
+        exception_class: &ExceptionContainer,
+        text: &str,
+    ) -> PyResult<()> {
+        if let Some(selected_rules) = exception_class.get_selected_rules(&text) {
+            selected_rules
+                .iter()
+                .try_for_each(|rule| Self::step_by_step_one_the_rule(rule, text))?;
+        }
+        exception_class
+            .get_fancy_rules()
+            .iter()
+            .try_for_each(|rule| Self::step_by_step_one_the_rule(rule, text))?;
+        Ok(())
+    }
+    pub fn step_by_step_one_the_rule(rule: &rule::Rule, text: &str) -> PyResult<()> {
+        let mut stack: VecDeque<&rule::Rule> = VecDeque::new();
+        let mut error_flag = false;
         Ok(())
     }
 }
