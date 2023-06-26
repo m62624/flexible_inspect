@@ -1,9 +1,11 @@
-use crate::rule::Rule;
 mod bytes_convert;
+mod next_step;
 mod runners;
+
+//=====================
+use super::rule::Rule;
 use super::*;
 use bytes_convert::bytes_to_string_utf8;
-use std::collections::VecDeque;
 #[pymethods]
 impl TemplateValidator {
     fn validate_single_sync(&self, py: Python, text: &types::PyBytes) -> PyResult<()> {
