@@ -35,25 +35,31 @@ pub mod single_work {
         stack.push_back(rule);
         while let Some(rule_stack) = stack.pop_back() {
             let captures = MultiCapture::find_captures(rule_stack, text)?;
+            let texts = captures.to_str_vec();
             next_step::result_on_the_match(py, rule_stack, obj, captures, &mut next_step)?;
-        }
-        if next_step {
-            if let Some(subrules) = rule.get_regex_set(text) {
-                subrules
+            if next_step {
+                texts
                     .iter()
-                    .map(|rule| {
-                        stack.push_back(rule);
+                    .map(|text| {
+                        if let Some(subrules) = rule.get_regex_set(text) {
+                            subrules
+                                .iter()
+                                .map(|rule| {
+                                    stack.push_back(rule);
+                                })
+                                .for_each(drop);
+                        } else {
+                            if let Some(subrules) = rule.get_op_subrules() {
+                                subrules
+                                    .iter()
+                                    .map(|rule| {
+                                        stack.push_back(rule);
+                                    })
+                                    .for_each(drop);
+                            }
+                        }
                     })
                     .for_each(drop);
-            } else {
-                if let Some(subrules) = rule.get_op_subrules() {
-                    subrules
-                        .iter()
-                        .map(|rule| {
-                            stack.push_back(rule);
-                        })
-                        .for_each(drop);
-                }
             }
         }
         Ok(())

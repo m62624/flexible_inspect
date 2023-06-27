@@ -4,7 +4,7 @@ from pystval import TemplateValidator, MatchRequirement,Rule, PystvalError
 
 class CustomError_1(PystvalError):
     message = "my custom error 1"
-    rules = [Rule("Root rule",MatchRequirement.MustBeFound)]
+    rules = [Rule("Linux",MatchRequirement.MustNotBefound)]
     
 
 
@@ -27,7 +27,25 @@ class CustomError_2(PystvalError):
         ])
         ])]
 
-def main():
-    testval = TemplateValidator([CustomError_1,CustomError_2])
-    testval.show_tree()
-main()
+# ==============(ERROR FLAGS)==================
+
+
+# ============================================
+
+
+async def init():
+    # text = await get_bytes("-- link --")
+    with open('Makefile', 'rb') as file:
+        text = file.read()
+    validator_sample = TemplateValidator([CustomError_1])
+    try:
+        validator_sample.validate_single_sync(text)
+    except PystvalError as e:
+        print(f"ERROR VALIDATE: '{e.message}'")
+
+
+# =============================================
+loop = asyncio.get_event_loop()
+task = loop.create_task(init())
+loop.run_until_complete(task)
+# ============================================

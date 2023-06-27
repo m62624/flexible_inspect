@@ -15,6 +15,7 @@ impl TemplateValidator {
     fn new(py: Python, error_classes: PyObject) -> PyResult<Self> {
         if let Ok(list) = error_classes.downcast::<types::PyList>(py) {
             let mut exceptions = Vec::new();
+            dbg!(&exceptions);
             list.iter()
                 .map(|py_class| {
                     exceptions.push(ExceptionContainer::new(py, py_class.into())?);

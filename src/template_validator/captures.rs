@@ -31,10 +31,7 @@ impl<'a> MultiCapture<'a> {
             )),
         }
     }
-}
-
-impl<'a> Into<Vec<&'a str>> for &MultiCapture<'a> {
-    fn into(self) -> Vec<&'a str> {
+    pub fn to_str_vec(&self) -> Vec<&'a str> {
         match self {
             MultiCapture::DefaultCaptures(captures) => captures
                 .iter()

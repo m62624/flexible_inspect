@@ -66,19 +66,19 @@ class TemplateValidator:
     #     pass
     # pass
 
-    # def validate(self, text: str):
-    #     """
-    #     Parameters
-    #     ----------
-    #     `text` : `str`
-    #         Text for verification
+    def validate_single_sync(self, text: str):
+        """
+        Parameters
+        ----------
+        `text` : `str`
+            Text for verification
 
-    #     Raises
-    #     ------
-    #     `Custom Error (PystvalError)`
-    #         The error that was specified in `flags`
-    #     """
-    #     pass
-    # pass
+        Raises
+        ------
+        `Custom Error (PystvalError)`
+            The error that was specified in `flags`
+        """
+        pass
+    pass
 
 
