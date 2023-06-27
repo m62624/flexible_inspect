@@ -1,6 +1,10 @@
 use pyo3::prelude::*;
 //=====================================================================
+/// Совпадения с rules
+mod captures;
+mod check_py_type;
 mod py_exception;
+/// Правила с вложенностью
 mod rule;
 mod template_validator;
 // ============================= CONST ================================
@@ -23,16 +27,9 @@ pub const BASE_ERROR: &str = "PystvalError";
 mod export {
     use super::*;
     #[pymodule]
-    fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
-        PyModule::from_code(
-            _py,
-            &py_exception::py_code_base_exception(),
-            "",
-            MODULE_NAME,
-        )?;
-        py_module.add_class::<rule::MatchRequirement>()?;
+    pub fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
         py_module.add_class::<rule::Rule>()?;
-        py_module.add_class::<template_validator::TemplateValidator>()?;
+        py_module.add_class::<rule::MatchRequirement>()?;
         Ok(())
     }
 }

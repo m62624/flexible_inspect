@@ -1,10 +1,10 @@
-use crate::template_validator::captures::MultiCapture;
+use crate::captures::MultiCapture;
 use lazy_static::lazy_static;
 use pyo3::prelude::*;
 use pyo3::types;
 use std::collections::HashMap;
 /// Получаем extra из класса (MESSAGE_WITH_EXTRA_FROM_CLASS_PY)
-pub fn extra_from_class<'a>(
+pub fn get_extra_from_class<'a>(
     py: Python<'a>,
     class_template: &'a PyObject,
     attr: &str,
@@ -30,7 +30,7 @@ pub fn extra_from_class<'a>(
     }
 }
 
-pub fn extra_from__captures<'a>(
+pub fn filling_extra<'a>(
     extra_name: Vec<&'a str>,
     captures: MultiCapture<'a>,
 ) -> Option<HashMap<&'a str, &'a str>> {

@@ -1,5 +1,7 @@
 use super::rule::Rule;
 use super::*;
+mod unit_tests;
+// use rule::
 #[derive(Debug)]
 pub enum MultiCapture<'a> {
     DefaultCaptures(Vec<regex::Captures<'a>>),

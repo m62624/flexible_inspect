@@ -1,7 +1,15 @@
-use pyo3::{exceptions, types};
 mod getters;
-mod regexset;
-use super::*;
+mod match_requirement;
+mod regex_raw;
+mod subrules;
+mod take_self_error;
+pub use match_requirement::MatchRequirement;
+use pyo3::types::PyList;
+use pyo3::{exceptions, prelude::*};
+pub use regex_raw::RegexRaw;
+pub use subrules::Subrules;
+#[cfg(test)]
+mod unit_tests;
 
 #[pyclass]
 #[derive(Debug, Clone, Default)]
@@ -9,20 +17,7 @@ use super::*;
 pub struct Rule {
     str_raw: Option<RegexRaw>,
     requirement: Option<MatchRequirement>,
-    subrules: Option<Vec<Rule>>,
-}
-#[derive(Debug, Clone)]
-/// --> Rule
-pub enum RegexRaw {
-    DefaultR(Box<str>),
-    FancyR(Box<str>),
-}
-#[pyclass]
-#[derive(Debug, Clone, PartialEq)]
-/// --> Rule
-pub enum MatchRequirement {
-    MustBeFound,
-    MustNotBefound,
+    subrules: Option<Subrules>,
 }
 
 #[pymethods]
@@ -30,25 +25,24 @@ impl Rule {
     #[new]
     pub fn new(pattern: String, requirements: MatchRequirement) -> PyResult<Self> {
         Ok(Self {
-            str_raw: Some(Self::check_regex(pattern)?),
+            str_raw: Some(RegexRaw::new(pattern)?),
             requirement: Some(requirements),
             subrules: None,
         })
     }
+
     pub fn extend(&mut self, py: Python<'_>, nested_rules: PyObject) -> PyResult<Self> {
+        let (mut default_r_vec, mut fancy_r_vec) = (Vec::new(), Vec::new());
         // Проверяем, что это список
-        if let Ok(list) = nested_rules.downcast::<types::PyList>(py) {
+        if let Ok(list) = nested_rules.downcast::<PyList>(py) {
             // Итерируемся по списку для получения всех дочерних правил
             list.iter().map(|packed_rule| {
                 if let Ok(rule) = packed_rule.extract::<Rule>() {
-                    // Добавляем в вектор дочерних правил
-                    if let Some(rules) = &mut self.subrules {
-                        rules.push(rule);
-                        Ok(())
-                    } else {
-                        self.subrules = Some(vec![rule]);
-                        Ok(())
+                    match rule.get_str_raw()? {
+                        RegexRaw::DefaultR(_) => default_r_vec.push(rule),
+                        RegexRaw::FancyR(_) => fancy_r_vec.push(rule),
                     }
+                    Ok(())
                 } else {
                     return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                         "Expected `Rule` in the list, the child error `{}` from the parent rule `{}`",
@@ -57,24 +51,14 @@ impl Rule {
                     )));
                 }
             }).collect::<PyResult<Vec<_>>>()?;
+            if !default_r_vec.is_empty() || !fancy_r_vec.is_empty() {
+                self.subrules = Some(Subrules::new(default_r_vec, fancy_r_vec));
+            }
             return Ok(std::mem::take(self));
         }
         Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
             "`{}` -- Expected `List` --> List[Rule, Rule, Rule]",
             nested_rules.as_ref(py).get_type().name().unwrap()
         )))
-    }
-}
-impl Rule {
-    pub fn check_regex(pattern: String) -> PyResult<RegexRaw> {
-        if regex::Regex::new(&pattern).is_ok() {
-            return Ok(RegexRaw::DefaultR(pattern.into_boxed_str()));
-        } else if fancy_regex::Regex::new(&pattern).is_ok() {
-            return Ok(RegexRaw::FancyR(pattern.into_boxed_str()));
-        }
-        return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-            "Expected `Regex` or `FancyRegex`, got `{}`",
-            pattern
-        )));
     }
 }

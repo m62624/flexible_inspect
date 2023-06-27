@@ -1,33 +1,8 @@
 use super::*;
-use rule::Rule;
-#[derive(Debug)]
-/// --> TemplateValidator
-pub struct ExceptionContainer {
-    inner: PyObject,
-    default_r: Vec<Rule>,
-    fancy_r: Vec<Rule>,
-}
-
+use pyo3::{exceptions, types};
 impl ExceptionContainer {
-    pub fn new(py: Python, py_class: PyObject) -> PyResult<Self> {
-        if let Ok(class_py) = py_class.downcast::<types::PyType>(py) {
-            let mut default_r = Vec::new();
-            let mut fancy_r = Vec::new();
-            Self::get_rules(class_py, &mut default_r, &mut fancy_r)?;
-            return Ok(Self {
-                inner: py_class,
-                default_r,
-                fancy_r,
-            });
-        } else {
-            return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                "'{}' must be a 'Class'",
-                py_class
-            )));
-        }
-    }
     /// Получение всех правил из класса
-    fn get_rules(
+    pub fn get_all_rules_from_class(
         class_py: &types::PyType,
         default_rules: &mut Vec<Rule>,
         fancy_rules: &mut Vec<Rule>,
@@ -67,34 +42,5 @@ impl ExceptionContainer {
             )));
         }
         Ok(())
-    }
-    pub fn get_selected_rules(&self, text: &str) -> Option<Vec<&Rule>> {
-        if self.default_r.is_empty() {
-            return None;
-        }
-        return Some(
-            regex::RegexSet::new(
-                self.default_r
-                    .iter()
-                    .filter_map(|rule| {
-                        if let Some(value) = rule.get_op_str_raw() {
-                            return Some(value.get_str());
-                        }
-                        None
-                    })
-                    .collect::<Vec<&Box<str>>>(),
-            )
-            .unwrap()
-            .matches(text)
-            .iter()
-            .map(|id| &self.default_r[id])
-            .collect::<Vec<_>>(),
-        );
-    }
-    pub fn get_fancy_rules(&self) -> &Vec<Rule> {
-        &self.fancy_r
-    }
-    pub fn get_obj(&self) -> &PyObject {
-        &self.inner
     }
 }

@@ -1,53 +1,27 @@
-use super::{
-    BASE_ERROR, EXTRA_FROM_CLASS_PY, MESSAGE_WITH_EXTRA_FROM_CLASS_PY, RULES_FROM_CLASS_PY,
-};
+use super::*;
 pub mod extra_collection;
-pub mod make_error;
-/// Функция для получения базового класса ошибки
-// Почему именно такая реализация ?
-/*
-`PyO3` в настоящее время использует функцию `PyErr_NewExceptionWithDoc` из `CPython` для создания типов исключений в модуле `PyErr::new_type`. Однако эта функция создает только классы исключений `Python`, которые имеют ограниченные возможности для добавления или изменения атрибутов экземпляра. Аргументы функции `PyErr_NewExceptionWithDoc` предназначены только для определения переменных и методов класса `dict`, и не могут быть использованы для добавления атрибутов экземпляра.
- */
-pub fn py_code_base_exception() -> String {
-    format!("
-from typing import List, Any
-class {BASE_ERROR}Meta(type):
-        def __new__(cls, name, bases, attrs):
-            if name == '{BASE_ERROR}':
-                attrs['allow_default_values'] = True
-            else:
-                if '{MESSAGE_WITH_EXTRA_FROM_CLASS_PY}' not in attrs or not attrs['{MESSAGE_WITH_EXTRA_FROM_CLASS_PY}']:
-                    raise NotImplementedError(
-                        \"Subclasses must provide a non-empty '{MESSAGE_WITH_EXTRA_FROM_CLASS_PY}' attribute.\")
-                if '{RULES_FROM_CLASS_PY}' not in attrs or not isinstance(attrs['{RULES_FROM_CLASS_PY}'], List):
-                    raise NotImplementedError(
-                        \"Subclasses must provide a '{RULES_FROM_CLASS_PY}' attribute of type 'List[Rule,Rule,Rule]'.\")
-            return super().__new__(cls, name, bases, attrs)
-    
-    
-class {BASE_ERROR}(Exception,metaclass={BASE_ERROR}Meta):
-        {MESSAGE_WITH_EXTRA_FROM_CLASS_PY} = \"\"
-    
-        def __init__(self, {MESSAGE_WITH_EXTRA_FROM_CLASS_PY}: str = None, {RULES_FROM_CLASS_PY}: List[Any] = None, **{EXTRA_FROM_CLASS_PY}):
-            self.__{EXTRA_FROM_CLASS_PY} = {EXTRA_FROM_CLASS_PY}
-            self.__{RULES_FROM_CLASS_PY} = {RULES_FROM_CLASS_PY}
-            if {MESSAGE_WITH_EXTRA_FROM_CLASS_PY} is None:
-                self.__{MESSAGE_WITH_EXTRA_FROM_CLASS_PY} = self.{MESSAGE_WITH_EXTRA_FROM_CLASS_PY}.format(**{EXTRA_FROM_CLASS_PY})
-            else:
-                self.__{MESSAGE_WITH_EXTRA_FROM_CLASS_PY} = {MESSAGE_WITH_EXTRA_FROM_CLASS_PY}.format(**{EXTRA_FROM_CLASS_PY})
-    
-    
-        @property
-        def report(self):
-            return self.__{MESSAGE_WITH_EXTRA_FROM_CLASS_PY}
-    
-        @property
-        def {EXTRA_FROM_CLASS_PY}(self):
-            return self.__{EXTRA_FROM_CLASS_PY}
-    
-        @property
-        def {RULES_FROM_CLASS_PY}(self):
-            return self.__{RULES_FROM_CLASS_PY}
-"
-    )
+pub use extra_collection as extra;
+use pyo3::exceptions::PyException;
+use pyo3::types;
+use std::collections::HashMap;
+
+/// Создаем ошибку с переданными параметрами
+pub fn init_error(obj: &PyObject, extra_hm: Option<HashMap<&str, &str>>) -> PyResult<()> {
+    Python::with_gil(|py| -> PyResult<()> {
+        // dbg!(&extra_hm);
+        // Создаем объект класса ошибки с переданными параметрами
+        let extra = types::PyDict::new(py);
+        if let Some(extra_hm) = extra_hm {
+            for (key, value) in extra_hm {
+                extra.set_item(key, value)?;
+            }
+        }
+        let obj = obj.downcast::<types::PyType>(py)?;
+        obj.setattr(EXTRA_FROM_CLASS_PY, extra)?;
+        let obj = obj
+            .downcast::<PyAny>()?
+            .call(types::PyTuple::empty(py), Some(extra))?;
+        // Создаем объект класса & Возвращаем ошибку
+        Err(PyErr::new::<PyException, _>(obj.to_object(py)))
+    })
 }
