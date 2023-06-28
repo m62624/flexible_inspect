@@ -73,7 +73,6 @@ pub fn filling_extra<'a>(
                 .for_each(drop);
         }
     }
-
     if !extra_values.is_empty() {
         return Some(extra_values);
     }

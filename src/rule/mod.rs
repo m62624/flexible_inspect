@@ -1,13 +1,6 @@
 mod getters;
-mod match_requirement;
-mod regex_raw;
-mod subrules;
-mod take_self_error;
-pub use match_requirement::MatchRequirement;
 use pyo3::types::PyList;
 use pyo3::{exceptions, prelude::*};
-pub use regex_raw::RegexRaw;
-pub use subrules::Subrules;
 #[cfg(test)]
 mod unit_tests;
 
@@ -18,6 +11,26 @@ pub struct Rule {
     str_raw: Option<RegexRaw>,
     requirement: Option<MatchRequirement>,
     subrules: Option<Subrules>,
+}
+#[derive(Debug, Clone)]
+/// --> Rule
+pub enum RegexRaw {
+    DefaultR(Box<str>),
+    FancyR(Box<str>),
+}
+
+#[pyclass]
+#[derive(Debug, Clone, PartialEq)]
+/// --> Rule
+pub enum MatchRequirement {
+    MustBeFound,
+    MustNotBefound,
+}
+
+#[derive(Debug, Clone)]
+pub struct Subrules {
+    default_r_vec: Vec<Rule>,
+    fancy_r_vec: Vec<Rule>,
 }
 
 #[pymethods]
@@ -60,5 +73,45 @@ impl Rule {
             "`{}` -- Expected `List` --> List[Rule, Rule, Rule]",
             nested_rules.as_ref(py).get_type().name().unwrap()
         )))
+    }
+}
+impl Rule {
+    fn absence_error() -> PyErr {
+        PyErr::new::<exceptions::PyValueError, _>(format!(
+            "* If you saved `Rule` in a variable, but used `extend` afterwards on the variable itself:
+    
+           x = Rule(\"X\")
+           x.extend(Rule(\"Y\"))
+           
+           * Please use this syntax:
+           
+           x = Rule(\"X\").extend(Rule(\"Y\"))
+           * or 
+           x = Rule(\"X\")
+           x = x.extend(Rule(\"Y\"))"
+        ))
+    }
+}
+
+impl RegexRaw {
+    pub fn new(pattern: String) -> PyResult<RegexRaw> {
+        if regex::Regex::new(&pattern).is_ok() {
+            return Ok(RegexRaw::DefaultR(pattern.into_boxed_str()));
+        } else if fancy_regex::Regex::new(&pattern).is_ok() {
+            return Ok(RegexRaw::FancyR(pattern.into_boxed_str()));
+        }
+        return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+            "Expected `Regex` or `FancyRegex`, got `{}`",
+            pattern
+        )));
+    }
+}
+
+impl Subrules {
+    pub fn new(default_r_vec: Vec<Rule>, fancy_r_vec: Vec<Rule>) -> Self {
+        Self {
+            default_r_vec,
+            fancy_r_vec,
+        }
     }
 }
