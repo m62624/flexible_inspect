@@ -10,6 +10,7 @@ pub struct ExceptionContainer {
     py_class: PyObject,
     default_r: Vec<Rule>,
     fancy_r: Vec<Rule>,
+    regex_set: regex::RegexSet,
 }
 impl ExceptionContainer {
     pub fn new(py: Python, py_class: PyObject) -> PyResult<Self> {
@@ -18,6 +19,7 @@ impl ExceptionContainer {
             let mut fancy_r = Vec::new();
             Self::get_all_rules_from_class(class_py, &mut default_r, &mut fancy_r)?;
             return Ok(Self {
+                regex_set: Rule::regex_set(&default_r),
                 py_class,
                 default_r,
                 fancy_r,

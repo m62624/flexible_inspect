@@ -2,11 +2,15 @@ pub mod exception_container;
 use self::exception_container::ExceptionContainer;
 use super::*;
 use pyo3::{exceptions, types};
+mod unit_tests;
 mod validate;
+
 #[pyclass]
+#[derive(Debug)]
 pub struct TemplateValidator {
     exceptions: Vec<ExceptionContainer>,
 }
+
 #[pymethods]
 impl TemplateValidator {
     #[new]
@@ -26,3 +30,4 @@ impl TemplateValidator {
         }
     }
 }
+

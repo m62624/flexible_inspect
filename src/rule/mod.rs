@@ -31,6 +31,7 @@ pub enum MatchRequirement {
 pub struct Subrules {
     default_r_vec: Vec<Rule>,
     fancy_r_vec: Vec<Rule>,
+    regex_set: regex::RegexSet,
 }
 
 #[pymethods]
@@ -76,6 +77,15 @@ impl Rule {
     }
 }
 impl Rule {
+    pub fn regex_set(rules: &Vec<Rule>) -> regex::RegexSet {
+        regex::RegexSet::new(
+            rules
+                .iter()
+                .map(|rule| rule.get_str_raw().unwrap().get_str()),
+        )
+        .unwrap()
+    }
+
     fn absence_error() -> PyErr {
         PyErr::new::<exceptions::PyValueError, _>(format!(
             "* If you saved `Rule` in a variable, but used `extend` afterwards on the variable itself:
@@ -110,6 +120,7 @@ impl RegexRaw {
 impl Subrules {
     pub fn new(default_r_vec: Vec<Rule>, fancy_r_vec: Vec<Rule>) -> Self {
         Self {
+            regex_set: Rule::regex_set(&default_r_vec),
             default_r_vec,
             fancy_r_vec,
         }

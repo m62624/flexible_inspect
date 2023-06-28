@@ -1,13 +1,22 @@
 #[cfg(test)]
 use super::*;
 #[cfg(test)]
-mod tests {
+pub mod tests {
     use super::*;
     use crate::rule::MatchRequirement;
     use crate::rule::Rule;
     use crate::template_validator::exception_container;
 
-    #[cfg(test)]
+    fn single_obj(msg: &str) -> PyResult<PyObject> {
+        Python::with_gil(|py| -> PyResult<PyObject> {
+            let class = types::PyType::new::<Rule>(py);
+            class.setattr(
+                MESSAGE_WITH_EXTRA_FROM_CLASS_PY,
+                types::PyString::new(py, format!("{}", msg).as_str()),
+            )?;
+            Ok(class.to_object(py))
+        })
+    }
     fn make_obj(py: Python, message: &str, rules: Vec<Rule>) -> PyObject {
         let rules = types::PyList::new(py, rules.into_iter().map(|r| r.into_py(py)));
         let obj = types::PyType::new::<Rule>(py);
@@ -93,16 +102,6 @@ mod tests {
 
     #[cfg(test)]
     mod fn_init_error {
-        fn create_obj(msg: &str) -> PyResult<PyObject> {
-            Python::with_gil(|py| -> PyResult<PyObject> {
-                let class = types::PyType::new::<Rule>(py);
-                class.setattr(
-                    MESSAGE_WITH_EXTRA_FROM_CLASS_PY,
-                    types::PyString::new(py, format!("{}", msg).as_str()),
-                )?;
-                Ok(class.to_object(py))
-            })
-        }
         use super::*;
         /// Проверка инициализации ошибки
         #[test]
@@ -134,7 +133,7 @@ mod tests {
                     )?,
                     captures::MultiCapture::find_captures(&default_rules[0], &text)?,
                 );
-                assert!(py_exception::init_error(&create_obj(msg)?, extra_x)?
+                assert!(py_exception::init_error(&single_obj(msg)?, extra_x)?
                     .downcast::<PyException>(py)
                     .is_ok());
                 Ok(())
