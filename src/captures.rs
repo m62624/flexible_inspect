@@ -1,7 +1,6 @@
 use super::rule::Rule;
 use super::*;
-mod unit_tests;
-// use rule::
+
 #[derive(Debug)]
 pub enum MultiCapture<'a> {
     DefaultCaptures(Vec<regex::Captures<'a>>),
@@ -9,12 +8,6 @@ pub enum MultiCapture<'a> {
 }
 
 impl<'a> MultiCapture<'a> {
-    pub fn is_some(&self) -> bool {
-        match self {
-            MultiCapture::DefaultCaptures(captures) => !captures.is_empty(),
-            MultiCapture::FancyCaptures(captures) => !captures.is_empty(),
-        }
-    }
     pub fn find_captures(rule: &Rule, text: &'a str) -> PyResult<MultiCapture<'a>> {
         match rule.get_str_raw()? {
             rule::RegexRaw::DefaultR(pattern) => Ok(MultiCapture::DefaultCaptures(
@@ -53,6 +46,12 @@ impl<'a> MultiCapture<'a> {
                         .collect::<Vec<_>>()
                 })
                 .collect(),
+        }
+    }
+    pub fn is_some(&self) -> bool {
+        match self {
+            MultiCapture::DefaultCaptures(captures) => !captures.is_empty(),
+            MultiCapture::FancyCaptures(captures) => !captures.is_empty(),
         }
     }
 }

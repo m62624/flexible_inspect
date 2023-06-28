@@ -1,11 +1,16 @@
-use pyo3::prelude::*;
+#[cfg(test)]
+mod unit_tests;
 //=====================================================================
-/// Совпадения с rules
+use pyo3::exceptions::{self, PyException};
+use pyo3::prelude::*;
+use pyo3::types;
+//=====================================================================
+use lazy_static::lazy_static;
+use std::collections::HashMap;
+//=====================================================================
 mod captures;
-mod py_exception;
-/// Правила с вложенностью
+mod custom_error;
 mod rule;
-mod template_validator;
 // ============================= CONST ================================
 
 // имя модуля для `Python`
@@ -27,8 +32,8 @@ mod export {
     use super::*;
     #[pymodule]
     pub fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
-        py_module.add_class::<rule::Rule>()?;
-        py_module.add_class::<rule::MatchRequirement>()?;
+        // py_module.add_class::<rule::Rule>()?;
+        // py_module.add_class::<rule::MatchRequirement>()?;
         Ok(())
     }
 }

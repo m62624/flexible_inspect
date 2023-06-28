@@ -1,39 +1,60 @@
 use super::*;
 
-impl Rule {
-    pub fn get_match_requirement(&self) -> PyResult<&MatchRequirement> {
-        if let Some(value) = &self.requirement {
-            return Ok(value);
-        } else {
-            return Err(Rule::absence_error());
+mod for_rule {
+    use super::*;
+
+    impl Rule {
+        pub fn get_requirement(&self) -> PyResult<&MatchRequirement> {
+            if let Some(value) = &self.requirement {
+                return Ok(value);
+            } else {
+                return Err(absence_error());
+            }
+        }
+        pub fn get_str_raw(&self) -> PyResult<&RegexRaw> {
+            if let Some(value) = &self.str_raw {
+                return Ok(value);
+            } else {
+                return Err(absence_error());
+            }
+        }
+        pub fn get_op_subrules(&self) -> &Option<Subrules> {
+            &self.subrules
         }
     }
-    pub fn get_str_raw(&self) -> PyResult<&RegexRaw> {
-        if let Some(value) = &self.str_raw {
-            return Ok(value);
-        } else {
-            return Err(Rule::absence_error());
-        }
+
+    fn absence_error() -> PyErr {
+        PyErr::new::<exceptions::PyValueError, _>(format!(
+            "* If you saved `Rule` in a variable, but used `extend` afterwards on the variable itself:
+    
+           x = Rule(\"X\")
+           x.extend(Rule(\"Y\"))
+           
+           * Please use this syntax:
+           
+           x = Rule(\"X\").extend(Rule(\"Y\"))
+           * or 
+           x = Rule(\"X\")
+           x = x.extend(Rule(\"Y\"))"
+        ))
     }
-    pub fn get_op_subrules(&self) -> &Option<Subrules> {
-        &self.subrules
+
+    impl AsRef<str> for Rule {
+        fn as_ref(&self) -> &str {
+            self.get_str_raw().unwrap().as_ref()
+        }
     }
 }
 
-impl RegexRaw {
-    pub fn get_str(&self) -> &str {
-        match self {
-            RegexRaw::DefaultR(value) => &value,
-            RegexRaw::FancyR(value) => &value,
-        }
-    }
-}
+mod for_regex_raw {
+    use super::*;
 
-impl Subrules {
-    pub fn get_default_r_vec(&self) -> &Vec<Rule> {
-        &self.default_r_vec
-    }
-    pub fn get_fancy_r_vec(&self) -> &Vec<Rule> {
-        &self.fancy_r_vec
+    impl AsRef<str> for RegexRaw {
+        fn as_ref(&self) -> &str {
+            match self {
+                RegexRaw::DefaultR(value) => value,
+                RegexRaw::FancyR(value) => value,
+            }
+        }
     }
 }
