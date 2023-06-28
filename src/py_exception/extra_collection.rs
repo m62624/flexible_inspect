@@ -31,7 +31,7 @@ pub fn get_extra_from_class<'a>(
 }
 
 pub fn filling_extra<'a>(
-    extra_name: Vec<&'a str>,
+    extra_name: &Vec<&'a str>,
     captures: MultiCapture<'a>,
 ) -> Option<HashMap<&'a str, &'a str>> {
     let mut extra_values: HashMap<&str, &str> = HashMap::new();

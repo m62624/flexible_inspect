@@ -1,6 +1,7 @@
 mod step_by_step;
 use super::rule::Rule;
 use super::*;
+mod getters;
 #[derive(Debug)]
 /// --> TemplateValidator
 pub struct ExceptionContainer {

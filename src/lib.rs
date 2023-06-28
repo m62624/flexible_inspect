@@ -2,7 +2,6 @@ use pyo3::prelude::*;
 //=====================================================================
 /// Совпадения с rules
 mod captures;
-mod check_py_type;
 mod py_exception;
 /// Правила с вложенностью
 mod rule;

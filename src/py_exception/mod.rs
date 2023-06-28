@@ -4,7 +4,7 @@ pub use extra_collection as extra;
 use pyo3::exceptions::PyException;
 use pyo3::types;
 use std::collections::HashMap;
-
+mod unit_tests;
 /// Создаем ошибку с переданными параметрами
 pub fn init_error(obj: &PyObject, extra_hm: Option<HashMap<&str, &str>>) -> PyResult<()> {
     Python::with_gil(|py| -> PyResult<()> {
