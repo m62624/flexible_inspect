@@ -5,18 +5,18 @@ use super::*;
 
 /*
 - MustBeFound - если найдено и нет subrules  -> Stop(), Ok()
-- MustBeFound -> Если Найдено и есть subrules -> Continue(), Ok()
+- MustBeFound -> если найдено и есть subrules -> Continue(), Ok()
   |
-  | --> MustBeFound - Если не найдено и есть subrules -> Stop(), Error()
+  | --> MustBeFound - если не найдено и есть subrules -> Stop(), Error()
  \|/
-- MustBeFound - Если не найдено и нет subrules -> Stop(), Error()
+- MustBeFound - если не найдено и нет subrules -> Stop(), Error()
 ========================================================================
-- MustNotBeFound - Если Найдено и нет subrules -> Stop(), Error()
-- MustNotBeFound - Если Найдено и есть subrules -> Continue(), Ok()
+- MustNotBeFound - если Найдено и нет subrules -> Stop(), Error()
+- MustNotBeFound - если Найдено и есть subrules -> Continue(), Ok()
    |
-   | ---> MustNotBeFound - Если не найдено и есть subrules -> Stop(), Ok()
+   | ---> MustNotBeFound - если не найдено и есть subrules -> Stop(), Ok()
   \|/
-- MustNotBeFound - Не найдено и нет subrules -> Stop(), Ok()
+- MustNotBeFound - если не найдено и нет subrules -> Stop(), Ok()
  */
 
 pub fn next_or_error(

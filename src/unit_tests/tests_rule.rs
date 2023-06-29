@@ -139,3 +139,23 @@ mod fn_get_selected_rules {
         })
     }
 }
+
+#[cfg(test)]
+mod fn_run {
+    use super::*;
+
+    #[test]
+    fn run_t_0() -> PyResult<()> {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| -> PyResult<()> {
+            let class_template = mock_obj::make_obj(py, "information found : {data}", None);
+            let text = "text text [12321] text text [aboba]";
+            let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustBeFound)?
+                .extend_t(py, vec![Rule::spawn(r"\[\d+\]", MatchRequirement::MustNotBefound)?])
+                .unwrap();
+            let error = Rule::run(py, text, &rule, &class_template)?;
+            dbg!(error);
+            Ok(())
+        })
+    }
+}

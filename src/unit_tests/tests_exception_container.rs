@@ -22,7 +22,7 @@ mod fn_new {
             let rule_3 = Rule::spawn(r"[^123]", MatchRequirement::MustNotBefound)?;
             let class_py =
                 mock_obj::make_obj(py, "it found: {data}", Some(vec![rule_1, rule_2, rule_3]));
-            dbg!(excpetion_container::ExceptionContainer::new(py, class_py)?);
+            dbg!(exception_container::ExceptionContainer::new(py, class_py)?);
             Ok(())
         })
     }
@@ -43,7 +43,7 @@ mod fn_new {
                 types::PyType::new::<CustomClassError>(py),
             )
             .unwrap();
-            dbg!(excpetion_container::ExceptionContainer::new(py, obj.into_py(py)).unwrap());
+            dbg!(exception_container::ExceptionContainer::new(py, obj.into_py(py)).unwrap());
         });
     }
 
@@ -53,7 +53,7 @@ mod fn_new {
         pyo3::prepare_freethreaded_python();
         Python::with_gil(|py| {
             let obj = types::PyType::new::<CustomClassError>(py);
-            dbg!(excpetion_container::ExceptionContainer::new(py, obj.into_py(py)).unwrap());
+            dbg!(exception_container::ExceptionContainer::new(py, obj.into_py(py)).unwrap());
         });
     }
 }

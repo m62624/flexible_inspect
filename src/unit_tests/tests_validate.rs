@@ -181,7 +181,7 @@ mod tests_actions_from_the_requirement {
             })
         }
 
-        /// MustNotBeFound, Captures - True, SubRules - False
+        /// MustNotBeFound, Captures - False, SubRules - False
         #[test]
         fn next_or_error_t_7() -> PyResult<()> {
             pyo3::prepare_freethreaded_python();

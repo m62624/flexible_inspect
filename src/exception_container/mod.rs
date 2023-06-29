@@ -1,3 +1,6 @@
+mod getters;
+mod runner;
+
 use super::rule::slice::RuleContext;
 use super::rule::Rule;
 use super::*;
@@ -50,8 +53,7 @@ mod rules_pulling_from_class {
                 } else {
                     return Err(PyErr::new::<exceptions::PyAttributeError, _>(format!(
                         "The class `{}` has no attribute : `{}`",
-                        class_py,
-                        RULES_FROM_CLASS_PY
+                        class_py, RULES_FROM_CLASS_PY
                     )));
                 }
             } else {
@@ -60,25 +62,6 @@ mod rules_pulling_from_class {
                     py_class
                 )));
             }
-        }
-    }
-}
-
-mod getters {
-    use super::*;
-
-    impl ExceptionContainer {
-        pub fn get_py_class(&self) -> &PyObject {
-            &self.py_class
-        }
-        pub fn get_fancy_roots_vec(&self) -> &Option<Vec<Rule>> {
-            &self.fancy_root_vec
-        }
-        pub fn get_default_roots_vec(&self) -> &Option<Vec<Rule>> {
-            &self.default_roots_vec
-        }
-        fn get_roots_set(&self) -> &Option<regex::RegexSet> {
-            &self.default_roots_set
         }
     }
 }

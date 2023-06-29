@@ -10,7 +10,7 @@ use std::collections::HashMap;
 //=====================================================================
 mod captures;
 mod custom_error;
-mod excpetion_container;
+mod exception_container;
 mod rule;
 mod template_validator;
 mod validate;
