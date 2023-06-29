@@ -1,7 +1,6 @@
 use super::captures::MultiCapture;
 use super::*;
 
-#[cfg(test)]
 mod tests_actions_from_the_requirement {
     use super::*;
 
@@ -21,15 +20,15 @@ mod tests_actions_from_the_requirement {
                 dbg!(&class_template);
                 let captures = MultiCapture::find_captures(&rule, text)?;
                 dbg!(&captures);
-                let mut next_step = false;
-                validate::actions_from_the_requirement::next_or_error(
-                    py,
-                    &class_template,
-                    &rule,
-                    captures,
-                    &mut next_step,
-                )?;
-                assert_eq!(next_step, true);
+                assert_eq!(
+                    validate::actions_from_the_requirement::next_or_error(
+                        py,
+                        &class_template,
+                        &rule,
+                        &captures,
+                    )?,
+                    true
+                );
                 Ok(())
             })
         }
@@ -45,66 +44,67 @@ mod tests_actions_from_the_requirement {
                 dbg!(&class_template);
                 let captures = MultiCapture::find_captures(&rule, text)?;
                 dbg!(&captures);
-                let mut next_step = false;
-                validate::actions_from_the_requirement::next_or_error(
-                    py,
-                    &class_template,
-                    &rule,
-                    captures,
-                    &mut next_step,
-                )?;
-                assert_eq!(next_step, false);
+                assert_eq!(
+                    validate::actions_from_the_requirement::next_or_error(
+                        py,
+                        &class_template,
+                        &rule,
+                        &captures,
+                    )?,
+                    false
+                );
                 Ok(())
             })
         }
 
         /// MustBeFound, Captures - False, SubRules - True
         #[test]
-        fn next_or_error_t_2() -> PyResult<()> {
+        #[should_panic]
+        fn next_or_error_e_0() {
             pyo3::prepare_freethreaded_python();
-            Python::with_gil(|py| -> PyResult<()> {
+            Python::with_gil(|py| {
                 let text = "text text text text";
-                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustBeFound)?
-                    .extend_t(py, vec![Rule::spawn(r"\d", MatchRequirement::MustBeFound)?])
+                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustBeFound)
+                    .unwrap()
+                    .extend_t(
+                        py,
+                        vec![Rule::spawn(r"\d", MatchRequirement::MustBeFound).unwrap()],
+                    )
                     .unwrap();
                 let class_template = mock_obj::make_obj(py, "GOTCHA : {data}", None);
                 dbg!(&class_template);
-                let captures = MultiCapture::find_captures(&rule, text)?;
+                let captures = MultiCapture::find_captures(&rule, text).unwrap();
                 dbg!(&captures);
-                let error = validate::actions_from_the_requirement::next_or_error(
+                validate::actions_from_the_requirement::next_or_error(
                     py,
                     &class_template,
                     &rule,
-                    captures,
-                    &mut false,
-                )?;
-                dbg!(&error);
-                assert!(error.is_some());
-                Ok(())
-            })
+                    &captures,
+                )
+                .unwrap();
+            });
         }
+
         /// MustBeFound, Captures - False, SubRules - False
         #[test]
-        fn next_or_error_t_3() -> PyResult<()> {
+        #[should_panic]
+        fn next_or_error_e_1() {
             pyo3::prepare_freethreaded_python();
-            Python::with_gil(|py| -> PyResult<()> {
+            Python::with_gil(|py| {
                 let text = "text text text text";
-                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustBeFound)?;
+                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustBeFound).unwrap();
                 let class_template = mock_obj::make_obj(py, "GOTCHA : {data}", None);
                 dbg!(&class_template);
-                let captures = MultiCapture::find_captures(&rule, text)?;
+                let captures = MultiCapture::find_captures(&rule, text).unwrap();
                 dbg!(&captures);
-                let error = validate::actions_from_the_requirement::next_or_error(
+                validate::actions_from_the_requirement::next_or_error(
                     py,
                     &class_template,
                     &rule,
-                    captures,
-                    &mut false,
-                )?;
-                dbg!(&error);
-                assert!(error.is_some());
-                Ok(())
-            })
+                    &captures,
+                )
+                .unwrap();
+            });
         }
 
         /// MustNotBeFound, Captures - True, SubRules - True
@@ -119,41 +119,40 @@ mod tests_actions_from_the_requirement {
                 dbg!(&class_template);
                 let captures = MultiCapture::find_captures(&rule, text)?;
                 dbg!(&captures);
-                let mut next_step = false;
-                validate::actions_from_the_requirement::next_or_error(
-                    py,
-                    &class_template,
-                    &rule,
-                    captures,
-                    &mut next_step,
-                )?;
-                assert_eq!(next_step, true);
+
+                assert_eq!(
+                    validate::actions_from_the_requirement::next_or_error(
+                        py,
+                        &class_template,
+                        &rule,
+                        &captures,
+                    )?,
+                    true
+                );
                 Ok(())
             })
         }
 
         /// MustNotBeFound, Captures - True, SubRules - False
         #[test]
-        fn next_or_error_t_5() -> PyResult<()> {
+        #[should_panic]
+        fn next_or_error_t_5() {
             pyo3::prepare_freethreaded_python();
-            Python::with_gil(|py| -> PyResult<()> {
+            Python::with_gil(|py| {
                 let text = "text text [234 451] text text [text]";
-                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustNotBefound)?;
+                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustNotBefound).unwrap();
                 let class_template = mock_obj::make_obj(py, "GOTCHA : {data}", None);
                 dbg!(&class_template);
-                let captures = MultiCapture::find_captures(&rule, text)?;
+                let captures = MultiCapture::find_captures(&rule, text).unwrap();
                 dbg!(&captures);
-                let mut next_step = false;
                 validate::actions_from_the_requirement::next_or_error(
                     py,
                     &class_template,
                     &rule,
-                    captures,
-                    &mut next_step,
-                )?;
-                assert_eq!(next_step, false);
-                Ok(())
-            })
+                    &captures,
+                )
+                .unwrap();
+            });
         }
 
         /// MustNotBeFound, Captures - False, SubRules - True
@@ -168,15 +167,15 @@ mod tests_actions_from_the_requirement {
                 dbg!(&class_template);
                 let captures = MultiCapture::find_captures(&rule, text)?;
                 dbg!(&captures);
-                let mut next_step = false;
-                validate::actions_from_the_requirement::next_or_error(
-                    py,
-                    &class_template,
-                    &rule,
-                    captures,
-                    &mut next_step,
-                )?;
-                assert_eq!(next_step, false);
+                assert_eq!(
+                    validate::actions_from_the_requirement::next_or_error(
+                        py,
+                        &class_template,
+                        &rule,
+                        &captures,
+                    )?,
+                    false
+                );
                 Ok(())
             })
         }
@@ -192,15 +191,15 @@ mod tests_actions_from_the_requirement {
                 dbg!(&class_template);
                 let captures = MultiCapture::find_captures(&rule, text)?;
                 dbg!(&captures);
-                let mut next_step = false;
-                validate::actions_from_the_requirement::next_or_error(
-                    py,
-                    &class_template,
-                    &rule,
-                    captures,
-                    &mut next_step,
-                )?;
-                assert_eq!(next_step, false);
+                assert_eq!(
+                    validate::actions_from_the_requirement::next_or_error(
+                        py,
+                        &class_template,
+                        &rule,
+                        &captures,
+                    )?,
+                    false
+                );
                 Ok(())
             })
         }

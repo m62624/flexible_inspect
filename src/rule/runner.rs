@@ -1,91 +1,60 @@
 use super::captures::MultiCapture;
 use super::validate::actions_from_the_requirement::next_or_error;
+use std::collections::VecDeque;
 
 use super::*;
 impl Rule {
-    pub fn run(
-        py: Python,
-        text: &str,
-        rule: &Rule,
-        class_template: &PyObject,
-    ) -> PyResult<Option<PyObject>> {
-        let captures = MultiCapture::find_captures(rule, text)?;
-        dbg!(&captures);
-        let new_texts = captures.to_str_vec();
-        dbg!(&new_texts);
-        let mut next_step = false;
-        let error = next_or_error(py, class_template, rule, captures, &mut next_step)?;
-        if let Some(e) = error {
-            return Ok(Some(e));
-        } else if next_step {
-            if let Some(regex_set) = Rule::get_selected_rules(
-                rule.subrules.as_ref().unwrap().get_default_rgx_set(),
-                rule.subrules.as_ref().unwrap().get_default_rgx_vec(),
-                text,
-            ) {
-                let x = regex_set;
-                x.iter()
-                    .map(|sub_rule| {
-                        new_texts
-                            .iter()
-                            .map(|txt| {
-                                dbg!(&txt);
-                                dbg!(&sub_rule);
-                                Self::run(py, txt, sub_rule, class_template)?;
-                                Ok(())
-                            })
-                            .collect::<PyResult<Vec<_>>>()?;
-                        Ok(())
-                    })
-                    .collect::<PyResult<Vec<_>>>()?;
-            } else {
-                rule.subrules
-                    .as_ref()
-                    .unwrap()
-                    .get_fancy_rgx_vec()
-                    .as_ref()
-                    .unwrap()
-                    .iter()
-                    .map(|rule| {
-                        new_texts
-                            .iter()
-                            .map(|text| Self::run(py, text, rule, class_template))
-                            .collect::<PyResult<Vec<_>>>()?;
-                        Ok(())
-                    })
-                    .collect::<PyResult<Vec<_>>>()?;
-            }
-        }
+    pub fn run(py: Python, text: &str, rule: &Rule, class_template: &PyObject) -> PyResult<()> {
+        let mut stack = VecDeque::from([(rule, text)]);
+        while let Some(stack_rule) = stack.pop_back() {
+            let captures = MultiCapture::find_captures(stack_rule.0, stack_rule.1)?;
+            dbg!(&captures);
+            if next_or_error(py, class_template, stack_rule.0, &captures)? {
+                let texts = captures.to_str_vec();
+                // Если найден первый этап, проверяем до первой ошибки
+                if let Some(rgxs_set) = &stack_rule.0.unchacked_get_rgx_set() {
+                    texts
+                        .iter()
+                        .map(|text| {
+                            dbg!(text);
+                            let index = Rule::get_selected_rules(rgxs_set, text);
+                            index
+                                .iter()
+                                .map(|id| {
+                                    dbg!(&id);
+                                    stack.push_back((
+                                        &stack_rule.0.unchacked_get_rgx_vec()[*id],
+                                        text,
+                                    ));
+                                })
+                                .for_each(drop);
+                            stack_rule
+                                .0
+                                .unchacked_get_rgx_vec()
+                                .iter()
+                                .map(|rule| {
+                                    if !stack.contains(&(rule, &text)) {
+                                        stack.push_back((rule, text));
+                                    }
+                                })
+                                .for_each(drop);
+                        })
+                        .for_each(drop);
+                }
 
-        Ok(None)
-    }
-}
-/*
-// Создаем коллецкию для очереди
-    let mut stack = VecDeque::from([rule]);
-    // Флаг для следующего шага
-    let mut next_step = false;
-    while let Some(rule_from_stack) = stack.pop_back() {
-        let captures = MultiCapture::find_captures(rule, text)?;
-        if let Some(error) = actions_from_the_requirement::next_or_error(
-            py,
-            class_template,
-            rule,
-            captures,
-            &mut next_step,
-        )? {
-            return Ok(Some(error));
-        } else if next_step {
-            if let Some(sub_rules) = &rule_from_stack.get_op_subrules() {
-                if let Some(selected_rules) = Rule::get_selected_rules(
-                    sub_rules.get_default_rgx_set(),
-                    sub_rules.get_default_rgx_vec(),
-                    text,
-                ) {
-
-                } else {
+                // Если первый этап пройден, проверяем самые сложные правила
+                if let Some(f_r) = stack_rule.0.subrules.as_ref().unwrap().get_fancy_rgx_vec() {
+                    texts
+                        .iter()
+                        .map(|text| {
+                            f_r.iter()
+                                .map(|rules| stack.push_back((rules, text)))
+                                .for_each(drop);
+                        })
+                        .for_each(drop);
                 }
             }
         }
+        Ok(())
     }
- */
+}

@@ -127,11 +127,9 @@ mod fn_get_selected_rules {
             let sb = extended_rule.get_op_subrules().as_ref().unwrap();
             assert_eq!(
                 Rule::get_selected_rules(
-                    sb.get_default_rgx_set(),
-                    sb.get_default_rgx_vec(),
+                    &sb.get_default_rgx_set().as_ref().unwrap(),
                     "[qwe] cxa a:D"
                 )
-                .unwrap()
                 .len(),
                 2
             );
@@ -145,13 +143,33 @@ mod fn_run {
     use super::*;
 
     #[test]
+    fn show_run() -> PyResult<()> {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| -> PyResult<()> {
+            let class_template = mock_obj::make_obj(py, "information found : {data}", None);
+            let text = "text text [12321] text text [aboba]";
+            let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustBeFound)?
+                .extend_t(
+                    py,
+                    vec![Rule::spawn(r"\[\d+\]", MatchRequirement::MustBeFound)?],
+                )
+                .unwrap();
+            dbg!(&rule);
+            Rule::run(py, text, &rule, &class_template)?;
+            Ok(())
+        })
+    }
+
     fn run_t_0() -> PyResult<()> {
         pyo3::prepare_freethreaded_python();
         Python::with_gil(|py| -> PyResult<()> {
             let class_template = mock_obj::make_obj(py, "information found : {data}", None);
             let text = "text text [12321] text text [aboba]";
             let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustBeFound)?
-                .extend_t(py, vec![Rule::spawn(r"\[\d+\]", MatchRequirement::MustNotBefound)?])
+                .extend_t(
+                    py,
+                    vec![Rule::spawn(r"\[\d+\]", MatchRequirement::MustNotBefound)?],
+                )
                 .unwrap();
             let error = Rule::run(py, text, &rule, &class_template)?;
             dbg!(error);

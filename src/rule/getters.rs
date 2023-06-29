@@ -21,21 +21,12 @@ mod for_rule {
         pub fn get_op_subrules(&self) -> &Option<Subrules> {
             &self.subrules
         }
-        pub fn get_selected_rules<'a>(
-            regex_set: &'a Option<regex::RegexSet>,
-            default_rules: &'a Option<Vec<Rule>>,
-            text: &str,
-        ) -> Option<Vec<&'a Rule>> {
-            if let Some(rgxst) = regex_set {
-                return Some(
-                    rgxst
-                        .matches(text)
-                        .iter()
-                        .map(|id| &default_rules.as_ref().unwrap()[id])
-                        .collect::<Vec<_>>(),
-                );
-            }
-            None
+        pub fn get_selected_rules<'a>(regex_set: &'a regex::RegexSet, text: &str) -> Vec<usize> {
+            regex_set
+                .matches(text)
+                .iter()
+                .map(|id| id)
+                .collect::<Vec<_>>()
         }
     }
 
@@ -58,6 +49,25 @@ mod for_rule {
     impl AsRef<str> for Rule {
         fn as_ref(&self) -> &str {
             self.get_str_raw().unwrap().as_ref()
+        }
+    }
+    mod unchacked_getters {
+        use super::*;
+        impl Rule {
+            pub fn unchacked_get_rgx_set(&self) -> &Option<regex::RegexSet> {
+                self.get_op_subrules()
+                    .as_ref()
+                    .unwrap()
+                    .get_default_rgx_set()
+            }
+            pub fn unchacked_get_rgx_vec(&self) -> &Vec<Rule> {
+                self.get_op_subrules()
+                    .as_ref()
+                    .unwrap()
+                    .default_rgx_vec
+                    .as_ref()
+                    .unwrap()
+            }
         }
     }
 }

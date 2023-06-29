@@ -23,48 +23,35 @@ pub fn next_or_error(
     py: Python,
     class_template: &PyObject,
     rule: &rule::Rule,
-    captures: MultiCapture,
-    next_step: &mut bool,
-) -> PyResult<Option<PyObject>> {
+    captures: &MultiCapture,
+) -> PyResult<bool> {
     match rule.get_requirement().unwrap() {
         rule::MatchRequirement::MustBeFound => {
             match (captures.is_some(), rule.get_op_subrules().is_some()) {
-                (true, true) => {
-                    *next_step = true;
-                    Ok(None)
-                }
-                (true, false) => {
-                    *next_step = false;
-                    Ok(None)
-                }
-                (false, true) => Ok(Some(make_error(
+                (true, true) => Ok(true),
+                (true, false) => Ok(false),
+                (false, true) => Err(make_error(
                     class_template,
                     filling_extra(&get_extra_from_class(py, class_template)?, captures),
-                )?)),
-                (false, false) => Ok(Some(make_error(
+                )
+                .unwrap_err()),
+                (false, false) => Err(make_error(
                     class_template,
                     filling_extra(&get_extra_from_class(py, class_template)?, captures),
-                )?)),
+                )
+                .unwrap_err()),
             }
         }
         rule::MatchRequirement::MustNotBefound => {
             match (captures.is_some(), rule.get_op_subrules().is_some()) {
-                (true, true) => {
-                    *next_step = true;
-                    Ok(None)
-                }
-                (true, false) => Ok(Some(make_error(
+                (true, true) => Ok(true),
+                (true, false) => Err(make_error(
                     class_template,
                     filling_extra(&get_extra_from_class(py, class_template)?, captures),
-                )?)),
-                (false, true) => {
-                    *next_step = false;
-                    Ok(None)
-                }
-                (false, false) => {
-                    *next_step = false;
-                    Ok(None)
-                }
+                )
+                .unwrap_err()),
+                (false, true) => Ok(false),
+                (false, false) => Ok(false),
             }
         }
     }
