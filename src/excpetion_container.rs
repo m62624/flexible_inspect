@@ -49,7 +49,8 @@ mod rules_pulling_from_class {
                     }
                 } else {
                     return Err(PyErr::new::<exceptions::PyAttributeError, _>(format!(
-                        "There is no '{}' attribute for getting rules",
+                        "The class `{}` has no attribute : `{}`",
+                        class_py,
                         RULES_FROM_CLASS_PY
                     )));
                 }
