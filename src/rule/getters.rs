@@ -21,6 +21,22 @@ mod for_rule {
         pub fn get_op_subrules(&self) -> &Option<Subrules> {
             &self.subrules
         }
+        pub fn get_selected_rules<'a>(
+            regex_set: &'a Option<regex::RegexSet>,
+            default_rules: &'a Option<Vec<Rule>>,
+            text: &str,
+        ) -> Option<Vec<&'a Rule>> {
+            if let Some(rgxst) = regex_set {
+                return Some(
+                    rgxst
+                        .matches(text)
+                        .iter()
+                        .map(|id| &default_rules.as_ref().unwrap()[id])
+                        .collect::<Vec<_>>(),
+                );
+            }
+            None
+        }
     }
 
     fn absence_error() -> PyErr {
@@ -55,6 +71,22 @@ mod for_regex_raw {
                 RegexRaw::DefaultR(value) => value,
                 RegexRaw::FancyR(value) => value,
             }
+        }
+    }
+}
+
+mod for_subrules {
+    use super::*;
+
+    impl Subrules {
+        pub fn get_default_rgx_vec<'a>(&self) -> &Option<Vec<Rule>> {
+            &self.default_rgx_vec
+        }
+        pub fn get_fancy_rgx_vec<'a>(&self) -> &Option<Vec<Rule>> {
+            &self.fancy_rgx_vec
+        }
+        pub fn get_default_rgx_set<'a>(&self) -> &Option<regex::RegexSet> {
+            &self.default_rgx_set
         }
     }
 }

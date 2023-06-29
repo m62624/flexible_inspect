@@ -10,7 +10,9 @@ use std::collections::HashMap;
 //=====================================================================
 mod captures;
 mod custom_error;
+mod excpetion_container;
 mod rule;
+mod template_validator;
 // ============================= CONST ================================
 
 // имя модуля для `Python`

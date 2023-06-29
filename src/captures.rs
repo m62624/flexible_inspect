@@ -28,24 +28,32 @@ impl<'a> MultiCapture<'a> {
     }
     pub fn to_str_vec(&self) -> Vec<&'a str> {
         match self {
-            MultiCapture::DefaultCaptures(captures) => captures
-                .iter()
-                .flat_map(|capture| {
-                    capture
-                        .iter()
-                        .filter_map(|capture| capture.map(|value| value.as_str()))
-                        .collect::<Vec<_>>()
-                })
-                .collect(),
-            MultiCapture::FancyCaptures(captures) => captures
-                .iter()
-                .flat_map(|capture| {
-                    capture
-                        .iter()
-                        .filter_map(|capture| capture.map(|value| value.as_str()))
-                        .collect::<Vec<_>>()
-                })
-                .collect(),
+            MultiCapture::DefaultCaptures(captures) => {
+                let mut rsl = captures
+                    .iter()
+                    .flat_map(|capture| {
+                        capture
+                            .iter()
+                            .filter_map(|capture| capture.map(|value| value.as_str()))
+                            .collect::<Vec<_>>()
+                    })
+                    .collect::<Vec<_>>();
+                rsl.dedup();
+                rsl
+            }
+            MultiCapture::FancyCaptures(captures) => {
+                let mut rsl = captures
+                    .iter()
+                    .flat_map(|capture| {
+                        capture
+                            .iter()
+                            .filter_map(|capture| capture.map(|value| value.as_str()))
+                            .collect::<Vec<_>>()
+                    })
+                    .collect::<Vec<_>>();
+                rsl.dedup();
+                rsl
+            }
         }
     }
     pub fn is_some(&self) -> bool {

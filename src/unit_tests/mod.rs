@@ -8,6 +8,8 @@ mod tests_captures;
 #[cfg(test)]
 mod tests_custom_error;
 #[cfg(test)]
+mod tests_exception_container;
+#[cfg(test)]
 mod tests_rule;
 //=====================================================================
 
@@ -51,10 +53,11 @@ mod for_rule {
         /// ! ONLY FOR TESTS !\
         /// Расширяем объект `Rule` с помощью переданного списка
         pub fn extend_t(&mut self, py: Python, sub_rules_list: Vec<Rule>) -> PyResult<Self> {
-            self.extend(types::PyList::new(
+            self.extend(
                 py,
-                sub_rules_list.into_iter().map(|r| r.into_py(py)),
-            ))
+                types::PyList::new(py, sub_rules_list.into_iter().map(|r| r.into_py(py)))
+                    .into_py(py),
+            )
         }
     }
 }

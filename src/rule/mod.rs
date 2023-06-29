@@ -30,6 +30,7 @@ pub enum MatchRequirement {
 /// --> Rule
 #[derive(Debug, Clone)]
 pub struct Subrules {
-    default_rgx_set: regex::RegexSet,
-    fancy_rgx_vec: Vec<Rule>,
+    default_rgx_set: Option<regex::RegexSet>,
+    default_rgx_vec: Option<Vec<Rule>>,
+    fancy_rgx_vec: Option<Vec<Rule>>,
 }

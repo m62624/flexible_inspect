@@ -11,7 +11,7 @@ mod fn_find_captures {
         let captures = MultiCapture::find_captures(&rule, text).unwrap();
         assert_eq!(
             captures.to_str_vec(),
-            vec!["H", "e", "l", "l", "o", "w", "o", "r", "l", "d"]
+            vec!["H", "e", "l", "o", "w", "o", "r", "l", "d"]
         );
     }
 

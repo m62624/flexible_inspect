@@ -38,10 +38,20 @@ mod init_subrules {
     use super::*;
 
     impl Subrules {
-        pub fn new(regex_set: Vec<Rule>, fancy_rgx_vec: Vec<Rule>) -> Self {
+        pub fn new(default_rgx_vec: Vec<Rule>, fancy_rgx_vec: Vec<Rule>) -> Self {
             Self {
-                default_rgx_set: regex::RegexSet::new(regex_set).unwrap(),
-                fancy_rgx_vec,
+                default_rgx_set: match !&default_rgx_vec.is_empty() {
+                    true => Some(regex::RegexSet::new(&default_rgx_vec).unwrap()),
+                    false => None,
+                },
+                fancy_rgx_vec: match !&fancy_rgx_vec.is_empty() {
+                    true => Some(fancy_rgx_vec),
+                    false => None,
+                },
+                default_rgx_vec: match !&default_rgx_vec.is_empty() {
+                    true => Some(default_rgx_vec),
+                    false => None,
+                },
             }
         }
     }
