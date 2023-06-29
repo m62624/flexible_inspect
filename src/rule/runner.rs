@@ -30,7 +30,7 @@ impl Rule {
                 // Первый этап, проверяем самые простые правила
                 if let Some(rgxs_set) = &stack_rule.0.unchacked_get_rgx_set() {
                     // Каждый текст проверяем на совпадение с каждым правилом
-                    texts
+                        texts
                         .iter()
                         .map(|text| {
                             // dbg!(text);
@@ -56,8 +56,8 @@ impl Rule {
                                         .iter()
                                         .map(|rule| {
                                             // Теперь добавляем правила из `default` которые не попали в `regexSet`
-                                            if !stack.contains(&(rule, &text)) {
-                                                stack.push_back((rule, &text));
+                                            if !stack.contains(&(rule, text)) {
+                                                stack.push_back((rule, text));
                                             }
                                         })
                                         .for_each(drop);
@@ -67,7 +67,7 @@ impl Rule {
                         .for_each(drop);
                 }
 
-                // Если первый этап пройден, переходим ко второму этапу, проверка на существование сложныы правил (`fancy`)
+                // Если первый этап пройден, переходим ко второму этапу, проверка на существование сложных правил (`fancy`)
                 if let Some(f_r) = stack_rule.0.subrules.as_ref().unwrap().get_fancy_rgx_vec() {
                     // Каждый текст проверяем на совпадение с каждым правилом
                     texts
