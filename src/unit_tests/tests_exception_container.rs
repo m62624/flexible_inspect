@@ -1,5 +1,6 @@
 use super::mock_obj;
 use super::rule::{MatchRequirement, Rule};
+use super::unit_tests::mock_obj::CustomClassError;
 use super::*;
 #[cfg(test)]
 mod fn_new {
@@ -26,4 +27,33 @@ mod fn_new {
         })
     }
 
+    #[test]
+    #[should_panic]
+    fn constructor_e_0() {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| {
+            let obj = types::PyType::new::<CustomClassError>(py);
+            obj.setattr(
+                MESSAGE_WITH_EXTRA_FROM_CLASS_PY,
+                types::PyString::new(py, format!("__").as_str()),
+            )
+            .unwrap();
+            obj.setattr(
+                RULES_FROM_CLASS_PY,
+                types::PyType::new::<CustomClassError>(py),
+            )
+            .unwrap();
+            dbg!(excpetion_container::ExceptionContainer::new(py, obj.into_py(py)).unwrap());
+        });
+    }
+
+    #[test]
+    #[should_panic]
+    fn constructor_e_1() {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| {
+            let obj = types::PyType::new::<CustomClassError>(py);
+            dbg!(excpetion_container::ExceptionContainer::new(py, obj.into_py(py)).unwrap());
+        });
+    }
 }

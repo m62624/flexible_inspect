@@ -13,6 +13,7 @@ mod custom_error;
 mod excpetion_container;
 mod rule;
 mod template_validator;
+mod validate;
 // ============================= CONST ================================
 
 // имя модуля для `Python`

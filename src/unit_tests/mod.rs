@@ -11,6 +11,8 @@ mod tests_custom_error;
 mod tests_exception_container;
 #[cfg(test)]
 mod tests_rule;
+#[cfg(test)]
+mod tests_validate;
 //=====================================================================
 
 pub mod mock_obj {
