@@ -1,6 +1,7 @@
 mod extend;
 mod getters;
 mod init;
+pub mod slice;
 use super::*;
 
 /// --> ExceptionContainer

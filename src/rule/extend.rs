@@ -1,4 +1,4 @@
-use super::*;
+use super::{slice::RuleContext, *};
 
 #[pymethods]
 impl Rule {
@@ -6,21 +6,12 @@ impl Rule {
         // Проверяем, что это список
         if let Ok(list) = nested_rules.downcast::<types::PyList>(py) {
             let (mut default_r_vec, mut fancy_r_vec) = (Vec::new(), Vec::new());
-            list.iter().map(|packed_rule| {
-                    if let Ok(rule) = packed_rule.extract::<Rule>() {
-                        match rule.get_str_raw().unwrap() {
-                            RegexRaw::DefaultR(_) => default_r_vec.push(rule),
-                            RegexRaw::FancyR(_) => fancy_r_vec.push(rule),
-                        }
-                        Ok(())
-                    } else {
-                        return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                            "Expected `Rule` in the list, the child error `{}` from the parent rule `{}`",
-                            packed_rule.get_type().name().unwrap(),
-                            self.str_raw.as_ref().unwrap().as_ref()
-                        )));
-                    }
-                }).collect::<PyResult<Vec<_>>>()?;
+            RuleContext::slice_rules(
+                RuleContext::Subelement(self),
+                list,
+                &mut default_r_vec,
+                &mut fancy_r_vec,
+            )?;
             if !default_r_vec.is_empty() || !fancy_r_vec.is_empty() {
                 self.subrules = Some(Subrules::new(default_r_vec, fancy_r_vec));
             }

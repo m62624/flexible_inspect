@@ -1,3 +1,4 @@
+use super::rule::slice::RuleContext;
 use super::rule::Rule;
 use super::*;
 
@@ -19,24 +20,12 @@ mod rules_pulling_from_class {
                     if let Ok(py_list) = py_list.downcast::<types::PyList>() {
                         let mut default_roots = Vec::new();
                         let mut fancy_roots = Vec::new();
-                        py_list
-                            .iter()
-                            .map(|rule| {
-                                if let Ok(rule) = rule.extract::<rule::Rule>() {
-                                    match rule.get_str_raw()? {
-                                        rule::RegexRaw::DefaultR(_) => default_roots.push(rule),
-                                        rule::RegexRaw::FancyR(_) => fancy_roots.push(rule),
-                                    }
-                                    Ok(())
-                                } else {
-                                    Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                                        "'{}' must be a 'Rule' from class `{}`",
-                                        rule.get_type().name().unwrap(),
-                                        class_py.name().unwrap()
-                                    )))
-                                }
-                            })
-                            .collect::<PyResult<Vec<_>>>()?;
+                        RuleContext::slice_rules(
+                            RuleContext::Root(class_py),
+                            py_list,
+                            &mut default_roots,
+                            &mut fancy_roots,
+                        )?;
                         return Ok(Self {
                             py_class: py_class,
                             default_roots_set: match !&default_roots.is_empty() {
