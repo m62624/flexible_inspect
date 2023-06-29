@@ -18,8 +18,8 @@ impl Rule {
             return Ok(std::mem::take(self));
         }
         Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-            "`{}` -- Expected `List` --> List[Rule, Rule, Rule]",
-            nested_rules.as_ref(py).get_type().name().unwrap()
+            "`{}` -- expected `List` --> List [Rule, Rule, Rule]",
+            nested_rules
         )))
     }
 }
