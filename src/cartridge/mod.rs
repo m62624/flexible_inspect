@@ -4,10 +4,13 @@ use super::*;
 
 mod runner;
 
+#[derive(Debug)]
+
 pub struct Cartridge {
     py_class: PyObject,
     root_rules: RootRules,
 }
+#[derive(Debug)]
 pub struct CartridgeWrapper(Arc<Cartridge>);
 
 impl CartridgeWrapper {
