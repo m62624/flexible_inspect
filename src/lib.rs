@@ -26,7 +26,7 @@ pub const RULES_FROM_CLASS_PY: &str = "rules";
 // имя атрибута, где хранится **extra переменные для заполнения из класса Python
 pub const EXTRA_FROM_CLASS_PY: &str = "extra";
 // имя класса ошибки (базовый шаблон) для `Python`
-pub const BASE_ERROR: &str = "PystvalError";
+pub const BASE_ERROR: &str = "PystvalException";
 
 // =====================================================================
 

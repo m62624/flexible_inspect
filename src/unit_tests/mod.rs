@@ -7,6 +7,8 @@ mod tests_base_error;
 #[cfg(test)]
 mod tests_captures;
 #[cfg(test)]
+mod tests_cartridge;
+#[cfg(test)]
 mod tests_custom_error;
 #[cfg(test)]
 mod tests_rule;
