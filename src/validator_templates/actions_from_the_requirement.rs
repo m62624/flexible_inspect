@@ -1,5 +1,4 @@
 use super::captures::MultiCapture;
-
 use super::custom_error::py_error::*;
 use super::*;
 
@@ -25,9 +24,12 @@ pub fn next_or_error(
     rule: &rule::Rule,
     captures: &MultiCapture,
 ) -> PyResult<bool> {
-    match rule.get_requirement().unwrap() {
+    match rule.get_content().unwrap().requirement {
         rule::MatchRequirement::MustBeFound => {
-            match (captures.is_some(), rule.get_op_subrules().is_some()) {
+            match (
+                captures.is_some(),
+                rule.get_content().unwrap().subrules.is_some(),
+            ) {
                 (true, true) => Ok(true),
                 (true, false) => Ok(false),
                 (false, true) => Err(make_error(
@@ -43,7 +45,10 @@ pub fn next_or_error(
             }
         }
         rule::MatchRequirement::MustNotBefound => {
-            match (captures.is_some(), rule.get_op_subrules().is_some()) {
+            match (
+                captures.is_some(),
+                rule.get_content().unwrap().subrules.is_some(),
+            ) {
                 (true, true) => Ok(true),
                 (true, false) => Err(make_error(
                     class_template,

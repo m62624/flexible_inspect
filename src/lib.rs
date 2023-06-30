@@ -7,13 +7,13 @@ use pyo3::types;
 //=====================================================================
 use lazy_static::lazy_static;
 use std::collections::HashMap;
+use std::sync::Arc;
 //=====================================================================
 mod captures;
+mod cartridge;
 mod custom_error;
-mod exception_container;
 mod rule;
-mod template_validator;
-mod validate;
+mod validator_templates;
 // ============================= CONST ================================
 
 // имя модуля для `Python`

@@ -1,102 +1,53 @@
 use super::*;
 
-mod for_rule {
-    use super::*;
-
-    impl Rule {
-        pub fn get_requirement(&self) -> PyResult<&MatchRequirement> {
-            if let Some(value) = &self.requirement {
-                return Ok(value);
-            } else {
-                return Err(absence_error());
-            }
+impl Rule {
+    pub fn get_content(&self) -> PyResult<&TakeRuleForExtend> {
+        if let Some(content) = &self.content {
+            return Ok(content);
         }
-        pub fn get_str_raw(&self) -> PyResult<&RegexRaw> {
-            if let Some(value) = &self.str_raw {
-                return Ok(value);
-            } else {
-                return Err(absence_error());
-            }
-        }
-        pub fn get_op_subrules(&self) -> &Option<Subrules> {
-            &self.subrules
-        }
-        pub fn get_selected_rules<'a>(regex_set: &'a regex::RegexSet, text: &str) -> Vec<usize> {
-            regex_set
-                .matches(text)
-                .iter()
-                .map(|id| id)
-                .collect::<Vec<_>>()
-        }
+        Err(Self::option_error())
     }
 
-    fn absence_error() -> PyErr {
-        PyErr::new::<exceptions::PyValueError, _>(format!(
-            "* If you saved `Rule` in a variable, but used `extend` afterwards on the variable itself:
+    pub fn get_content_mut(&mut self) -> PyResult<&mut TakeRuleForExtend> {
+        if let Some(content) = &mut self.content {
+            return Ok(content);
+        }
+        Err(Self::option_error())
+    }
+
+    pub fn get_selected_rules<'a>(regex_set: &'a regex::RegexSet, text: &str) -> Vec<usize> {
+        regex_set
+            .matches(text)
+            .iter()
+            .map(|index| index)
+            .collect::<Vec<_>>()
+    }
+
+    fn option_error() -> PyErr {
+        PyErr::new::<exceptions::PyTypeError, _>(
+            "If you saved `Rule` in a variable, but used `extend` afterwards on the variable itself:
     
-           x = Rule(\"X\")
-           x.extend(Rule(\"Y\"))
-           
-           * Please use this syntax:
-           
-           x = Rule(\"X\").extend(Rule(\"Y\"))
-           * or 
-           x = Rule(\"X\")
-           x = x.extend(Rule(\"Y\"))"
-        ))
-    }
-
-    impl AsRef<str> for Rule {
-        fn as_ref(&self) -> &str {
-            self.get_str_raw().unwrap().as_ref()
-        }
-    }
-    mod unchacked_getters {
-        use super::*;
-        impl Rule {
-            pub fn unchacked_get_rgx_set(&self) -> &Option<regex::RegexSet> {
-                self.get_op_subrules()
-                    .as_ref()
-                    .unwrap()
-                    .get_default_rgx_set()
-            }
-            pub fn unchacked_get_rgx_vec(&self) -> &Vec<Rule> {
-                self.get_op_subrules()
-                    .as_ref()
-                    .unwrap()
-                    .default_rgx_vec
-                    .as_ref()
-                    .unwrap()
-            }
-        }
+            x = Rule(\"X\")
+            x.extend(Rule(\"Y\"))
+            
+            * Please use this syntax:
+            
+            x = Rule(\"X\").extend(Rule(\"Y\"))
+            * or 
+            x = Rule(\"X\")
+            x = x.extend(Rule(\"Y\"))",
+        )
     }
 }
 
-mod for_regex_raw {
-    use super::*;
-
-    impl AsRef<str> for RegexRaw {
-        fn as_ref(&self) -> &str {
-            match self {
-                RegexRaw::DefaultR(value) => value,
-                RegexRaw::FancyR(value) => value,
-            }
-        }
-    }
-}
-
-mod for_subrules {
-    use super::*;
-
-    impl Subrules {
-        pub fn get_default_rgx_vec<'a>(&self) -> &Option<Vec<Rule>> {
-            &self.default_rgx_vec
-        }
-        pub fn get_fancy_rgx_vec<'a>(&self) -> &Option<Vec<Rule>> {
-            &self.fancy_rgx_vec
-        }
-        pub fn get_default_rgx_set<'a>(&self) -> &Option<regex::RegexSet> {
-            &self.default_rgx_set
-        }
-    }
+impl TakeRuleForExtend {
+    // pub fn get_str_with_type(&self) -> &RegexRaw {
+    //     &self.str_with_type
+    // }
+    // pub fn get_requirement(&self) -> &MatchRequirement {
+    //     &self.requirement
+    // }
+    // pub fn get_subrules(&self) -> Option<&Subrules> {
+    //     self.subrules.as_ref()
+    // }
 }

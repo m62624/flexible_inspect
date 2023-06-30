@@ -3,25 +3,33 @@ mod getters;
 mod init;
 mod runner;
 pub mod slice;
+mod traits;
+//==============
 use super::*;
 
 /// --> ExceptionContainer
 #[pyclass]
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Rule {
-    str_raw: Option<RegexRaw>,
-    requirement: Option<MatchRequirement>,
-    subrules: Option<Subrules>,
+    content: Option<TakeRuleForExtend>,
 }
 
 /// --> Rule
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub struct TakeRuleForExtend {
+    pub str_with_type: RegexRaw,
+    pub requirement: MatchRequirement,
+    pub subrules: Option<Subrules>,
+}
+
+/// --> TakeRuleForExtend
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RegexRaw {
     DefaultR(Box<str>),
     FancyR(Box<str>),
 }
 
-/// --> Rule
+/// --> TakeRuleForExtend
 #[pyclass]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MatchRequirement {
@@ -29,18 +37,17 @@ pub enum MatchRequirement {
     MustNotBefound,
 }
 
-/// --> Rule
+/// --> TakeRuleForExtend
+/// --> Cartridge
 #[derive(Debug, Clone)]
 pub struct Subrules {
-    default_rgx_set: Option<regex::RegexSet>,
-    default_rgx_vec: Option<Vec<Rule>>,
-    fancy_rgx_vec: Option<Vec<Rule>>,
+    pub simple_rules: Option<SimpleRules>,
+    pub complex_rules: Option<Vec<Rule>>,
 }
 
-impl PartialEq for Subrules {
-    fn eq(&self, other: &Self) -> bool {
-        self.default_rgx_vec == other.default_rgx_vec && self.fancy_rgx_vec == other.fancy_rgx_vec
-    }
+/// --> Subrules
+#[derive(Debug, Clone)]
+pub struct SimpleRules {
+    pub all_rules: Vec<Rule>,
+    pub regex_set: regex::RegexSet,
 }
-
-impl Eq for Subrules {}

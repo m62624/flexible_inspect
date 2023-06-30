@@ -9,16 +9,16 @@ impl<'py> RuleContext<'py> {
     pub fn slice_rules(
         element: RuleContext,
         all_rules: &types::PyList,
-        default_r_vec: &mut Vec<Rule>,
-        fancy_r_vec: &mut Vec<Rule>,
+        simple_rules: &mut Vec<Rule>,
+        complex_rules: &mut Vec<Rule>,
     ) -> PyResult<()> {
         all_rules
             .iter()
             .map(|packed_rule| {
                 if let Ok(rule) = packed_rule.extract::<Rule>() {
-                    match rule.get_str_raw().unwrap() {
-                        RegexRaw::DefaultR(_) => default_r_vec.push(rule),
-                        RegexRaw::FancyR(_) => fancy_r_vec.push(rule),
+                    match rule.get_content().unwrap().str_with_type {
+                        RegexRaw::DefaultR(_) => simple_rules.push(rule),
+                        RegexRaw::FancyR(_) => complex_rules.push(rule),
                     }
                     Ok(())
                 } else {
@@ -30,8 +30,8 @@ impl<'py> RuleContext<'py> {
                                 class_py.name().unwrap()
                             )))
                         }
-                        RuleContext::Subelement(slf) => {
-                            return Err(PyErr::new::<exceptions::PyTypeError, _>(format!("Expected `Rule` in the list, the child error `{}` from the parent rule `{}`",packed_rule, slf.str_raw.as_ref().unwrap().as_ref())));
+                        RuleContext::Subelement(this_rule) => {
+                            return Err(PyErr::new::<exceptions::PyTypeError, _>(format!("Expected `Rule` in the list, the child error `{}` from the parent rule `{}`",packed_rule, this_rule.get_content().unwrap().str_with_type.as_ref())));
                         },
                     }
                 }

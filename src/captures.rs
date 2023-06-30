@@ -9,7 +9,7 @@ pub enum MultiCapture<'a> {
 
 impl<'a> MultiCapture<'a> {
     pub fn find_captures(rule: &Rule, text: &'a str) -> PyResult<MultiCapture<'a>> {
-        match rule.get_str_raw()? {
+        match &rule.get_content().unwrap().str_with_type {
             rule::RegexRaw::DefaultR(pattern) => Ok(MultiCapture::DefaultCaptures(
                 regex::Regex::new(&pattern)
                     .unwrap()
@@ -26,40 +26,39 @@ impl<'a> MultiCapture<'a> {
             )),
         }
     }
-    pub fn to_str_vec(&self) -> Vec<&'a str> {
-        match self {
-            MultiCapture::DefaultCaptures(captures) => {
-                let mut rsl = captures
-                    .iter()
-                    .flat_map(|capture| {
-                        capture
-                            .iter()
-                            .filter_map(|capture| capture.map(|value| value.as_str()))
-                            .collect::<Vec<_>>()
-                    })
-                    .collect::<Vec<_>>();
-                rsl.dedup();
-                rsl
-            }
-            MultiCapture::FancyCaptures(captures) => {
-                let mut rsl = captures
-                    .iter()
-                    .flat_map(|capture| {
-                        capture
-                            .iter()
-                            .filter_map(|capture| capture.map(|value| value.as_str()))
-                            .collect::<Vec<_>>()
-                    })
-                    .collect::<Vec<_>>();
-                rsl.dedup();
-                rsl
-            }
-        }
-    }
     pub fn is_some(&self) -> bool {
         match self {
             MultiCapture::DefaultCaptures(captures) => !captures.is_empty(),
             MultiCapture::FancyCaptures(captures) => !captures.is_empty(),
+        }
+    }
+}
+
+mod traits {
+    use super::*;
+
+    impl<'a> Into<Vec<&'a str>> for MultiCapture<'a> {
+        fn into(self) -> Vec<&'a str> {
+            match self {
+                MultiCapture::DefaultCaptures(captures) => captures
+                    .into_iter()
+                    .flat_map(|capture| {
+                        capture
+                            .iter()
+                            .filter_map(|capture| capture.map(|value| value.as_str()))
+                            .collect::<Vec<_>>()
+                    })
+                    .collect::<Vec<_>>(),
+                MultiCapture::FancyCaptures(captures) => captures
+                    .into_iter()
+                    .flat_map(|capture| {
+                        capture
+                            .iter()
+                            .filter_map(|capture| capture.map(|value| value.as_str()))
+                            .collect::<Vec<_>>()
+                    })
+                    .collect::<Vec<_>>(),
+            }
         }
     }
 }

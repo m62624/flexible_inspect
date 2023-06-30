@@ -55,45 +55,32 @@ pub mod py_error {
         let mut extra_values: HashMap<&str, &str> = HashMap::new();
         match captures {
             MultiCapture::DefaultCaptures(captures) => {
-                captures
-                    .iter()
-                    .map(|capture| {
-                        extra_name
-                            .iter()
-                            .map(|name| match capture.name(name) {
-                                Some(value) => {
-                                    extra_values.insert(name, value.as_str());
-                                }
-                                None => {
-                                    extra_values.insert(name, "___");
-                                }
-                            })
-                            .for_each(drop);
-                    })
-                    .for_each(drop);
+                captures.iter().by_ref().for_each(|capture| {
+                    extra_name.iter().by_ref().for_each(|name| {
+                        if let Some(value) = capture.name(name) {
+                            extra_values.insert(name, value.as_str());
+                        } else {
+                            extra_values.insert(name, "___");
+                        }
+                    });
+                });
             }
             MultiCapture::FancyCaptures(captures) => {
-                captures
-                    .iter()
-                    .map(|capture| {
-                        extra_name
-                            .iter()
-                            .map(|name| match capture.name(name) {
-                                Some(value) => {
-                                    extra_values.insert(name, value.as_str());
-                                }
-                                None => {
-                                    extra_values.insert(name, "___");
-                                }
-                            })
-                            .for_each(drop);
-                    })
-                    .for_each(drop);
+                captures.iter().by_ref().for_each(|capture| {
+                    extra_name.iter().by_ref().for_each(|name| {
+                        if let Some(value) = capture.name(name) {
+                            extra_values.insert(name, value.as_str());
+                        } else {
+                            extra_values.insert(name, "___");
+                        }
+                    });
+                });
             }
         }
         if !extra_values.is_empty() {
-            return Some(extra_values);
+            Some(extra_values)
+        } else {
+            None
         }
-        return None;
     }
 }

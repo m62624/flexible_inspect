@@ -1,58 +1,55 @@
 use super::*;
 
-mod init_rule {
-    use super::*;
-
-    #[pymethods]
-    impl Rule {
-        #[new]
-        pub fn new(pattern: String, requirements: MatchRequirement) -> PyResult<Self> {
-            Ok(Self {
-                str_raw: Some(RegexRaw::new(pattern)?),
-                requirement: Some(requirements),
-                subrules: None,
-            })
-        }
+impl Rule {
+    pub fn new(pattern: String, requirements: MatchRequirement) -> PyResult<Self> {
+        Ok(Self {
+            content: Some(TakeRuleForExtend::new(pattern, requirements)?),
+        })
     }
 }
 
-mod init_regex_raw {
-    use super::*;
-
-    impl RegexRaw {
-        pub fn new(pattern: String) -> PyResult<RegexRaw> {
-            if regex::Regex::new(&pattern).is_ok() {
-                return Ok(RegexRaw::DefaultR(pattern.into_boxed_str()));
-            } else if fancy_regex::Regex::new(&pattern).is_ok() {
-                return Ok(RegexRaw::FancyR(pattern.into_boxed_str()));
-            }
-            return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                "Expected `Regex` or `FancyRegex`, got `{}`",
-                pattern
-            )));
-        }
+impl TakeRuleForExtend {
+    fn new(pattern: String, requirements: MatchRequirement) -> PyResult<Self> {
+        Ok(Self {
+            str_with_type: RegexRaw::new(pattern)?,
+            requirement: requirements,
+            subrules: None,
+        })
     }
 }
 
-mod init_subrules {
-    use super::*;
-
-    impl Subrules {
-        pub fn new(default_rgx_vec: Vec<Rule>, fancy_rgx_vec: Vec<Rule>) -> Self {
-            Self {
-                default_rgx_set: match !&default_rgx_vec.is_empty() {
-                    true => Some(regex::RegexSet::new(&default_rgx_vec).unwrap()),
-                    false => None,
-                },
-                fancy_rgx_vec: match !&fancy_rgx_vec.is_empty() {
-                    true => Some(fancy_rgx_vec),
-                    false => None,
-                },
-                default_rgx_vec: match !&default_rgx_vec.is_empty() {
-                    true => Some(default_rgx_vec),
-                    false => None,
-                },
-            }
+impl RegexRaw {
+    fn new(pattern: String) -> PyResult<Self> {
+        if regex::Regex::new(&pattern).is_ok() {
+            return Ok(RegexRaw::DefaultR(pattern.into_boxed_str()));
+        } else if fancy_regex::Regex::new(&pattern).is_ok() {
+            return Ok(RegexRaw::FancyR(pattern.into_boxed_str()));
+        }
+        return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+            "Expected `Regex` or `FancyRegex`, got `{}`",
+            pattern
+        )));
+    }
+}
+impl Subrules {
+    pub fn new(simple_rules: SimpleRules, complex_rules: Vec<Rule>) -> Self {
+        Self {
+            simple_rules: match !simple_rules.all_rules.is_empty() {
+                true => Some(simple_rules),
+                false => None,
+            },
+            complex_rules: match !complex_rules.is_empty() {
+                true => Some(complex_rules),
+                false => None,
+            },
+        }
+    }
+}
+impl SimpleRules {
+    pub fn new(all_rules: Vec<Rule>) -> Self {
+        Self {
+            regex_set: regex::RegexSet::new(&all_rules).unwrap(),
+            all_rules,
         }
     }
 }
