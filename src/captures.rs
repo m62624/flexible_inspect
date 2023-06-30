@@ -40,24 +40,32 @@ mod traits {
     impl<'a> Into<Vec<&'a str>> for MultiCapture<'a> {
         fn into(self) -> Vec<&'a str> {
             match self {
-                MultiCapture::DefaultCaptures(captures) => captures
-                    .into_iter()
-                    .flat_map(|capture| {
-                        capture
-                            .iter()
-                            .filter_map(|capture| capture.map(|value| value.as_str()))
-                            .collect::<Vec<_>>()
-                    })
-                    .collect::<Vec<_>>(),
-                MultiCapture::FancyCaptures(captures) => captures
-                    .into_iter()
-                    .flat_map(|capture| {
-                        capture
-                            .iter()
-                            .filter_map(|capture| capture.map(|value| value.as_str()))
-                            .collect::<Vec<_>>()
-                    })
-                    .collect::<Vec<_>>(),
+                MultiCapture::DefaultCaptures(captures) => {
+                    let mut data = captures
+                        .into_iter()
+                        .flat_map(|capture| {
+                            capture
+                                .iter()
+                                .filter_map(|capture| capture.map(|value| value.as_str()))
+                                .collect::<Vec<_>>()
+                        })
+                        .collect::<Vec<_>>();
+                    data.dedup();
+                    data
+                }
+                MultiCapture::FancyCaptures(captures) => {
+                    let mut data = captures
+                        .into_iter()
+                        .flat_map(|capture| {
+                            capture
+                                .iter()
+                                .filter_map(|capture| capture.map(|value| value.as_str()))
+                                .collect::<Vec<_>>()
+                        })
+                        .collect::<Vec<_>>();
+                    data.dedup();
+                    data
+                }
             }
         }
     }
