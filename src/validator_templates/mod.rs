@@ -23,23 +23,21 @@ impl TemplateValidator {
 impl TemplateSafeSelf {
     fn new(py: Python, cartridges: PyObject) -> PyResult<Self> {
         if let Ok(list) = cartridges.downcast::<types::PyList>(py) {
-            list.iter()
-                .map(|class_obj| {
-                    if let Ok(class_py) = class_obj.downcast::<types::PyType>() {
-                        CartridgeWrapper::new(py, class_py.to_object(py))?;
-                        Ok(())
-                    } else {
-                        return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                            "'{}' must be a 'Class'",
-                            class_obj
-                        )));
-                    }
-                })
-                .collect::<PyResult<()>>()?;
+            list.iter().try_for_each(|class_obj| {
+                if let Ok(class_py) = class_obj.downcast::<types::PyType>() {
+                    CartridgeWrapper::new(py, class_py.to_object(py))?;
+                    Ok(())
+                } else {
+                    Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+                        "'{}' must be a 'Class'",
+                        class_obj
+                    )))
+                }
+            })?;
         }
-        return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+        Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
             "'{}' must be a 'List[ Class, Class... ]'",
             cartridges
-        )));
+        )))
     }
 }

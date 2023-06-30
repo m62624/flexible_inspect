@@ -31,7 +31,7 @@ impl<'py> RuleContext<'py> {
                             )))
                         }
                         RuleContext::Subelement(this_rule) => {
-                            return Err(PyErr::new::<exceptions::PyTypeError, _>(format!("Expected `Rule` in the list, the child error `{}` from the parent rule `{}`",packed_rule, this_rule.get_content().unwrap().str_with_type.as_ref())));
+                            Err(PyErr::new::<exceptions::PyTypeError, _>(format!("Expected `Rule` in the list, the child error `{}` from the parent rule `{}`",packed_rule, this_rule.get_content().unwrap().str_with_type.as_ref())))
                         },
                     }
                 }

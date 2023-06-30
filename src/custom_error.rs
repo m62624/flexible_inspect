@@ -36,9 +36,9 @@ pub mod py_error {
         lazy_static! {
             static ref RE: regex::Regex = regex::Regex::new(r"\{.+?\}").unwrap();
         }
-        if RE.is_match(&attr_value) {
+        if RE.is_match(attr_value) {
             Ok(RE
-                .captures_iter(&attr_value)
+                .captures_iter(attr_value)
                 .map(|cap| {
                     cap.get(0)
                         .map_or("", |m| m.as_str().trim_matches('{').trim_matches('}'))
@@ -49,7 +49,7 @@ pub mod py_error {
         }
     }
     pub fn filling_extra<'a>(
-        extra_name: &Vec<&'a str>,
+        extra_name: &[&'a str],
         captures: &MultiCapture<'a>,
     ) -> Option<HashMap<&'a str, &'a str>> {
         let mut extra_values: HashMap<&str, &str> = HashMap::new();

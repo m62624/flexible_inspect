@@ -6,7 +6,7 @@ impl CartridgeWrapper {
     pub fn sync_run(&self, text: &str) -> PyResult<()> {
         if let Some(simple_rules) = &self.0.root_rules.simple_rules {
             // Отбираем простые правила через `RegexSet`
-            let selected_rules = Rule::get_selected_rules(&simple_rules.regex_set, &text);
+            let selected_rules = Rule::get_selected_rules(&simple_rules.regex_set, text);
 
             // Создаем задачи 3 задачи
             // 1 - простые правила, отобранные через `RegexSet`
@@ -14,10 +14,9 @@ impl CartridgeWrapper {
             // 3 - сложные правила
 
             // 1
-            selected_rules
-                .iter()
-                .map(|id| Rule::run(&text, &simple_rules.all_rules[*id], &self.0.py_class))
-                .collect::<PyResult<()>>()?;
+            selected_rules.iter().try_for_each(|id| {
+                Rule::run(text, &simple_rules.all_rules[*id], &self.0.py_class)
+            })?;
 
             // 2
             simple_rules
@@ -25,7 +24,7 @@ impl CartridgeWrapper {
                 .iter()
                 .enumerate()
                 .filter(|(id, _)| !selected_rules.contains(id))
-                .map(|(_, rule)| Rule::run(&text, &rule, &self.0.py_class))
+                .map(|(_, rule)| Rule::run(text, rule, &self.0.py_class))
                 .collect::<PyResult<Vec<_>>>()?;
         }
 
@@ -33,7 +32,7 @@ impl CartridgeWrapper {
         if let Some(complex_rules) = &self.0.root_rules.complex_rules {
             complex_rules
                 .iter()
-                .map(|rule| Rule::run(&text, &rule, &self.0.py_class))
+                .map(|rule| Rule::run(text, rule, &self.0.py_class))
                 .collect::<PyResult<Vec<_>>>()?;
         }
         Ok(())
@@ -64,16 +63,13 @@ impl CartridgeWrapper {
                 // Отбираем простые правила через `RegexSet`
                 let selected_rules =
                     Rule::get_selected_rules(&simple_rules.regex_set, &text_for_task_1);
-                selected_rules
-                    .iter()
-                    .map(|id| {
-                        Rule::run(
-                            &text_for_task_1,
-                            &simple_rules.all_rules[*id],
-                            &self_for_task_1.py_class,
-                        )
-                    })
-                    .collect::<PyResult<()>>()?;
+                selected_rules.iter().try_for_each(|id| {
+                    Rule::run(
+                        &text_for_task_1,
+                        &simple_rules.all_rules[*id],
+                        &self_for_task_1.py_class,
+                    )
+                })?;
             }
             Ok::<(), PyErr>(())
         }));
@@ -90,7 +86,7 @@ impl CartridgeWrapper {
                     .iter()
                     .enumerate()
                     .filter(|(id, _)| !selected_rules.contains(id))
-                    .map(|(_, rule)| Rule::run(&text_for_task_2, &rule, &self_for_task_2.py_class))
+                    .map(|(_, rule)| Rule::run(&text_for_task_2, rule, &self_for_task_2.py_class))
                     .collect::<PyResult<Vec<_>>>()?;
             }
             Ok::<(), PyErr>(())
@@ -101,7 +97,7 @@ impl CartridgeWrapper {
             if let Some(complex_rules) = &self_for_task_3.root_rules.complex_rules {
                 complex_rules
                     .iter()
-                    .map(|rule| Rule::run(&text_for_task_3, &rule, &self_for_task_3.py_class))
+                    .map(|rule| Rule::run(&text_for_task_3, rule, &self_for_task_3.py_class))
                     .collect::<PyResult<Vec<_>>>()?;
             }
             Ok::<(), PyErr>(())

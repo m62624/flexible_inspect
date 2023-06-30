@@ -25,10 +25,10 @@ impl RegexRaw {
         } else if fancy_regex::Regex::new(&pattern).is_ok() {
             return Ok(RegexRaw::FancyR(pattern.into_boxed_str()));
         }
-        return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+        Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
             "Expected `Regex` or `FancyRegex`, got `{}`",
             pattern
-        )));
+        )))
     }
 }
 impl Subrules {

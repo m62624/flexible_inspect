@@ -8,7 +8,7 @@ impl Rule {
         Python::with_gil(|py| -> PyResult<()> {
             let mut stack = VecDeque::from([(rule, text)]);
             while let Some(stack_rule) = stack.pop_back() {
-                let captures = MultiCapture::find_captures(stack_rule.0, &stack_rule.1)?;
+                let captures = MultiCapture::find_captures(stack_rule.0, stack_rule.1)?;
                 if next_or_error(py, class_template, rule, &captures)? {
                     let text_set: Vec<&str> = captures.into();
                     // Простые правила
@@ -30,8 +30,8 @@ impl Rule {
                         });
                         text_set.iter().for_each(|txt| {
                             simple_rules.all_rules.iter().for_each(|rule| {
-                                if !stack.contains(&(rule, &txt)) {
-                                    stack.push_back((rule, &txt));
+                                if !stack.contains(&(rule, txt)) {
+                                    stack.push_back((rule, txt));
                                 }
                             });
                         });

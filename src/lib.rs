@@ -33,8 +33,8 @@ pub const BASE_ERROR: &str = "PystvalException";
 // Импортируем всё необходимое в `Python`
 #[cfg(not(tarpaulin_include))]
 mod export {
-
     use super::*;
+
     #[pymodule]
     pub fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
         py_module.add_class::<rule::Rule>()?;

@@ -26,27 +26,27 @@ impl CartridgeWrapper {
                         &mut simple_rules,
                         &mut complex_rules,
                     )?;
-                    return Ok(Self(Arc::new(Cartridge {
+                    Ok(Self(Arc::new(Cartridge {
                         py_class,
                         root_rules: RootRules::new(SimpleRules::new(simple_rules), complex_rules),
-                    })));
+                    })))
                 } else {
-                    return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+                    Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                         "'{}' must be a 'List[ Rule, Rule... ]'",
                         py_list
-                    )));
+                    )))
                 }
             } else {
-                return Err(PyErr::new::<exceptions::PyAttributeError, _>(format!(
+                Err(PyErr::new::<exceptions::PyAttributeError, _>(format!(
                     "The class `{}` has no attribute : `{}`",
                     class_py, RULES_FROM_CLASS_PY
-                )));
+                )))
             }
         } else {
-            return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+            Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                 "'{}' must be a 'Class'",
                 py_class
-            )));
+            )))
         }
     }
 }

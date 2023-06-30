@@ -15,12 +15,8 @@ impl Rule {
         Err(Self::option_error())
     }
 
-    pub fn get_selected_rules<'a>(regex_set: &'a regex::RegexSet, text: &str) -> Vec<usize> {
-        regex_set
-            .matches(text)
-            .iter()
-            .map(|index| index)
-            .collect::<Vec<_>>()
+    pub fn get_selected_rules(regex_set: &regex::RegexSet, text: &str) -> Vec<usize> {
+        regex_set.matches(text).iter().collect::<Vec<_>>()
     }
 
     fn option_error() -> PyErr {
