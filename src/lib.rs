@@ -9,6 +9,7 @@ use lazy_static::lazy_static;
 use std::collections::HashMap;
 use std::sync::Arc;
 //=====================================================================
+mod base_error;
 mod captures;
 mod cartridge;
 mod custom_error;
@@ -39,6 +40,7 @@ mod export {
         py_module.add_class::<rule::Rule>()?;
         py_module.add_class::<rule::MatchRequirement>()?;
         py_module.add_class::<validator_templates::TemplateValidator>()?;
+        PyModule::from_code(_py, &base_error::export_base_error(), "", MODULE_NAME)?;
         Ok(())
     }
 }
