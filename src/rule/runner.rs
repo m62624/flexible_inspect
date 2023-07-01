@@ -9,7 +9,8 @@ impl Rule {
             let mut stack = VecDeque::from([(rule, text)]);
             while let Some(stack_rule) = stack.pop_front() {
                 let captures = MultiCapture::find_captures(stack_rule.0, stack_rule.1)?;
-                dbg!(&stack_rule);
+                // dbg!("Работаем над правилом :");
+                // dbg!(&stack_rule);
                 // subrules
                 if next_or_error(py, class_template, stack_rule.0, &captures)? {
                     let text_set: Vec<&str> = captures.into();
@@ -30,17 +31,21 @@ impl Rule {
                                     stack.push_back((&simple_rules.all_rules[*index], txt))
                                 });
                         });
-                        dbg!(":: правила которые были добавлены из regexset:");
-                        dbg!(&stack);
+                        // dbg!(":: правила которые были добавлены из regexset:");
+                        // dbg!(&stack);
                         text_set.iter().for_each(|txt| {
                             simple_rules.all_rules.iter().for_each(|rule| {
-                                if !stack.contains(&(rule, txt)) {
+                                if !stack.contains(&(rule, *txt)) {
+                                    // dbg!("Весь стэк с regex");
+                                    // dbg!(&stack);
+                                    // dbg!("то что сейчас добавил в стэк, что не было в regex set");
+                                    dbg!(&rule);
                                     stack.push_back((rule, txt));
                                 }
                             });
                         });
-                        dbg!(":: правила которые были добавлены после regexset:");
-                        dbg!(&stack);
+                        // dbg!(":: правила которые были добавлены после regexset:");
+                        // dbg!(&stack);
                     }
                     if let Some(complex_rules) = &stack_rule
                         .0
@@ -57,8 +62,8 @@ impl Rule {
                                 .for_each(|rule| stack.push_back((rule, txt)))
                         });
                     }
-                   dbg!(":: последние правила, которые были добавлены из complex rules:");
-                    dbg!(&stack);
+                    //    dbg!(":: последние правила, которые были добавлены из complex rules:");
+                    //     dbg!(&stack);
                 }
             }
             Ok(())
