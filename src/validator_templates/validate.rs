@@ -20,12 +20,22 @@ impl TemplateValidator {
     }
 
     #[cfg(not(tarpaulin_include))]
-    pub fn validate(&self, text_bytes: &types::PyBytes) -> PyResult<()> {
+    pub fn validate(
+        &self,
+        py: Python<'_>,
+        text_bytes: &types::PyBytes,
+    ) -> PyResult<Option<PyObject>> {
         let text = bytes_to_string_utf8(text_bytes.as_bytes())?;
+        let mut errors = Vec::new();
         for cartridge in &self.0.cartridges {
-            cartridge.sync_run(&text)?;
+            if let Err(err) = cartridge.sync_run(&text) {
+                errors.push(err);
+            }
         }
-        Ok(())
+        if !errors.is_empty() {
+            return Ok(Some(errors.into_py(py)));
+        }
+        Ok(None)
     }
 }
 
