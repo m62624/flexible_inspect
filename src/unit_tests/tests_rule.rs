@@ -193,3 +193,26 @@ mod fn_option_error {
         rule.get_content_mut().unwrap();
     }
 }
+
+mod fn_run {
+    use super::*;
+
+    #[test]
+    fn run_t_0() -> PyResult<()> {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| {
+            let text = "[1234] test test gl gl";
+            let rule = Rule::spawn(r".+", MatchRequirement::MustBeFound)?.extend_t(
+                py,
+                vec![
+                    Rule::spawn(r"glg", MatchRequirement::MustNotBefound)?,
+                    Rule::spawn(r"\[\d+\]", MatchRequirement::MustBeFound)?,
+                    Rule::spawn(r"gl (?=gl)", MatchRequirement::MustBeFound)?,
+                ],
+            )?;
+            let obj = mock_obj::make_obj(py, "found : {data}", None);
+            dbg!(Rule::run(text, &rule, &obj)?);
+            Ok(())
+        })
+    }
+}
