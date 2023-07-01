@@ -23,7 +23,8 @@ mod fn_new {
                     )?,
                 ]),
             );
-            CartridgeWrapper::new(py, class_py)?;
+            
+            dbg!(CartridgeWrapper::new(py, class_py)?);
             Ok(())
         })
     }
