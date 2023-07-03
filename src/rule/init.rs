@@ -1,4 +1,5 @@
 use super::*;
+use super::*;
 
 impl Rule {
     pub fn new(pattern: String, requirements: MatchRequirement) -> PyResult<Self> {
@@ -14,6 +15,7 @@ impl TakeRuleForExtend {
             str_with_type: RegexRaw::new(pattern)?,
             requirement: requirements,
             subrules: None,
+            counter: None,
         })
     }
 }

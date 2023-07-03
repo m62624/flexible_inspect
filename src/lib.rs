@@ -1,5 +1,5 @@
-#[cfg(test)]
-mod unit_tests;
+// #[cfg(test)]
+// mod unit_tests;
 //=====================================================================
 use pyo3::exceptions::{self, PyException};
 use pyo3::prelude::*;
@@ -14,7 +14,7 @@ mod captures;
 mod cartridge;
 mod custom_error;
 mod rule;
-mod validator_templates;
+mod unit_tests;
 // ============================= CONST ================================
 
 // имя модуля для `Python`
@@ -37,10 +37,18 @@ mod export {
 
     #[pymodule]
     pub fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
-        py_module.add_class::<rule::Rule>()?;
-        py_module.add_class::<rule::MatchRequirement>()?;
-        py_module.add_class::<validator_templates::TemplateValidator>()?;
-        PyModule::from_code(_py, &base_error::export_base_error(), "", MODULE_NAME)?;
+        // py_module.add_class::<rule::Rule>()?;
+        // py_module.add_class::<rule::MatchRequirement>()?;
+        // py_module.add_class::<validator_templates::TemplateValidator>()?;
+        // PyModule::from_code(_py, &base_error::export_base_error(), "", MODULE_NAME)?;
         Ok(())
     }
+}
+
+#[test]
+fn xa() {
+    let captures = regex::Regex::new(r"(?P<number> 1 )").unwrap();
+
+    captures.captures_iter("2 3 1 3 31 1 ").for_each(|cap| {});
+    dbg!(captures.static_captures_len());
 }

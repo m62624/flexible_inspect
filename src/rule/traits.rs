@@ -18,9 +18,22 @@ mod partial_eq_eq {
     }
 
     impl Eq for SimpleRules {}
+
+    impl PartialEq for Counter {
+        fn eq(&self, other: &Self) -> bool {
+            match (self, other) {
+                (Self::Only(l0), Self::Only(r0)) => l0 == r0,
+                (Self::MoreThan(l0), Self::MoreThan(r0)) => l0 == r0,
+                (Self::LessThan(l0), Self::LessThan(r0)) => l0 == r0,
+                _ => false,
+            }
+        }
+    }
+    impl Eq for Counter {}
 }
 
 mod as_ref_str {
+
     use super::*;
 
     impl AsRef<str> for RegexRaw {
@@ -34,7 +47,13 @@ mod as_ref_str {
 
     impl AsRef<str> for Rule {
         fn as_ref(&self) -> &str {
-            self.get_content().unwrap().str_with_type.as_ref()
+            self.content_unchecked().str_with_type.as_ref()
+        }
+    }
+
+    impl AsRef<TakeRuleForExtend> for &TakeRuleForExtend {
+        fn as_ref(&self) -> &TakeRuleForExtend {
+            self
         }
     }
 }

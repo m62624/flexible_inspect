@@ -147,12 +147,7 @@ mod fn_get_selected_rules {
                     Rule::spawn(r"\w(?=:D)", MatchRequirement::MustBeFound)?,
                 ],
             )?;
-            let subrules = extended_rule
-                .get_content()
-                .unwrap()
-                .subrules
-                .as_ref()
-                .unwrap();
+            let subrules = extended_rule.content_unchecked().subrules.as_ref().unwrap();
             assert_eq!(
                 Rule::get_selected_rules(
                     &subrules.simple_rules.as_ref().unwrap().regex_set,
@@ -190,7 +185,7 @@ mod fn_option_error {
         pyo3::prepare_freethreaded_python();
         let mut rule = Rule::spawn(r"(?:.+)", MatchRequirement::MustBeFound).unwrap();
         std::mem::take(&mut rule);
-        rule.get_content_mut().unwrap();
+        rule.content_unchecked();
     }
 }
 
@@ -211,7 +206,7 @@ mod fn_run {
                 ],
             )?;
             let obj = mock_obj::make_obj(py, "found : {data}", None);
-            dbg!(Rule::run(text, &rule, &obj)?);
+            dbg!(Rule::run(&rule, text));
             Ok(())
         })
     }

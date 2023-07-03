@@ -1,72 +1,57 @@
-use super::captures::MultiCapture;
-use super::validator_templates::actions_from_the_requirement::next_or_error;
+use super::captures::CaptureData;
+use super::next::NextStep;
 use super::*;
 use std::collections::VecDeque;
 
 impl Rule {
-    pub fn run(text: &str, rule: &Rule, class_template: &PyObject) -> PyResult<()> {
-        Python::with_gil(|py| -> PyResult<()> {
-            let mut stack = VecDeque::from([(rule, text)]);
-            while let Some(stack_rule) = stack.pop_front() {
-                let captures = MultiCapture::find_captures(stack_rule.0, stack_rule.1)?;
-                // dbg!("Работаем над правилом :");
-                // dbg!(&stack_rule);
-                // subrules
-                if next_or_error(py, class_template, stack_rule.0, &captures)? {
-                    let text_set: Vec<&str> = captures.into();
-                    // Простые правила
+    pub fn run(rule: &Rule, text: &str) -> NextStep {
+        let mut stack = VecDeque::from([(rule, text)]);
+        while let Some(stack_rule) = stack.pop_front() {
+            let mut captures = CaptureData::find_captures(stack_rule.0, stack_rule.1);
+            match Self::next_or_data_for_error(&stack_rule.0, &mut captures) {
+                NextStep::Go => {
                     if let Some(simple_rules) = &stack_rule
                         .0
-                        .get_content()
-                        .unwrap()
+                        .content_unchecked()
                         .subrules
                         .as_ref()
                         .unwrap()
                         .simple_rules
                     {
-                        text_set.iter().for_each(|txt| {
+                        captures.text_for_capture.iter().for_each(|txt| {
                             Rule::get_selected_rules(&simple_rules.regex_set, txt)
                                 .iter()
                                 .for_each(|index| {
                                     stack.push_back((&simple_rules.all_rules[*index], txt))
                                 });
                         });
-                        // dbg!(":: правила которые были добавлены из regexset:");
-                        // dbg!(&stack);
-                        text_set.iter().for_each(|txt| {
+                        captures.text_for_capture.iter().for_each(|txt| {
                             simple_rules.all_rules.iter().for_each(|rule| {
                                 if !stack.contains(&(rule, *txt)) {
-                                    // dbg!("Весь стэк с regex");
-                                    // dbg!(&stack);
-                                    // dbg!("то что сейчас добавил в стэк, что не было в regex set");
-                                    dbg!(&rule);
                                     stack.push_back((rule, txt));
                                 }
                             });
                         });
-                        // dbg!(":: правила которые были добавлены после regexset:");
-                        // dbg!(&stack);
                     }
                     if let Some(complex_rules) = &stack_rule
                         .0
-                        .get_content()
-                        .unwrap()
+                        .content_unchecked()
                         .subrules
                         .as_ref()
                         .unwrap()
                         .complex_rules
                     {
-                        text_set.iter().for_each(|txt| {
+                        captures.text_for_capture.iter().for_each(|txt| {
                             complex_rules
                                 .iter()
                                 .for_each(|rule| stack.push_back((rule, txt)))
                         });
                     }
-                    //    dbg!(":: последние правила, которые были добавлены из complex rules:");
-                    //     dbg!(&stack);
                 }
+                NextStep::Finish => return NextStep::Finish,
+                NextStep::Error(value) => return NextStep::Error(value),
             }
-            Ok(())
-        })
+        }
+        NextStep::Finish
     }
 }

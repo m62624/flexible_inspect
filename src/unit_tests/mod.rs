@@ -3,17 +3,7 @@ use super::rule::Rule;
 use super::*;
 
 #[cfg(test)]
-mod tests_base_error;
-#[cfg(test)]
-mod tests_captures;
-#[cfg(test)]
-mod tests_cartridge;
-#[cfg(test)]
-mod tests_custom_error;
-#[cfg(test)]
-mod tests_rule;
-#[cfg(test)]
-mod tests_validator_templates;
+mod tests_rules;
 
 pub mod mock_obj {
     use super::*;

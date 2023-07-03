@@ -16,7 +16,7 @@ impl<'py> RuleContext<'py> {
             .iter()
             .map(|packed_rule| {
                 if let Ok(rule) = packed_rule.extract::<Rule>() {
-                    match rule.get_content().unwrap().str_with_type {
+                    match rule.content_unchecked().str_with_type {
                         RegexRaw::DefaultR(_) => simple_rules.push(rule),
                         RegexRaw::FancyR(_) => complex_rules.push(rule),
                     }
@@ -31,7 +31,7 @@ impl<'py> RuleContext<'py> {
                             )))
                         }
                         RuleContext::Subelement(this_rule) => {
-                            Err(PyErr::new::<exceptions::PyTypeError, _>(format!("Expected `Rule` in the list, the child error `{}` from the parent rule `{}`",packed_rule, this_rule.get_content().unwrap().str_with_type.as_ref())))
+                            Err(PyErr::new::<exceptions::PyTypeError, _>(format!("Expected `Rule` in the list, the child error `{}` from the parent rule `{}`",packed_rule, this_rule.content_unchecked().str_with_type.as_ref())))
                         },
                     }
                 }
