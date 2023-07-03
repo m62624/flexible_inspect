@@ -1,10 +1,8 @@
-mod extend;
 mod getters;
 mod init;
-mod runner;
-pub mod slice;
+mod modifiers;
+mod slice;
 mod traits;
-//==============
 use super::*;
 
 /// --> ExceptionContainer
@@ -20,6 +18,7 @@ pub struct TakeRuleForExtend {
     pub str_with_type: RegexRaw,
     pub requirement: MatchRequirement,
     pub subrules: Option<Subrules>,
+    pub counter: Option<Counter>,
 }
 
 /// --> TakeRuleForExtend
@@ -43,6 +42,15 @@ pub enum MatchRequirement {
 pub struct Subrules {
     pub simple_rules: Option<SimpleRules>,
     pub complex_rules: Option<Vec<Rule>>,
+}
+
+#[derive(Debug, Clone, Copy)]
+pub enum Counter {
+    Only(usize),
+    /// включительно
+    MoreThan(usize),
+    /// включительно
+    LessThan(usize),
 }
 
 /// --> Subrules
