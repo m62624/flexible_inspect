@@ -1,9 +1,12 @@
-use super::rule::MatchRequirement;
-use super::rule::Rule;
+use super::rule::{MatchRequirement, Rule};
 use super::*;
 
 #[cfg(test)]
-mod tests_rules;
+mod tests_capture;
+#[cfg(test)]
+mod tests_cartridge;
+#[cfg(test)]
+mod tests_rule;
 
 pub mod mock_obj {
     use super::*;
