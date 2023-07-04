@@ -5,6 +5,7 @@ use pyo3::exceptions::{self, PyException};
 use pyo3::prelude::*;
 use pyo3::types;
 //=====================================================================
+use lazy_static::lazy_static;
 use std::collections::HashMap;
 use std::sync::Arc;
 //=====================================================================

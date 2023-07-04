@@ -39,6 +39,11 @@ class {BASE_ERROR}(Exception,metaclass={BASE_ERROR}Meta):
         @property
         def report(self):
             return self.__{MESSAGE_WITH_EXTRA_FROM_CLASS_PY}
+
+        @property
+        def {EXTRA_FROM_CLASS_PY}(self):
+            return self.__{EXTRA_FROM_CLASS_PY}
 "
+
     )
 }
