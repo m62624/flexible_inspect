@@ -52,10 +52,13 @@ impl TemplateValidator {
     ) -> PyResult<&'py PyAny> {
         let text = Self::bytes_to_string_utf8(text_bytes.as_bytes())?;
         let async_self = Arc::clone(&self.0);
+        // println!("Запущена функция для future into py");
         pyo3_asyncio::async_std::future_into_py(py, async move {
             async_std::task::spawn_blocking(|| async move {
+                // println!("Запустился отедльный таск в потоке");
                 for cartridge in &async_self.cartridges {
                     if let NextStep::Error(value) = cartridge.async_run(&text).await {
+                        // println!("Зарегал ошибку");
                         Python::with_gil(|py| -> PyResult<()> {
                             custom_error::make_error(
                                 py,
@@ -66,7 +69,9 @@ impl TemplateValidator {
                     }
                 }
                 Ok::<(), PyErr>(())
-            });
+            })
+            .await
+            .await?;
             Ok(Python::with_gil(|py| py.None()))
         })
     }
