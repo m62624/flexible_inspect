@@ -1,21 +1,40 @@
 use super::*;
 //=========================
+
+/// Модуль для получения содержимого `Rule`
 mod getters;
+/// Модуль для инициализации `Rule`
 mod init;
+/// Модуль для модификации `Rule`
 mod modifiers;
+/// Модуль для запуска `Rule`
 mod runner;
+/// Типажи, необходимо для проверок `Eq` (contains)
 mod traits;
 //==========================
+/// Модуль для проверки шага по правилу
 pub mod next;
+/// Модуль для разбиения правил на простые и сложные
 pub mod slice;
 
-/// --> ExceptionContainer
+// `Rule` - класс для хранения правила. При создания правила, автоматический
+// определеяется тип правила ( `regex default ` | `regex fancy` )
+// Идет проверка на валидность правила, + создается `RegexSet` для простых правил
+//
+// Каждый `Rule` может хранить подправила, сам же `Rule` может быть и корнем правил,
+// и подправилом. Так же `Rule` может хранить `Counter` для ограничения количества совпадений
+//
+// ( на каждое правило создаются собственные модификаторы + `RegexSet` )\
+// --> ExceptionContainer
+
+/// `Rule` - a class for storing a rule with different modifiers
 #[pyclass]
 #[derive(Debug, Clone, Default, PartialEq, Eq)]
 pub struct Rule {
     content: Option<TakeRuleForExtend>,
 }
 
+/// Содержимое `Rule`, необходим для модификаций Rule через std::mem::take\
 /// --> Rule
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct TakeRuleForExtend {
@@ -25,6 +44,9 @@ pub struct TakeRuleForExtend {
     pub counter: Option<Counter>,
 }
 
+/// `RegexRaw` - хранит тип правила и само правило, используется `Box<str>`,
+/// так как мы не можем знать размер правила, + мы не можем использовать время жизни
+/// так как используется в pyclass\
 /// --> TakeRuleForExtend
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum RegexRaw {
@@ -32,15 +54,23 @@ pub enum RegexRaw {
     FancyR(Box<str>),
 }
 
-/// --> TakeRuleForExtend
+// `MatchRequirement` - модификатор правила, является неким флагом, который
+// говорит, что по этому правилу должно быть найдено совпадение или же нет\
+// --> TakeRuleForExtend
+
+/// `MatchRequirement` - rule modifier, specifies whether a match should be found or not
 #[pyclass]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub enum MatchRequirement {
+    /// По правилу должно быть найдено совпадение
     MustBeFound,
+    /// По правилу не должно быть найдено совпадение
     MustNotBefound,
 }
 
-/// --> TakeRuleForExtend
+/// `Subrules` - хранит в себе простые и сложные правила, которые являются подправилами
+/// для текущего правила, также используется как RootRules для классов\
+/// --> TakeRuleForExtend\
 /// --> Cartridge
 #[derive(Debug, Clone)]
 pub struct Subrules {
@@ -48,14 +78,25 @@ pub struct Subrules {
     pub complex_rules: Option<Vec<Rule>>,
 }
 
+/// `Counter` - модификатор правила, является счетчиком совпадения
 #[derive(Debug, Clone, Copy)]
 pub enum Counter {
+    /// Ровно столько раз, сколько указано X
     Only(usize),
-    /// включительно
+    /// Большье или равно X
     MoreThan(usize),
-    /// включительно
+    /// Меньше или равно X
     LessThan(usize),
 }
+
+/// `SimpleRules` - хранит в себе простые правила + RegexSet
+
+/*
+   RegexSet позволяет избежать повторной компиляции регулярных выражений при выполнении нескольких проверок на одних и тех же шаблонах.
+   Он также предлагает оптимизации для эффективного сравнения множества регулярных выражений на одной строке.
+
+   Если у вас есть сотни или тысячи регулярных выражений для многократного сопоставления, то набор регулярных выражений может обеспечить огромный прирост производительности.
+*/
 
 /// --> Subrules
 #[derive(Debug, Clone)]
