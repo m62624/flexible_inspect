@@ -48,7 +48,7 @@ impl Rule {
                         });
                     }
                 }
-                NextStep::Finish => return NextStep::Finish,
+                NextStep::Finish => (),
                 NextStep::Error(value) => return NextStep::Error(value),
             }
         }

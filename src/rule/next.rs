@@ -1,7 +1,7 @@
 use super::captures::CaptureData;
 use super::*;
 
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum NextStep {
     Go,
     Finish,
@@ -19,10 +19,10 @@ impl Rule {
                     (true, true) => rule.counter_status(captures),
                     (true, false) => NextStep::Finish,
                     (false, true) => {
-                        NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)))
+                        NextStep::Error(None)
                     }
                     (false, false) => {
-                        NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)))
+                        NextStep::Error(None)
                     }
                 }
             }

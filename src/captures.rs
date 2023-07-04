@@ -76,14 +76,3 @@ impl<'s> CaptureData<'s> {
         !self.text_for_capture.is_empty()
     }
 }
-
-// #[test]
-// fn check_find_captures() {
-//     pyo3::prepare_freethreaded_python();
-//     let text = "BOB";
-//     let rule = Rule::new(String::from(r"PATRIK"), ::MatchRequirement::MustBeFound)
-//         .unwrap()
-//         .counter_is_equal(5);
-//     let captures = CaptureData::find_captures(&rule, text);
-//     dbg!(captures);
-// }

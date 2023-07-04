@@ -1,11 +1,13 @@
+use super::*;
+//=========================
 mod getters;
 mod init;
 mod modifiers;
-mod next;
 mod runner;
-mod slice;
 mod traits;
-use super::*;
+//==========================
+pub mod next;
+pub mod slice;
 
 /// --> ExceptionContainer
 #[pyclass]
