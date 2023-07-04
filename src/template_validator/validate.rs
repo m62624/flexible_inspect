@@ -25,15 +25,15 @@ impl TemplateValidator {
         py: Python<'py>,
         text_bytes: &types::PyBytes,
     ) -> PyResult<&'py PyAny> {
-        let text = Self::bytes_to_string_utf8(text_bytes.as_bytes())?;
+        let text = Arc::new(Self::bytes_to_string_utf8(text_bytes.as_bytes())?);
         let async_self = Arc::clone(&self.0);
         // println!("Запущена функция для future into py");
         pyo3_asyncio::async_std::future_into_py(py, async move {
             async_std::task::spawn_blocking(|| async move {
                 // println!("Запустился отедльный таск в потоке");
                 for cartridge in &async_self.cartridges {
-                    if let NextStep::Error(value) = cartridge.async_run(&text).await {
-                        // println!("Зарегал ошибку");
+                    if let NextStep::Error(value) = cartridge.async_run(Arc::clone(&text)).await {
+                        // println!("Зарегистрировал ошибку");
                         Python::with_gil(|py| -> PyResult<()> {
                             custom_error::make_error(
                                 py,
