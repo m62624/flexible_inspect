@@ -7,9 +7,11 @@ impl TemplateValidator {
         let mut errors = Vec::new();
         for cartridge in &self.0.cartridges {
             if let NextStep::Error(mut value) = cartridge.sync_run(&text) {
-                if let Err(err) =
-                    custom_error::make_error(py, cartridge.get_cartridge().get_py_class(), &mut value)
-                {
+                if let Err(err) = custom_error::make_error(
+                    py,
+                    cartridge.get_cartridge().get_py_class(),
+                    &mut value,
+                ) {
                     errors.push(err);
                 }
             }
@@ -32,7 +34,8 @@ impl TemplateValidator {
             async_std::task::spawn_blocking(|| async move {
                 // println!("Запустился отедльный таск в потоке");
                 for cartridge in &async_self.cartridges {
-                    if let NextStep::Error(mut value) = cartridge.async_run(Arc::clone(&text)).await {
+                    if let NextStep::Error(mut value) = cartridge.async_run(Arc::clone(&text)).await
+                    {
                         // println!("Зарегистрировал ошибку");
                         Python::with_gil(|py| -> PyResult<()> {
                             custom_error::make_error(

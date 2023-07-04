@@ -47,6 +47,5 @@ pub fn make_error(
             .downcast::<PyAny>(py)?
             .call(types::PyTuple::empty(py), Some(extra))?
             .into_py(py),
-    )
-    .into())
+    ))
 }

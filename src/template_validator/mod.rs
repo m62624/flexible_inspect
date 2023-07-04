@@ -39,10 +39,10 @@ impl TemplateSafeSelf {
             })?;
             Ok(Self { cartridges: data })
         } else {
-            return Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+            Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
                 "'{}' must be a 'List[ Class, Class... ]'",
                 cartridges
-            )));
+            )))
         }
     }
 }
