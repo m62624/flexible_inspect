@@ -9,7 +9,7 @@ pub enum NextStep {
 }
 
 impl Rule {
-    pub fn next_or_data_for_error<'a>(rule: &rule::Rule, captures: &mut CaptureData) -> NextStep {
+    pub fn next_or_data_for_error(rule: &rule::Rule, captures: &mut CaptureData) -> NextStep {
         match rule.content_unchecked().requirement {
             MatchRequirement::MustBeFound => {
                 match (
@@ -18,12 +18,8 @@ impl Rule {
                 ) {
                     (true, true) => rule.counter_status(captures),
                     (true, false) => NextStep::Finish,
-                    (false, true) => {
-                        NextStep::Error(None)
-                    }
-                    (false, false) => {
-                        NextStep::Error(None)
-                    }
+                    (false, true) => NextStep::Error(None),
+                    (false, false) => NextStep::Error(None),
                 }
             }
             MatchRequirement::MustNotBefound => {

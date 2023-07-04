@@ -1,11 +1,12 @@
 use super::rule::slice::RuleContext;
 use super::rule::{SimpleRules, Subrules as RootRules};
 use super::*;
+mod getter;
 mod runner;
 
 #[derive(Debug)]
 pub struct Cartridge {
-    py_class: PyObject,
+    pub py_class: PyObject,
     root_rules: RootRules,
 }
 #[derive(Debug)]

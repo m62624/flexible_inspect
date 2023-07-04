@@ -27,7 +27,7 @@ impl<'s> CaptureData<'s> {
                             counter += 1;
                         }
                     }
-                    re.capture_names().into_iter().for_each(|name| {
+                    re.capture_names().for_each(|name| {
                         if let Some(name) = name {
                             if let Some(value) = capture.name(name) {
                                 hashmap_for_error
@@ -51,7 +51,7 @@ impl<'s> CaptureData<'s> {
                                 counter += 1;
                             }
                         }
-                        re.capture_names().into_iter().for_each(|name| {
+                        re.capture_names().for_each(|name| {
                             if let Some(name) = name {
                                 if let Some(value) = capture.name(name) {
                                     hashmap_for_error

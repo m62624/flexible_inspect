@@ -15,7 +15,7 @@ impl CartridgeWrapper {
 
             // Правила отобранные из regexset
             for index in &selected_rules {
-                if let NextStep::Error(value) = Rule::run(&simple_rules.all_rules[*index], &text) {
+                if let NextStep::Error(value) = Rule::run(&simple_rules.all_rules[*index], text) {
                     return NextStep::Error(value);
                 }
             }
@@ -23,7 +23,7 @@ impl CartridgeWrapper {
             // Правила которые не попали в regexset
             for (index, _) in simple_rules.all_rules.iter().enumerate() {
                 if !selected_rules.contains(&index) {
-                    if let NextStep::Error(value) = Rule::run(&simple_rules.all_rules[index], &text)
+                    if let NextStep::Error(value) = Rule::run(&simple_rules.all_rules[index], text)
                     {
                         return NextStep::Error(value);
                     }
@@ -34,7 +34,7 @@ impl CartridgeWrapper {
         // Проверка сложных правил
         if let Some(complex_rules) = &self.0.root_rules.complex_rules {
             for rule in complex_rules {
-                if let NextStep::Error(value) = Rule::run(&rule, &text) {
+                if let NextStep::Error(value) = Rule::run(rule, text) {
                     return NextStep::Error(value);
                 }
             }
@@ -55,8 +55,6 @@ impl CartridgeWrapper {
         let self_for_task_1 = Arc::clone(&self.0);
         let self_for_task_2 = Arc::clone(&self.0);
         let self_for_task_3 = Arc::clone(&self.0);
-
-        
 
         tasks.push(task::spawn(async move {
             if let Some(simple_rules) = &self_for_task_1.root_rules.simple_rules {
@@ -91,7 +89,7 @@ impl CartridgeWrapper {
         tasks.push(task::spawn(async move {
             if let Some(complex_rules) = &self_for_task_3.root_rules.complex_rules {
                 for rule in complex_rules {
-                    if let NextStep::Error(value) = Rule::run(&rule, &text_3) {
+                    if let NextStep::Error(value) = Rule::run(rule, &text_3) {
                         return NextStep::Error(value);
                     }
                 }

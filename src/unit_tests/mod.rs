@@ -7,7 +7,10 @@ mod tests_capture;
 mod tests_cartridge;
 #[cfg(test)]
 mod tests_rule;
+#[cfg(test)]
+mod tests_template_validator;
 
+#[cfg(test)]
 pub mod mock_obj {
     use super::*;
 

@@ -1,7 +1,8 @@
 use super::*;
-use super::*;
 
+#[pymethods]
 impl Rule {
+    #[new]
     pub fn new(pattern: String, requirements: MatchRequirement) -> PyResult<Self> {
         Ok(Self {
             content: Some(TakeRuleForExtend::new(pattern, requirements)?),
