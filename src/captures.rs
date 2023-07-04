@@ -20,20 +20,26 @@ impl<'s> CaptureData<'s> {
         let mut counter: usize = 0;
         // флаг для проверки `Counter`
         let flag_check_counter = rule.content_unchecked().counter.is_some();
-        // На первый взгляд мы видим дублирование кода, но каждый `match` работает с разными типами
+        // На первый взгляд мы видим дублирование кода, но каждый `match` работает с разными структурами
         match &rule.content_unchecked().str_with_type {
             RegexRaw::DefaultR(pattern) => {
+                // создаем регулярное выражение
                 let re = regex::Regex::new(pattern).unwrap();
+                // получаем совпадения и повышаем `counter` по необходимости
                 re.captures_iter(text).for_each(|capture| {
                     if let Some(value) = capture.get(0) {
                         hashmap_for_error
                             .entry("main_capture".into())
                             .or_insert_with(|| value.as_str().into());
                         text_for_capture.insert(value.as_str());
+                        // в одном `regex` может быть несколько групп, но все
+                        // они нужны для получения главного совпадения, потому
+                        // повышение идет только в `main capture`
                         if flag_check_counter {
                             counter += 1;
                         }
                     }
+                    // получаем совпадения по именам группы, для заполнения `extra` в сообщений ошибки
                     re.capture_names().for_each(|name| {
                         if let Some(name) = name {
                             if let Some(value) = capture.name(name) {
@@ -46,7 +52,9 @@ impl<'s> CaptureData<'s> {
                 });
             }
             RegexRaw::FancyR(pattern) => {
+                // создаем регулярное выражение
                 let re = fancy_regex::Regex::new(pattern).unwrap();
+                // получаем совпадения и повышаем `counter` по необходимости
                 re.captures_iter(text).for_each(|capture| {
                     if let Ok(capture) = capture {
                         if let Some(value) = capture.get(0) {
@@ -54,10 +62,14 @@ impl<'s> CaptureData<'s> {
                                 .entry("main_capture".into())
                                 .or_insert_with(|| value.as_str().into());
                             text_for_capture.insert(value.as_str());
+                            // в одном `regex` может быть несколько групп, но все
+                            // они нужны для получения главного совпадения, потому
+                            // повышение идет только в `main capture`
                             if flag_check_counter {
                                 counter += 1;
                             }
                         }
+                        // получаем совпадения по именам группы, для заполнения `extra` в сообщений ошибки
                         re.capture_names().for_each(|name| {
                             if let Some(name) = name {
                                 if let Some(value) = capture.name(name) {
@@ -71,7 +83,7 @@ impl<'s> CaptureData<'s> {
                 });
             }
         }
-
+        // возвращаем структуру
         Self {
             hashmap_for_error,
             text_for_capture,

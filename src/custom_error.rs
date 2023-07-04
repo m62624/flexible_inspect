@@ -1,7 +1,7 @@
 use super::lazy_static;
 use super::*;
 
-/// Получаем extra из класса (MESSAGE_WITH_EXTRA_FROM_CLASS_PY)
+/// Получаем extra из класса (`MESSAGE_WITH_EXTRA_FROM_CLASS_PY`)
 fn extra_from_class(class_template: &types::PyType) -> PyResult<Vec<String>> {
     // Получаем значение атрибута `MESSAGE_WITH_EXTRA_FROM_CLASS_PY`
     let attr_value = class_template
@@ -12,8 +12,8 @@ fn extra_from_class(class_template: &types::PyType) -> PyResult<Vec<String>> {
         static ref RE: regex::Regex = regex::Regex::new(r"\{.+?\}").unwrap();
     }
     // Если есть совпадения, то возвращаем вектор с совпадениями
-    // Используем шаблон { что либо }, чтобы получить название переменной
-    // ( да, на данный момент, это еднственный вариант форматирования который можно исполоьзовать, чтобы получить название переменной)
+    // Используем шаблон { имя_группы }, чтобы получить название переменной
+    // (да, на данный момент, это еднственный вариант форматирования который можно исполоьзовать, чтобы получить название переменной и заполнить значением)
     if RE.is_match(&attr_value) {
         Ok(RE
             .captures_iter(&attr_value)
@@ -36,8 +36,8 @@ pub fn make_error(
 ) -> PyResult<()> {
     // Создаем словарь для extra
     let extra = types::PyDict::new(py);
-    // Получаем extra из класса, это необходимо, если есть extra переменные, которых нету в
-    // `captures` (Option<HashMap<String, String>>). Тем самым мы сможем
+    // Получаем extra из класса, это необходимо, если есть `extra` переменные, которых нету в
+    // `captures` (`Option<HashMap<String, String>>`). Тем самым мы сможем
     // заполнить пустышкой `___`, чтобы не было ошибки `KeyError`
 
     /*
