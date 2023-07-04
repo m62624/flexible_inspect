@@ -1,10 +1,18 @@
 use super::*;
 
+/// Реализация методов валидаций для API `Python`
 #[pymethods]
 impl TemplateValidator {
+    /// Synchronous text validation, unlike `async` versions,
+    /// goes through all classes, and returns a sheet, with errors based on the classes
+    ///
+    /// Main plus, it returns the entire list of failed classes at once
     pub fn validate(&self, py: Python, text_bytes: &types::PyBytes) -> PyResult<Option<PyObject>> {
+        // Проверяем байты на `UTF-8`
         let text = Self::bytes_to_string_utf8(text_bytes.as_bytes())?;
+        // Коллекция для хранения ошибок
         let mut errors = Vec::new();
+        // Проходимся 
         for cartridge in &self.0.cartridges {
             if let NextStep::Error(mut value) = cartridge.sync_run(&text) {
                 if let Err(err) = custom_error::make_error(
@@ -22,6 +30,9 @@ impl TemplateValidator {
         Ok(None)
     }
 
+    /// Asynchronous text checking, unlike `sync` versions, goes class by class, but immediately stops working at the first mismatch and returns a single error class
+    ///
+    /// Main plus, multiple rules work competitively in a single validation
     pub fn async_validate<'py>(
         &self,
         py: Python<'py>,

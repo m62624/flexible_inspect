@@ -1,5 +1,6 @@
 use super::*;
 
+/// Реализация трейта по сравнению элементов
 mod partial_eq_eq {
     use super::*;
 
@@ -32,6 +33,7 @@ mod partial_eq_eq {
     impl Eq for Counter {}
 }
 
+/// Реализация трейта для получения ссылки
 mod as_ref_str {
 
     use super::*;
