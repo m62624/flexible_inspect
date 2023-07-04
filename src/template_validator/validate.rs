@@ -33,7 +33,7 @@ impl TemplateValidator {
         for cartridge in &self.0.cartridges {
             if let NextStep::Error(value) = cartridge.sync_run(&text) {
                 if let Err(err) =
-                    custom_error::make_error(cartridge.get_cartridge().get_py_class(), value)
+                    custom_error::make_error(py, cartridge.get_cartridge().get_py_class(), value)
                 {
                     errors.push(err);
                 }
@@ -44,6 +44,7 @@ impl TemplateValidator {
         }
         Ok(None)
     }
+
     pub fn async_validate<'py>(
         &self,
         py: Python<'py>,
@@ -52,11 +53,20 @@ impl TemplateValidator {
         let text = Self::bytes_to_string_utf8(text_bytes.as_bytes())?;
         let async_self = Arc::clone(&self.0);
         pyo3_asyncio::async_std::future_into_py(py, async move {
-            for cartridge in &async_self.cartridges {
-                if let NextStep::Error(value) = cartridge.async_run(&text).await {
-                    custom_error::make_error(cartridge.get_cartridge().get_py_class(), value)?;
+            async_std::task::spawn_blocking(|| async move {
+                for cartridge in &async_self.cartridges {
+                    if let NextStep::Error(value) = cartridge.async_run(&text).await {
+                        Python::with_gil(|py| -> PyResult<()> {
+                            custom_error::make_error(
+                                py,
+                                cartridge.get_cartridge().get_py_class(),
+                                value,
+                            )
+                        })?
+                    }
                 }
-            }
+                Ok::<(), PyErr>(())
+            });
             Ok(Python::with_gil(|py| py.None()))
         })
     }
