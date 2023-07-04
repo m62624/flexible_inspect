@@ -1,5 +1,6 @@
-// #[cfg(test)]
-// mod unit_tests;
+/// Модуль для юнит тестов
+#[cfg(test)]
+mod unit_tests;
 //=====================================================================
 use pyo3::exceptions::{self, PyException};
 use pyo3::prelude::*;
@@ -21,7 +22,6 @@ mod custom_error;
 mod rule;
 /// Модуль для создания валидатора
 mod template_validator;
-mod unit_tests;
 // ============================= CONST ================================
 
 // имя модуля для `Python`
