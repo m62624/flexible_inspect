@@ -9,11 +9,17 @@ use lazy_static::lazy_static;
 use std::collections::HashMap;
 use std::sync::Arc;
 //=====================================================================
+/// Модуль для создания ошибок
 mod base_error;
+/// Модуль для получения совпадений
 mod captures;
+/// Модуль для хранения классов и их правил
 mod cartridge;
+/// Модуль для создания ошибок
 mod custom_error;
+/// Модуль для создания правил
 mod rule;
+/// Модуль для создания валидатора
 mod template_validator;
 mod unit_tests;
 // ============================= CONST ================================

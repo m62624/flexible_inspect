@@ -1,19 +1,26 @@
 use super::rule::{RegexRaw, Rule};
 use std::collections::{HashMap, HashSet};
 
+/// Структура для хранения совпадений
 #[derive(Debug)]
 pub struct CaptureData<'s> {
+    /// Хранит совпадения по именам, для заполнения `extra` в сообщений ошибки
     pub hashmap_for_error: HashMap<String, String>,
+    // Хранит совпадения по тексту, для проверок подправил
     pub text_for_capture: HashSet<&'s str>,
+    // Хранит количество совпадений, для проверки `Counter`
     pub counter_value: usize,
 }
 
 impl<'s> CaptureData<'s> {
+    /// Метод для получения совпадений
     pub fn find_captures(rule: &Rule, text: &'s str) -> Self {
         let mut hashmap_for_error = HashMap::new();
         let mut text_for_capture = HashSet::new();
         let mut counter: usize = 0;
+        // флаг для проверки `Counter`
         let flag_check_counter = rule.content_unchecked().counter.is_some();
+        // На первый взгляд мы видим дублирование кода, но каждый `match` работает с разными типами
         match &rule.content_unchecked().str_with_type {
             RegexRaw::DefaultR(pattern) => {
                 let re = regex::Regex::new(pattern).unwrap();
@@ -71,7 +78,7 @@ impl<'s> CaptureData<'s> {
             counter_value: counter,
         }
     }
-
+    /// Проверка присутствия совпадений
     pub fn is_some(&self) -> bool {
         !self.text_for_capture.is_empty()
     }
