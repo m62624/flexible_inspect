@@ -1,31 +1,35 @@
-import pystval
 import asyncio
-from pystval import Rule,MatchRequirement,TemplateValidator,PystvalException
+from pystval import Rule, MatchRequirement, TemplateValidator, PystvalException
 
 class ErrorAboba(PystvalException):
     message = "Not found aboba"
     rules = [
         Rule("aboba", MatchRequirement.MustBeFound)
     ]
-    pass
 
 class ErrorNumber(PystvalException):
     message = "found number {n}"
     rules = [
         Rule("(?P<n>\d+)", MatchRequirement.MustNotBefound)
     ]
-    pass
 
-def init():
+async def init(delay,text):
+    await asyncio.sleep(delay)
     validator = TemplateValidator([ErrorAboba, ErrorNumber])
-    list_error = validator.validate(b"aboba 123")
-    print(list_error)
-    if list_error is not None:
-        for error in list_error:
-            try:
-                raise error
-            except PystvalException as e:
-                print("work ?")
-                print(e)
+    try:
+        await validator.async_validate(text)
+    except PystvalException as e:
+        print(f"{delay}, {e.report}")
 
-init()
+async def main():
+    tasks = [
+        asyncio.create_task(init(50,b"aboba")),  
+        asyncio.create_task(init(4,b"bob")),
+        asyncio.create_task(init(6,b"HEY")),
+    ]
+
+    await asyncio.gather(*tasks)
+
+loop = asyncio.get_event_loop()
+task = loop.create_task(main())
+loop.run_until_complete(task)
