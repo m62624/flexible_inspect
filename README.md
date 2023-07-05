@@ -2,7 +2,7 @@
 
 <p align="center">
   <kbd>
-    <img src="docs/images/logo_b.svg" alt="Logo" width="600"/>
+    <img src="docs/images/logo_b.svg" alt="Logo" width="400"/>
   </kbd>
 </p>
 
@@ -11,9 +11,6 @@
   - [Quick Look](#quick-look)
   - [Installation](#installation)
   - [Regex Syntax](#regex-syntax)
-    - [](#)
-  - [The system of rule modifiers](#the-system-of-rule-modifiers)
-  - [Examples](#examples)
   - [License](#license)
 
 
@@ -25,9 +22,50 @@
 ## Quick Look
 
 ```python
- some code
-```
+from pystval import Rule, MatchRequirement, TemplateValidator, PystvalException
 
+
+class ErrorInvalidFormat(PystvalException):
+    message = "Custom error 1"
+    rules = [
+        # root rule
+        Rule("(?i)abc.+\d+", MatchRequirement.MustBeFound).extend([
+            # 1-subrule of root rule
+            Rule("\d{3}-\d{4}-\d{2}", MatchRequirement.MustBeFound).extend([
+                # 1-subrule of 1-subrule
+                Rule("^\d{3}", MatchRequirement.MustBeFound).extend(
+                    # 1-subrule of 1-subrule of 1-subrule
+                    [Rule("[0-1][1-2][1-3]", MatchRequirement.MustBeFound)]),
+                # 2-subrule of 1-subrule
+                Rule("-", MatchRequirement.MustBeFound),
+            ]),
+        ])
+    ]
+
+
+class ErrorNumber(PystvalException):
+    message = "Custom error with value : {num}"
+    rules = [
+        Rule(r"(?<num>\d+(?!\d|-|\s))", MatchRequirement.MustNotBefound)
+    ]
+
+
+def main():
+    text = b"This is a complex text with aBc_122-4567-99 and def. The number is 12345"
+    validator = TemplateValidator([ErrorInvalidFormat, ErrorNumber])
+    list_error = validator.validate(text)
+    if list_error is not None:
+        for error in list_error:
+            try:
+                raise error
+            except PystvalException as e:
+                print(e.report)
+
+
+main()
+```
+> **Output**:
+> Custom error with value : 12345
 
 ## Installation
 
@@ -44,22 +82,19 @@ pip install pystval-version-platform.whl
 
 ## Regex Syntax
 
-### 
-- [**Default-Regex**](https://docs.rs/regex/latest/regex/#syntax)
-- [**Fancy-Regex**](https://docs.rs/fancy-regex/latest/fancy_regex/#syntax)
-OR
+When the `Rule` is created, the complexity of the rule is determined based on the presence of leading and retrospective checks in the regular expression. Below is a description of how the library classifies the complexity of a rule:
+
+ - Fancy Regex: If a regular expression contains leading or retrospective checks (lookahead/lookbehind), the rule is considered "fancy". This is because lookahead and lookbehind checks require more complex processing algorithms and can have high computational complexity.
+
+- Default Regex: If a regular expression does not contain leading or retrospective checks, it is considered "default". In this case, the default regular expression algorithm is used, which usually has lower computational complexity.
+
+When creating rules without leading or retrospective checks, `RegexSet` is used. `RegexSet` allows you to compile and combine many regular expressions into a single data structure, which can have a positive impact on performance when doing mass match checking.
+
+More information on syntax :
+- [Default-Regex](https://docs.rs/regex/latest/regex/#syntax)
+- [Fancy-Regex](https://docs.rs/fancy-regex/latest/fancy_regex/#syntax)
+Or
 - [the same as those links, but with only a syntax table ](docs/syntax_regex/regex.md)
-
-## The system of rule modifiers
-
-## Examples
-- [A simple example with fn `validate`](docs/examples/example_1.md)
-- [A simple example with fn `async validate`](docs/examples/example_2.md)
-- [An example with a large nesting of rules](docs/examples/example_3.md)
-- [A simple `html` validator example](docs/examples/example_4.md)
-- [A simple `css` validator example](docs/examples/example_5.md)
-- [An example of a text search using complex criteria](docs/examples/example_6.md)
-
 
 ## License
 
