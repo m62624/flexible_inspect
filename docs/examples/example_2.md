@@ -1,3 +1,4 @@
+```python
 import asyncio
 from pystval import Rule, MatchRequirement, TemplateValidator, PystvalException
 
@@ -39,3 +40,4 @@ async def main():
 loop = asyncio.get_event_loop()
 task = loop.create_task(main())
 loop.run_until_complete(task)
+```
