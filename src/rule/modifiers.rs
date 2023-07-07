@@ -52,3 +52,7 @@ impl Rule {
         std::mem::take(self)
     }
 }
+
+impl Rule {
+
+}

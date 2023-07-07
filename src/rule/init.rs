@@ -17,6 +17,7 @@ impl TakeRuleForExtend {
             requirement: requirements,
             subrules: None,
             counter: None,
+            mod_match: ModeMatch::AllRulesForAllMatches,
         })
     }
 }

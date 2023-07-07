@@ -2,6 +2,8 @@ use super::rule::{MatchRequirement, Rule};
 use super::*;
 
 #[cfg(test)]
+mod test_nested_rules;
+#[cfg(test)]
 mod tests_capture;
 #[cfg(test)]
 mod tests_cartridge;
@@ -17,6 +19,13 @@ pub mod mock_obj {
     #[pyclass]
     pub struct CustomClassError {}
 
+    #[pymethods]
+    impl CustomClassError {
+        #[new]
+        fn new() -> Self {
+            Self {}
+        }
+    }
     /// Создаем объект `Rule` для тестов
     pub fn make_obj(py: Python, message: &str, rules: Option<Vec<Rule>>) -> PyObject {
         let obj = types::PyType::new::<CustomClassError>(py);

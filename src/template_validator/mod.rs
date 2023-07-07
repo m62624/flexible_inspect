@@ -47,6 +47,7 @@ impl TemplateSafeSelf {
                     )))
                 }
             })?;
+
             // Возвращаем структуру
             Ok(Self { cartridges: data })
         } else {

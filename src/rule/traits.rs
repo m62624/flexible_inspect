@@ -2,6 +2,8 @@ use super::*;
 
 /// Реализация трейта по сравнению элементов
 mod partial_eq_eq {
+    use crate::captures::CaptureData;
+
     use super::*;
 
     impl PartialEq for Subrules {
@@ -31,6 +33,21 @@ mod partial_eq_eq {
         }
     }
     impl Eq for Counter {}
+
+    impl PartialEq for ModeMatch {
+        fn eq(&self, other: &Self) -> bool {
+            core::mem::discriminant(self) == core::mem::discriminant(other)
+        }
+    }
+    impl Eq for ModeMatch {}
+
+    impl<'a> PartialEq for CaptureData<'a> {
+        fn eq(&self, other: &Self) -> bool {
+            self.text_for_capture == other.text_for_capture
+                && self.hashmap_for_error == other.hashmap_for_error
+                && self.counter_value == other.counter_value
+        }
+    }
 }
 
 /// Реализация трейта для получения ссылки

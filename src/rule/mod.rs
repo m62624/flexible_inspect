@@ -42,6 +42,7 @@ pub struct TakeRuleForExtend {
     pub requirement: MatchRequirement,
     pub subrules: Option<Subrules>,
     pub counter: Option<Counter>,
+    pub mod_match: ModeMatch,
 }
 
 /// `RegexRaw` - хранит тип правила и само правило, используется `Box<str>`,
@@ -87,6 +88,14 @@ pub enum Counter {
     MoreThan(usize),
     /// Меньше или равно X
     LessThan(usize),
+}
+
+#[derive(Debug, Clone)]
+pub enum ModeMatch {
+    AllRulesForAllMatches,
+    AllRulesForAtLeastOneMatch,
+    OneRuleForAllMatches,
+    AtLeastOneRuleForAtLeastOneMatch,
 }
 
 /// `SimpleRules` - хранит в себе простые правила + RegexSet
