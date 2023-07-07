@@ -2,11 +2,11 @@ use super::rule::{MatchRequirement, Rule};
 use super::*;
 
 #[cfg(test)]
-mod tests_modes;
-#[cfg(test)]
 mod tests_capture;
 #[cfg(test)]
 mod tests_cartridge;
+#[cfg(test)]
+mod tests_modes_c;
 #[cfg(test)]
 mod tests_rule;
 #[cfg(test)]

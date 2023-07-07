@@ -52,19 +52,7 @@ impl Subrules {
 impl SimpleRules {
     pub fn new(all_rules: Vec<Rule>) -> Self {
         Self {
-            regex_set: regex::RegexSet::new(
-                &all_rules
-                    .iter()
-                    .filter(|rule| {
-                        matches!(
-                            rule.content_unchecked().requirement,
-                            MatchRequirement::MustBeFound
-                        )
-                    })
-                    .map(|rule| rule.as_ref())
-                    .collect::<Vec<&str>>(),
-            )
-            .unwrap(),
+            regex_set: regex::RegexSet::new(&all_rules).unwrap(),
             all_rules,
         }
     }
