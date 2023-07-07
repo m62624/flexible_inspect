@@ -40,7 +40,7 @@ class MatchRequirement(enum.Enum):
     """
     It must be found, otherwise an exception will be thrown
     """
-    MustNotBefound = 1
+    MustNotBeFound = 1
     """
     It is not to be found here, otherwise an exception will be raised
     """
@@ -102,6 +102,8 @@ class Rule:
         Adding a match counter, where the condition is: there must be less than or equal to `count` matches
         """
         ...
+
+    
 
 
 class TemplateValidator:

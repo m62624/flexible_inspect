@@ -7,7 +7,7 @@ mod fn_new {
     fn new_t_0() -> PyResult<()> {
         pyo3::prepare_freethreaded_python();
         Python::with_gil(|py| -> PyResult<()> {
-            let rule1 = Rule::spawn(r"(?P<number>\d+)", MatchRequirement::MustNotBefound)?;
+            let rule1 = Rule::spawn(r"(?P<number>\d+)", MatchRequirement::MustNotBeFound)?;
             let class_py = mock_obj::make_obj(py, "test", Some(vec![rule1]));
 
             let template_val = template_validator::TemplateValidator::new(

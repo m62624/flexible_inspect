@@ -25,10 +25,10 @@ mod mode_all_rules_for_all_matches {
                                 py,
                                 vec![
                                     Rule::spawn(r"(?P<number>\d+)", MatchRequirement::MustBeFound)?,
-                                    Rule::spawn(r"BOBA", MatchRequirement::MustNotBefound)?,
+                                    Rule::spawn(r"BOBA", MatchRequirement::MustNotBeFound)?,
                                 ],
                             )?,
-                        Rule::spawn(r"ABOBA", MatchRequirement::MustNotBefound)?,
+                        Rule::spawn(r"ABOBA", MatchRequirement::MustNotBeFound)?,
                         Rule::spawn(r".*", MatchRequirement::MustBeFound)?,
                         Rule::spawn(r".+", MatchRequirement::MustBeFound)?,
                     ],
@@ -64,8 +64,8 @@ mod mode_all_rules_for_at_least_one_match {
                     py,
                     vec![
                         Rule::spawn(r"(?P<subrule>\[.+\])", MatchRequirement::MustBeFound)?,
-                        Rule::spawn(r"ABOBA", MatchRequirement::MustNotBefound)?,
-                        Rule::spawn(r"\d+", MatchRequirement::MustNotBefound)?,
+                        Rule::spawn(r"ABOBA", MatchRequirement::MustNotBeFound)?,
+                        Rule::spawn(r"\d+", MatchRequirement::MustNotBeFound)?,
                         Rule::spawn(r".*", MatchRequirement::MustBeFound)?,
                         Rule::spawn(r".+", MatchRequirement::MustBeFound)?,
                     ],

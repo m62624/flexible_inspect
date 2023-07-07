@@ -20,7 +20,7 @@ mod fn_new {
                     Rule::spawn(r"aboba", MatchRequirement::MustBeFound)?,
                     Rule::spawn(r"aboba(?=end)", MatchRequirement::MustBeFound)?.extend_t(
                         py,
-                        vec![Rule::spawn("bob", MatchRequirement::MustNotBefound)?],
+                        vec![Rule::spawn("bob", MatchRequirement::MustNotBeFound)?],
                     )?,
                 ]),
             );

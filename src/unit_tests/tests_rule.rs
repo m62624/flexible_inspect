@@ -14,11 +14,11 @@ mod fn_new {
         Ok(())
     }
 
-    /// Создаем правило с помощью конструктора `Regex` (MatchRequirement::MustNotBefound)
+    /// Создаем правило с помощью конструктора `Regex` (MatchRequirement::MustNotBeFound)
     #[test]
     fn new_t_1() -> PyResult<()> {
         pyo3::prepare_freethreaded_python();
-        dbg!(Rule::spawn(r"\w", MatchRequirement::MustNotBefound)?);
+        dbg!(Rule::spawn(r"\w", MatchRequirement::MustNotBeFound)?);
         Ok(())
     }
 
@@ -30,11 +30,11 @@ mod fn_new {
         Ok(())
     }
 
-    /// Создаем правило с помощью конструктора `Fancy Regex` (MatchRequirement::MustNotBefound)
+    /// Создаем правило с помощью конструктора `Fancy Regex` (MatchRequirement::MustNotBeFound)
     #[test]
     fn new_t_3() -> PyResult<()> {
         pyo3::prepare_freethreaded_python();
-        dbg!(Rule::spawn(r"\w(?=:D)", MatchRequirement::MustNotBefound)?);
+        dbg!(Rule::spawn(r"\w(?=:D)", MatchRequirement::MustNotBeFound)?);
         Ok(())
     }
 
@@ -43,7 +43,7 @@ mod fn_new {
     #[should_panic]
     fn new_e_0() {
         pyo3::prepare_freethreaded_python();
-        dbg!(Rule::spawn(r"(?P<invalid)", MatchRequirement::MustNotBefound).unwrap());
+        dbg!(Rule::spawn(r"(?P<invalid)", MatchRequirement::MustNotBeFound).unwrap());
     }
 }
 
@@ -205,7 +205,7 @@ mod fn_run {
                 let rule = Rule::spawn(r".+", MatchRequirement::MustBeFound)?.extend_t(
                     py,
                     vec![
-                        Rule::spawn(r"glg", MatchRequirement::MustNotBefound)?,
+                        Rule::spawn(r"glg", MatchRequirement::MustNotBeFound)?,
                         Rule::spawn(r"\[\d+\]", MatchRequirement::MustBeFound)?,
                         Rule::spawn(r"gl (?=gl)", MatchRequirement::MustBeFound)?,
                     ],
@@ -258,29 +258,29 @@ mod fn_run {
             })
         }
 
-        /// MustNotBefound, Captures - True, Subrules - true, Counter - None
+        /// MustNotBeFound, Captures - True, Subrules - true, Counter - None
         #[test]
         fn run_t_4() -> PyResult<()> {
             pyo3::prepare_freethreaded_python();
             Python::with_gil(|py| -> PyResult<()> {
                 let text = "text text [234 451] text text [text]";
-                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustNotBefound)?
+                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustNotBeFound)?
                     .extend_t(py, vec![Rule::spawn(r"\d", MatchRequirement::MustBeFound)?])?;
                 assert_eq!(Rule::run(&rule, text), NextStep::Error(None));
                 Ok(())
             })
         }
 
-        /// MustNotBefound, Captures - True, Subrules - true, Counter - None
+        /// MustNotBeFound, Captures - True, Subrules - true, Counter - None
         #[test]
         fn run_t_5() -> PyResult<()> {
             pyo3::prepare_freethreaded_python();
             Python::with_gil(|py| -> PyResult<()> {
                 let text = "text text [234 451] text text [text]";
-                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustNotBefound)?
+                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustNotBeFound)?
                     .extend_t(
                         py,
-                        vec![Rule::spawn(r"\d+", MatchRequirement::MustNotBefound)?],
+                        vec![Rule::spawn(r"\d+", MatchRequirement::MustNotBeFound)?],
                     )?;
                 if let NextStep::Error(v) = Rule::run(&rule, text) {
                     assert_eq!(v.is_some(), true);
@@ -291,13 +291,13 @@ mod fn_run {
             })
         }
 
-        /// MustNotBefound, Captures - False, Subrules - true, Counter - None
+        /// MustNotBeFound, Captures - False, Subrules - true, Counter - None
         #[test]
         fn run_t_6() -> PyResult<()> {
             pyo3::prepare_freethreaded_python();
             Python::with_gil(|py| -> PyResult<()> {
                 let text = "text text text text";
-                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustNotBefound)
+                let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustNotBeFound)
                     .unwrap()
                     .extend_t(
                         py,

@@ -48,7 +48,7 @@ impl Rule {
                 }
             }
             // совпадение не должно быть найдено
-            MatchRequirement::MustNotBefound => {
+            MatchRequirement::MustNotBeFound => {
                 match (
                     // резльутат совпадения
                     captures.is_some(),
