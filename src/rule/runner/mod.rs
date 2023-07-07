@@ -28,6 +28,7 @@ impl Rule {
     pub fn run(rule: &Rule, text: &str) -> NextStep {
         let mut stack = VecDeque::from([(rule, CaptureData::find_captures(rule, text))]);
         while !stack.is_empty() {
+            dbg!(&stack);
             match rule.content_unchecked().mod_match {
                 ModeMatch::AllRulesForAllMatches => {
                     if let NextStep::Error(v) = Self::all_rules_for_all_matches(&mut stack) {

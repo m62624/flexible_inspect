@@ -29,20 +29,12 @@ impl Rule {
                                 temp_stack.push_back((&simple_rules.all_rules[index], captures));
                             }
                         }
+                        stack.extend(temp_stack.drain(..));
                         for text in frame.1.text_for_capture.iter() {
                             for rule in simple_rules.all_rules.iter() {
                                 let mut captures = CaptureData::find_captures(rule, text);
-                                if !stack.iter().any(|(r, c)| {
-                                    dbg!("сравнение");
-
-                                    dbg!(format!(
-                                        "{:#?} != {:#?}",
-                                        rule.content_unchecked().str_with_type,
-                                        r.content_unchecked().str_with_type
-                                    ));
-                                    *r == rule && *c == captures
-                                }) {
-                                    // dbg!("то что не попало в regexset");
+                                if !stack.iter().any(|&(r, _)| r == rule) {
+                                    dbg!("то что не попало в regexset");
                                     dbg!(&rule.content_unchecked().str_with_type);
                                     if let NextStep::Error(value) =
                                         Self::next_or_data_for_error(rule, &mut captures)
