@@ -225,7 +225,7 @@ mod fn_run {
                     py,
                     vec![Rule::spawn(r"\d+", MatchRequirement::MustBeFound)?],
                 )?;
-                assert_eq!(Rule::run(&rule, text), NextStep::Error(None));
+                assert_eq!(Rule::run(&rule, text), NextStep::Finish);
                 Ok(())
             })
         }
@@ -266,7 +266,7 @@ mod fn_run {
                 let text = "text text [234 451] text text [text]";
                 let rule = Rule::spawn(r"\[[^\[\]]+\]", MatchRequirement::MustNotBefound)?
                     .extend_t(py, vec![Rule::spawn(r"\d", MatchRequirement::MustBeFound)?])?;
-                assert_eq!(Rule::run(&rule, text), NextStep::Error(None));
+                assert_eq!(Rule::run(&rule, text), NextStep::Finish);
                 Ok(())
             })
         }

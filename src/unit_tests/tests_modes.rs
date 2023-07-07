@@ -2,10 +2,10 @@ use super::mock_obj;
 use super::template_validator::TemplateValidator;
 use super::*;
 
-mod example_1 {
+mod mode_all_rules_for_all_matches {
     use super::*;
     #[test]
-    fn test_t_1() -> PyResult<()> {
+    fn runner_t_0() -> PyResult<()> {
         pyo3::prepare_freethreaded_python();
         Python::with_gil(|py| -> PyResult<()> {
             let text = "[[AL_XL_191_KJ_OL]]";
@@ -19,19 +19,17 @@ mod example_1 {
                             Rule::spawn(r"(?P<subrule>\[.+\])", MatchRequirement::MustBeFound)?
                                 .extend_t(
                                     py,
-                                    vec![Rule::spawn(
-                                        r"(?P<number>\d+)",
-                                        MatchRequirement::MustBeFound,
-                                    )?],
+                                    vec![
+                                        Rule::spawn(
+                                            r"(?P<number>\d+)",
+                                            MatchRequirement::MustBeFound,
+                                        )?,
+                                        Rule::spawn(r"BOBA", MatchRequirement::MustNotBefound)?,
+                                    ],
                                 )?,
-                            Rule::spawn(
-                                r".*",
-                                MatchRequirement::MustBeFound,
-                            )?,
-                            Rule::spawn(
-                                r".+",
-                                MatchRequirement::MustBeFound,
-                            )?,
+                            Rule::spawn(r"ABOBA", MatchRequirement::MustNotBefound)?,
+                            Rule::spawn(r".*", MatchRequirement::MustBeFound)?,
+                            Rule::spawn(r".+", MatchRequirement::MustBeFound)?,
                         ],
                     )?]),
             );

@@ -2,7 +2,7 @@ use super::rule::{MatchRequirement, Rule};
 use super::*;
 
 #[cfg(test)]
-mod test_nested_rules;
+mod tests_modes;
 #[cfg(test)]
 mod tests_capture;
 #[cfg(test)]
