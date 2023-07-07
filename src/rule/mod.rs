@@ -90,6 +90,7 @@ pub enum Counter {
     LessThan(usize),
 }
 
+#[pyclass]
 #[derive(Debug, Clone)]
 pub enum ModeMatch {
     AllRulesForAllMatches,

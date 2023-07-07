@@ -34,6 +34,30 @@ impl Rule {
         )))
     }
 
+    /// All subrules should work successfully for all matches (text)
+    pub fn mode_all_rules_for_all_matches(&mut self) -> Self {
+        self.content_mut_unchecked().mod_match = ModeMatch::AllRulesForAllMatches;
+        std::mem::take(self)
+    }
+
+    /// All subrules should work successfully for at least one match (text)
+    pub fn mode_all_rules_for_at_least_one_match(&mut self) -> Self {
+        self.content_mut_unchecked().mod_match = ModeMatch::AllRulesForAtLeastOneMatch;
+        std::mem::take(self)
+    }
+
+    /// At least one rule should work successfully for all matches
+    pub fn mode_one_rule_for_all_matches(&mut self) -> Self {
+        self.content_mut_unchecked().mod_match = ModeMatch::OneRuleForAllMatches;
+        std::mem::take(self)
+    }
+
+    /// At least one rule should work successfully for at least one match
+    pub fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self {
+        self.content_mut_unchecked().mod_match = ModeMatch::AtLeastOneRuleForAtLeastOneMatch;
+        std::mem::take(self)
+    }
+
     /// adding a match counter, exactly as many times as X is specified
     pub fn counter_is_equal(&mut self, count: usize) -> Self {
         self.content_mut_unchecked().counter = Some(Counter::Only(count));
@@ -53,6 +77,4 @@ impl Rule {
     }
 }
 
-impl Rule {
-
-}
+impl Rule {}
