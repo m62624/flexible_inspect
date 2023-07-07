@@ -47,8 +47,8 @@ impl Rule {
     }
 
     /// At least one rule should work successfully for all matches
-    pub fn mode_one_rule_for_all_matches(&mut self) -> Self {
-        self.content_mut_unchecked().mod_match = ModeMatch::OneRuleForAllMatches;
+    pub fn mod_at_least_one_rule_for_all_matches(&mut self) -> Self {
+        self.content_mut_unchecked().mod_match = ModeMatch::AtLeastOneRuleForAllMatches;
         std::mem::take(self)
     }
 

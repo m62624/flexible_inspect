@@ -93,9 +93,13 @@ pub enum Counter {
 #[pyclass]
 #[derive(Debug, Clone)]
 pub enum ModeMatch {
+    /// Все подправила должны сработать успешно для всех совпадений
     AllRulesForAllMatches,
+    /// Все подправила должны сработать успешно хотя бы для одного совпадения
     AllRulesForAtLeastOneMatch,
-    OneRuleForAllMatches,
+    /// Хотя бы одно правило должно сработать успешно для всех совпадений
+    AtLeastOneRuleForAllMatches,
+    /// Хотя бы одно правило должно сработать успешно хотя бы для одного совпадения
     AtLeastOneRuleForAtLeastOneMatch,
 }
 

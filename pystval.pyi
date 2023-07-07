@@ -103,7 +103,29 @@ class Rule:
         """
         ...
 
-    
+    def mode_all_rules_for_all_matches(self) -> None:
+        """
+        All subrules should work successfully for all matches (text)
+        """
+        ...
+
+    def mode_all_rules_for_at_least_one_match(self) -> None:
+        """
+        All subrules should work successfully for at least one match (text)
+        """
+        ...
+
+    def mod_at_least_one_rule_for_all_matches(self) -> None:
+        """
+        At least one rule should work successfully for all matches
+        """
+        ...
+
+    def mode_at_least_one_rule_for_at_least_one_match(self) -> None:
+        """
+        At least one rule should work successfully for at least one match
+        """
+        ...
 
 
 class TemplateValidator:

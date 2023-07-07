@@ -42,7 +42,7 @@ impl Rule {
                         return NextStep::Error(v);
                     }
                 }
-                ModeMatch::OneRuleForAllMatches => {}
+                ModeMatch::AtLeastOneRuleForAllMatches => {}
                 ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {}
             }
         }
