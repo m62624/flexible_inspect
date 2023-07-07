@@ -2,8 +2,8 @@ use super::captures::CaptureData;
 use super::next::NextStep;
 use super::*;
 use std::collections::VecDeque;
-
 mod context_match;
+
 impl Rule {
     /// Главный метод для итерационного запуска правила
     /// Проходит по всем подправилам, и так до самого конца для каждого `Rule`
@@ -28,7 +28,7 @@ impl Rule {
     pub fn run(rule: &Rule, text: &str) -> NextStep {
         let mut stack = VecDeque::from([(rule, CaptureData::find_captures(rule, text))]);
         while !stack.is_empty() {
-            dbg!(&stack);
+            // dbg!(&stack);
             match rule.content_unchecked().mod_match {
                 ModeMatch::AllRulesForAllMatches => {
                     if let NextStep::Error(v) = Self::all_rules_for_all_matches(&mut stack) {
