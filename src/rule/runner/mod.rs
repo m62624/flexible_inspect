@@ -1,7 +1,7 @@
 use super::captures::CaptureData;
 use super::next::NextStep;
 use super::*;
-use log::info;
+use log::{info, trace};
 use std::collections::VecDeque;
 mod context_match;
 

@@ -22,7 +22,7 @@ mod mode_all_rules_for_all_matches {
                                     vec![
                                         Rule::spawn(
                                             r"(?P<number>\d+)",
-                                            MatchRequirement::MustBeFound,
+                                            MatchRequirement::MustNotBeFound,
                                         )?,
                                         Rule::spawn(r"BOBA", MatchRequirement::MustNotBeFound)?,
                                     ],

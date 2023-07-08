@@ -1,6 +1,6 @@
 use super::captures::CaptureData;
 use super::*;
-
+use log::info;
 /// Перечисление для определения следующего шага.
 /// Используется вместо `bool`, для упрощения понимания кода,
 /// любые новые модификаторы должны возвращать `NextStep`, тем самым
@@ -19,6 +19,15 @@ impl Rule {
     /// Главный метод для получения разрешения запуска правила
     /// Все новые модификаторы, должны добавляться сюда
     pub fn next_or_data_for_error(rule: &rule::Rule, captures: &mut CaptureData) -> NextStep {
+        // ================= (LOG) =================
+        info!(
+            "\nRule: (`{}`, `{:#?}`),\n`Captures: {:#?}`,\n",
+            rule.as_ref(),
+            rule.content_unchecked().requirement,
+            captures.text_for_capture
+        );
+        // =========================================
+
         // Итак, что здесь происходит ?
         // Зависит от модификатора, мы либо идем дальше, либо завершаемся
         match rule.content_unchecked().requirement {
@@ -92,6 +101,15 @@ impl Rule {
             match value {
                 // Если совпадений равно по условию, то проходим дальше
                 Counter::Only(value) => {
+                    // ================= (LOG) =================
+                    info!(
+                        "\nRule: `{}`,\rule counter {},\na total of {} matches found",
+                        self.as_ref(),
+                        value,
+                        captures.counter_value
+                    );
+                    // =========================================
+
                     if captures.counter_value == value {
                         return NextStep::Go;
                     }
@@ -99,6 +117,14 @@ impl Rule {
                 }
                 // Если совпадений больше или равно по условию, то проходим дальше
                 Counter::MoreThan(value) => {
+                    // ================= (LOG) =================
+                    info!(
+                        "\nRule: `{}`,\rule counter {},\na total of {} matches found",
+                        self.as_ref(),
+                        value,
+                        captures.counter_value
+                    );
+                    // =========================================
                     if captures.counter_value >= value {
                         return NextStep::Go;
                     }
@@ -106,6 +132,15 @@ impl Rule {
                 }
                 // Если совпадений меньше или равно по условию, то проходим дальше
                 Counter::LessThan(value) => {
+                    // ================= (LOG) =================
+                    info!(
+                        "\nRule: `{}`,\rule counter {},\na total of {} matches found",
+                        self.as_ref(),
+                        value,
+                        captures.counter_value
+                    );
+                    // =========================================
+
                     if captures.counter_value <= value {
                         return NextStep::Go;
                     }

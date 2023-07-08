@@ -13,6 +13,14 @@ impl Rule {
         let mut temp_stack: VecDeque<(&Rule, CaptureData)> = VecDeque::new();
         // Начнем проход по `stack`, `stack_temp` будет расширять `stack`
         while let Some(mut frame) = stack.pop_front() {
+            // ================= (LOG) =================
+            trace!(
+                "Started rule (`{}`, `{:#?}`) from the stack",
+                frame.0.as_ref(),
+                frame.0.content_unchecked().requirement
+            );
+            // =========================================
+
             // Проверяем, что мы можем продолжить выполнение правила, если нет, то либо пропуск, либо ошибка
             match Self::next_or_data_for_error(frame.0, &mut frame.1) {
                 NextStep::Go => {
@@ -42,6 +50,17 @@ impl Rule {
                                     &simple_rules.all_rules[index],
                                     &mut captures,
                                 ) {
+                                    // ================= (LOG) =================
+                                    error!(
+                                        "The rule (`{}`, `{:#?}`) did not work for text : `{}`",
+                                        &simple_rules.all_rules[index].as_ref(),
+                                        &simple_rules.all_rules[index]
+                                            .content_unchecked()
+                                            .requirement,
+                                        text
+                                    );
+                                    // =========================================
+
                                     return NextStep::Error(value);
                                 }
                                 // Загружаем во временный стек если успех

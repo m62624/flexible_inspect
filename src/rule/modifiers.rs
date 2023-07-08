@@ -99,6 +99,7 @@ impl Rule {
             "used the `mode_at_least_one_rule_for_at_least_one_match` modifier for `Rule` ( `{}` )",
             self.content_unchecked().str_with_type.as_ref()
         );
+        
         // =========================================
 
         std::mem::take(self)
