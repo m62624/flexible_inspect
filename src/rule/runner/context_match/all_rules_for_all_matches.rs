@@ -18,6 +18,7 @@ impl Rule {
                 NextStep::Go => {
                     // По каждому тексту в `text_for_capture` мы будем искать совпадения
                     for text in frame.1.text_for_capture.iter() {
+                        // dbg!(text);
                         if let Some(simple_rules) = &frame
                             .0
                             .content_unchecked()
@@ -29,6 +30,7 @@ impl Rule {
                             // 1 Этап
                             // Получаем правила из `RegexSet`
                             for index in Rule::get_selected_rules(&simple_rules.regex_set, text) {
+                                // dbg!(&simple_rules.all_rules[index].as_ref());
                                 // dbg!(index);
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(
@@ -52,7 +54,7 @@ impl Rule {
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Проверяем, что мы не обрабатывали это правило ранее
                                 if !stack.iter().any(|&(r, _)| r == rule) {
-                                    // dbg!(rule);
+                                    // dbg!(rule.as_ref());
                                     // Сразу узнаем, что будет дальше, если ошибка, то выходим из функции
                                     if let NextStep::Error(value) =
                                         Self::next_or_data_for_error(rule, &mut captures)
@@ -75,6 +77,7 @@ impl Rule {
                             // 3 Этап
                             // Получаем сложные правила
                             for rule in complex_rules {
+                                // dbg!(rule);
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Сразу узнаем, что будет дальше, если ошибка, то выходим из функции

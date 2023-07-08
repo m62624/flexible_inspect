@@ -1,5 +1,6 @@
 use super::cartridge::CartridgeWrapper;
 use super::custom_error;
+use super::init_logger;
 use super::rule::next::NextStep;
 use super::*;
 // =================================
@@ -24,7 +25,19 @@ impl TemplateValidator {
     /// The Constructor, takes classes (API for `Python`)
     #[new]
     pub fn new(py: Python, cartridges: PyObject) -> PyResult<Self> {
-        Ok(Self(Arc::new(TemplateSafeSelf::new(py, cartridges)?)))
+        init_logger();
+        let slf = Self(Arc::new(TemplateSafeSelf::new(py, cartridges)?));
+        {
+            debug!(
+                "loaded classes in the validator: {:#?}",
+                slf.0
+                    .cartridges
+                    .iter()
+                    .map(|x| x.get_cartridge().py_class.to_string())
+                    .collect::<Vec<_>>()
+            );
+        }
+        Ok(slf)
     }
 }
 

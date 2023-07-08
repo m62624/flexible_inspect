@@ -46,6 +46,15 @@ pub fn make_error(
     Для этого мы получаем `extra` из класса и заполняем `extra_with_value` пустышкой `___`.
      */
     let extra_from_class = extra_from_class(custom_class_error.downcast::<types::PyType>(py)?)?;
+
+    // ================= (LOG) =================
+    debug!(
+        "Received variables to fill the `{}` message: {:#?}",
+        custom_class_error.to_string(),
+        extra_from_class
+    );
+    // =========================================
+
     // Если есть `extra_with_value`, то мы заполняем `extra` значениями из `extra_with_value`
     if let Some(extra_with_value) = extra_with_value {
         // Заполняем `extra_with_value` пустышкой `___`, при необходимости

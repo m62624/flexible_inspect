@@ -24,6 +24,14 @@ impl Rule {
                     SimpleRules::new(simple_collection),
                     complex_collection,
                 ));
+
+                // ================= (LOG) =================
+                debug!(
+                    "used the `extend` modifier for `Rule` ( `{}` )",
+                    self.content_unchecked().str_with_type.as_ref()
+                );
+                // =========================================
+
                 // Возвращаем правило, которое было взято из владения
                 return Ok(std::mem::take(self));
             }
@@ -37,44 +45,98 @@ impl Rule {
     /// All subrules should work successfully for all matches (text)
     pub fn mode_all_rules_for_all_matches(&mut self) -> Self {
         self.content_mut_unchecked().mod_match = ModeMatch::AllRulesForAllMatches;
+
+        // ================= (LOG) =================
+        debug!(
+            "used the `mode_all_rules_for_all_matches` modifier for `Rule` ( `{}` )",
+            self.content_unchecked().str_with_type.as_ref()
+        );
+        // =========================================
+
         std::mem::take(self)
     }
 
     /// All subrules should work successfully for at least one match (text)
     pub fn mode_all_rules_for_at_least_one_match(&mut self) -> Self {
         self.content_mut_unchecked().mod_match = ModeMatch::AllRulesForAtLeastOneMatch;
+
+        // ================= (LOG) =================
+        debug!(
+            "used the `mode_all_rules_for_at_least_one_match` modifier for `Rule` ( `{}` )",
+            self.content_unchecked().str_with_type.as_ref()
+        );
+        // =========================================
+
         std::mem::take(self)
     }
 
     /// At least one rule should work successfully for all matches
     pub fn mod_at_least_one_rule_for_all_matches(&mut self) -> Self {
         self.content_mut_unchecked().mod_match = ModeMatch::AtLeastOneRuleForAllMatches;
+
+        // ================= (LOG) =================
+        debug!(
+            "used the `mod_at_least_one_rule_for_all_matches` modifier for `Rule` ( `{}` )",
+            self.content_unchecked().str_with_type.as_ref()
+        );
+        // =========================================
+
         std::mem::take(self)
     }
 
     /// At least one rule should work successfully for at least one match
     pub fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self {
         self.content_mut_unchecked().mod_match = ModeMatch::AtLeastOneRuleForAtLeastOneMatch;
+
+        // ================= (LOG) =================
+        debug!(
+            "used the `mode_at_least_one_rule_for_at_least_one_match` modifier for `Rule` ( `{}` )",
+            self.content_unchecked().str_with_type.as_ref()
+        );
+        // =========================================
+
         std::mem::take(self)
     }
 
     /// adding a match counter, exactly as many times as X is specified
     pub fn counter_is_equal(&mut self, count: usize) -> Self {
         self.content_mut_unchecked().counter = Some(Counter::Only(count));
+
+        // ================= (LOG) =================
+        debug!(
+            "used the `counter_is_equal` modifier for `Rule` ( `{}` )",
+            self.content_unchecked().str_with_type.as_ref()
+        );
+        // =========================================
+
         std::mem::take(self)
     }
 
     /// adding a counter of matches greater than or equal to X
     pub fn counter_more_than(&mut self, count: usize) -> Self {
         self.content_mut_unchecked().counter = Some(Counter::MoreThan(count));
+
+        // ================= (LOG) =================
+        debug!(
+            "used the `counter_more_than` modifier for `Rule` ( `{}` )",
+            self.content_unchecked().str_with_type.as_ref()
+        );
+        // =========================================
+
         std::mem::take(self)
     }
 
     /// adding a counter of matches, less than or equal to X
     pub fn counter_less_than(&mut self, count: usize) -> Self {
         self.content_mut_unchecked().counter = Some(Counter::LessThan(count));
+
+        // ================= (LOG) =================
+        debug!(
+            "used the `counter_less_than` modifier for `Rule` ( `{}` )",
+            self.content_unchecked().str_with_type.as_ref()
+        );
+        // =========================================
+
         std::mem::take(self)
     }
 }
-
-impl Rule {}

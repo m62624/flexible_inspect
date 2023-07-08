@@ -1,12 +1,23 @@
+use super::debug;
+use super::init_logger;
 use super::*;
-
 #[pymethods]
 impl Rule {
     #[new]
     pub fn new(pattern: String, requirements: MatchRequirement) -> PyResult<Self> {
-        Ok(Self {
+        init_logger();
+        let slf = Self {
             content: Some(TakeRuleForExtend::new(pattern, requirements)?),
-        })
+        };
+
+        // ================= (LOG) =================
+        debug!(
+            "Rule created (only constructor without modifiers): {:#?}",
+            slf
+        );
+        // =========================================
+
+        Ok(slf)
     }
 }
 
@@ -29,6 +40,11 @@ impl RegexRaw {
         } else if fancy_regex::Regex::new(&pattern).is_ok() {
             return Ok(RegexRaw::FancyR(pattern.into_boxed_str()));
         }
+
+        // ================= (LOG) =================
+        error!("`{}` is not a valid regex", pattern);
+        // =========================================
+
         Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
             "Expected `Regex` or `FancyRegex`, got `{}`",
             pattern

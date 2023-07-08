@@ -31,7 +31,7 @@ impl Rule {
             // dbg!(&stack);
             match rule.content_unchecked().mod_match {
                 ModeMatch::AllRulesForAllMatches => {
-                    dbg!(&stack);
+                    // dbg!(&stack);
                     if let NextStep::Error(v) = Self::all_rules_for_all_matches(&mut stack) {
                         return NextStep::Error(v);
                     }

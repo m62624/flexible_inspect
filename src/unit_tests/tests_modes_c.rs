@@ -12,32 +12,32 @@ mod mode_all_rules_for_all_matches {
             let class_error = mock_obj::make_obj(
                 py,
                 "custom error with value {number}",
-                Some(vec![Rule::spawn(
-                    r"\[[^\]]+\]
-                ",
-                    MatchRequirement::MustBeFound,
-                )?
-                .extend_t(
-                    py,
-                    vec![
-                        Rule::spawn(r"(?P<subrule>\[.+\])", MatchRequirement::MustBeFound)?
-                            .extend_t(
-                                py,
-                                vec![
-                                    Rule::spawn(r"(?P<number>\d+)", MatchRequirement::MustBeFound)?,
-                                    Rule::spawn(r"BOBA", MatchRequirement::MustNotBeFound)?,
-                                ],
-                            )?,
-                        Rule::spawn(r"ABOBA", MatchRequirement::MustNotBeFound)?,
-                        Rule::spawn(r".*", MatchRequirement::MustBeFound)?,
-                        Rule::spawn(r".+", MatchRequirement::MustBeFound)?,
-                    ],
-                )?]),
+                Some(vec![Rule::spawn(r"\[.+\]", MatchRequirement::MustBeFound)?
+                    .extend_t(
+                        py,
+                        vec![
+                            Rule::spawn(r"(?P<subrule>\[.+\])", MatchRequirement::MustBeFound)?
+                                .extend_t(
+                                    py,
+                                    vec![
+                                        Rule::spawn(
+                                            r"(?P<number>\d+)",
+                                            MatchRequirement::MustBeFound,
+                                        )?,
+                                        Rule::spawn(r"BOBA", MatchRequirement::MustNotBeFound)?,
+                                    ],
+                                )?,
+                            Rule::spawn(r"ABOBA", MatchRequirement::MustNotBeFound)?,
+                            Rule::spawn(r".*", MatchRequirement::MustBeFound)?,
+                            Rule::spawn(r".+", MatchRequirement::MustBeFound)?,
+                        ],
+                    )?]),
             );
             let validator =
                 TemplateValidator::new(py, types::PyList::new(py, [class_error]).into_py(py))?;
             let values = validator.validate(py, types::PyBytes::new(py, text.as_bytes()))?;
             if let Some(list) = values {
+                println!("ERRORS");
                 dbg!(&list.downcast::<types::PyList>(py).unwrap());
             }
             Ok(())
