@@ -44,6 +44,7 @@ impl Rule {
                             // 1 Этап
                             // Получаем правила из `RegexSet`
                             for index in Rule::get_selected_rules(&simple_rules.regex_set, text) {
+                                // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(
                                     &simple_rules.all_rules[index],
                                     text,
@@ -94,6 +95,7 @@ impl Rule {
                             // 3 Этап
                             // Получаем сложные правила
                             for rule in complex_rules {
+                                // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Сохраняем данные для ошибки, если error
                                 if let NextStep::Error(value) =

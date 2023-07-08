@@ -54,6 +54,7 @@ impl Rule {
                                 *counter_one_rule.entry(index).or_insert(0) += 1;
                                 // сверяем, сколько раз встретился индекс, с количеством совпадений
                                 if counter_one_rule[&index] == frame.1.text_for_capture.len() {
+                                    // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                     let mut captures = CaptureData::find_captures(
                                         &simple_rules.all_rules[index],
                                         text,
@@ -102,6 +103,7 @@ impl Rule {
                             'main_complex: for rule in complex_rules {
                                 // Каждое правило проверяет каждое совпадение
                                 for text in frame.1.text_for_capture.iter() {
+                                    // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                     let mut captures = CaptureData::find_captures(rule, text);
                                     // Проверяем это правило
                                     if let NextStep::Error(value) =
