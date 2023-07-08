@@ -119,7 +119,7 @@ impl Rule {
                                     // =========================================
 
                                     // Если все хорошо, то добавляем в стек
-                                    temp_stack.push_back((&rule, captures));
+                                    temp_stack.push_back((rule, captures));
                                 }
                                 // Если мы дошли до этого момента, значит мы нашли правило
                                 one_rule_found = true;
