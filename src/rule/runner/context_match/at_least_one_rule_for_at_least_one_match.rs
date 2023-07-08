@@ -29,7 +29,7 @@ impl Rule {
                     // Статус, что нашли одно правило на одно совпадение
                     let mut found_rule = false;
                     // По каждому тексту в `text_for_capture` мы будем искать совпадение
-                    for text in frame.1.text_for_capture.iter() {
+                    'stop_text: for text in frame.1.text_for_capture.iter() {
                         // Если есть простые подправила, то мы их проверяем
                         if let Some(simple_rules) = &frame
                             .0
@@ -71,6 +71,7 @@ impl Rule {
                                 found_rule = true;
                                 // Загружаем во временный стек если успех
                                 stack.push_back((&simple_rules.all_rules[index], captures));
+                                break 'stop_text;
                             }
                             // 2 Этап
                             // Получаем правила, которые не попали в `RegexSet`
@@ -98,6 +99,7 @@ impl Rule {
                                     found_rule = true;
                                     // Загружаем во временный стек, если успех
                                     stack.push_back((rule, captures));
+                                    break 'stop_text;
                                 }
                             }
                         }
@@ -110,37 +112,35 @@ impl Rule {
                             .unwrap()
                             .complex_rules
                         {
-                            if !found_rule {
-                                // 3 Этап
-                                // Получаем сложные правила
-                                'skip_rule: for rule in complex_rules {
-                                    // Сохраняем в отдельной переменой, чтобы не дублировать данные
-                                    let mut captures = CaptureData::find_captures(rule, text);
-                                    // Проверяем это правило
-                                    if let NextStep::Error(value) =
-                                        Self::next_or_data_for_error(rule, &mut captures)
-                                    {
-                                        // ================= (LOG) =================
-                                        error!(
+                            // 3 Этап
+                            // Получаем сложные правила
+                            'skip_rule: for rule in complex_rules {
+                                // Сохраняем в отдельной переменой, чтобы не дублировать данные
+                                let mut captures = CaptureData::find_captures(rule, text);
+                                // Проверяем это правило
+                                if let NextStep::Error(value) =
+                                    Self::next_or_data_for_error(rule, &mut captures)
+                                {
+                                    // ================= (LOG) =================
+                                    error!(
                                         "The rule (`{}`, `{:#?}`) didn't work for the text : `{}`",
                                         &rule.as_ref(),
                                         &rule.content_unchecked().requirement,
                                         text
                                     );
-                                        // =========================================
-                                        // return NextStep::Error(value);
-                                        err = value;
-                                        continue 'skip_rule;
-                                    }
-                                    // Помечаем, что нашли правило
-                                    found_rule = true;
-                                    // Загружаем во временный стек если успех
-                                    stack.push_back((rule, captures));
+                                    // =========================================
+                                    // return NextStep::Error(value);
+                                    err = value;
+                                    continue 'skip_rule;
                                 }
+                                // Помечаем, что нашли правило
+                                found_rule = true;
+                                // Загружаем во временный стек если успех
+                                stack.push_back((rule, captures));
+                                break 'stop_text;
                             }
                         }
                     }
-
                     if !found_rule {
                         return NextStep::Error(err);
                     }
