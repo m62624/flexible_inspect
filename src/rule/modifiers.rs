@@ -36,10 +36,16 @@ impl Rule {
                 return Ok(std::mem::take(self));
             }
         }
-        Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
+        let err_msg = format!(
             "`{}` -- expected `List` --> List [Rule, Rule, Rule]",
             nested_rules
-        )))
+        );
+
+        // ================= (LOG) =================
+        error!("{}", err_msg);
+        // =========================================
+
+        Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg))
     }
 
     /// All subrules should work successfully for all matches (text)
