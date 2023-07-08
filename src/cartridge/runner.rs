@@ -21,7 +21,6 @@ impl CartridgeWrapper {
             self.0.get_py_class().to_string()
         );
         //==========================================
-
         // Проверка простых правил
         if let Some(simple_rules) = &self.0.root_rules.simple_rules {
             let selected_rules = Rule::get_selected_rules(&simple_rules.regex_set, text);
@@ -64,7 +63,6 @@ impl CartridgeWrapper {
             self.0.get_py_class().to_string()
         );
         //==========================================
-
         // Коллекция для конкурентного выполнения задач
         let mut tasks = Vec::new();
 

@@ -22,12 +22,9 @@ impl Rule {
         while let Some(mut frame) = stack.pop_front() {
             // ================= (LOG) =================
             trace!(
-                "Started rule (`{}`, `{:#?}`) from the stack",
+                "Started rule (`{}`, `{:#?}`) from the stack\nFull details of the rule (after modifications): {:#?}",
                 frame.0.as_ref(),
-                frame.0.content_unchecked().requirement
-            );
-            trace!(
-                "\nFull details of the rule (after modifications): {:#?}",
+                frame.0.content_unchecked().requirement,
                 frame.0
             );
             // =========================================
@@ -36,9 +33,8 @@ impl Rule {
                 NextStep::Go => {
                     // Статус, нашли ли мы одно правило для всех совпадений
                     let mut one_rule_found = false;
-                    // хранит ошибку, если она есть
+                    // Хранит ошибку, если она есть
                     let mut err: Option<HashMap<String, String>> = None;
-
                     // Если есть простые подправила, то мы их проверяем
                     if let Some(simple_rules) = &frame
                         .0
@@ -49,9 +45,9 @@ impl Rule {
                         .simple_rules
                     {
                         // Проходимся по всем совпадениям
-                        'main_text_regexset: for text in frame.1.text_for_capture.iter() {
+                        'skip_text: for text in frame.1.text_for_capture.iter() {
                             // Проходимся по всем индексам, которые вернул `RegexSet`
-                            'this_rule: for index in
+                            'skip_this_rule: for index in
                                 Rule::get_selected_rules(&simple_rules.regex_set, text)
                             {
                                 // Если индекс уже есть в `counter_one_rule`, то мы его увеличиваем
@@ -68,7 +64,7 @@ impl Rule {
                                         &mut captures,
                                     ) {
                                         err = value;
-                                        continue 'this_rule;
+                                        continue 'skip_this_rule;
                                     }
 
                                     // ================ (LOG) =================
@@ -84,7 +80,7 @@ impl Rule {
                                     temp_stack
                                         .push_back((&simple_rules.all_rules[index], captures));
                                     // Выходим из цикла, так как мы нашли правило
-                                    break 'main_text_regexset;
+                                    break 'skip_text;
                                 }
                             }
                         }
@@ -140,7 +136,9 @@ impl Rule {
                         return NextStep::Error(err);
                     }
                 }
+                // Завершены все действия для правила
                 NextStep::Finish => (),
+                // Условие не сработало, значит ошибка
                 NextStep::Error(value) => return NextStep::Error(value),
             }
         }

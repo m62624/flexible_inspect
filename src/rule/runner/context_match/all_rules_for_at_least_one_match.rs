@@ -15,14 +15,24 @@ impl Rule {
         let mut temp_stack: VecDeque<(&Rule, CaptureData)> = VecDeque::new();
         // Начнем проход по `stack`, `stack_temp` будет расширять `stack`
         while let Some(mut frame) = stack.pop_front() {
-            // Проверяем, что мы можем продолжить выполнение правила, если нет, то либо пропуск, либо ошибка
+            // ================= (LOG) =================
+            trace!(
+                 "Started rule (`{}`, `{:#?}`) from the stack\nFull details of the rule (after modifications): {:#?}",
+                frame.0.as_ref(),
+                frame.0.content_unchecked().requirement,
+                frame.0
+            );
+            // =========================================
+            // Проверяем, нужно ли идти дальше
             match Self::next_or_data_for_error(frame.0, &mut frame.1) {
                 NextStep::Go => {
-                    // по условию, хотя бы на одно совпадение (текст) должны сработать все правила
+                    // Хранит ошибку, если она есть
                     let mut err: Option<HashMap<String, String>> = None;
+                    // Статус, что нашли одно совпадение на которое сработали все правила
                     let mut rule_matched_for_any_text = false;
-                    // помечаем цикл, чтобы выйти из него, если условие не исполнилось
-                    'main_element: for text in frame.1.text_for_capture.iter() {
+                    // Помечаем цикл, чтобы выйти из него, если условие не исполнилось
+                    'skip_text: for text in frame.1.text_for_capture.iter() {
+                        // Если есть простые подправила, то мы их проверяем
                         if let Some(simple_rules) = &frame
                             .0
                             .content_unchecked()
@@ -38,13 +48,15 @@ impl Rule {
                                     &simple_rules.all_rules[index],
                                     text,
                                 );
-                                // Сохраняем данные для ошибки, если error
+                                // Провверяем это правило
                                 if let NextStep::Error(value) = Self::next_or_data_for_error(
                                     &simple_rules.all_rules[index],
                                     &mut captures,
                                 ) {
+                                    // Сохраняем данные для ошибки, если error
                                     err = value;
-                                    continue 'main_element;
+                                    // Пропускаем текст
+                                    continue 'skip_text;
                                 }
                                 // Загружаем во временный стек если успех
                                 temp_stack.push_back((&simple_rules.all_rules[index], captures));
@@ -63,14 +75,14 @@ impl Rule {
                                         Self::next_or_data_for_error(rule, &mut captures)
                                     {
                                         err = value;
-                                        continue 'main_element;
+                                        continue 'skip_text;
                                     }
                                     // Загружаем во временный стек, если успех
                                     temp_stack.push_back((rule, captures));
                                 }
                             }
                         }
-
+                        // Если есть сложные подправила, то мы их проверяем
                         if let Some(complex_rules) = &frame
                             .0
                             .content_unchecked()
@@ -88,7 +100,7 @@ impl Rule {
                                     Self::next_or_data_for_error(rule, &mut captures)
                                 {
                                     err = value;
-                                    continue 'main_element;
+                                    continue 'skip_text;
                                 }
 
                                 temp_stack.push_back((rule, captures));
@@ -111,7 +123,9 @@ impl Rule {
                         return NextStep::Error(err);
                     }
                 }
+                // Завершены все действия для правила
                 NextStep::Finish => (),
+                // Условие не сработало, значит ошибка
                 NextStep::Error(value) => return NextStep::Error(value),
             }
         }

@@ -21,11 +21,12 @@ impl Rule {
                 frame.0
             );
             // =========================================
-            // Проверяем, что мы можем продолжить выполнение правила, если нет, то либо пропуск, либо ошибка
+            // Проверяем, нужно ли идти дальше
             match Self::next_or_data_for_error(frame.0, &mut frame.1) {
                 NextStep::Go => {
                     // По каждому тексту в `text_for_capture` мы будем искать совпадения
                     for text in frame.1.text_for_capture.iter() {
+                        // Если есть простые подправила, то мы их проверяем
                         if let Some(simple_rules) = &frame
                             .0
                             .content_unchecked()
@@ -57,7 +58,6 @@ impl Rule {
                                         text
                                     );
                                     // =========================================
-
                                     return NextStep::Error(value);
                                 }
                                 // Загружаем во временный стек если успех
@@ -89,6 +89,7 @@ impl Rule {
                                 }
                             }
                         }
+                        // Если есть сложные подправила, то мы их проверяем
                         if let Some(complex_rules) = &frame
                             .0
                             .content_unchecked()
@@ -108,7 +109,7 @@ impl Rule {
                                 {
                                     // ================= (LOG) =================
                                     error!(
-                                        "The rule (`{}`, `{:#?}`) did not work for text : `{}`",
+                                        "The rule (`{}`, `{:#?}`) didn't work for the text : `{}`",
                                         &rule.as_ref(),
                                         &rule.content_unchecked().requirement,
                                         text
@@ -121,10 +122,15 @@ impl Rule {
                             }
                         }
                     }
+                    // ================= (LOG) =================
+                    info!("for all matches all rules worked successfully");
+                    // =========================================
                     // Финальный этап, мы загружаем всё в`stack` для дальнейшей обработки
                     stack.extend(temp_stack.drain(..));
                 }
+                // Завершены все действия для правила
                 NextStep::Finish => (),
+                // Условие не сработало, значит ошибка
                 NextStep::Error(value) => return NextStep::Error(value),
             }
         }

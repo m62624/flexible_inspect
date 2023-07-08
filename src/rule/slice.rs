@@ -39,21 +39,17 @@ impl<'py> RuleContext<'py> {
                                 packed_rule.get_type().name().unwrap(),
                                 class_py.name().unwrap()
                             );
-
                             // ================= (LOG) =================
                             error!("{}",err_msg);
                             // =========================================
-
                             Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg))
                         }
                         // Если это не подправило, то возвращаем ошибку
                         RuleContext::Subelement(this_rule) => {
                             let err_msg = format!("Expected `Rule` in the list, the child error `{}` from the parent rule `{}`",packed_rule, this_rule.content_unchecked().str_with_type.as_ref());
-
-                              // ================= (LOG) =================
-                              error!("{}",err_msg);
-                              // =========================================
-
+                            // ================= (LOG) =================
+                            error!("{}",err_msg);
+                            // =========================================
                             Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg))
                         },
                     }
