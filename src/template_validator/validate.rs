@@ -1,5 +1,4 @@
 use super::*;
-use log::info;
 
 /// Реализация методов валидаций для API `Python`
 #[pymethods]
@@ -16,7 +15,7 @@ impl TemplateValidator {
         // Проходимся по всем классам
 
         // ================= (LOG) =================
-        info!("synchronous validator is running");
+        debug!("synchronous validator is running");
         // =========================================
 
         for cartridge in &self.0.cartridges {
@@ -52,9 +51,13 @@ impl TemplateValidator {
         // Получаем ссылку на `self`, для `async task`
         let async_self = Arc::clone(&self.0);
         // println!("Запущена функция для future into py");
-        // Возвращаем `future into py`, необходимо для того чтобы, создать `awaitable object`
-        // для `python`
+        // Возвращаем `future into py`, необходимо для того чтобы, создать `awaitable object` для `python`
+
         pyo3_asyncio::async_std::future_into_py(py, async move {
+            // ================= (LOG) =================
+            debug!("asynchronous validator is running");
+            // =========================================
+
             // Итак, почему это выглядит именно так а не иначе ?
 
             /*

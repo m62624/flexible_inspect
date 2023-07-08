@@ -58,6 +58,13 @@ impl CartridgeWrapper {
     /// Запускает все правила, которые есть в классе\
     /// Описание этапов и принципов работы опиcаны в `./rule/runner.rs`
     pub async fn async_run(&self, text: Arc<String>) -> NextStep {
+        // ================= (LOG) =================
+        info!(
+            "iteratively pass by the rules of the `{}` class",
+            self.0.get_py_class().to_string()
+        );
+        //==========================================
+
         // Коллекция для конкурентного выполнения задач
         let mut tasks = Vec::new();
 
