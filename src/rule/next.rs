@@ -45,7 +45,12 @@ impl Rule {
                     // были применены подправила
                     (true, true) => rule.counter_status(captures),
                     // Если есть совпадение, но нет подправил, то мы завершаемся.
-                    (true, false) => NextStep::Finish,
+                    (true, false) => {
+                        if let NextStep::Error(value) = rule.counter_status(captures) {
+                            return NextStep::Error(value);
+                        }
+                        NextStep::Finish
+                    }
                     // Если нет совпадения, но есть подправила, это ошибка.
                     // Держим в голове, что пользователь указал подправила,
                     // а значит, должно было быть совпадение, на которое должны были
@@ -85,9 +90,19 @@ impl Rule {
                         NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)))
                     }
                     // Если нет совпадения и есть подправила, то мы завершаемся.
-                    (false, true) => NextStep::Finish,
+                    (false, true) => {
+                        if let NextStep::Error(value) = rule.counter_status(captures) {
+                            return NextStep::Error(value);
+                        }
+                        NextStep::Finish
+                    }
                     // Если нет совпадения и нет подправил, то мы завершаемся.
-                    (false, false) => NextStep::Finish,
+                    (false, false) => {
+                        if let NextStep::Error(value) = rule.counter_status(captures) {
+                            return NextStep::Error(value);
+                        }
+                        NextStep::Finish
+                    }
                 }
             }
         }
@@ -103,7 +118,7 @@ impl Rule {
                 Counter::Only(value) => {
                     // ================= (LOG) =================
                     info!(
-                        "\nRule: `{}`,\rule counter {},\na total of {} matches found",
+                        "\nrule: `{}`,\nrule counter {},\na total of {} matches found",
                         self.as_ref(),
                         value,
                         captures.counter_value
@@ -119,7 +134,7 @@ impl Rule {
                 Counter::MoreThan(value) => {
                     // ================= (LOG) =================
                     info!(
-                        "\nRule: `{}`,\rule counter {},\na total of {} matches found",
+                        "\nrule: `{}`,\nrule counter {},\na total of {} matches found",
                         self.as_ref(),
                         value,
                         captures.counter_value
@@ -134,7 +149,7 @@ impl Rule {
                 Counter::LessThan(value) => {
                     // ================= (LOG) =================
                     info!(
-                        "\nRule: `{}`,\rule counter {},\na total of {} matches found",
+                        "\nrule: `{}`,\nrule counter {},\na total of {} matches found",
                         self.as_ref(),
                         value,
                         captures.counter_value
