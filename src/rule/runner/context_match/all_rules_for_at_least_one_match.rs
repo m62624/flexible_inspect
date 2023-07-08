@@ -94,7 +94,6 @@ impl Rule {
                                 temp_stack.push_back((rule, captures));
                             }
                         }
-                        // dbg!(&text);
                         // Если дошли до конца цикла (в рамках одного элемента), значит все правила сработали
                         rule_matched_for_any_text = true;
                         break;
@@ -103,6 +102,13 @@ impl Rule {
                         // Финальный этап, мы загружаем всё в`stack` для дальнейшей обработки
                         stack.extend(temp_stack.drain(..));
                     } else {
+                        // ================= (LOG) =================
+                        error!(
+                            "(all_rules_for_at_least_one_match) rule matched for any text `{}`",
+                            rule_matched_for_any_text
+                        );
+
+                        // =========================================
                         return NextStep::Error(err);
                     }
                 }

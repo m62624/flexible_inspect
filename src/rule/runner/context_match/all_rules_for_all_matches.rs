@@ -19,7 +19,10 @@ impl Rule {
                 frame.0.as_ref(),
                 frame.0.content_unchecked().requirement
             );
-            trace!("\nFull details of the rule (after modifications): {:#?}", frame.0);
+            trace!(
+                "\nFull details of the rule (after modifications): {:#?}",
+                frame.0
+            );
             // =========================================
 
             // Проверяем, что мы можем продолжить выполнение правила, если нет, то либо пропуск, либо ошибка
@@ -39,8 +42,6 @@ impl Rule {
                             // 1 Этап
                             // Получаем правила из `RegexSet`
                             for index in Rule::get_selected_rules(&simple_rules.regex_set, text) {
-                                // dbg!(&simple_rules.all_rules[index].as_ref());
-                                // dbg!(index);
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(
                                     &simple_rules.all_rules[index],
@@ -79,6 +80,14 @@ impl Rule {
                                     if let NextStep::Error(value) =
                                         Self::next_or_data_for_error(rule, &mut captures)
                                     {
+                                        // ================= (LOG) =================
+                                        error!(
+                                            "The rule (`{}`, `{:#?}`) did not work for text : `{}`",
+                                            &rule.as_ref(),
+                                            &rule.content_unchecked().requirement,
+                                            text
+                                        );
+                                        // =========================================
                                         return NextStep::Error(value);
                                     }
                                     // Загружаем во временный стек, если успех
@@ -104,6 +113,14 @@ impl Rule {
                                 if let NextStep::Error(value) =
                                     Self::next_or_data_for_error(rule, &mut captures)
                                 {
+                                    // ================= (LOG) =================
+                                    error!(
+                                        "The rule (`{}`, `{:#?}`) did not work for text : `{}`",
+                                        &rule.as_ref(),
+                                        &rule.content_unchecked().requirement,
+                                        text
+                                    );
+                                    // =========================================
                                     return NextStep::Error(value);
                                 }
                                 // Загружаем во временный стек если успех

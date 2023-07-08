@@ -118,9 +118,9 @@ impl Rule {
                 Counter::Only(value) => {
                     // ================= (LOG) =================
                     info!(
-                        "\nrule: `{}`,\nrule counter {},\na total of {} matches found",
+                        "\nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
                         self.as_ref(),
-                        value,
+                        self.content_unchecked().counter,
                         captures.counter_value
                     );
                     // =========================================
@@ -134,9 +134,9 @@ impl Rule {
                 Counter::MoreThan(value) => {
                     // ================= (LOG) =================
                     info!(
-                        "\nrule: `{}`,\nrule counter {},\na total of {} matches found",
+                        "\nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
                         self.as_ref(),
-                        value,
+                        self.content_unchecked().counter,
                         captures.counter_value
                     );
                     // =========================================
@@ -149,9 +149,9 @@ impl Rule {
                 Counter::LessThan(value) => {
                     // ================= (LOG) =================
                     info!(
-                        "\nrule: `{}`,\nrule counter {},\na total of {} matches found",
+                        "\nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
                         self.as_ref(),
-                        value,
+                        self.content_unchecked().counter,
                         captures.counter_value
                     );
                     // =========================================
