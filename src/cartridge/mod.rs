@@ -40,25 +40,31 @@ impl CartridgeWrapper {
                         root_rules: RootRules::new(SimpleRules::new(simple_rules), complex_rules),
                     })))
                 } else {
+                    let err_msg = format!("'{}' must be a 'List [ Rule, Rule... ] '", py_list);
+                    // ================= (LOG) =================
+                    error!("{}", err_msg);
+                    // =========================================
                     // Если это не список, то возвращаем ошибку
-                    Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                        "'{}' must be a 'List [ Rule, Rule... ] '",
-                        py_list
-                    )))
+                    Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg))
                 }
             } else {
-                // Если у класса нету атрибута `RULES_FROM_CLASS_PY`, то возвращаем ошибку
-                Err(PyErr::new::<exceptions::PyAttributeError, _>(format!(
+                let err_msg = format!(
                     "The class `{}` has no attribute : `{}`",
                     class_py, RULES_FROM_CLASS_PY
-                )))
+                );
+                // ================= (LOG) =================
+                error!("{}", err_msg);
+                // =========================================
+                // Если у класса нету атрибута `RULES_FROM_CLASS_PY`, то возвращаем ошибку
+                Err(PyErr::new::<exceptions::PyAttributeError, _>(err_msg))
             }
         } else {
+            let err_msg = format!("'{}' must be a 'Class'", py_class);
+            // ================= (LOG) =================
+            error!("{}", err_msg);
+            // =========================================
             // Если это не класс, то возвращаем ошибку
-            Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                "'{}' must be a 'Class'",
-                py_class
-            )))
+            Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg))
         }
     }
 }
