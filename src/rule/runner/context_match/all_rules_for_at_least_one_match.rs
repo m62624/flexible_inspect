@@ -7,7 +7,7 @@ impl Rule {
     возникла ошибка
      */
 
-    /// Проверяем, что все правила сработают хотябы на одно совпадение (текст)
+    /// Проверяем, что все правила сработают хотя бы на одно совпадение (текст)
     pub fn all_rules_for_at_least_one_match(
         stack: &mut VecDeque<(&Rule, CaptureData)>,
     ) -> NextStep {

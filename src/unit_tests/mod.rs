@@ -6,7 +6,7 @@ mod tests_capture;
 #[cfg(test)]
 mod tests_cartridge;
 #[cfg(test)]
-mod tests_modes_c;
+mod tests_modes;
 #[cfg(test)]
 mod tests_rule;
 #[cfg(test)]

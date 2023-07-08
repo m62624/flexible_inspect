@@ -7,7 +7,7 @@ impl Rule {
     возникла ошибка
      */
 
-    /// Проверяем, что на каждое совпадение, точно сработают все правила (текст)
+    /// Проверяем, что на каждое совпадение (текст), сработают все правила
     pub fn all_rules_for_all_matches(stack: &mut VecDeque<(&Rule, CaptureData)>) -> NextStep {
         // Создаем временный стек, в который будем складывать все правила, которые нужно обработать
         let mut temp_stack: VecDeque<(&Rule, CaptureData)> = VecDeque::new();
@@ -15,22 +15,17 @@ impl Rule {
         while let Some(mut frame) = stack.pop_front() {
             // ================= (LOG) =================
             trace!(
-                "Started rule (`{}`, `{:#?}`) from the stack",
+                "Started rule (`{}`, `{:#?}`) from the stack\nFull details of the rule (after modifications): {:#?}",
                 frame.0.as_ref(),
-                frame.0.content_unchecked().requirement
-            );
-            trace!(
-                "\nFull details of the rule (after modifications): {:#?}",
+                frame.0.content_unchecked().requirement,
                 frame.0
             );
             // =========================================
-
             // Проверяем, что мы можем продолжить выполнение правила, если нет, то либо пропуск, либо ошибка
             match Self::next_or_data_for_error(frame.0, &mut frame.1) {
                 NextStep::Go => {
                     // По каждому тексту в `text_for_capture` мы будем искать совпадения
                     for text in frame.1.text_for_capture.iter() {
-                        // dbg!(text);
                         if let Some(simple_rules) = &frame
                             .0
                             .content_unchecked()
@@ -75,7 +70,6 @@ impl Rule {
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Проверяем, что мы не обрабатывали это правило ранее
                                 if !stack.iter().any(|&(r, _)| r == rule) {
-                                    // dbg!(rule.as_ref());
                                     // Сразу узнаем, что будет дальше, если ошибка, то выходим из функции
                                     if let NextStep::Error(value) =
                                         Self::next_or_data_for_error(rule, &mut captures)
@@ -106,7 +100,6 @@ impl Rule {
                             // 3 Этап
                             // Получаем сложные правила
                             for rule in complex_rules {
-                                // dbg!(rule);
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Сразу узнаем, что будет дальше, если ошибка, то выходим из функции
@@ -128,7 +121,6 @@ impl Rule {
                             }
                         }
                     }
-                    // dbg!(&temp_stack);
                     // Финальный этап, мы загружаем всё в`stack` для дальнейшей обработки
                     stack.extend(temp_stack.drain(..));
                 }
