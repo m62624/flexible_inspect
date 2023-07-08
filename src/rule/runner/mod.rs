@@ -61,7 +61,11 @@ impl Rule {
                         rule.as_ref()
                     );
                     // =========================================
-                    todo!()
+
+                    if let NextStep::Error(v) = Self::at_least_one_rule_for_all_matches(&mut stack)
+                    {
+                        return NextStep::Error(v);
+                    }
                 }
                 ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {
                     // ================= (LOG) =================
