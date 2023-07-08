@@ -43,6 +43,7 @@ static INIT: Once = Once::new();
 #[cfg(not(tarpaulin_include))]
 /// Инициализация логгера
 pub fn init_logger() {
+    // env_logger вызывается лишь раз
     INIT.call_once(|| {
         env_logger::init();
     });

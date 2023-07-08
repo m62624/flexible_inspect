@@ -54,21 +54,27 @@ impl TemplateSafeSelf {
                     data.push(CartridgeWrapper::new(py, class_py.to_object(py))?);
                     Ok(())
                 } else {
-                    Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                        "'{}' must be a 'Class'",
-                        class_obj
-                    )))
+                    let err_msg = format!("'{}' must be a 'Class'", class_obj);
+
+                    // ================= (LOG) =================
+                    error!("(validator constructor): {}", err_msg);
+                    // =========================================
+
+                    Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg))
                 }
             })?;
 
             // Возвращаем структуру
             Ok(Self { cartridges: data })
         } else {
+            let err_msg = format!("'{}' must be a 'List[ Class, Class... ]'", cartridges);
+
+            // ================= (LOG) =================
+            error!("(validator constructor): {}", err_msg);
+            // =========================================
+
             // Если это не `List`, то возвращаем ошибку
-            Err(PyErr::new::<exceptions::PyTypeError, _>(format!(
-                "'{}' must be a 'List[ Class, Class... ]'",
-                cartridges
-            )))
+            Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg))
         }
     }
 }

@@ -19,7 +19,7 @@ class ErrorNumber(PystvalException):
 class CheckExtraBlank(PystvalException):
     message = "Extra blank {e}"
     rules = [
-        Rule(r"(?P<e>\[.+\])", MatchRequirement.MustBeFound).extend([
+        Rule(r"(?P< s e>\[.+\])", MatchRequirement.MustBeFound).extend([
             Rule(r"(?P<e>\d+)", MatchRequirement.MustNotBeFound)
         ])
     ]
