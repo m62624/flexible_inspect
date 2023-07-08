@@ -94,6 +94,8 @@ impl Rule {
                                 temp_stack.push_back((rule, captures));
                             }
                         }
+
+                        info!("all rules passed successfully for the text `{}` ", text);
                         // Если дошли до конца цикла (в рамках одного элемента), значит все правила сработали
                         rule_matched_for_any_text = true;
                         break;
@@ -103,10 +105,7 @@ impl Rule {
                         stack.extend(temp_stack.drain(..));
                     } else {
                         // ================= (LOG) =================
-                        error!(
-                            "(all_rules_for_at_least_one_match) rule matched for any text `{}`",
-                            rule_matched_for_any_text
-                        );
+                        error!("all of the rules do not match any text (one of the rules that participated in the rule pool `{}`)",frame.0.as_ref());
 
                         // =========================================
                         return NextStep::Error(err);

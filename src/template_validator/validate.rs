@@ -50,6 +50,7 @@ impl TemplateValidator {
         let text = Arc::new(Self::bytes_to_string_utf8(text_bytes.as_bytes())?);
         // Получаем ссылку на `self`, для `async task`
         let async_self = Arc::clone(&self.0);
+
         // println!("Запущена функция для future into py");
         // Возвращаем `future into py`, необходимо для того чтобы, создать `awaitable object` для `python`
 

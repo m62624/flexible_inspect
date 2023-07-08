@@ -21,7 +21,7 @@ impl Rule {
     pub fn next_or_data_for_error(rule: &rule::Rule, captures: &mut CaptureData) -> NextStep {
         // ================= (LOG) =================
         info!(
-            "\nRule: (`{}`, `{:#?}`),\n`Captures: {:#?}`,\n",
+            "\nTHE RESULT: \nrule: (`{}`, `{:#?}`),\n`Captures: {:#?}`,\n",
             rule.as_ref(),
             rule.content_unchecked().requirement,
             captures.text_for_capture
@@ -118,7 +118,7 @@ impl Rule {
                 Counter::Only(value) => {
                     // ================= (LOG) =================
                     info!(
-                        "\nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
+                        "\nTHE RESULT: \nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
                         self.as_ref(),
                         self.content_unchecked().counter,
                         captures.counter_value
@@ -134,7 +134,7 @@ impl Rule {
                 Counter::MoreThan(value) => {
                     // ================= (LOG) =================
                     info!(
-                        "\nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
+                        "\nTHE RESULT: \nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
                         self.as_ref(),
                         self.content_unchecked().counter,
                         captures.counter_value
@@ -149,7 +149,7 @@ impl Rule {
                 Counter::LessThan(value) => {
                     // ================= (LOG) =================
                     info!(
-                        "\nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
+                        "\nTHE RESULT: \nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
                         self.as_ref(),
                         self.content_unchecked().counter,
                         captures.counter_value
