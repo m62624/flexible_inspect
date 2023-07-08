@@ -1,6 +1,7 @@
 use super::rule::{next::NextStep, Rule};
 use super::*;
 use async_std::task;
+use log::info;
 
 /// Первые варианты, использовали итераторы,
 /// но проблема в том, что даже через `All`, нужно передать ещё и результат ошибки
@@ -14,6 +15,13 @@ impl CartridgeWrapper {
     /// Запускает все правила, которые есть в классе\
     /// Описание этапов и принципов работы опиcаны в `./rule/runner.rs`
     pub fn sync_run(&self, text: &str) -> NextStep {
+        // ================= (LOG) =================
+        info!(
+            "iteratively pass by the rules of the `{}` class",
+            self.0.get_py_class().to_string()
+        );
+        //==========================================
+
         // Проверка простых правил
         if let Some(simple_rules) = &self.0.root_rules.simple_rules {
             let selected_rules = Rule::get_selected_rules(&simple_rules.regex_set, text);

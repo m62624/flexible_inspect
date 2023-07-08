@@ -1,6 +1,7 @@
 use super::captures::CaptureData;
 use super::next::NextStep;
 use super::*;
+use log::info;
 use std::collections::VecDeque;
 mod context_match;
 
@@ -28,22 +29,49 @@ impl Rule {
     pub fn run(rule: &Rule, text: &str) -> NextStep {
         let mut stack = VecDeque::from([(rule, CaptureData::find_captures(rule, text))]);
         while !stack.is_empty() {
-            // dbg!(&stack);
             match rule.content_unchecked().mod_match {
                 ModeMatch::AllRulesForAllMatches => {
-                    // dbg!(&stack);
+                    // ================= (LOG) =================
+                    info!(
+                        "rule processing mode `{}` : `all_rules_for_all_matches`",
+                        rule.as_ref()
+                    );
+                    // =========================================
+
                     if let NextStep::Error(v) = Self::all_rules_for_all_matches(&mut stack) {
                         return NextStep::Error(v);
                     }
                 }
                 ModeMatch::AllRulesForAtLeastOneMatch => {
-                    dbg!(&stack);
+                    // ================= (LOG) =================
+                    info!(
+                        "rule processing mode `{}` : `all_rules_for_at_least_one_match`",
+                        rule.as_ref()
+                    );
+                    // =========================================
+
                     if let NextStep::Error(v) = Self::all_rules_for_at_least_one_match(&mut stack) {
                         return NextStep::Error(v);
                     }
                 }
-                ModeMatch::AtLeastOneRuleForAllMatches => {}
-                ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {}
+                ModeMatch::AtLeastOneRuleForAllMatches => {
+                    // ================= (LOG) =================
+                    info!(
+                        "rule processing mode `{}` : `at_least_one_rule_for_all_matches`",
+                        rule.as_ref()
+                    );
+                    // =========================================
+                    todo!()
+                }
+                ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {
+                    // ================= (LOG) =================
+                    info!(
+                        "rule processing mode `{}` : `at_least_one_rule_for_at_least_one_match`",
+                        rule.as_ref()
+                    );
+                    // =========================================
+                    todo!()
+                }
             }
         }
         NextStep::Finish

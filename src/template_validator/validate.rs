@@ -1,4 +1,5 @@
 use super::*;
+use log::info;
 
 /// Реализация методов валидаций для API `Python`
 #[pymethods]
@@ -13,6 +14,11 @@ impl TemplateValidator {
         // Коллекция для хранения ошибок
         let mut errors = Vec::new();
         // Проходимся по всем классам
+
+        // ================= (LOG) =================
+        info!("synchronous validator is running");
+        // =========================================
+
         for cartridge in &self.0.cartridges {
             // Если валидация не прошла, то создаем ошибку
             if let NextStep::Error(mut value) = cartridge.sync_run(&text) {
