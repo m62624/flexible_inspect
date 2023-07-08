@@ -77,12 +77,12 @@ impl Rule {
     }
 
     /// At least one rule should work successfully for all matches
-    pub fn mod_at_least_one_rule_for_all_matches(&mut self) -> Self {
+    pub fn mode_at_least_one_rule_for_all_matches(&mut self) -> Self {
         self.content_mut_unchecked().mod_match = ModeMatch::AtLeastOneRuleForAllMatches;
 
         // ================= (LOG) =================
         debug!(
-            "used the `mod_at_least_one_rule_for_all_matches` modifier for `Rule` ( `{}` )",
+            "used the `mode_at_least_one_rule_for_all_matches` modifier for `Rule` ( `{}` )",
             self.content_unchecked().str_with_type.as_ref()
         );
         // =========================================

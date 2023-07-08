@@ -68,7 +68,7 @@ class Rule:
         """
         ...
 
-    def extend(self, nested_rules: List['Rule']) -> None:
+    def extend(self, nested_rules: List['Rule']) -> Rule:
         """
         Extend the rule with nested rules.
 
@@ -85,43 +85,43 @@ class Rule:
         """
         ...
 
-    def counter_is_equal(self, count: int) -> None:
+    def counter_is_equal(self, count: int) -> Rule:
         """
         Adding a match counter, where the condition is: there must be exactly `count` matches
         """
         ...
 
-    def counter_more_than(self, count: int) -> None:
+    def counter_more_than(self, count: int) -> Rule:
         """
         Adding a match counter, where the condition is: there must be greater than or equal to `count` matches
         """
         ...
 
-    def counter_less_than(self, count: int) -> None:
+    def counter_less_than(self, count: int) -> Rule:
         """
         Adding a match counter, where the condition is: there must be less than or equal to `count` matches
         """
         ...
 
-    def mode_all_rules_for_all_matches(self) -> None:
+    def mode_all_rules_for_all_matches(self) -> Rule:
         """
         All subrules should work successfully for all matches (text)
         """
         ...
 
-    def mode_all_rules_for_at_least_one_match(self) -> None:
+    def mode_all_rules_for_at_least_one_match(self) -> Rule:
         """
         All subrules should work successfully for at least one match (text)
         """
         ...
 
-    def mod_at_least_one_rule_for_all_matches(self) -> None:
+    def mode_at_least_one_rule_for_all_matches(self) -> Rule:
         """
         At least one rule should work successfully for all matches
         """
         ...
 
-    def mode_at_least_one_rule_for_at_least_one_match(self) -> None:
+    def mode_at_least_one_rule_for_at_least_one_match(self) -> Rule:
         """
         At least one rule should work successfully for at least one match
         """

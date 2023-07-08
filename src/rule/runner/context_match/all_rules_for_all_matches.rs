@@ -19,6 +19,7 @@ impl Rule {
                 frame.0.as_ref(),
                 frame.0.content_unchecked().requirement
             );
+            trace!("\nFull details of the rule (after modifications): {:#?}", frame.0);
             // =========================================
 
             // Проверяем, что мы можем продолжить выполнение правила, если нет, то либо пропуск, либо ошибка
