@@ -296,4 +296,34 @@ mod mode_at_least_one_rule_for_at_least_one_match {
             Ok(())
         })
     }
+
+    /// Проверяем, что сработывает цикл с RegexSet
+    #[test]
+    fn runner_t_3() -> PyResult<()> {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| -> PyResult<()> {
+            let text = "QWEQ 123 [123919]";
+            let class_error = mock_obj::make_obj(
+                py,
+                "custom error with value {number}",
+                Some(vec![Rule::spawn(
+                    r"\[[^\]]+\]",
+                    MatchRequirement::MustBeFound,
+                )?
+                .extend_t(
+                    py,
+                    vec![
+                        Rule::spawn(r"\d+", MatchRequirement::MustBeFound)?,
+                        Rule::spawn(r"LP", MatchRequirement::MustBeFound)?,
+                    ],
+                )?
+                .mode_at_least_one_rule_for_at_least_one_match()]),
+            );
+            let validator =
+                TemplateValidator::new(py, types::PyList::new(py, [class_error]).into_py(py))?;
+            let values = validator.validate(py, types::PyBytes::new(py, text.as_bytes()))?;
+            assert_eq!(values.is_some(), false);
+            Ok(())
+        })
+    }
 }
