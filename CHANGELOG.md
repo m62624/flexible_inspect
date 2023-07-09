@@ -19,7 +19,7 @@
 - Filling in the error message variables: Allows to specify the same name as the name of the capture group in a regular expression.
 - Logging system for tracking validation processes and errors.
 
-Please note that this is a brief summary of the changes and features introduced in version `1.0.0`. For a detailed understanding of the features and how to use them, please refer to the README file or the official documentation.
+Please note that this is a brief summary of the changes and features introduced in version `1.0.0`. For a detailed understanding of the features and how to use them, please refer to the `README` file or the official documentation.
 
 
 ## [0.4.0] - 2023.05.15
