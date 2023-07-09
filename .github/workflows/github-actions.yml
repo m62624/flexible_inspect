@@ -51,6 +51,7 @@ jobs:
   coverage_test:
     needs: linter_check
     runs-on: ubuntu-latest
+    if: ${{ !startsWith(github.event.head_commit.message, 'docs:') }}
     steps:
       # Шаг для входа в Docker Registry
       - name: Log in to GitHub Docker Registry
@@ -106,12 +107,23 @@ jobs:
           docker cp $(docker ps -lq):/app/Windows .
           ls -al
       
-      # Шаг для загрузки пакетов в артефакты
-      - name: Upload Packages
+      # Шаг для загрузки пакетов Linux в артефакты
+      - name: Upload Linux Packages
         uses: actions/upload-artifact@v2
         with:
-          name: packages
-          path: |
-            Linux/
-            macOS/
-            Windows/
+          name: linux-packages
+          path: Linux/
+
+      # Шаг для загрузки пакетов macOS в артефакты
+      - name: Upload macOS Packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: macos-packages
+          path: macOS/
+
+      # Шаг для загрузки пакетов Windows в артефакты
+      - name: Upload Windows Packages
+        uses: actions/upload-artifact@v2
+        with:
+          name: windows-packages
+          path: Windows/

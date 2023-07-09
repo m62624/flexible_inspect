@@ -3,6 +3,7 @@ PLATFORMS = x86_64-unknown-linux-gnu aarch64-unknown-linux-gnu x86_64-pc-windows
 ARTIFACTS_DIR_LINUX := Linux
 ARTIFACTS_DIR_MACOS := macOS
 ARTIFACTS_DIR_WINDOWS := Windows
+ARTIFACTS_DIR_DIST := dist
 
 # Цель: all
 # Описание: Собирает все указанные платформы
@@ -19,6 +20,21 @@ $(PLATFORMS):
 	else \
 		mkdir -p $(ARTIFACTS_DIR_MACOS); \
 		maturin build -i python3 --release --target $@ --zig -o $(ARTIFACTS_DIR_MACOS); \
+	fi
+
+dist: $(PLATFORMS)
+
+$(PLATFORMS):
+	@echo "Building $@..."
+	@if [ "$@" = "x86_64-unknown-linux-gnu" -o "$@" = "aarch64-unknown-linux-gnu" ]; then \
+		mkdir -p $(ARTIFACTS_DIR_DIST); \
+		maturin build -i python3 --release --target $@ --zig -o $(ARTIFACTS_DIR_DIST); \
+	elif [ "$@" = "x86_64-pc-windows-msvc" -o "$@" = "aarch64-pc-windows-msvc" ]; then \
+		mkdir -p $(ARTIFACTS_DIR_DIST); \
+		maturin build -i python3 --release --target $@ --zig -o $(ARTIFACTS_DIR_DIST); \
+	else \
+		mkdir -p $(ARTIFACTS_DIR_DIST); \
+		maturin build -i python3 --release --target $@ --zig -o $(ARTIFACTS_DIR_DIST); \
 	fi
 
 # Шорткаты для каждой операционной системы
