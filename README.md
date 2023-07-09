@@ -30,10 +30,9 @@
   - [counter\_is\_equal `X`](#counter_is_equal-x)
   - [counter\_more\_than `X`](#counter_more_than-x)
   - [counter\_less\_than `X`](#counter_less_than-x)
-      - [Filling in the error message variables](#filling-in-the-error-message-variables)
+  - [Filling in the error message variables](#filling-in-the-error-message-variables)
   - [How to debug the code ?](#how-to-debug-the-code-)
   - [License](#license)
-
 
 
 ## The Library
@@ -399,7 +398,7 @@ there must be less than or equal to `x` matches
  Rule(r"\[\d+\]", MatchRequirement.MustBeFound).counter_less_than(1000)
 ```
 
-#### Filling in the error message variables
+## Filling in the error message variables
 
 Before we continue, let's find out how it works when you put the same names in the error messages and in Rule with the modifier `MustNotBeFound`, we fill in the message with the data we got from the rule and here we need to remember, no matter how many groups you create in one regular expression, we save data from the whole regular expression 
 
