@@ -1,4 +1,5 @@
 # PYSTVAL
+[![codecov](https://codecov.io/gh/m62624/pystval/branch/extend-validation/graph/badge.svg?token=S8H7J5O0AL)](https://codecov.io/gh/m62624/pystval)
 
 <p align="center">
   <kbd>
