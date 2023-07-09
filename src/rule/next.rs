@@ -128,6 +128,14 @@ impl Rule {
                     if captures.counter_value == value {
                         return NextStep::Go;
                     }
+                    // ================= (LOG) =================
+                    error!(
+                        "for the `{}` rule must be matched: `{:#?}`\ntotal matches found: `{}`",
+                        self.as_ref(),
+                        self.content_unchecked().counter,
+                        captures.counter_value,
+                    );
+                    // =========================================
                     return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
                 }
                 // Если совпадений больше или равно по условию, то проходим дальше
@@ -143,6 +151,14 @@ impl Rule {
                     if captures.counter_value >= value {
                         return NextStep::Go;
                     }
+                    // ================= (LOG) =================
+                    error!(
+                        "for the `{}` rule must be matched: `{:#?}`\ntotal matches found: `{}`",
+                        self.as_ref(),
+                        self.content_unchecked().counter,
+                        captures.counter_value,
+                    );
+                    // =========================================
                     return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
                 }
                 // Если совпадений меньше или равно по условию, то проходим дальше
@@ -159,6 +175,14 @@ impl Rule {
                     if captures.counter_value <= value {
                         return NextStep::Go;
                     }
+                    // ================= (LOG) =================
+                    error!(
+                        "for the `{}` rule must be matched: `{:#?}`\ntotal matches found: `{}`",
+                        self.as_ref(),
+                        self.content_unchecked().counter,
+                        captures.counter_value,
+                    );
+                    // =========================================
                     return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
                 }
             }
