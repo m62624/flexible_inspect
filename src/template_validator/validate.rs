@@ -41,6 +41,7 @@ impl TemplateValidator {
     /// Asynchronous text checking, unlike `sync` versions, goes class by class, but immediately stops working at the first mismatch and returns a single error class
     ///
     /// Main plus, multiple rules work competitively in a single validation
+    #[cfg(not(tarpaulin_include))]
     pub fn async_validate<'py>(
         &self,
         py: Python<'py>,

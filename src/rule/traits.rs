@@ -1,6 +1,7 @@
 use super::*;
 
 /// Реализация трейта по сравнению элементов
+#[cfg(not(tarpaulin_include))]
 mod partial_eq_eq {
     use crate::captures::CaptureData;
 
@@ -51,6 +52,7 @@ mod partial_eq_eq {
 }
 
 /// Реализация трейта для получения ссылки
+#[cfg(not(tarpaulin_include))]
 mod as_ref_str {
 
     use super::*;
