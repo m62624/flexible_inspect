@@ -19,6 +19,7 @@
     - [Rule](#rule)
       - [Root rule](#root-rule)
       - [Subrule](#subrule)
+    - [Syntax regex](#syntax-regex)
     - [Simple regex](#simple-regex)
     - [Complex regex](#complex-regex)
     - [Modifier](#modifier)
@@ -201,7 +202,13 @@ class CustomError_2(PystvalException):
         Rule(r"3 - Root rule", MatchRequirement.MustBeFound),
     ]
 ```
+### Syntax regex
+Since all calculations using regex take place in `Rust`, it is necessary to follow the format `rust regex`.
 
+More information on syntax :
+- [Default-Regex](https://docs.rs/regex/latest/regex/#syntax)
+- [Fancy-Regex](https://docs.rs/fancy-regex/latest/fancy_regex/#syntax)
+- [the same as those links, but with only a syntax table ](https://github.com/m62624/pystval/blob/extend-validation/docs/syntax_regex/regex.md)
 
 ### Simple regex
 Category rules based on the [**regex**](https://docs.rs/regex/latest/regex/) library.
