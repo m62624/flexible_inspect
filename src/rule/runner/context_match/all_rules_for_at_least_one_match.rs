@@ -128,7 +128,13 @@ impl Rule {
                 // Завершены все действия для правила
                 NextStep::Finish => (),
                 // Условие не сработало, значит ошибка
-                NextStep::Error(value) => return NextStep::Error(value),
+                NextStep::Error(value) => {
+                    // ================= (LOG) =================
+                    error!("all of the rules do not match any text (one of the rules that participated in the rule pool `{}`)",frame.0.as_ref());
+
+                    // =========================================
+                    return NextStep::Error(value);
+                }
             }
         }
 

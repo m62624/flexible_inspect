@@ -15,7 +15,7 @@ impl Rule {
         while let Some(mut frame) = stack.pop_front() {
             // ================= (LOG) =================
             trace!(
-                "Started rule (`{}`, `{:#?}`) from the stack\nFull details of the rule (after modifications): {:#?}",
+                "started rule (`{}`, `{:#?}`) from the stack\nFull details of the rule (after modifications): {:#?}",
                 frame.0.as_ref(),
                 frame.0.content_unchecked().requirement,
                 frame.0
@@ -50,7 +50,7 @@ impl Rule {
                                 ) {
                                     // ================= (LOG) =================
                                     error!(
-                                        "The rule (`{}`, `{:#?}`) did not work for text : `{}`",
+                                        "the rule (`{}`, `{:#?}`) did not work for text : `{}`",
                                         &simple_rules.all_rules[index].as_ref(),
                                         &simple_rules.all_rules[index]
                                             .content_unchecked()
@@ -76,7 +76,7 @@ impl Rule {
                                     {
                                         // ================= (LOG) =================
                                         error!(
-                                            "The rule (`{}`, `{:#?}`) did not work for text : `{}`",
+                                            "the rule (`{}`, `{:#?}`) did not work for text : `{}`",
                                             &rule.as_ref(),
                                             &rule.content_unchecked().requirement,
                                             text
@@ -109,7 +109,7 @@ impl Rule {
                                 {
                                     // ================= (LOG) =================
                                     error!(
-                                        "The rule (`{}`, `{:#?}`) didn't work for the text : `{}`",
+                                        "the rule (`{}`, `{:#?}`) didn't work for the text : `{}`",
                                         &rule.as_ref(),
                                         &rule.content_unchecked().requirement,
                                         text
@@ -131,7 +131,16 @@ impl Rule {
                 // Завершены все действия для правила
                 NextStep::Finish => (),
                 // Условие не сработало, значит ошибка
-                NextStep::Error(value) => return NextStep::Error(value),
+                NextStep::Error(value) => {
+                    // ================= (LOG) =================
+                    error!(
+                        "the rule (`{}`, `{:#?}`) didn't work",
+                        &frame.0.as_ref(),
+                        &frame.0.content_unchecked().requirement,
+                    );
+                    // =========================================
+                    return NextStep::Error(value);
+                }
             }
         }
         NextStep::Finish

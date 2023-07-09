@@ -15,7 +15,7 @@ impl Rule {
         while let Some(mut frame) = stack.pop_front() {
             // ================= (LOG) =================
             trace!(
-            "Started rule (`{}`, `{:#?}`) from the stack\nFull details of the rule (after modifications): {:#?}",
+            "started rule (`{}`, `{:#?}`) from the stack\nFull details of the rule (after modifications): {:#?}",
             frame.0.as_ref(),
             frame.0.content_unchecked().requirement,
             frame.0
@@ -54,19 +54,16 @@ impl Rule {
                                     &simple_rules.all_rules[index],
                                     &mut captures,
                                 ) {
-                                    // ================= (LOG) =================
-                                    error!(
-                                        "The rule (`{}`, `{:#?}`) did not work for text : `{}`",
-                                        &simple_rules.all_rules[index].as_ref(),
-                                        &simple_rules.all_rules[index]
-                                            .content_unchecked()
-                                            .requirement,
-                                        text
-                                    );
-                                    // =========================================
                                     err = value;
                                     continue 'skip_rule;
                                 }
+                                // ================= (LOG) =================
+                                info!(
+                                    "\nfound one rule (`{}`) \nfor one match (`{:#?}`)",
+                                    &simple_rules.all_rules[index].as_ref(),
+                                    captures.text_for_capture
+                                );
+                                // =========================================
                                 // Помечаем, что нашли правило
                                 found_rule = true;
                                 // Загружаем во временный стек если успех
@@ -84,17 +81,17 @@ impl Rule {
                                     if let NextStep::Error(value) =
                                         Self::next_or_data_for_error(rule, &mut captures)
                                     {
-                                        // ================= (LOG) =================
-                                        error!(
-                                            "The rule (`{}`, `{:#?}`) didn't work for text : `{}`",
-                                            &rule.as_ref(),
-                                            &rule.content_unchecked().requirement,
-                                            text
-                                        );
-                                        // =========================================
                                         err = value;
                                         continue 'skip_rule;
                                     }
+                                    // ================= (LOG) =================
+                                    info!(
+                                        "found one rule (`{}`) for one match (`{:#?}`)",
+                                        rule.as_ref(),
+                                        captures.text_for_capture
+                                    );
+                                    // =========================================
+
                                     // Помечаем, что нашли правило
                                     found_rule = true;
                                     // Загружаем во временный стек, если успех
@@ -121,15 +118,6 @@ impl Rule {
                                 if let NextStep::Error(value) =
                                     Self::next_or_data_for_error(rule, &mut captures)
                                 {
-                                    // ================= (LOG) =================
-                                    error!(
-                                        "The rule (`{}`, `{:#?}`) didn't work for the text : `{}`",
-                                        &rule.as_ref(),
-                                        &rule.content_unchecked().requirement,
-                                        text
-                                    );
-                                    // =========================================
-                                    // return NextStep::Error(value);
                                     err = value;
                                     continue 'skip_rule;
                                 }
@@ -142,16 +130,21 @@ impl Rule {
                         }
                     }
                     if !found_rule {
+                        // ================= (LOG) =================
+                        error!("no rules were found for any of the matches");
+                        // =========================================
                         return NextStep::Error(err);
                     }
-                    // ================= (LOG) =================
-                    info!("for all matches all rules worked successfully");
-                    // =========================================
                 }
                 // Завершены все действия для правила
                 NextStep::Finish => (),
                 // Условие не сработало, значит ошибка
-                NextStep::Error(value) => return NextStep::Error(value),
+                NextStep::Error(value) => {
+                    // ================= (LOG) =================
+                    error!("no rules were found for any of the matches");
+                    // =========================================
+                    return NextStep::Error(value);
+                }
             }
         }
         NextStep::Finish
