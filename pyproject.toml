@@ -4,7 +4,7 @@ build-backend = "maturin"
 
 [project]
 name = "pystval"
-version = "0.4.0"
+version = "1.0.0"
 description = "Library for creating a custom validator"
 requires-python = ">=3.7"
 keywords = ["validate", "regex", "rust"]
@@ -16,9 +16,13 @@ authors = [
 classifiers = [
     "Programming Language :: Rust",
     "Programming Language :: Python :: Implementation :: CPython",
+    "License :: OSI Approved :: MIT License",
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
 
 [tool.maturin]
 features = ["pyo3/extension-module"]
+
+[project.urls]
+"Homepage" = "https://github.com/m62624/pystval"
