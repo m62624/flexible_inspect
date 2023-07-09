@@ -49,7 +49,7 @@ pub fn make_error(
 
     // ================= (LOG) =================
     debug!(
-        "Received variables to fill the `{}` message: {:#?}",
+        "received variables to fill the `{}` message: {:#?}",
         custom_class_error.to_string(),
         extra_from_class
     );

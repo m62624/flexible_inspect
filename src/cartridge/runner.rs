@@ -17,7 +17,7 @@ impl CartridgeWrapper {
     pub fn sync_run(&self, text: &str) -> NextStep {
         // ================= (LOG) =================
         info!(
-            "iteratively pass by the rules of the `{}` class",
+            "all rules of the `{}` are run",
             self.0.get_py_class().to_string()
         );
         //==========================================
@@ -59,7 +59,7 @@ impl CartridgeWrapper {
     pub async fn async_run(&self, text: Arc<String>) -> NextStep {
         // ================= (LOG) =================
         info!(
-            "iteratively pass by the rules of the `{}` class",
+            "all rules of the `{}` are run",
             self.0.get_py_class().to_string()
         );
         //==========================================

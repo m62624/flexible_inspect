@@ -12,7 +12,7 @@ impl Rule {
 
         // ================= (LOG) =================
         debug!(
-            "Rule created (only constructor without modifiers): {:#?}",
+            "rule created (only constructor without modifiers): {:#?}",
             slf
         );
         // =========================================
