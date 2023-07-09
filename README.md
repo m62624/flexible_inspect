@@ -31,6 +31,7 @@
   - [counter\_more\_than `X`](#counter_more_than-x)
   - [counter\_less\_than `X`](#counter_less_than-x)
       - [Filling in the error message variables](#filling-in-the-error-message-variables)
+  - [How to debug the code ?](#how-to-debug-the-code-)
   - [License](#license)
 
 
@@ -438,6 +439,52 @@ If you want to output only one variable, you can use the reserved name without a
 message = "error message with value {main_capture}"
 # some code
  Rule(r"\d+", MatchRequirement.MustNotBeFound)
+```
+
+## How to debug the code ?
+
+How to understand what the expression caught, what rules worked ? for which rule was the modifier used ? 
+
+The library implements logging modes via an environment variable. 
+By default, you always get an error log when you forward an error from rust to python. 
+
+To just see which rule found what matches, you can run a python file with the `info` environment variable
+
+`**RUST_LOG=info** file.py`
+
+Example log
+```python
+# some text
+
+class TestError1(PystvalException):
+    message = "error message {main_capture}"
+    rules = [
+        Rule(r"\[\d+\]", MatchRequirement.MustBeFound).counter_is_equal(30)]
+
+ test_validator = TemplateValidator([TestError1])
+ test_validator.validate(text)
+
+```
+
+```bash
+[2023-07-09T15:02:54Z INFO  pystval::cartridge::runner] all rules of the `<class '__main__.TestError1'>` are run
+[2023-07-09T15:02:54Z INFO  pystval::rule::runner] rule processing mode `\[\d+\]` : `all_rules_for_all_matches`
+[2023-07-09T15:02:54Z INFO  pystval::rule::next] 
+    THE RESULT: 
+    rule: (`\[\d+\]`, `MustBeFound`),
+    `Captures: {
+        "[1]",
+    }`,
+    
+[2023-07-09T15:02:54Z INFO  pystval::rule::next] 
+    THE RESULT: 
+    rule: `\[\d+\]`,
+    rule counter Some(
+        Only(
+            30,
+        ),
+    ),
+    a total of 30 matches found
 ```
 
 ## License
