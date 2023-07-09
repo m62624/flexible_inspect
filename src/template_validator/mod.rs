@@ -5,9 +5,9 @@ use super::rule::next::NextStep;
 use super::*;
 // =================================
 
+mod traverse_and_clear;
 /// Модуль для валидации текста
 mod validate;
-
 /// Структура хранит картриджи с правилами и телом класса
 #[derive(Debug)]
 pub struct TemplateSafeSelf {
@@ -18,7 +18,7 @@ pub struct TemplateSafeSelf {
 /// Необходимо, так как используется между `async tasks`
 #[pyclass]
 #[derive(Debug)]
-pub struct TemplateValidator(Arc<TemplateSafeSelf>);
+pub struct TemplateValidator(Option<Arc<TemplateSafeSelf>>);
 
 #[pymethods]
 impl TemplateValidator {
@@ -26,15 +26,19 @@ impl TemplateValidator {
     #[new]
     pub fn new(py: Python, cartridges: PyObject) -> PyResult<Self> {
         init_logger();
-        let slf = Self(Arc::new(TemplateSafeSelf::new(py, cartridges)?));
+        let slf = Self(Some(Arc::new(TemplateSafeSelf::new(py, cartridges)?)));
         {
             debug!(
                 "loaded classes in the validator: {:#?}",
-                slf.0
-                    .cartridges
-                    .iter()
-                    .map(|x| x.get_cartridge().py_class.to_string())
-                    .collect::<Vec<_>>()
+                if let Some(classes) = &slf.0 {
+                    classes
+                        .cartridges
+                        .iter()
+                        .map(|x| x.get_cartridge().get_py_class().to_string())
+                        .collect::<Vec<_>>()
+                } else {
+                    vec![String::from("None")]
+                }
             );
         }
         Ok(slf)

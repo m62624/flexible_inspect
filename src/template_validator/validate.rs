@@ -13,21 +13,21 @@ impl TemplateValidator {
         // Коллекция для хранения ошибок
         let mut errors = Vec::new();
         // Проходимся по всем классам
-
         // ================= (LOG) =================
         debug!("synchronous validator is running");
         // =========================================
-
-        for cartridge in &self.0.cartridges {
-            // Если валидация не прошла, то создаем ошибку
-            if let NextStep::Error(mut value) = cartridge.sync_run(&text) {
-                if let Err(err) = custom_error::make_error(
-                    py,
-                    cartridge.get_cartridge().get_py_class(),
-                    &mut value,
-                ) {
-                    // Если ошибка, то добавляем ее в коллекцию
-                    errors.push(err);
+        if let Some(slf) = &self.0 {
+            for cartridge in slf.cartridges.iter() {
+                // Если валидация не прошла, то создаем ошибку
+                if let NextStep::Error(mut value) = cartridge.sync_run(&text) {
+                    if let Err(err) = custom_error::make_error(
+                        py,
+                        cartridge.get_cartridge().get_py_class(),
+                        &mut value,
+                    ) {
+                        // Если ошибка, то добавляем ее в коллекцию
+                        errors.push(err);
+                    }
                 }
             }
         }
@@ -46,52 +46,63 @@ impl TemplateValidator {
         py: Python<'py>,
         text_bytes: &types::PyBytes,
     ) -> PyResult<&'py PyAny> {
-        // Проверяем байты на `UTF-8` и создаем `Arc<String>` для `async task`
-        let text = Arc::new(Self::bytes_to_string_utf8(text_bytes.as_bytes())?);
-        // Получаем ссылку на `self`, для `async task`
-        let async_self = Arc::clone(&self.0);
+        if let Some(slf) = &self.0 {
+            // Проверяем байты на `UTF-8` и создаем `Arc<String>` для `async task`
+            let text = Arc::new(Self::bytes_to_string_utf8(text_bytes.as_bytes())?);
+            // Получаем ссылку на `self`, для `async task`
+            let async_self = Arc::clone(&slf);
 
-        // println!("Запущена функция для future into py");
-        // Возвращаем `future into py`, необходимо для того чтобы, создать `awaitable object` для `python`
+            // println!("Запущена функция для future into py");
+            // Возвращаем `future into py`, необходимо для того чтобы, создать `awaitable object` для `python`
 
-        pyo3_asyncio::async_std::future_into_py(py, async move {
-            // ================= (LOG) =================
-            debug!("asynchronous validator is running");
-            // =========================================
+            pyo3_asyncio::async_std::future_into_py(py, async move {
+                // ================= (LOG) =================
+                debug!("asynchronous validator is running");
+                // =========================================
 
-            // Итак, почему это выглядит именно так а не иначе ?
+                // Итак, почему это выглядит именно так а не иначе ?
 
-            /*
-            Поскольку `Python` не имеет концепции владения и работает исключительно с объектами в штучной упаковке, на любой объект Python можно ссылаться любое количество раз, и разрешено изменение любой ссылки.
+                /*
+                Поскольку `Python` не имеет концепции владения и работает исключительно с объектами в штучной упаковке, на любой объект Python можно ссылаться любое количество раз, и разрешено изменение любой ссылки.
 
-            Ситуацию облегчает глобальная блокировка интерпретатора (GIL), которая гарантирует, что только один поток может одновременно использовать интерпретатор Python и его API. Это означает, что вам не нужно беспокоиться о том, что один поток изменит объект, когда другой поток использует его.
-             */
+                Ситуацию облегчает глобальная блокировка интерпретатора (GIL), которая гарантирует, что только один поток может одновременно использовать интерпретатор Python и его API. Это означает, что вам не нужно беспокоиться о том, что один поток изменит объект, когда другой поток использует его.
+                 */
 
-            // Поэтому мы получаем маркер (token) интерпретатора `GIL` и выполняем в нем `async task`
-            // При получения токена, блокируется поток, поэтому мы используем `spawn_blocking`
-            // для того чтобы не блокировать поток, в котором выполняется `Python`
-            async_std::task::spawn_blocking(|| async move {
-                // println!("Запустился отедльный таск в потоке");
-                for cartridge in &async_self.cartridges {
-                    if let NextStep::Error(mut value) = cartridge.async_run(Arc::clone(&text)).await
-                    {
-                        // println!("Зарегистрировал ошибку");
-                        // Полуаем `GIL` и создаем ошибку
-                        Python::with_gil(|py| -> PyResult<()> {
-                            custom_error::make_error(
-                                py,
-                                cartridge.get_cartridge().get_py_class(),
-                                &mut value,
-                            )
-                        })?
+                // Поэтому мы получаем маркер (token) интерпретатора `GIL` и выполняем в нем `async task`
+                // При получения токена, блокируется поток, поэтому мы используем `spawn_blocking`
+                // для того чтобы не блокировать поток, в котором выполняется `Python`
+                async_std::task::spawn_blocking(|| async move {
+                    // println!("Запустился отедльный таск в потоке");
+                    for cartridge in &async_self.cartridges {
+                        if let NextStep::Error(mut value) =
+                            cartridge.async_run(Arc::clone(&text)).await
+                        {
+                            // println!("Зарегистрировал ошибку");
+                            // Полуаем `GIL` и создаем ошибку
+                            Python::with_gil(|py| -> PyResult<()> {
+                                custom_error::make_error(
+                                    py,
+                                    cartridge.get_cartridge().get_py_class(),
+                                    &mut value,
+                                )
+                            })?
+                        }
                     }
-                }
-                Ok::<(), PyErr>(())
+                    Ok::<(), PyErr>(())
+                })
+                .await
+                .await?;
+                Ok(Python::with_gil(|py| py.None()))
             })
-            .await
-            .await?;
-            Ok(Python::with_gil(|py| py.None()))
-        })
+        }
+        // Если нет `self`, то возвращаем `None`
+        else {
+            let err_msg = "early clearing of a class template from a structure in Rust";
+            // ================= (LOG) =================
+            error!("{}", err_msg);
+            // =========================================
+            Err(PyErr::new::<exceptions::PyMemoryError, _>(err_msg))
+        }
     }
 }
 
@@ -102,11 +113,9 @@ impl TemplateValidator {
             Ok(result) => Ok(result),
             Err(_) => {
                 let err_msg = format!("This data is not a valid UTF-8 string : `{:#?}` ", bytes);
-
                 // ================= (LOG) =================
                 error!("(conversion error) {}", err_msg);
                 // =========================================
-
                 Err(PyErr::new::<exceptions::PyValueError, _>(err_msg))
             }
         }
