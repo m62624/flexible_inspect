@@ -19,6 +19,7 @@
     - [Complex regex](#complex-regex)
     - [Modifier](#modifier)
       - [Different situations](#different-situations)
+      - [Extend rule](#extend-rule)
       - [Matching mode](#matching-mode)
   - [Scheme of operation modes](#scheme-of-operation-modes)
   - [`all_rules_for_all_matches`](#all_rules_for_all_matches)
@@ -245,6 +246,20 @@ As you may have noticed, there is a difference between these two options:
 | MustNotBeFound     | Yes         | No                                 | Error (match should not have been found) |
 
 This is done so that if you should not find this, but you do find it, you can create a subrules for additional checks with modifiers. If nothing is found, the subcorrections will simply be skipped.
+
+#### Extend rule
+
+Modification to extend the rule with subrules. This is a very important modifier, because it allows you to create a tree of rules, and also allows you to create a tree of rules inside a tree of rules, etc.
+
+```python
+Rule(r"1 - Root rule", MatchRequirement.MustBeFound).extend([
+    Rule(r"1 - Subrule", MatchRequirement.MustBeFound),
+    Rule(r"2 - Subrule", MatchRequirement.MustBeFound).extend([
+        Rule(r"1 - Subrule of subrule", MatchRequirement.MustBeFound),
+        Rule(r"2 - Subrule of subrule", MatchRequirement.MustBeFound),
+    ]),
+])
+```
 
 #### Matching mode
 Before we looked at modifiers that affect one `Rule`, but now we will study modifiers that affect all `subrules` within one `root rule`
