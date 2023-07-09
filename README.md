@@ -1,5 +1,7 @@
 # PYSTVAL
 [![codecov](https://codecov.io/gh/m62624/pystval/branch/extend-validation/graph/badge.svg?token=S8H7J5O0AL)](https://codecov.io/gh/m62624/pystval)
+[![CI/CD Pipeline](https://github.com/m62624/pystval/actions/workflows/github-actions.yml/badge.svg?branch=main)](https://github.com/m62624/pystval/actions/workflows/github-actions.yml)
+[![Static Badge](https://img.shields.io/badge/changelog-blue)](https://github.com/m62624/pystval/blob/main/CHANGELOG.md)
 
 <p align="center">
   <kbd>
