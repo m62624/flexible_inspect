@@ -1,4 +1,5 @@
 use super::*;
+use crate::{cartridge::CartridgeWrapper, rule::next::NextStep};
 
 mod fn_new {
     use super::*;
@@ -42,7 +43,6 @@ mod fn_validate {
 
 mod fn_async_validate {
     use super::*;
-    use crate::{cartridge::CartridgeWrapper, rule::next::NextStep};
 
     #[test]
     fn async_validate_t_0() -> PyResult<()> {
