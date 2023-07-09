@@ -123,7 +123,7 @@ pip install pystval-version-platform.whl
 
 ### Build via Docker
 
-if `Docker` is installed, clone the repository, go to the folder with the project, build the docker image together with the code and run one of the :
+If `Docker` is installed, clone the repository, navigate to the project folder, build the docker image together with the code and run the container together with one of the :
 
 ```bash
 # for Linux
