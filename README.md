@@ -6,6 +6,27 @@
   </kbd>
 </p>
 
+- [PYSTVAL](#pystval)
+  - [The Library](#the-library)
+  - [Quick Look](#quick-look)
+  - [Installation](#installation)
+  - [How does it all work?](#how-does-it-all-work)
+    - [Cartridge](#cartridge)
+    - [Rule](#rule)
+      - [Root rule](#root-rule)
+      - [Subrule](#subrule)
+    - [Simple regex](#simple-regex)
+    - [Complex regex](#complex-regex)
+    - [Modifier](#modifier)
+      - [Different situations](#different-situations)
+      - [Matching mode](#matching-mode)
+  - [Scheme of operation modes](#scheme-of-operation-modes)
+  - [`all_rules_for_all_matches`](#all_rules_for_all_matches)
+  - [`all_rules_for_at_least_one_match`](#all_rules_for_at_least_one_match)
+  - [`at_least_one_rule_for_all_matches`](#at_least_one_rule_for_all_matches)
+  - [`at_least_one_rule_for_at_least_one_match`](#at_least_one_rule_for_at_least_one_match)
+  - [License](#license)
+
 
 
 ## The Library
@@ -68,6 +89,38 @@ if list_error is not None:
 > OUTPUT: **Custom error with value : 12345**
 
 </details>
+
+## Installation
+
+To install the latest version of Pystval, use the following command:
+```bash
+pip install pystval-version-platform.whl
+```
+
+if `Docker` is installed, clone the repository, go to the folder with the project, build the docker image together with the code and run one of the :
+
+```bash
+# for Linux
+make linux-amd
+make linux-arm
+
+# for windows
+make windows-amd
+make windows-arm
+
+# for macOS
+make mac-amd
+make mac-arm
+
+```
+**Supported Platforms**:
+
+|                     | **Linux**                   | **Windows**               | **macOS**              |
+| ------------------- | --------------------------- | ------------------------- | ---------------------- |
+| System architecture | `x86_64-unknown-linux-gnu`  | `x86_64-pc-windows-msvc`  | `aarch64-apple-darwin` |
+|                     | `aarch64-unknown-linux-gnu` | `aarch64-pc-windows-msvc` | `x86_64-apple-darwin`  |
+
+
 
 
 ## How does it all work? 
@@ -147,7 +200,7 @@ It is important to note that the exact amount of memory consumed will depend on 
 ### Modifier
 Modifiers are additional logic changes for `Rule`. Modifiers are an important element of the `rules`.  When you create a `Rule` there are always at least two modifiers created. 
 
-The first one is the category of the pattern. The `Simple rule` or `Complex rule` is a hidden modifier, it cannot be called for the `Rule`, but it is defined based on the pattern. When you create a regular expression without leading and trailing checks, it will be put into the category `Simple Rule`, and will be used in the `RegexSet` for each text. If you create a regular expression with leading and trailing checks, the rule goes to the end of the queue. So we go through an easy regular expression at the beginning and a hard one at the end.
+The first one is the category of the pattern. The `Simple regex` or `Complex regex` is a hidden modifier, it cannot be called for the `Rule`, but it is defined based on the pattern. When you create a regular expression without leading and trailing checks, it will be put into the category `Simple Rule`, and will be used in the `RegexSet` for each text. If you create a regular expression with leading and trailing checks, the rule goes to the end of the queue. So we go through an easy regular expression at the beginning and a hard one at the end.
 
 The second modifier is a kind of conditional operator. 
 - `MustBeFound` - which means we must necessarily get a match from this regular expression
@@ -163,3 +216,137 @@ The second modifier is a kind of conditional operator.
 | MustNotBeFound   | Yes         | No                                 | Error (match should not have been found) |
 | MustNotBeFound   | Yes         | Yes                                | Finish processing                        |
 | MustNotBeFound   | No          | No                                 | Finish processing                        |
+
+For example, we have a regular expression `r"\d+"` and we want to get a match from it. We create a rule with the modifier `MustBeFound`. If we get a match, we continue to process the subrules. If we don't get a match, we get an error.
+
+```bash
+#=======================================
+text = "txt txt txt 910 301 44 text"
+#=======================================
+
+CustomError
+|
+root rule : r"\d+" with modifier MustBeFound
+   |     
+   |___ if true,true -> new captures from root: 910, 301, 44,
+         |__ subrule from root rule : "\d{2}" with modifier MustBeFound
+               |__ if true,true -> new captures from subrule: 44,
+                  |__  ... 
+                     |__   ...
+                        |__   ...
+```
+#### Different situations 
+
+As you may have noticed, there is a difference between these two options: 
+
+| MatchRequirement   | Match found | does this rule have any subrules ? | Result                                   |
+| ------------------ | ----------- | ---------------------------------- | ---------------------------------------- |
+| **MustNotBeFound** | **Yes**     | **Yes**                            | **Continue processing subrules**         |
+| MustNotBeFound     | Yes         | No                                 | Error (match should not have been found) |
+
+This is done so that if you should not find this, but you do find it, you can create a subrules for additional checks with modifiers. If nothing is found, the subcorrections will simply be skipped.
+
+#### Matching mode
+Before we looked at modifiers that affect one `Rule`, but now we will study modifiers that affect all `subrules` within one `root rule`
+
+- `all_rules_for_all_matches`
+- `all_rules_for_at_least_one_match`
+- `at_least_one_rule_for_all_matches`
+- `at_least_one_rule_for_at_least_one_match`
+
+Scheme of operation modes
+---
+
+<details>
+<summary>Click me</summary>
+
+![](<docs/scheme/scheme.svg>)
+
+</details>
+
+`all_rules_for_all_matches` 
+---
+
+In this mode, to which all additional rules apply. (default mode for everyone)
+We check that for each match (text) all the rules will work.
+
+```bash
+#=======================================
+text = "txt [123] txt [456] txt [789]"
+#=======================================
+
+CustomError
+|
+|__ Rule "\[[^\[\]]+\]" (MustBeFound)
+     |   [123], [456], [789]
+     |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE 
+     |                                      |       |        |
+     |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
+```
+
+`all_rules_for_at_least_one_match`
+---
+
+In this mode, all the sub-adjustments should work for at least one match. If at least one sub-rule does not work on one of the matches, an error will be returned.
+
+```bash
+#=======================================
+text = "txt [123] txt [456] txt [789]"
+#=======================================
+
+CustomError
+|
+|__ Rule "\[[^\[\]]+\]" (MustBeFound)
+    |   [123], [456], [789]
+    |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE 
+    |                                      |
+    |___ Subrule "\[\d+\]" (MustBeFound) __|
+    |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- ERROR
+
+```
+
+`at_least_one_rule_for_all_matches` 
+---
+
+In this mode, at least one sub-rule should work for every match. If no sub-rule works on one of the matches, an error will be returned.
+
+```bash
+#=======================================
+text = "txt [123] txt [456] txt [789]"
+#=======================================
+
+CustomError
+|
+|__ Rule "\[[^\[\]]+\]" (MustBeFound)
+    |   [123], [456], [789]
+    |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE -- [456] -- TRUE -- [789] -- TRUE
+    |                                      |               |                 |
+    |___ Subrule "\[\d+\]" (MustBeFound) __|_______________|_________________|
+    |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched)
+
+```
+
+`at_least_one_rule_for_at_least_one_match`
+--- 
+
+In this mode, at least one sub-rule should work for at least one match. If no sub-rule works on one of the matches, an error will be returned.
+
+```bash
+#=======================================
+text = "txt [123] txt [456] txt [789]"
+#=======================================
+
+CustomError
+|
+|__ Rule "\[[^\[\]]+\]" (MustBeFound)
+    |   [123], [456], [789]
+    |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE 
+    |                                      |
+    |___ Subrule "\[\d+\]" (MustBeFound) __|
+    |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
+
+```
+
+## License
+
+[MIT License](LICENSE).
