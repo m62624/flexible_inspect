@@ -59,29 +59,9 @@ mod export {
     #[pymodule]
     pub fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
         py_module.add_class::<rule::Rule>()?;
-
-        // ================= (LOG) =================
-        debug!("successfully importing `Rule` into python");
-        // =========================================
-
         py_module.add_class::<rule::MatchRequirement>()?;
-
-        // ================= (LOG) =================
-        debug!("successfully importing `MatchRequirement` into python");
-        // =========================================
-
         py_module.add_class::<template_validator::TemplateValidator>()?;
-
-        // ================= (LOG) =================
-        debug!("successfully importing `TemplateValidator` into python");
-        // =========================================
-
         PyModule::from_code(_py, &base_error::export_base_error(), "", MODULE_NAME)?;
-
-        // ================= (LOG) =================
-        debug!("successfully importing `PystvalException` into python");
-        // =========================================
-
         Ok(())
     }
 }
