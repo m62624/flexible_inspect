@@ -2,7 +2,7 @@
 
 <p align="center">
   <kbd>
-    <img src="docs/images/Color logo - no background.svg" alt="Logo" width="700"/>
+    <img src="https://github.com/m62624/pystval/blob/extend-validation/docs/images/Color%20logo%20-%20no%20background.svg" alt="Logo" width="700"/>
   </kbd>
 </p>
 
@@ -10,6 +10,9 @@
   - [The Library](#the-library)
   - [Quick Look](#quick-look)
   - [Installation](#installation)
+    - [PyPi.](#pypi)
+    - [Github packages](#github-packages)
+    - [Build via Docker](#build-via-docker)
   - [How does it all work?](#how-does-it-all-work)
     - [Cartridge](#cartridge)
     - [Rule](#rule)
@@ -98,10 +101,23 @@ if list_error is not None:
 
 ## Installation
 
-To install the latest version of Pystval, use the following command:
+### PyPi.
+Installation from `PyPi` (to be added soon)
+
+```bash
+pip install pystval
+```
+
+### Github packages
+
+Under `Releases` choose your platform.
+Unpack the archive and install
+
 ```bash
 pip install pystval-version-platform.whl
 ```
+
+### Build via Docker
 
 if `Docker` is installed, clone the repository, go to the folder with the project, build the docker image together with the code and run one of the :
 
@@ -280,7 +296,7 @@ Scheme of operation modes
 <details>
 <summary>Click me</summary>
 
-![](<docs/scheme/scheme.svg>)
+![](<https://github.com/m62624/pystval/blob/extend-validation/docs/scheme/scheme.svg>)
 
 </details>
 

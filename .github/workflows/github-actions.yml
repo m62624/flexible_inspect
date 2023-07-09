@@ -90,7 +90,7 @@ jobs:
     needs: coverage_test
     runs-on: ubuntu-latest
     # Проверяем, что пайплайн запущен в ветке main и что событие - пуш или пулл-реквест
-    if: ${{ github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'pull_request') }}
+    if: ${{ startsWith(github.ref, 'refs/tags/v') && github.ref == 'refs/heads/main' && (github.event_name == 'push' || github.event_name == 'pull_request') }}
     steps:
       # Шаг для входа в Docker Registry
       - name: Log in to GitHub Docker Registry
