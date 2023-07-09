@@ -131,7 +131,7 @@ class CustomError_2(PystvalException):
 Category rules based on the [**regex**](https://docs.rs/regex/latest/regex/) library.
 This package is optimized for fast execution and low memory consumption. It uses efficient algorithms and data structures to minimize memory usage while processing regular expressions.
 
-The `regex` of rust provides us with `RegexSet`, a data structure which allows us to match a string with a set of regular expressions at the same time. This can be useful when you have a lot of regular expressions and want to quickly determine which ones match a particular string.
+The `regex` of rust provides us with [`RegexSet`](https://docs.rs/regex/latest/regex/struct.RegexSet.html), a data structure which allows us to match a string with a set of regular expressions at the same time. This can be useful when you have a lot of regular expressions and want to quickly determine which ones match a particular string.
 
 The main advantage of using RegexSet is that it can be much faster than applying each regular expression to a string in sequence, especially if you have a large number of regular expressions.
 
@@ -145,4 +145,21 @@ Category rules based on the [**fancy-regex**](https://docs.rs/fancy-regex/latest
 It is important to note that the exact amount of memory consumed will depend on the specific regular expressions and data you are working with.
 
 ### Modifier
-Modifiers are additional logic changes for `Rule`.
+Modifiers are additional logic changes for `Rule`. Modifiers are an important element of the `rules`.  When you create a `Rule` there are always at least two modifiers created. 
+
+The first one is the category of the pattern. The `Simple rule` or `Complex rule` is a hidden modifier, it cannot be called for the `Rule`, but it is defined based on the pattern. When you create a regular expression without leading and trailing checks, it will be put into the category `Simple Rule`, and will be used in the `RegexSet` for each text. If you create a regular expression with leading and trailing checks, the rule goes to the end of the queue. So we go through an easy regular expression at the beginning and a hard one at the end.
+
+The second modifier is a kind of conditional operator. 
+- `MustBeFound` - which means we must necessarily get a match from this regular expression
+- `MustNotBeFound` - which means, based on this regular expression, we must not get a match 
+
+| MatchRequirement | Match found | does this rule have any subrules ? | Result                                   |
+| ---------------- | ----------- | ---------------------------------- | ---------------------------------------- |
+| MustBeFound      | Yes         | Yes                                | Continue processing subrules             |
+| MustBeFound      | Yes         | No                                 | Finish processing                        |
+| MustBeFound      | No          | Yes                                | Error (match must have been found)       |
+| MustBeFound      | No          | No                                 | Error (match must have been found)       |
+| MustNotBeFound   | Yes         | Yes                                | Continue processing subrules             |
+| MustNotBeFound   | Yes         | No                                 | Error (match should not have been found) |
+| MustNotBeFound   | Yes         | Yes                                | Finish processing                        |
+| MustNotBeFound   | No          | No                                 | Finish processing                        |
