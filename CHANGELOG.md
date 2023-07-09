@@ -1,5 +1,5 @@
 # Changelog
-## [1.0.0] - 2023.07.xx
+## [1.0.0] - 2023.07.11
 **Added**
 
 - Combination of different rules with modifiers, with results of these rules automatically passed to subexpressions.
