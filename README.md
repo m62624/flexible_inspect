@@ -106,7 +106,7 @@ if list_error is not None:
 ## Installation
 
 ### PyPi.
-Installation from `PyPi` (to be added soon)
+Installation from `PyPi`
 
 ```bash
 pip install pystval
