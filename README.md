@@ -30,6 +30,7 @@
   - [counter\_is\_equal `X`](#counter_is_equal-x)
   - [counter\_more\_than `X`](#counter_more_than-x)
   - [counter\_less\_than `X`](#counter_less_than-x)
+      - [Filling in the error message variables](#filling-in-the-error-message-variables)
   - [License](#license)
 
 
@@ -397,6 +398,47 @@ there must be less than or equal to `x` matches
  Rule(r"\[\d+\]", MatchRequirement.MustBeFound).counter_less_than(1000)
 ```
 
+#### Filling in the error message variables
+
+Before we continue, let's find out how it works when you put the same names in the error messages and in Rule with the modifier `MustNotBeFound`, we fill in the message with the data we got from the rule and here we need to remember, no matter how many groups you create in one regular expression, we save data from the whole regular expression 
+
+```python
+text = "123123sd"
+Rule(r"(?P<NUMBER_3>\d{3})(?P=NUMBER_3)\w+", MatchRequirement.MustBeFound)
+```
+> OUTPUT: 
+```rust
+Some(Captures({
+    0: Some("123123sds"),
+    1: Some("123"),
+})),
+```
+
+we skip the match from the `NUMBER_3` (**1**) subgroup, we keep the overall result from the expression (**0**).
+
+---
+When you specify the `message` attribute in a class
+ 
+```python
+# some code
+message = "error message with value {INFO}"
+# some code
+```
+you can specify the same name as the name of the capture group in a regular expression
+
+```python
+ Rule(r"(?P<INFO>\d+)", MatchRequirement.MustNotBeFound)
+```
+
+If you want to output only one variable, you can use the reserved name without assigning a group name to the regular mode 
+`main_capture`.
+
+```python
+# some code
+message = "error message with value {main_capture}"
+# some code
+ Rule(r"\d+", MatchRequirement.MustNotBeFound)
+```
 
 ## License
 
