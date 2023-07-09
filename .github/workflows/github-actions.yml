@@ -51,7 +51,6 @@ jobs:
   coverage_test:
     needs: linter_check
     runs-on: ubuntu-latest
-    if: ${{ !contains(github.event.head_commit.message, 'docs:') }}
     steps:
       # Шаг для входа в Docker Registry
       - name: Log in to GitHub Docker Registry
