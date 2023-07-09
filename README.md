@@ -5,7 +5,7 @@
 
 <p align="center">
   <kbd>
-    <img src="https://github.com/m62624/pystval/blob/extend-validation/docs/images/Color%20logo%20-%20no%20background.svg" alt="Logo" width="700"/>
+    <img src="https://github.com/m62624/pystval/blob/main/docs/images/Color%20logo%20-%20no%20background.svg" alt="Logo" width="700"/>
   </kbd>
 </p>
 
@@ -306,7 +306,7 @@ Scheme of operation modes
 <details>
 <summary>Click me</summary>
 
-![](<https://github.com/m62624/pystval/blob/extend-validation/docs/scheme/scheme.svg>)
+![](<https://github.com/m62624/pystval/blob/main/docs/scheme/scheme.svg>)
 
 </details>
 
