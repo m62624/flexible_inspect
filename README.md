@@ -246,7 +246,7 @@ The second modifier is a kind of conditional operator.
 | MustBeFound      | No          | No                                 | Error (match must have been found)       |
 | MustNotBeFound   | Yes         | Yes                                | Continue processing subrules             |
 | MustNotBeFound   | Yes         | No                                 | Error (match should not have been found) |
-| MustNotBeFound   | Yes         | Yes                                | Finish processing                        |
+| MustNotBeFound   | No          | Yes                                | Finish processing                        |
 | MustNotBeFound   | No          | No                                 | Finish processing                        |
 
 For example, we have a regular expression `r"\d+"` and we want to get a match from it. We create a rule with the modifier `MustBeFound`. If we get a match, we continue to process the subrules. If we don't get a match, we get an error.
