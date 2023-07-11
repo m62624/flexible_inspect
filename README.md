@@ -6,7 +6,7 @@
 
 <p align="center">
   <kbd>
-    <img src="https://github.com/m62624/pystval/blob/main/docs/images/Color%20logo%20-%20no%20background.svg" alt="Logo" width="700"/>
+    <img src="https://github.com/m62624/pystval/blob/main/docs/images/Color%20logo%20-%20no%20background.png" alt="Logo" width="700"/>
   </kbd>
 </p>
 
