@@ -64,6 +64,9 @@ RUN cargo fetch
 # делаем один раз билд для каждой платформы, 
 # headers загружаются только при сборке (либо я не нашел команду для maturin :D)
 RUN make all;
+# 
 RUN rm -rf *
 RUN mkdir coverage
+RUN pip3 install --upgrade build
+RUN pip3 install --upgrade twine
 COPY . .

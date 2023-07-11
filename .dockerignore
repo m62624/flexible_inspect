@@ -2,8 +2,6 @@
 .vscode
 .github
 target
-CHANGELOG.md
-README.md
 .gitlab-ci.yml
 Dockerfile
 WHEELS
