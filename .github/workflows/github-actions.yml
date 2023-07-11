@@ -142,7 +142,7 @@ jobs:
 
       # Шаг для загрузки пакетов в артефакты
       - name: Upload Packages
-        uses: actions/upload-artifact@v2
+        uses: actions/upload-artifact@v3
         with:
           name: packages
           path: ${{ env.DIR_MODE }}
