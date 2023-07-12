@@ -211,7 +211,7 @@ Since all calculations using regex take place in `Rust`, it is necessary to foll
 More information on syntax :
 - [Default-Regex](https://docs.rs/regex/latest/regex/#syntax)
 - [Fancy-Regex](https://docs.rs/fancy-regex/latest/fancy_regex/#syntax)
-- [the same as those links, but with only a syntax table ](https://github.com/m62624/pystval/blob/extend-validation/docs/syntax_regex/regex.md)
+- [the same as those links, but with only a syntax table ](https://github.com/m62624/pystval/blob/main/docs/syntax_regex/regex.md)
 
 ### Simple regex
 Category rules based on the [**regex**](https://docs.rs/regex/latest/regex/) library.
