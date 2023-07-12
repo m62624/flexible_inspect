@@ -1,8 +1,8 @@
 # PYSTVAL
 [![codecov](https://codecov.io/gh/m62624/pystval/branch/main/graph/badge.svg?token=S8H7J5O0AL)](https://codecov.io/gh/m62624/pystval)
-[![CI/CD Pipeline](https://github.com/m62624/pystval/actions/workflows/github-actions.yml/badge.svg?branch=main)](https://github.com/m62624/pystval/actions/workflows/github-actions.yml)
 [![changelog](https://img.shields.io/badge/changelog-blue)](https://github.com/m62624/pystval/blob/main/CHANGELOG.md)
-[![Downloads](https://static.pepy.tech/personalized-badge/pystval?period=total&units=international_system&left_color=orange&right_color=black&left_text=Downloads)](https://pepy.tech/project/pystval)
+[![CI/CD Pipeline](https://github.com/m62624/pystval/actions/workflows/github-actions.yml/badge.svg?branch=main)](https://github.com/m62624/pystval/actions/workflows/github-actions.yml)
+![PyPI - Downloads](https://img.shields.io/pypi/dm/pystval)
 
 <p align="center">
   <kbd>
