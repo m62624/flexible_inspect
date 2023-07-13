@@ -1,6 +1,7 @@
 use super::captures::CaptureData;
 use super::*;
 use log::info;
+mod counter_status;
 /// Перечисление для определения следующего шага.
 /// Используется вместо `bool`, для упрощения понимания кода,
 /// любые новые модификаторы должны возвращать `NextStep`, тем самым
@@ -43,12 +44,21 @@ impl Rule {
                     // Так как, если есть совпадение, и пользователь указал подправила,
                     // значит пользователь хочет, чтобы теперь на это совпадение
                     // были применены подправила
-                    (true, true) => rule.counter_status(captures),
+                    (true, true) => {
+                        if let NextStep::Error(value) = rule.counter_status(captures) {
+                            return NextStep::Error(value);
+                        }
+
+                        // Конечный результат должен быть Go
+                        NextStep::Go
+                    }
                     // Если есть совпадение, но нет подправил, то мы завершаемся.
                     (true, false) => {
                         if let NextStep::Error(value) = rule.counter_status(captures) {
                             return NextStep::Error(value);
                         }
+
+                        // Конечный результат должен быть Finish
                         NextStep::Finish
                     }
                     // Если нет совпадения, но есть подправила, это ошибка.
@@ -84,7 +94,14 @@ impl Rule {
                     // поэтому можно сделать условие, сначала найти `A` (но оно не должно быть найдено),
                     // но так как мы указали подпрпавила, мы можем проверить совпадения из `A`, есть какие то нежелательные даннные в форме `Y`.
                     // Если же их нет, то можно не вызывать ошибку
-                    (true, true) => rule.counter_status(captures),
+                    (true, true) => {
+                        if let NextStep::Error(value) = rule.counter_status(captures) {
+                            return NextStep::Error(value);
+                        }
+
+                        // Конечный результат должен быть Go
+                        NextStep::Go
+                    }
                     // Если есть совпадение, но нет подправил, то мы вызываем ошибку
                     (true, false) => {
                         NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)))
@@ -94,6 +111,8 @@ impl Rule {
                         if let NextStep::Error(value) = rule.counter_status(captures) {
                             return NextStep::Error(value);
                         }
+
+                        // Конечный результат должен быть Finish
                         NextStep::Finish
                     }
                     // Если нет совпадения и нет подправил, то мы завершаемся.
@@ -101,93 +120,12 @@ impl Rule {
                         if let NextStep::Error(value) = rule.counter_status(captures) {
                             return NextStep::Error(value);
                         }
+
+                        // Конечный результат должен быть Fininsh
                         NextStep::Finish
                     }
                 }
             }
         }
-    }
-
-    /// Проверка счетчика, если он есть
-    /// Если совпадение больше или меньше, или равно по условию,
-    /// то либо проходим дальше, либо вызываем ошибку
-    fn counter_status(&self, captures: &mut CaptureData) -> NextStep {
-        if let Some(value) = self.content_unchecked().counter {
-            match value {
-                // Если совпадений равно по условию, то проходим дальше
-                Counter::Only(value) => {
-                    // ================= (LOG) =================
-                    info!(
-                        "\nTHE RESULT: \nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
-                        self.as_ref(),
-                        self.content_unchecked().counter,
-                        captures.counter_value
-                    );
-                    // =========================================
-
-                    if captures.counter_value == value {
-                        return NextStep::Go;
-                    }
-                    // ================= (LOG) =================
-                    error!(
-                        "for the `{}` rule must be matched: `{:#?}`\ntotal matches found: `{}`",
-                        self.as_ref(),
-                        self.content_unchecked().counter,
-                        captures.counter_value,
-                    );
-                    // =========================================
-                    return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
-                }
-                // Если совпадений больше или равно по условию, то проходим дальше
-                Counter::MoreThan(value) => {
-                    // ================= (LOG) =================
-                    info!(
-                        "\nTHE RESULT: \nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
-                        self.as_ref(),
-                        self.content_unchecked().counter,
-                        captures.counter_value
-                    );
-                    // =========================================
-                    if captures.counter_value >= value {
-                        return NextStep::Go;
-                    }
-                    // ================= (LOG) =================
-                    error!(
-                        "for the `{}` rule must be matched: `{:#?}`\ntotal matches found: `{}`",
-                        self.as_ref(),
-                        self.content_unchecked().counter,
-                        captures.counter_value,
-                    );
-                    // =========================================
-                    return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
-                }
-                // Если совпадений меньше или равно по условию, то проходим дальше
-                Counter::LessThan(value) => {
-                    // ================= (LOG) =================
-                    info!(
-                        "\nTHE RESULT: \nrule: `{}`,\nrule counter {:#?},\na total of {} matches found",
-                        self.as_ref(),
-                        self.content_unchecked().counter,
-                        captures.counter_value
-                    );
-                    // =========================================
-
-                    if captures.counter_value <= value {
-                        return NextStep::Go;
-                    }
-                    // ================= (LOG) =================
-                    error!(
-                        "for the `{}` rule must be matched: `{:#?}`\ntotal matches found: `{}`",
-                        self.as_ref(),
-                        self.content_unchecked().counter,
-                        captures.counter_value,
-                    );
-                    // =========================================
-                    return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
-                }
-            }
-        }
-        // Если счетчика нет, то просто проходим дальше
-        NextStep::Go
     }
 }
