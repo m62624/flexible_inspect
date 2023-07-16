@@ -14,11 +14,11 @@ The difference between this library and the usual use of regular expressions is 
 
 ### Implementation
 
-Implementation: Regex is a standard library for working with regular expressions in many programming languages, including Python. It provides powerful pattern-based text retrieval and processing capabilities. On the other hand, `Pystval` is a specialized library for data validation in Python. It is designed specifically for easy and convenient data validation in applications.
+Implementation: `Regex` is a standard library for working with regular expressions in many programming languages, including Python. It provides powerful pattern-based text retrieval and processing capabilities. On the other hand, `Pystval` is a specialized library for data validation in Python. It is designed specifically for easy and convenient data validation in applications.
 
 ### Abstraction Level
 
-Abstraction Level: Regex works at the level of regular expressions, which are sequences of characters that define a pattern. It has a wide range of functions and operators to define complex patterns for text search and replacement. PyStval, on the other hand, provides a higher level of abstraction for data validation. It offers ready-made rules and functions for checking data types, value ranges, and other validation conditions.
+Abstraction Level: `Regex` works at the level of regular expressions, which are sequences of characters that define a pattern. It has a wide range of functions and operators to define complex patterns for text search and replacement. `Pystval`, on the other hand, provides a higher level of abstraction for data validation. It offers ready-made rules and functions for checking data types, value ranges, and other validation conditions.
 
 ### Finite state machines
 
