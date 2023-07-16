@@ -18,6 +18,11 @@ impl Rule {
                     .to_str()?,
             );
         }
-        Rule::new(RegExpBuilder::from(&texts[..]).build(), match_requirement)
+        let gen_reg = RegExpBuilder::from(&texts[..]).build();
+        debug!(
+            "regular expression `{}` is generated based on the obtained data: \n {:#?}",
+            gen_reg, texts
+        );
+        Rule::new(gen_reg, match_requirement)
     }
 }
