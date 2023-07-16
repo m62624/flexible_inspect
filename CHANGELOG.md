@@ -13,7 +13,7 @@
 - `Subrule`: The rules that are below the first step of the cartridge, as well as all rules created inside the extend method.
 - `Simple regex`: Category rules based on the `regex` library.
 - `Complex regex`: Category rules based on the `fancy-regex` library.
-- Modifier`: Additional logic changes for Rule.
+- `Modifier`: Additional logic changes for Rule.
 - Matching mode: Modifiers that affect all subrules within one root rule.
 - Matching text counter: Keeps the number of identical matches.
 - Filling in the error message variables: Allows to specify the same name as the name of the capture group in a regular expression.

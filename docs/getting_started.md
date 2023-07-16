@@ -22,3 +22,6 @@ pip install pystval-vesrion.whl
 ```
 
 
+### Basic concepts and terms
+
+

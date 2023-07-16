@@ -21,7 +21,6 @@ markdown_extensions:
 nav: 
   - Home: index.md
   - Getting started: getting_started.md
+  - Requirements: requirements.md
   - Changelog: changelog.md
   - License: LICENSE.md
-
-
