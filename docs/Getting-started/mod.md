@@ -22,6 +22,7 @@ pip install pystval-vesrion.whl
 ```
 
 
-### Basic concepts and terms
+## Basic concepts and terms
 
+{% include "basic_concepts_and_terms.md" %}
 
