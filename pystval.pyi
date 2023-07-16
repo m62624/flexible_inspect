@@ -1,5 +1,5 @@
 import enum
-from typing import Optional, Type, TypeVar, List, Any
+from typing import Optional, Type, List, Any
 
 
 class PystvalErrorMeta(type):
