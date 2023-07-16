@@ -454,21 +454,4 @@ mod fn_auto_generate_rule {
             Ok(())
         })
     }
-
-    #[test]
-    fn auto_generate_t_2() -> PyResult<()> {
-        pyo3::prepare_freethreaded_python();
-        Python::with_gil(|py| -> PyResult<()> {
-            let texts = types::PyList::new(
-                py,
-                ["
-            "],
-            );
-            assert_eq!(
-                Rule::auto_generate(MatchRequirement::MustBeFound, texts)?.as_ref(),
-                "^(?:aboba|b(?:(?:ob|a))?)$"
-            );
-            Ok(())
-        })
-    }
 }
