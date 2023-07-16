@@ -1,18 +1,10 @@
-- [Links](#links)
-  - [Default Regex](#default-regex)
-  - [Fancy Regex](#fancy-regex)
 
-
-# Links
-> Text taken from these links (full details) : 
-> - [ (`regex`) docs.rs](https://docs.rs/regex/latest/regex/)
-> - [ (`fancy-regex`) docs.rs](https://docs.rs/fancy-regex/latest/fancy_regex/)
-
----
+# Regex Syntax
 
 ## Default Regex
 
-**Matching one character**:
+**Matching one character**
+
 |             |                                                                 |
 | ----------- | --------------------------------------------------------------- |
 | `.`         | any character except new line (includes new line with s flag)   |
@@ -23,7 +15,8 @@
 | `\PX`       | Negated Unicode character class identified by a one-letter name |
 | `\P{Greek}` | negated Unicode character class (general category or script)    |
 
-**Character classes**:
+**Character classes**
+
 |                |                                                                         |
 | -------------- | ----------------------------------------------------------------------- |
 | `[xyz]`        | A character class matching either x, y or z (union).                    |
@@ -38,13 +31,15 @@
 | `[a-g~~b-h]`   | Symmetric difference (matching `a` and `h` only)                        |
 | `[\[\]]`       | Escaping in character classes (matching [ or ])                         |
 
-**Composites**:
+**Composites**
+
 |      |                                 |
 | ---- | ------------------------------- |
 | `xy` | concatenation (x followed by y) |
 | `x   | y`                              | alternation (x or y, prefer x) |
 
-**Repetitions**:
+**Repetitions**
+
 |           |                                              |
 | --------- | -------------------------------------------- |
 | `x*`      | zero or more of x (greedy)                   |
@@ -60,7 +55,8 @@
 | `x{n,}?`  | at least n x (ungreedy/lazy)                 |
 | `x{n}?`   | exactly n x                                  |
 
-**Empty matches**:
+**Empty matches**
+
 |      |                                                                             |
 | ---- | --------------------------------------------------------------------------- |
 | `^`  | the beginning of text (or start-of-line with multi-line mode)               |
@@ -71,6 +67,7 @@
 | `\B` | not a Unicode word boundary                                                 |
 
 **Grouping and flags**
+
 |                 |                                                                   |
 | --------------- | ----------------------------------------------------------------- |
 | `(exp)`         | numbered capture group (indexed by opening parenthesis)           |
@@ -90,6 +87,7 @@
 | `x` | verbose mode, ignores whitespace and allow line comments (starting with `#`) |
 
 **Perl character classes (Unicode friendly)**
+
 |      |                                                                                    |
 | ---- | ---------------------------------------------------------------------------------- |
 | `\d` | digit (`\p{Nd}`)                                                                   |
@@ -101,7 +99,8 @@
 
 ## Fancy Regex
 
-**Escapes:**
+**Escapes**
+
 |      |                                                   |
 | ---- | ------------------------------------------------- |
 | `\h` | hex digit (`[0-9A-Fa-f]`)                         |
@@ -110,13 +109,15 @@
 | `\K` | keep text matched so far out of the overall match |
 | `\G` | anchor to where the previous match ended          |
 
-**Backreferences**:
+**Backreferences**
+
 |      |                                                             |
 | ---- | ----------------------------------------------------------- |
 | `\1` | match the exact string that the first capture group matched |
 | `\2` | backref to the second capture group, etc                    |
 
-**Named capture groups**:
+**Named capture groups**
+
 |                 |                                                                  |
 | --------------- | ---------------------------------------------------------------- |
 | `(?<name>exp)`  | match exp, creating capture group named name                     |
@@ -124,7 +125,7 @@
 | `(?P<name>exp)` | same as `(?<name>exp)` for compatibility with `Python`, etc.     |
 | `(?P=name)`     | same as `\k<name>` for compatibility with `Python`, etc.         |
 
-**Look-around assertions for matching without changing the current position**:
+**Look-around assertions for matching without changing the current position**
 
 |            |                                                                          |
 | ---------- | ------------------------------------------------------------------------ |
@@ -132,3 +133,11 @@
 | `(?!exp)`  | negative look-ahead, succeeds if exp doesn’t match to the right          |
 | `(?<=exp)` | look-behind, succeeds if exp matches to the left of the current position |
 | `(?<!exp)` | negative look-behind, succeeds if exp doesn’t match to the left          |
+
+
+# Links
+text taken from these links (full details)
+
+- [ Docs.rs (regex) ](https://docs.rs/regex/latest/regex/)
+
+- [ Docs.rs (fancy-regex)](https://docs.rs/fancy-regex/latest/fancy_regex/)

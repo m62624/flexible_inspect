@@ -1,0 +1,17 @@
+site_name: Pystval documentation
+repo_url: https://github.com/m62624/pystval.git
+theme:
+  name: readthedocs
+plugins:
+  - include-markdown
+  - exclude:
+      glob:
+        - images/*
+        - scheme/*
+        - examples/*
+
+nav: 
+  - Home: index.md
+  - License: LICENSE.md
+
+
