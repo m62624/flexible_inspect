@@ -52,11 +52,11 @@ impl Rule {
                     }
                 }
                 ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {
-                    // if let NextStep::Error(v) =
-                    //     Self::at_least_one_rule_for_at_least_one_match(&mut stack)
-                    // {
-                    //     return NextStep::Error(v);
-                    // }
+                    if let NextStep::Error(v) =
+                        Self::at_least_one_rule_for_at_least_one_match(&mut stack)
+                    {
+                        return NextStep::Error(v);
+                    }
                 }
             }
         }

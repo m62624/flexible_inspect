@@ -11,7 +11,6 @@ impl Rule {
             stack.front().unwrap().0.as_ref()
         );
         let mut temp_stack: VecDeque<(&Rule, CaptureData)> = VecDeque::new();
-        // temp_stack.push_back(stack.pop_front().unwrap());
         trace!("temporary stack created");
         while let Some(mut frame) = stack.pop_front() {
             trace!("received frame from stack `{}`", frame.0.as_ref());
