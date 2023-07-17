@@ -40,6 +40,12 @@ class ErrorCheckText(PystvalException):
 
 When creating an `ErrorCheckText` cartridge, it is mandatory to specify the message and add at least one rule for validation. When creating a rule at least three modifiers are created for each rule, one of which is `MatchRequirement`, after the second is a hidden modifier that defines the type of regex (default regex or fancy regex), it cannot be explicitly changed, it is determined based on what syntax you used (default regex or fancy regex) and the third modifier is the match validation mode modifier.
 
+`MatchRequirement`` is a kind of conditional operator ([more information about this modifier]).
+
+- `MustBeFound` - which means we must necessarily get a match from this regular expression
+- `MustNotBeFound` - which means, based on this regular expression, we must not get a match
+
+
 First, let's create the validator, we can load the cartridge into the validator
 
 ```py
@@ -50,6 +56,7 @@ for the basic example we use synchronous version of validations, returns `Option
 ```py
 result = simple_text_validator.validate(text)
 ```
+
 Checking the result of validations
 
 ```py
@@ -70,7 +77,6 @@ To just see which rule found what matches, you can run a python file with the `i
 ```bash
 RUST_LOG=info python3 main.py
 ```
-
 <details>
 <summary>Show log</summary>
 
@@ -88,5 +94,48 @@ text is valid
 ```
 </details>
 <br>
+With the help of logs, you can check which rules have passed the conditions and which have not, what their modifiers are used and the moment of their initializations ([more log information](../debug_and_Logs.md))
 
-With the help of logs, you can check which rules have passed the conditions and which have not, what their modifiers are used and the moment of their initializations (More log information)
+Now knowing how to use logs, we can continue writing rules for validations. We got only the text that is included in `---`, now we want to get for example only brackets with any other values except brackets themselves, i.e. without nesting. 
+
+For this we can use the extend modifier, when you create root rules, they must all fulfill their condition or else throw an error. If you want some rule to work for some match. You must create a sub-rule using `extend`. 
+
+```python
+class ErrorCheckText(PystvalException):
+    message = "text contains an error"
+    rules = [
+        Rule("---\s?.+\s?---", MatchRequirement.MustBeFound).extend(
+            [
+                Rule("[[^\[\]]+\]",MatchRequirement.MustBeFound)
+            ]
+        )
+    ]
+```
+
+So, the main difference between a root rule and a subrule is that all roots must fulfill the condition, when subrules can have different checking modes. By standard, when you create subrules, they have : `all_rules_for_all_matches` enabled by default, but you can change it to 
+
+- `all_rules_for_at_least_one_match`
+- `at_least_one_rule_for_all_matches`
+- `at_least_one_rule_for_at_least_one_match`
+
+Now let's take a look at the standard mode. In this mode, to which all additional rules apply. (default mode for everyone)
+We check that for each match (text) all the rules will work.
+
+```bash
+#=======================================
+text = "txt [123] txt [456] txt [789]"
+#=======================================
+
+CustomError
+|
+|__ Rule "\[[^\[\]]+\]" (MustBeFound)
+     |   [123], [456], [789]
+     |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE 
+     |                                      |       |        |
+     |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
+```
+
+Since we only have one tweak right now, we may not change that mode. The moment the root rule found a match, all matches are passed as new text to subrules 
+
+That is, in our example, we first got the desired fragment from the whole text, and from that fragment we got `[text] [text] [text] [text]`
+

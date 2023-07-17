@@ -47,7 +47,9 @@ test_validator.validate(text)
 ```
 
 </details>
+<br>
 
+---
 If you want to see in addition the use of modifiers and the initialization of the validator
 
 **`RUST_LOG=debug file.py`**
@@ -110,6 +112,8 @@ test_validator.validate(text)
 
 </details>
 <br>
+
+---
 If you want to see only errors in the logs
 
 **`RUST_LOG=error file.py`**
@@ -137,6 +141,8 @@ error message ___
 
 </details>
 <br>
+
+---
 If you want to see which rule is running from the stack and a full description of the rule with modifications
 
 **`RUST_LOG=trace file.py`**
@@ -210,3 +216,5 @@ error message ___
 
 </details>
 <br>
+
+---

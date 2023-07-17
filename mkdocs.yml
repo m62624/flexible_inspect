@@ -17,8 +17,9 @@ plugins:
 
 nav: 
   - Home: index.md
-  - Getting started: Getting-started/mod.md
+  - Getting started: getting-started/mod.md
   - Debug & logs: debug_and_Logs.md
+  - Modifiers: modifiers.md
   - Syntax Regex: syntax_regex/regex.md
   - Requirements: requirements.md
   - Changelog: changelog.md

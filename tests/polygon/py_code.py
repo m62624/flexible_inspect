@@ -15,7 +15,7 @@ I hope this example has helped you visualize how text with different nesting of 
 class CheckErrorText(PystvalException):
     message = "text contains an error {main_capture}"
     rules = [
-        Rule("---\s?.+\s?---", MatchRequirement.MustBeFound)
+        Rule("---\s?\[[^\[\]]+\]\s?---", MatchRequirement.MustBeFound)
     ]
 
 simple_text_validator = TemplateValidator([CheckErrorText])
