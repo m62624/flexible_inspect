@@ -22,7 +22,7 @@ class ErrorCheckText(PystvalException):
                     [
                         Rule(r"\d+", MatchRequirement.MustBeFound),
                         Rule(r"\d{4}", MatchRequirement.MustBeFound)
-                    ]).mode_at_least_one_rule_for_all_matches(),
+                    ]),
             ]
         )
     ]

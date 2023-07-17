@@ -11,8 +11,13 @@ impl Rule {
     pub fn at_least_one_rule_for_all_matches(
         stack: &mut VecDeque<(&Rule, CaptureData)>,
     ) -> NextStep {
+        trace!(
+            "the `at_least_one_rule_for_all_matches` method for rule `{}` is running",
+            stack.front().unwrap().0.as_ref()
+        );
         // Создаем временный стек, в который будем складывать все правила, которые нужно обработать
         let mut temp_stack: VecDeque<(&Rule, CaptureData)> = VecDeque::new();
+        trace!("temporary stack created");
         // нужно для проверки одного индекса из сета индексов `RegexSet`,
         // от каждого совпадения, мы получаем `RegexSet` (vec<usize>),
         // и считаем сколько раз встречается каждый индекс, если он встречается
@@ -43,7 +48,7 @@ impl Rule {
                                 Rule::get_selected_rules(&simple_rules.regex_set, text)
                             {
                                 trace!(
-                                    "Полученные правила из `RegexSet` : `{}`",
+                                    "retrieved rules from `RegexSet` : `{}`",
                                     &simple_rules.all_rules[index].as_ref()
                                 );
                                 // Если индекс уже есть в `counter_one_rule`, то мы его увеличиваем

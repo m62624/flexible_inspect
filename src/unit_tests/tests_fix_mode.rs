@@ -6,7 +6,7 @@ use super::*;
 fn test_all_rules_all_match_fix_1() -> PyResult<()> {
     pyo3::prepare_freethreaded_python();
     Python::with_gil(|py| -> PyResult<()> {
-        let text = "[ [12346] [1232] [1234] ] [ [123456789] ]";
+        let text = "[ [12346] [132] [1234] ] [ [123456789] ]";
         let rule = Rule::spawn(r".+", MatchRequirement::MustBeFound)?.extend_t(
             py,
             vec![

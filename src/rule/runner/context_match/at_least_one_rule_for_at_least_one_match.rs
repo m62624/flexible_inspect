@@ -12,7 +12,7 @@ impl Rule {
         stack: &mut VecDeque<(&Rule, CaptureData)>,
     ) -> NextStep {
         trace!(
-            "the `all_rules_for_all_matches` method for rule `{}` is running",
+            "the `at_least_one_rule_for_at_least_one_match` method for rule `{}` is running",
             stack.front().unwrap().0.as_ref()
         );
         // Начнем проход по `stack`
