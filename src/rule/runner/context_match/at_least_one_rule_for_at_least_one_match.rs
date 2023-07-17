@@ -11,13 +11,17 @@ impl Rule {
     pub fn at_least_one_rule_for_at_least_one_match(
         stack: &mut VecDeque<(&Rule, CaptureData)>,
     ) -> NextStep {
+        // ================= (LOG) =================
         trace!(
             "the `at_least_one_rule_for_at_least_one_match` method for rule `{}` is running",
             stack.front().unwrap().0.as_ref()
         );
+        // =========================================
         // Начнем проход по `stack`
         while let Some(mut frame) = stack.pop_front() {
+            // ================= (LOG) =================
             trace!("received frame from stack `{}`", frame.0.as_ref());
+            // =========================================
             // Проверяем, нужно ли идти дальше
             match Self::next_or_data_for_error(frame.0, &mut frame.1) {
                 NextStep::Go => {
@@ -41,10 +45,12 @@ impl Rule {
                             'skip_rule: for index in
                                 Rule::get_selected_rules(&simple_rules.regex_set, text)
                             {
+                                // ================= (LOG) =================
                                 trace!(
                                     "retrieved rules from `RegexSet` : `{}`",
                                     &simple_rules.all_rules[index].as_ref()
                                 );
+                                // =========================================
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(
                                     &simple_rules.all_rules[index],
@@ -78,10 +84,12 @@ impl Rule {
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Проверяем, что мы не обрабатывали это правило ранее
                                 if !stack.iter().any(|&(r, _)| r == rule) {
+                                    // ================= (LOG) =================
                                     trace!(
                                         "received rules that are not in `RegexSet` : `{}`",
                                         &rule.as_ref()
                                     );
+                                    // =========================================
                                     // Проверяем это правило
                                     if let NextStep::Error(value) =
                                         Self::next_or_data_for_error(rule, &mut captures)
@@ -96,7 +104,6 @@ impl Rule {
                                         captures.text_for_capture
                                     );
                                     // =========================================
-
                                     // Помечаем, что нашли правило
                                     found_rule = true;
                                     // Загружаем во временный стек, если успех

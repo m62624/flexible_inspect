@@ -11,13 +11,17 @@ impl Rule {
     pub fn at_least_one_rule_for_all_matches(
         stack: &mut VecDeque<(&Rule, CaptureData)>,
     ) -> NextStep {
+        // ================= (LOG) =================
         trace!(
             "the `at_least_one_rule_for_all_matches` method for rule `{}` is running",
             stack.front().unwrap().0.as_ref()
         );
+        // =========================================
         // Создаем временный стек, в который будем складывать все правила, которые нужно обработать
         let mut temp_stack: VecDeque<(&Rule, CaptureData)> = VecDeque::new();
+        // ================= (LOG) =================
         trace!("temporary stack created");
+        // =========================================
         // нужно для проверки одного индекса из сета индексов `RegexSet`,
         // от каждого совпадения, мы получаем `RegexSet` (vec<usize>),
         // и считаем сколько раз встречается каждый индекс, если он встречается
@@ -47,10 +51,12 @@ impl Rule {
                             'skip_this_rule: for index in
                                 Rule::get_selected_rules(&simple_rules.regex_set, text)
                             {
+                                // ================= (LOG) =================
                                 trace!(
                                     "retrieved rules from `RegexSet` : `{}`",
                                     &simple_rules.all_rules[index].as_ref()
                                 );
+                                // =========================================
                                 // Если индекс уже есть в `counter_one_rule`, то мы его увеличиваем
                                 *counter_one_rule.entry(index).or_insert(0) += 1;
                                 // сверяем, сколько раз встретился индекс, с количеством совпадений
@@ -68,14 +74,12 @@ impl Rule {
                                         err = value;
                                         continue 'skip_this_rule;
                                     }
-
                                     // ================ (LOG) =================
                                     info!(
                                         "found one rule for all matches: {}",
                                         &simple_rules.all_rules[index].as_ref()
                                     );
                                     // =========================================
-
                                     // Если мы дошли до этого момента, значит мы нашли правило
                                     one_rule_found = true;
                                     // Если все хорошо, то добавляем в стек
@@ -91,16 +95,20 @@ impl Rule {
 
                         if !one_rule_found {
                             'not_regex_set: for rule in simple_rules.all_rules.iter() {
+                                // ================= (LOG) =================
                                 trace!(
                                     " received rules that are not in `RegexSet` : (`{}`, `{:#?}`)",
                                     &rule.as_ref(),
                                     rule.content_unchecked().requirement
                                 );
+                                // =========================================
                                 if !temp_stack.iter().any(|&(r, _)| r == rule) {
+                                    // ================= (LOG) =================
                                     trace!(
                                         "received rules that are not in `RegexSet` : `{}`",
                                         &rule.as_ref()
                                     );
+                                    // =========================================
                                     // Каждое правило проверяет каждое совпадение
                                     for text in frame.1.text_for_capture.iter() {
                                         // Сохраняем в отдельной переменой, чтобы не дублировать данные
@@ -113,11 +121,9 @@ impl Rule {
                                             // Если ошибка, то переходим к следующему правилу
                                             continue 'not_regex_set;
                                         }
-
                                         // ================ (LOG) =================
                                         info!("found one rule for all matches: {}", &rule.as_ref());
                                         // =========================================
-
                                         // Если все хорошо, то добавляем в стек
                                         temp_stack.push_back((rule, captures));
                                     }
@@ -141,11 +147,13 @@ impl Rule {
                         if !one_rule_found {
                             // Проходимся по всем правилам
                             'main_complex: for rule in complex_rules {
+                                // ================= (LOG) =================
                                 trace!(
                                     " complex rule -  : (`{}`, `{:#?}`)",
                                     &rule.as_ref(),
                                     rule.content_unchecked().requirement
                                 );
+                                // =========================================
                                 // Каждое правило проверяет каждое совпадение
                                 for text in frame.1.text_for_capture.iter() {
                                     // Сохраняем в отдельной переменой, чтобы не дублировать данные
@@ -158,11 +166,9 @@ impl Rule {
                                         // Если ошибка, то переходим к следующему правилу
                                         continue 'main_complex;
                                     }
-
                                     // ================ (LOG) =================
                                     info!("found one rule for all matches: {}", &rule.as_ref());
                                     // =========================================
-
                                     // Если все хорошо, то добавляем в стек
                                     temp_stack.push_back((rule, captures));
                                 }
@@ -178,7 +184,6 @@ impl Rule {
                         // ================= (LOG) =================
                         error!("not found one rule for all matches");
                         // =========================================
-
                         // Если мы не нашли правило, то возвращаем ошибку
                         return NextStep::Error(err);
                     }

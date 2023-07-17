@@ -11,16 +11,22 @@ impl Rule {
     pub fn all_rules_for_at_least_one_match(
         stack: &mut VecDeque<(&Rule, CaptureData)>,
     ) -> NextStep {
-        // Создаем временный стек, в который будем складывать все правила, которые нужно обработать
+        // ================= (LOG) =================
         trace!(
             "the `all_rules_for_all_matches` method for rule `{}` is running",
             stack.front().unwrap().0.as_ref()
         );
+        // =========================================
+        // Создаем временный стек, в который будем складывать все правила, которые нужно обработать
         let mut temp_stack: VecDeque<(&Rule, CaptureData)> = VecDeque::new();
+        // ================= (LOG) =================
         trace!("temporary stack created");
+        // =========================================
         // Начнем проход по `stack`, `stack_temp` будет расширять `stack`
         while let Some(mut frame) = stack.pop_front() {
+            // ================= (LOG) =================
             trace!("received frame from stack `{}`", frame.0.as_ref());
+            // =========================================
             // Проверяем, нужно ли идти дальше
             match Self::next_or_data_for_error(frame.0, &mut frame.1) {
                 NextStep::Go => {
@@ -42,10 +48,12 @@ impl Rule {
                             // 1 Этап
                             // Получаем правила из `RegexSet`
                             for index in Rule::get_selected_rules(&simple_rules.regex_set, text) {
+                                // ================= (LOG) =================
                                 trace!(
                                     "retrieved rules from `RegexSet` : `{}`",
                                     &simple_rules.all_rules[index].as_ref()
                                 );
+                                // =========================================
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(
                                     &simple_rules.all_rules[index],
@@ -72,12 +80,13 @@ impl Rule {
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Проверяем, что мы не обрабатывали это правило ранее
                                 if !temp_stack.iter().any(|&(r, _)| r == rule) {
+                                    // ================= (LOG) =================
                                     trace!(
                                         " received rules that are not in `RegexSet` : (`{}`, `{:#?}`)",
                                         &rule.as_ref(),
                                         rule.content_unchecked().requirement
                                     );
-                                    // dbg!(rule);
+                                    // =========================================
                                     // Сохраняем данные для ошибки, если error
                                     if let NextStep::Error(value) =
                                         Self::next_or_data_for_error(rule, &mut captures)
@@ -102,11 +111,13 @@ impl Rule {
                             // 3 Этап
                             // Получаем сложные правила
                             for rule in complex_rules {
+                                // ================= (LOG) =================
                                 trace!(
                                     " complex rule -  : (`{}`, `{:#?}`)",
                                     &rule.as_ref(),
                                     rule.content_unchecked().requirement
                                 );
+                                // =========================================
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Сохраняем данные для ошибки, если error
@@ -120,8 +131,9 @@ impl Rule {
                                 temp_stack.push_back((rule, captures));
                             }
                         }
-
+                        // ================= (LOG) =================
                         info!("all rules passed successfully for the text `{}` ", text);
+                        // =========================================
                         // Если дошли до конца цикла (в рамках одного элемента), значит все правила сработали
                         rule_matched_for_any_text = true;
                         break;
