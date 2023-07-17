@@ -1,19 +1,23 @@
-use log::{error, info, trace};
-
-use super::super::{NextStep, Rule};
-use crate::captures::CaptureData;
-use std::collections::VecDeque;
+use super::super::*;
 
 impl Rule {
+    /*
+    Используется `for` вместо `iterator`, так как возращаем `NextStep`, при
+    использований цикла (`for`), мы можем сделать ранний выход из функции, если
+    возникла ошибка
+     */
+
+    /// Проверяем, что на каждое совпадение (текст), сработают все правила
     pub fn all_rules_for_all_matches(stack: &mut VecDeque<(&Rule, CaptureData)>) -> NextStep {
-        trace!(
-            "the `all_rules_for_all_matches` method for rule `{}` is running",
-            stack.front().unwrap().0.as_ref()
-        );
+        // Создаем временный стек, в который будем складывать все правила, которые нужно обработать
         let mut temp_stack: VecDeque<(&Rule, CaptureData)> = VecDeque::new();
-        trace!("temporary stack created");
+        // Начнем проход по `stack`, `stack_temp` будет расширять `stack`
         while let Some(mut frame) = stack.pop_front() {
-            trace!("received frame from stack `{}`", frame.0.as_ref());
+            trace!(
+                "the `all_rules_for_all_matches` method for rule `{}` is running",
+                stack.front().unwrap().0.as_ref()
+            );
+            // Проверяем, нужно ли идти дальше
             match Self::next_or_data_for_error(frame.0, &mut frame.1) {
                 NextStep::Go => {
                     // По каждому тексту в `text_for_capture` мы будем искать совпадения
@@ -44,7 +48,6 @@ impl Rule {
                                     &simple_rules.all_rules[index],
                                     &mut captures,
                                 ) {
-                                    // ================= (LOG) =================
                                     error!(
                                         "the rule (`{}`, `{:#?}`) did not work for text : `{}`",
                                         &simple_rules.all_rules[index].as_ref(),
@@ -53,7 +56,6 @@ impl Rule {
                                             .requirement,
                                         text
                                     );
-                                    // =========================================
                                     return NextStep::Error(value);
                                 }
                                 // Загружаем во временный стек если успех
@@ -74,14 +76,12 @@ impl Rule {
                                     if let NextStep::Error(value) =
                                         Self::next_or_data_for_error(rule, &mut captures)
                                     {
-                                        // ================= (LOG) =================
                                         error!(
                                             "the rule (`{}`, `{:#?}`) did not work for text : `{}`",
                                             &rule.as_ref(),
                                             &rule.content_unchecked().requirement,
                                             text
                                         );
-                                        // =========================================
                                         return NextStep::Error(value);
                                     }
                                     // Загружаем во временный стек, если успех
@@ -101,7 +101,11 @@ impl Rule {
                             // 3 Этап
                             // Получаем сложные правила
                             for rule in complex_rules {
-                                trace!("received complex rules : `{}`", &rule.as_ref());
+                                trace!(
+                                    " complex rule -  : (`{}`, `{:#?}`)",
+                                    &rule.as_ref(),
+                                    rule.content_unchecked().requirement
+                                );
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Сразу узнаем, что будет дальше, если ошибка, то выходим из функции
@@ -124,25 +128,26 @@ impl Rule {
                         }
                     }
                 }
+                // Завершены все действия для правила
                 NextStep::Finish => (),
+                // Условие не сработало, значит ошибка
                 NextStep::Error(value) => {
+                    // ================= (LOG) =================
                     error!(
                         "the rule (`{}`, `{:#?}`) didn't work",
                         &frame.0.as_ref(),
                         &frame.0.content_unchecked().requirement,
                     );
+                    // =========================================
                     return NextStep::Error(value);
                 }
             }
         }
+        // ================= (LOG) =================
         info!("for all matches all rules worked successfully");
+        // =========================================
         // Финальный этап, мы загружаем всё в`stack` для дальнейшей обработки
         stack.extend(temp_stack.drain(..));
-        trace!(
-            "stack size: {}\ntemporary stack size: {}",
-            stack.len(),
-            temp_stack.len()
-        );
         NextStep::Finish
     }
 }
