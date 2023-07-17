@@ -1,4 +1,4 @@
-use super::*;
+use super::super::*;
 
 impl Rule {
     /*
@@ -20,14 +20,6 @@ impl Rule {
         let mut counter_one_rule = HashMap::new();
         // Начнем проход по `stack`, `stack_temp` будет расширять `stack`
         while let Some(mut frame) = stack.pop_front() {
-            // ================= (LOG) =================
-            trace!(
-                "started rule (`{}`, `{:#?}`) from the stack\nFull details of the rule (after modifications): {:#?}",
-                frame.0.as_ref(),
-                frame.0.content_unchecked().requirement,
-                frame.0
-            );
-            // =========================================
             // Проверяем, нужно ли идти дальше
             match Self::next_or_data_for_error(frame.0, &mut frame.1) {
                 NextStep::Go => {
@@ -50,6 +42,10 @@ impl Rule {
                             'skip_this_rule: for index in
                                 Rule::get_selected_rules(&simple_rules.regex_set, text)
                             {
+                                trace!(
+                                    "Полученные правила из `RegexSet` : `{}`",
+                                    &simple_rules.all_rules[index].as_ref()
+                                );
                                 // Если индекс уже есть в `counter_one_rule`, то мы его увеличиваем
                                 *counter_one_rule.entry(index).or_insert(0) += 1;
                                 // сверяем, сколько раз встретился индекс, с количеством совпадений
