@@ -83,9 +83,46 @@ impl Rule {
                         }
                         // На всякий случай, очищаем `counter_one_rule`, после проверки простых правил
                         counter_one_rule.clear();
+
+                        if !one_rule_found {
+                            'not_regex_set: for rule in simple_rules.all_rules.iter() {
+                                trace!(
+                                    " received rules that are not in `RegexSet` : (`{}`, `{:#?}`)",
+                                    &rule.as_ref(),
+                                    rule.content_unchecked().requirement
+                                );
+                                if !temp_stack.iter().any(|&(r, _)| r == rule) {
+                                    trace!(
+                                        "received rules that are not in `RegexSet` : `{}`",
+                                        &rule.as_ref()
+                                    );
+                                    // Каждое правило проверяет каждое совпадение
+                                    for text in frame.1.text_for_capture.iter() {
+                                        // Сохраняем в отдельной переменой, чтобы не дублировать данные
+                                        let mut captures = CaptureData::find_captures(rule, text);
+                                        // Проверяем это правило
+                                        if let NextStep::Error(value) =
+                                            Self::next_or_data_for_error(rule, &mut captures)
+                                        {
+                                            err = value;
+                                            // Если ошибка, то переходим к следующему правилу
+                                            continue 'not_regex_set;
+                                        }
+
+                                        // ================ (LOG) =================
+                                        info!("found one rule for all matches: {}", &rule.as_ref());
+                                        // =========================================
+
+                                        // Если все хорошо, то добавляем в стек
+                                        temp_stack.push_back((rule, captures));
+                                    }
+                                    // Если мы дошли до этого момента, значит мы нашли правило
+                                    one_rule_found = true;
+                                }
+                            }
+                        }
                     }
 
-                    
                     // Если есть сложные подправила, то мы их проверяем
                     if let Some(complex_rules) = &frame
                         .0
@@ -99,6 +136,11 @@ impl Rule {
                         if !one_rule_found {
                             // Проходимся по всем правилам
                             'main_complex: for rule in complex_rules {
+                                trace!(
+                                    " complex rule -  : (`{}`, `{:#?}`)",
+                                    &rule.as_ref(),
+                                    rule.content_unchecked().requirement
+                                );
                                 // Каждое правило проверяет каждое совпадение
                                 for text in frame.1.text_for_capture.iter() {
                                     // Сохраняем в отдельной переменой, чтобы не дублировать данные
