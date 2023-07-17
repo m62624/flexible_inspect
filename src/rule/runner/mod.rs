@@ -28,8 +28,13 @@ impl Rule {
     /// Поэтому мы их оствавляем под конец, чтобы сразу попытаться отсеять долгие вычисления в начале очереди
     pub fn run(rule: &Rule, text: &str) -> NextStep {
         let mut stack = VecDeque::from([(rule, CaptureData::find_captures(rule, text))]);
-        while !stack.is_empty() {
-            match rule.content_unchecked().mod_match {
+        while let Some(frame) = stack.front() {
+            trace!(
+                "Загрузка правил из стека верхнего уровня : {}, mode {:#?}",
+                frame.0.as_ref(),
+                frame.0.content_unchecked().mod_match
+            );
+            match frame.0.content_unchecked().mod_match {
                 ModeMatch::AllRulesForAllMatches => {
                     // ================= (LOG) =================
                     info!(
@@ -50,9 +55,9 @@ impl Rule {
                     );
                     // =========================================
 
-                    if let NextStep::Error(v) = Self::all_rules_for_at_least_one_match(&mut stack) {
-                        return NextStep::Error(v);
-                    }
+                    // if let NextStep::Error(v) = Self::all_rules_for_at_least_one_match(&mut stack) {
+                    //     return NextStep::Error(v);
+                    // }
                 }
                 ModeMatch::AtLeastOneRuleForAllMatches => {
                     // ================= (LOG) =================
@@ -74,11 +79,11 @@ impl Rule {
                         rule.as_ref()
                     );
                     // =========================================
-                    if let NextStep::Error(v) =
-                        Self::at_least_one_rule_for_at_least_one_match(&mut stack)
-                    {
-                        return NextStep::Error(v);
-                    }
+                    // if let NextStep::Error(v) =
+                    //     Self::at_least_one_rule_for_at_least_one_match(&mut stack)
+                    // {
+                    //     return NextStep::Error(v);
+                    // }
                 }
             }
         }

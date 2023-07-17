@@ -84,6 +84,8 @@ impl Rule {
                         // На всякий случай, очищаем `counter_one_rule`, после проверки простых правил
                         counter_one_rule.clear();
                     }
+
+                    
                     // Если есть сложные подправила, то мы их проверяем
                     if let Some(complex_rules) = &frame
                         .0

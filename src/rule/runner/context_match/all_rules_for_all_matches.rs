@@ -136,9 +136,7 @@ impl Rule {
                 }
             }
         }
-        // ================= (LOG) =================
         info!("for all matches all rules worked successfully");
-        // =========================================
         // Финальный этап, мы загружаем всё в`stack` для дальнейшей обработки
         stack.extend(temp_stack.drain(..));
         trace!("Размер стека : {}", stack.len());

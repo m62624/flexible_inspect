@@ -1,15 +1,11 @@
 use super::rule::{MatchRequirement, Rule};
 use super::*;
 
-#[cfg(test)]
 mod tests_capture;
-#[cfg(test)]
 mod tests_cartridge;
-#[cfg(test)]
+mod tests_fix_mode;
 mod tests_modes;
-#[cfg(test)]
 mod tests_rule;
-#[cfg(test)]
 mod tests_template_validator;
 
 #[cfg(test)]
