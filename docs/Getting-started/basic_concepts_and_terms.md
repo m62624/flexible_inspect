@@ -15,50 +15,21 @@ A `cartridge` is a structure that contains a class for creating an error, class 
 ### Rule
 The `rule` is a structure for storing a regular expression with modifiers. Structure is the basic minimum unit of the validation logic
 
-```python
- Rule(r"\d+", MatchRequirement.MustNotBeFound)
-```
-
 #### Root rule
 The `root rule` - all rules that are in the first step of the `cardridge`, and is also the root in relation to the `subrule`
-
-```python
-class CustomError_1(PystvalException):
-    message = "my custom error 1"
-    rules = [
-        Rule(r"1 - Root rule", MatchRequirement.MustBeFound),
-        Rule(r"2 - Root rule", MatchRequirement.MustBeFound),
-        Rule(r"3 - Root rule", MatchRequirement.MustBeFound),
-    ]
-```
 
 #### Subrule
 The `subrule` is the rules that are below the first step of the cartridge, as well as all rules created inside the `extend` method.
 > But then again, even if `subrule` (**A**) is created within extend, for all `subrule` (**B** of **A**), `subrule` A itself will be the `root` for them
 
-```python
-class CustomError_2(PystvalException):
-    message = "my custom error 2"
-    rules = [
-        Rule(r"1 - Root rule", MatchRequirement.MustBeFound).extend([
-            Rule(r"1 - Subrule", MatchRequirement.MustBeFound),
-            Rule(r"2 - Subrule", MatchRequirement.MustBeFound).extend([
-                Rule(r"1 - Subrule of subrule", MatchRequirement.MustBeFound),
-                Rule(r"2 - Subrule of subrule", MatchRequirement.MustBeFound),
-            ]),
-            Rule(r"3 - Subrule", MatchRequirement.MustBeFound),
-        ]),
-        Rule(r"2 - Root rule", MatchRequirement.MustBeFound),
-        Rule(r"3 - Root rule", MatchRequirement.MustBeFound),
-    ]
-```
 ### Syntax regex
-Since all calculations using regex take place in `Rust`, it is necessary to follow the format `rust regex`.
+***Since all calculations using regex take place in `Rust`, it is necessary to follow the format `rust regex`.***
 
 More information on syntax :
+
 - [Default-Regex](https://docs.rs/regex/latest/regex/#syntax)
 - [Fancy-Regex](https://docs.rs/fancy-regex/latest/fancy_regex/#syntax)
-- [the same as those links, but with only a syntax table ](https://github.com/m62624/pystval/blob/main/docs/syntax_regex/regex.md)
+- [the same as those links, but with only a syntax table ](../syntax_regex/regex.md)
 
 #### Simple regex
 Category rules based on the [**regex**](https://docs.rs/regex/latest/regex/) library.

@@ -3,6 +3,7 @@ repo_url: https://github.com/m62624/pystval.git
 theme:
   name: readthedocs
 plugins:
+  - search
   - include-markdown
   - exclude:
       glob:
@@ -18,9 +19,11 @@ markdown_extensions:
   - pymdownx.snippets
   - pymdownx.superfences
 
+
 nav: 
   - Home: index.md
   - Getting started: Getting-started/mod.md
+  - Syntax Regex: syntax_regex/regex.md
   - Requirements: requirements.md
   - Changelog: changelog.md
   - License: LICENSE.md
