@@ -72,7 +72,7 @@ Before we looked at modifiers that affect one `Rule`, but now we will study modi
 - `at_least_one_rule_for_at_least_one_match`
 
 
-### `all_rules_for_all_matches` 
+### all_rules_for_all_matches
 
 
 In this mode, to which all additional rules apply. (default mode for everyone)
@@ -92,7 +92,7 @@ CustomError
      |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
 ```
 
-### `all_rules_for_at_least_one_match`
+### all_rules_for_at_least_one_match
 
 In this mode, all the sub-adjustments should work for at least one match. If at least one sub-rule does not work on one of the matches, an error will be returned.
 
@@ -112,7 +112,7 @@ CustomError
 
 ```
 
-### `at_least_one_rule_for_all_matches` 
+### at_least_one_rule_for_all_matches
 ---
 
 In this mode, at least one sub-rule should work for every match. If no sub-rule works on one of the matches, an error will be returned.
@@ -133,7 +133,7 @@ CustomError
 
 ```
 
-### `at_least_one_rule_for_at_least_one_match`
+### at_least_one_rule_for_at_least_one_match
 
 In this mode, at least one sub-rule should work for at least one match. If no sub-rule works on one of the matches, an error will be returned.
 

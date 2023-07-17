@@ -14,12 +14,12 @@ plugins:
         - scheme/*
         - examples/*
 
-
-nav: 
+nav:
   - Home: index.md
   - Getting started: getting-started/mod.md
   - Debug & logs: debug_and_Logs.md
   - Modifiers: modifiers.md
+  - Formating messages: formatting_the_error_message.md
   - Syntax Regex: syntax_regex/regex.md
   - Requirements: requirements.md
   - Changelog: changelog.md

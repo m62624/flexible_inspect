@@ -40,7 +40,7 @@ class ErrorCheckText(PystvalException):
 
 When creating an `ErrorCheckText` cartridge, it is mandatory to specify the message and add at least one rule for validation. When creating a rule at least three modifiers are created for each rule, one of which is `MatchRequirement`, after the second is a hidden modifier that defines the type of regex (default regex or fancy regex), it cannot be explicitly changed, it is determined based on what syntax you used (default regex or fancy regex) and the third modifier is the match validation mode modifier.
 
-`MatchRequirement`` is a kind of conditional operator ([more information about this modifier]).
+`MatchRequirement` is a kind of conditional operator ([more information about this modifier](../modifiers.md#matchrequirement)).
 
 - `MustBeFound` - which means we must necessarily get a match from this regular expression
 - `MustNotBeFound` - which means, based on this regular expression, we must not get a match
@@ -135,7 +135,7 @@ CustomError
      |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
 ```
 
-Since we only have one tweak right now, we may not change that mode. The moment the root rule found a match, all matches are passed as new text to subrules 
+Since we only have one tweak right now, we may not change that mode. The moment the root rule found a match, all matches are passed as new text to subrules ([more information about this modifier](../modifiers.md#matching-mode)).
 
 That is, in our example, we first got the desired fragment from the whole text, and from that fragment we got `[text] [text] [text] [text]`
 
