@@ -1,6 +1,6 @@
 use super::captures::CaptureData;
 use super::*;
-use log::info;
+use log::{info, trace};
 mod counter_status;
 /// Перечисление для определения следующего шага.
 /// Используется вместо `bool`, для упрощения понимания кода,
@@ -22,7 +22,7 @@ impl Rule {
     pub fn next_or_data_for_error(rule: &rule::Rule, captures: &mut CaptureData) -> NextStep {
         // ================= (LOG) =================
         info!(
-            "\nTHE RESULT: \nrule: (`{}`, `{:#?}`),\n`Captures: {:#?}`,\n",
+            "\nthe result: rule: (`{}`, `{:#?}`),\n`Captures: {:#?}`,\n",
             rule.as_ref(),
             rule.content_unchecked().requirement,
             captures.text_for_capture
@@ -49,6 +49,14 @@ impl Rule {
                             return NextStep::Error(value);
                         }
 
+                        trace!(
+                            "(next_core) the rule (`{}`, `{:#?}`) : \n(capture is some `{}` , subrules is some `{}`) - {}",
+                            rule.as_ref(),
+                            rule.content_unchecked().requirement,
+                            captures.is_some(),
+                            rule.content_unchecked().subrules.is_some(),
+                            "Go"
+                        );
                         // Конечный результат должен быть Go
                         NextStep::Go
                     }
@@ -58,6 +66,14 @@ impl Rule {
                             return NextStep::Error(value);
                         }
 
+                        trace!(
+                            "(next_core) the rule (`{}`, `{:#?}`) : \n(capture is some `{}` , subrules is some `{}`) - {}",
+                            rule.as_ref(),
+                            rule.content_unchecked().requirement,
+                            captures.is_some(),
+                            rule.content_unchecked().subrules.is_some(),
+                            "Finish"
+                        );
                         // Конечный результат должен быть Finish
                         NextStep::Finish
                     }
@@ -73,6 +89,13 @@ impl Rule {
             }
             // совпадение не должно быть найдено
             MatchRequirement::MustNotBeFound => {
+                trace!(
+                    "the rule (`{}`, `{:#?}`) : ({},{})",
+                    rule.as_ref(),
+                    rule.content_unchecked().requirement,
+                    captures.is_some(),
+                    rule.content_unchecked().subrules.is_some()
+                );
                 match (
                     // резльутат совпадения
                     captures.is_some(),
@@ -99,6 +122,14 @@ impl Rule {
                             return NextStep::Error(value);
                         }
 
+                        trace!(
+                            "(next_core) the rule (`{}`, `{:#?}`) : \n(capture is some `{}` , subrules is some `{}`) - {}",
+                            rule.as_ref(),
+                            rule.content_unchecked().requirement,
+                            captures.is_some(),
+                            rule.content_unchecked().subrules.is_some(),
+                            "Go"
+                        );
                         // Конечный результат должен быть Go
                         NextStep::Go
                     }
@@ -112,6 +143,14 @@ impl Rule {
                             return NextStep::Error(value);
                         }
 
+                        trace!(
+                            "(next_core) the rule (`{}`, `{:#?}`) : \n(capture is some `{}` , subrules is some `{}`) - {}",
+                            rule.as_ref(),
+                            rule.content_unchecked().requirement,
+                            captures.is_some(),
+                            rule.content_unchecked().subrules.is_some(),
+                            "Finish"
+                        );
                         // Конечный результат должен быть Finish
                         NextStep::Finish
                     }
@@ -121,6 +160,14 @@ impl Rule {
                             return NextStep::Error(value);
                         }
 
+                        trace!(
+                            "(next_core) the rule (`{}`, `{:#?}`) : \n(capture is some `{}` , subrules is some `{}`) - {}",
+                            rule.as_ref(),
+                            rule.content_unchecked().requirement,
+                            captures.is_some(),
+                            rule.content_unchecked().subrules.is_some(),
+                            "Finish"
+                        );
                         // Конечный результат должен быть Fininsh
                         NextStep::Finish
                     }
