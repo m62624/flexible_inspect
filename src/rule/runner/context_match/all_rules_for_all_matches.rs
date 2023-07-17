@@ -1,27 +1,20 @@
-use super::*;
+use log::{error, info, trace};
+
+use super::super::{NextStep, Rule};
+use crate::captures::CaptureData;
+use std::collections::VecDeque;
 
 impl Rule {
-    /*
-    Используется `for` вместо `iterator`, так как возращаем `NextStep`, при
-    использований цикла (`for`), мы можем сделать ранний выход из функции, если
-    возникла ошибка
-     */
-
-    /// Проверяем, что на каждое совпадение (текст), сработают все правила
     pub fn all_rules_for_all_matches(stack: &mut VecDeque<(&Rule, CaptureData)>) -> NextStep {
-        // Создаем временный стек, в который будем складывать все правила, которые нужно обработать
+        trace!(
+            "Запущен метод `all_rules_for_all_matches` для правила `{}`",
+            stack.front().unwrap().0.as_ref()
+        );
         let mut temp_stack: VecDeque<(&Rule, CaptureData)> = VecDeque::new();
-        // Начнем проход по `stack`, `stack_temp` будет расширять `stack`
+        // temp_stack.push_back(stack.pop_front().unwrap());
+        trace!("Создан временный стек");
         while let Some(mut frame) = stack.pop_front() {
-            // ================= (LOG) =================
-            trace!(
-                "started rule (`{}`, `{:#?}`) from the stack\nFull details of the rule (after modifications): {:#?}",
-                frame.0.as_ref(),
-                frame.0.content_unchecked().requirement,
-                frame.0
-            );
-            // =========================================
-            // Проверяем, нужно ли идти дальше
+            trace!("Получен фрейм из стека {}", frame.0.as_ref());
             match Self::next_or_data_for_error(frame.0, &mut frame.1) {
                 NextStep::Go => {
                     // По каждому тексту в `text_for_capture` мы будем искать совпадения
@@ -38,6 +31,10 @@ impl Rule {
                             // 1 Этап
                             // Получаем правила из `RegexSet`
                             for index in Rule::get_selected_rules(&simple_rules.regex_set, text) {
+                                trace!(
+                                    "Полученные правила из `RegexSet` : `{}`",
+                                    &simple_rules.all_rules[index].as_ref()
+                                );
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(
                                     &simple_rules.all_rules[index],
@@ -69,7 +66,11 @@ impl Rule {
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Проверяем, что мы не обрабатывали это правило ранее
-                                if !stack.iter().any(|&(r, _)| r == rule) {
+                                if !temp_stack.iter().any(|&(r, _)| r == rule) {
+                                    trace!(
+                                        "Полученные правила, которые не попали в `RegexSet` : `{}`",
+                                        &rule.as_ref()
+                                    );
                                     // Сразу узнаем, что будет дальше, если ошибка, то выходим из функции
                                     if let NextStep::Error(value) =
                                         Self::next_or_data_for_error(rule, &mut captures)
@@ -101,6 +102,7 @@ impl Rule {
                             // 3 Этап
                             // Получаем сложные правила
                             for rule in complex_rules {
+                                trace!("Полученные сложные правила : `{}`", &rule.as_ref());
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Сразу узнаем, что будет дальше, если ошибка, то выходим из функции
@@ -122,27 +124,25 @@ impl Rule {
                             }
                         }
                     }
-                    // ================= (LOG) =================
-                    info!("for all matches all rules worked successfully");
-                    // =========================================
-                    // Финальный этап, мы загружаем всё в`stack` для дальнейшей обработки
-                    stack.extend(temp_stack.drain(..));
                 }
-                // Завершены все действия для правила
                 NextStep::Finish => (),
-                // Условие не сработало, значит ошибка
                 NextStep::Error(value) => {
-                    // ================= (LOG) =================
                     error!(
                         "the rule (`{}`, `{:#?}`) didn't work",
                         &frame.0.as_ref(),
                         &frame.0.content_unchecked().requirement,
                     );
-                    // =========================================
                     return NextStep::Error(value);
                 }
             }
         }
+        // ================= (LOG) =================
+        info!("for all matches all rules worked successfully");
+        // =========================================
+        // Финальный этап, мы загружаем всё в`stack` для дальнейшей обработки
+        stack.extend(temp_stack.drain(..));
+        trace!("Размер стека : {}", stack.len());
+        trace!("Размер временного стека : {}", temp_stack.len());
         NextStep::Finish
     }
 }
