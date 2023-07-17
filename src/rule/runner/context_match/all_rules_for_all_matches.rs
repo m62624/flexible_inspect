@@ -7,14 +7,14 @@ use std::collections::VecDeque;
 impl Rule {
     pub fn all_rules_for_all_matches(stack: &mut VecDeque<(&Rule, CaptureData)>) -> NextStep {
         trace!(
-            "Запущен метод `all_rules_for_all_matches` для правила `{}`",
+            "the `all_rules_for_all_matches` method for rule `{}` is running",
             stack.front().unwrap().0.as_ref()
         );
         let mut temp_stack: VecDeque<(&Rule, CaptureData)> = VecDeque::new();
         // temp_stack.push_back(stack.pop_front().unwrap());
-        trace!("Создан временный стек");
+        trace!("temporary stack created");
         while let Some(mut frame) = stack.pop_front() {
-            trace!("Получен фрейм из стека {}", frame.0.as_ref());
+            trace!("received frame from stack `{}`", frame.0.as_ref());
             match Self::next_or_data_for_error(frame.0, &mut frame.1) {
                 NextStep::Go => {
                     // По каждому тексту в `text_for_capture` мы будем искать совпадения
@@ -32,7 +32,7 @@ impl Rule {
                             // Получаем правила из `RegexSet`
                             for index in Rule::get_selected_rules(&simple_rules.regex_set, text) {
                                 trace!(
-                                    "Полученные правила из `RegexSet` : `{}`",
+                                    "retrieved rules from `RegexSet` : `{}`",
                                     &simple_rules.all_rules[index].as_ref()
                                 );
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
@@ -68,7 +68,7 @@ impl Rule {
                                 // Проверяем, что мы не обрабатывали это правило ранее
                                 if !temp_stack.iter().any(|&(r, _)| r == rule) {
                                     trace!(
-                                        "Полученные правила, которые не попали в `RegexSet` : `{}`",
+                                        "received rules that are not in `RegexSet` : `{}`",
                                         &rule.as_ref()
                                     );
                                     // Сразу узнаем, что будет дальше, если ошибка, то выходим из функции
@@ -102,7 +102,7 @@ impl Rule {
                             // 3 Этап
                             // Получаем сложные правила
                             for rule in complex_rules {
-                                trace!("Полученные сложные правила : `{}`", &rule.as_ref());
+                                trace!("received complex rules : `{}`", &rule.as_ref());
                                 // Сохраняем в отдельной переменой, чтобы не дублировать данные
                                 let mut captures = CaptureData::find_captures(rule, text);
                                 // Сразу узнаем, что будет дальше, если ошибка, то выходим из функции
@@ -139,8 +139,11 @@ impl Rule {
         info!("for all matches all rules worked successfully");
         // Финальный этап, мы загружаем всё в`stack` для дальнейшей обработки
         stack.extend(temp_stack.drain(..));
-        trace!("Размер стека : {}", stack.len());
-        trace!("Размер временного стека : {}", temp_stack.len());
+        trace!(
+            "stack size: {}\ntemporary stack size: {}",
+            stack.len(),
+            temp_stack.len()
+        );
         NextStep::Finish
     }
 }

@@ -30,55 +30,29 @@ impl Rule {
         let mut stack = VecDeque::from([(rule, CaptureData::find_captures(rule, text))]);
         while let Some(frame) = stack.front() {
             trace!(
-                "Загрузка правил из стека верхнего уровня : {}, mode {:#?}",
+                "loading rules from top-level stack : `{}`, mode `{:#?}`",
                 frame.0.as_ref(),
                 frame.0.content_unchecked().mod_match
             );
             match frame.0.content_unchecked().mod_match {
                 ModeMatch::AllRulesForAllMatches => {
-                    // ================= (LOG) =================
-                    info!(
-                        "rule processing mode `{}` : `all_rules_for_all_matches`",
-                        rule.as_ref()
-                    );
-                    // =========================================
-
                     if let NextStep::Error(v) = Self::all_rules_for_all_matches(&mut stack) {
                         return NextStep::Error(v);
                     }
                 }
                 ModeMatch::AllRulesForAtLeastOneMatch => {
-                    // ================= (LOG) =================
-                    info!(
-                        "rule processing mode `{}` : `all_rules_for_at_least_one_match`",
-                        rule.as_ref()
-                    );
-                    // =========================================
 
                     // if let NextStep::Error(v) = Self::all_rules_for_at_least_one_match(&mut stack) {
                     //     return NextStep::Error(v);
                     // }
                 }
                 ModeMatch::AtLeastOneRuleForAllMatches => {
-                    // ================= (LOG) =================
-                    info!(
-                        "rule processing mode `{}` : `at_least_one_rule_for_all_matches`",
-                        rule.as_ref()
-                    );
-                    // =========================================
-
                     if let NextStep::Error(v) = Self::at_least_one_rule_for_all_matches(&mut stack)
                     {
                         return NextStep::Error(v);
                     }
                 }
                 ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {
-                    // ================= (LOG) =================
-                    info!(
-                        "rule processing mode `{}` : `at_least_one_rule_for_at_least_one_match`",
-                        rule.as_ref()
-                    );
-                    // =========================================
                     // if let NextStep::Error(v) =
                     //     Self::at_least_one_rule_for_at_least_one_match(&mut stack)
                     // {
