@@ -81,7 +81,7 @@ RUST_LOG=info python3 main.py
 <summary>Show log</summary>
 
 ```sh
-[2023-07-17T06:01:13Z INFO  pystval::cartridge::runner] all rules of the `<class '__main__.CheckErrorText'>` are run
+[2023-07-17T06:01:13Z INFO  pystval::cartridge::runner] all rules of the `<class '__main__.ErrorCheckText'>` are run
 [2023-07-17T06:01:13Z INFO  pystval::rule::runner] rule processing mode `---\s?.+\s?---` : `all_rules_for_all_matches`
 [2023-07-17T06:01:13Z INFO  pystval::rule::next] 
     THE RESULT: 
@@ -139,3 +139,49 @@ Since we only have one tweak right now, we may not change that mode. The moment 
 
 That is, in our example, we first got the desired fragment from the whole text, and from that fragment we got `[text] [text] [text] [text]`
 
+Let's see the result of our subrule
+
+<details>
+<summary>Show log</summary>
+
+```bash
+[2023-07-17T07:11:32Z INFO  pystval::rule::next] 
+    THE RESULT: 
+    rule: (`\[[^\[\]]+\]`, `MustBeFound`),
+    `Captures: {
+        "[123456789]",
+        "[123]",
+        "[1234]",
+    }`,
+    
+[2023-07-17T07:11:32Z INFO  pystval::rule::next] 
+    THE RESULT: 
+    rule: (`\[[^\[\]]+\]`, `MustBeFound`),
+    `Captures: {
+        "[123]",
+        "[1234]",
+        "[123456789]",
+    }`,
+    
+[2023-07-17T07:11:32Z INFO  pystval::rule::runner::context_match::all_rules_for_all_matches] for all matches all rules worked successfully
+```
+</details>
+<br>
+Now we can specify two more sub-rules for our sub-rule 
+one will check that there are only numbers in each bracket and the other rule will check that there are less than four numbers everywhere. But we want the validation to succeed if at least one rule is correct
+
+```python
+class ErrorCheckText(PystvalException):
+    message = "text contains an error"
+    rules = [
+        Rule(r"---\s?.+\s?---", MatchRequirement.MustBeFound).extend(
+            [
+                Rule(r"\[[^\[\]]+\]", MatchRequirement.MustBeFound).extend(
+                    [
+                        Rule(r"\d+", MatchRequirement.MustBeFound),
+                        Rule(r"\d{4}", MatchRequirement.MustBeFound)
+                    ]).mode_at_least_one_rule_for_all_matches(),
+            ]
+        )
+    ]
+```

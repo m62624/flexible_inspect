@@ -12,13 +12,23 @@ Such validation can be useful, for example, when processing user input, analyzin
 
 I hope this example has helped you visualize how text with different nesting of characters can be used for validation."""
 
-class CheckErrorText(PystvalException):
-    message = "text contains an error {main_capture}"
+
+class ErrorCheckText(PystvalException):
+    message = "text contains an error"
     rules = [
-        Rule("---\s?\[[^\[\]]+\]\s?---", MatchRequirement.MustBeFound)
+        Rule(r"---\s?.+\s?---", MatchRequirement.MustBeFound).extend(
+            [
+                Rule(r"\[[^\[\]]+\]", MatchRequirement.MustBeFound).extend(
+                    [
+                        Rule(r"\d+", MatchRequirement.MustBeFound),
+                        Rule(r"\d{4}", MatchRequirement.MustBeFound)
+                    ]).mode_at_least_one_rule_for_all_matches(),
+            ]
+        )
     ]
 
-simple_text_validator = TemplateValidator([CheckErrorText])
+
+simple_text_validator = TemplateValidator([ErrorCheckText])
 if simple_text_validator.validate(text) is None:
     print("text is valid")
 else:
