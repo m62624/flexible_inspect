@@ -3,7 +3,7 @@
 **Added**
 
 - Combination of different rules with modifiers, with results of these rules automatically passed to subexpressions.
-- Installation via PyPi, Github packages, and Docker.
+- Installation via PyPi, Github packages
 
 **Features**
 

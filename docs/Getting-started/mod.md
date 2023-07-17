@@ -26,3 +26,6 @@ pip install pystval-vesrion.whl
 
 {% include "basic_concepts_and_terms.md" %}
 
+## First step
+
+{% include "first_step.md" %}

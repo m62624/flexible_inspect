@@ -1,7 +1,10 @@
 site_name: Pystval documentation
 repo_url: https://github.com/m62624/pystval.git
+site_author: m62624
+
 theme:
   name: readthedocs
+
 plugins:
   - search
   - include-markdown
@@ -10,19 +13,12 @@ plugins:
         - images/*
         - scheme/*
         - examples/*
-markdown_extensions:
-  - pymdownx.highlight:
-      anchor_linenums: true
-      line_spans: __span
-      pygments_lang_class: true
-  - pymdownx.inlinehilite
-  - pymdownx.snippets
-  - pymdownx.superfences
 
 
 nav: 
   - Home: index.md
   - Getting started: Getting-started/mod.md
+  - Debug & logs: debug_and_Logs.md
   - Syntax Regex: syntax_regex/regex.md
   - Requirements: requirements.md
   - Changelog: changelog.md
