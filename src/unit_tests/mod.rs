@@ -1,7 +1,7 @@
 use super::rule::{MatchRequirement, Rule};
 use super::*;
 
-mod tests_capture;
+mod tests_captures;
 mod tests_rule;
 
 #[cfg(test)]

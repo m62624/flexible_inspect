@@ -1,6 +1,8 @@
 use super::captures::CaptureType;
 use super::*;
 use std::collections::HashSet;
+mod tests_eq;
+
 mod fn_find_captures {
     use super::*;
 
@@ -10,7 +12,6 @@ mod fn_find_captures {
         /// Проверка на то, что Capture работает корректно с Default Regex
         #[test]
         fn find_captures_t_0() -> PyResult<()> {
-            pyo3::prepare_freethreaded_python();
             let text = "lock 1";
             let rule = rule::Rule::spawn(r"(\w+)", MatchRequirement::MustBeFound)?;
             if let CaptureType::Single(v) =
@@ -26,7 +27,6 @@ mod fn_find_captures {
         /// Проверка на то, что Capture работает корректно с Fancy Regex
         #[test]
         fn find_captures_t_1() -> PyResult<()> {
-            pyo3::prepare_freethreaded_python();
             let text = "lock 1";
             let rule = rule::Rule::spawn(r"\w+ (?=1)", MatchRequirement::MustBeFound)?;
             if let CaptureType::Single(v) =
@@ -42,7 +42,6 @@ mod fn_find_captures {
         /// Проверка на то, что все совпадения уникальны Default Regex
         #[test]
         fn find_captures_t_2() -> PyResult<()> {
-            pyo3::prepare_freethreaded_python();
             let rule = Rule::spawn(r"\w", MatchRequirement::MustBeFound)?;
             let text = "Hello, world!";
             if let CaptureType::Single(mut v) =
@@ -62,7 +61,6 @@ mod fn_find_captures {
         /// Проверка на то, что все совпадения уникальны Fancy Regex
         #[test]
         fn find_captures_t_3() -> PyResult<()> {
-            pyo3::prepare_freethreaded_python();
             let rule = Rule::spawn(r"\w(?=\w)", MatchRequirement::MustBeFound)?;
             let text = "Hello, worlddd!";
             if let CaptureType::Single(mut v) =
@@ -82,7 +80,6 @@ mod fn_find_captures {
         /// Проверка на то, что совпадения повторяются Default Regex
         #[test]
         fn find_captures_t_4() -> PyResult<()> {
-            pyo3::prepare_freethreaded_python();
             let rule = Rule::spawn(r"\w", MatchRequirement::MustBeFound)?.duplicate_matches();
             let text = "Hello, world!";
             if let CaptureType::Multiple(v) =
@@ -102,7 +99,6 @@ mod fn_find_captures {
         /// Проверка на то, что совпадения повторяются Fancy Regex
         #[test]
         fn find_captures_t_5() -> PyResult<()> {
-            pyo3::prepare_freethreaded_python();
             let rule = Rule::spawn(r"\w(?=\w)", MatchRequirement::MustBeFound)?.duplicate_matches();
             let text = "Hello, wrlddd!";
             if let CaptureType::Multiple(v) =
@@ -122,7 +118,6 @@ mod fn_find_captures {
         /// Проверка заполнения group_name в Default Regex
         #[test]
         fn find_captures_t_6() -> PyResult<()> {
-            pyo3::prepare_freethreaded_python();
             let text = "lock 1";
             let rule = rule::Rule::spawn(r"(?P<test_group>\w+)", MatchRequirement::MustBeFound)?;
             assert_eq!(
@@ -138,7 +133,6 @@ mod fn_find_captures {
         /// Проверка заполнения group_name в Fancy Regex
         #[test]
         fn find_captures_t_7() -> PyResult<()> {
-            pyo3::prepare_freethreaded_python();
             let text = "lock 1";
             let rule =
                 rule::Rule::spawn(r"(?P<test_group>\w+ (?=1))", MatchRequirement::MustBeFound)?;
@@ -159,7 +153,6 @@ mod fn_find_captures {
         /// Проверка вычисления счетчика в Default Regex
         #[test]
         fn find_captures_t_0() -> PyResult<()> {
-            pyo3::prepare_freethreaded_python();
             let text = "lock lock lock";
             let rule =
                 rule::Rule::spawn(r"(\w+)", MatchRequirement::MustBeFound)?.counter_is_equal(5);
@@ -173,7 +166,6 @@ mod fn_find_captures {
         /// Проверка вычисления счетчика в Fancy Regex
         #[test]
         fn find_captures_t_1() -> PyResult<()> {
-            pyo3::prepare_freethreaded_python();
             let text = "lock lock lock";
             let rule = rule::Rule::spawn(r"(\w+ (?=lock))", MatchRequirement::MustBeFound)?
                 .counter_is_equal(5);
@@ -192,7 +184,6 @@ mod fn_is_some {
     /// Проверка is_some если есть совпадение без дубликатов
     #[test]
     fn is_some_t_0() -> PyResult<()> {
-        pyo3::prepare_freethreaded_python();
         let text = "lock 1";
         let rule = rule::Rule::spawn(r"(\w+)", MatchRequirement::MustBeFound)?;
         assert!(captures::CaptureData::find_captures(&rule, text).is_some());
@@ -202,7 +193,6 @@ mod fn_is_some {
     /// Проверка is_some если есть совпадение с дубликатами
     #[test]
     fn is_some_t_1() -> PyResult<()> {
-        pyo3::prepare_freethreaded_python();
         let text = "lock lock";
         let rule = rule::Rule::spawn(r"(\w+)", MatchRequirement::MustBeFound)?.duplicate_matches();
         assert!(captures::CaptureData::find_captures(&rule, text).is_some());
