@@ -130,4 +130,17 @@ mod fn_new {
             CartridgeWrapper::new(py, obj.into_py(py)).unwrap();
         });
     }
+
+    /// Проверка конструктора без атрибута `Message`
+    #[test]
+    #[should_panic]
+    fn new_e_5() {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| {
+            let obj = types::PyType::new::<CustomClassError>(py);
+            obj.setattr(RULES_FROM_CLASS_PY, types::PyString::new(py, ""))
+                .unwrap();
+            CartridgeWrapper::new(py, obj.into_py(py)).unwrap();
+        });
+    }
 }
