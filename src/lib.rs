@@ -23,8 +23,7 @@ mod cartridge;
 mod custom_error;
 /// Модуль для создания правил
 mod rule;
-/// Модуль для создания валидатора
-mod template_validator;
+
 // ============================= CONST ================================
 // имя модуля для `Python`
 pub const MODULE_NAME: &str = "pystval";
@@ -60,7 +59,7 @@ mod export {
     pub fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
         py_module.add_class::<rule::Rule>()?;
         py_module.add_class::<rule::MatchRequirement>()?;
-        py_module.add_class::<template_validator::TemplateValidator>()?;
+        // py_module.add_class::<template_validator::TemplateValidator>()?;
         PyModule::from_code(_py, &base_error::export_base_error(), "", MODULE_NAME)?;
         Ok(())
     }

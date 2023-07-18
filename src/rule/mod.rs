@@ -44,6 +44,7 @@ pub struct TakeRuleForExtend {
     pub subrules: Option<Subrules>,
     pub counter: Option<Counter>,
     pub mod_match: ModeMatch,
+    pub duplicate_matches: bool,
 }
 
 /// `RegexRaw` - хранит тип правила и само правило, используется `Box<str>`,

@@ -29,6 +29,7 @@ impl TakeRuleForExtend {
             subrules: None,
             counter: None,
             mod_match: ModeMatch::AllRulesForAllMatches,
+            duplicate_matches: false,
         })
     }
 }

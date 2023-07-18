@@ -1,11 +1,9 @@
 use super::*;
 
 /// Реализация трейта по сравнению элементов
-#[cfg(not(tarpaulin_include))]
 mod partial_eq_eq {
-    use crate::captures::CaptureData;
-
     use super::*;
+    use crate::captures::{CaptureData, CaptureType};
 
     impl PartialEq for Subrules {
         fn eq(&self, other: &Self) -> bool {
@@ -13,15 +11,11 @@ mod partial_eq_eq {
         }
     }
 
-    impl Eq for Subrules {}
-
     impl PartialEq for SimpleRules {
         fn eq(&self, other: &Self) -> bool {
             self.all_rules == other.all_rules
         }
     }
-
-    impl Eq for SimpleRules {}
 
     impl PartialEq for Counter {
         fn eq(&self, other: &Self) -> bool {
@@ -33,14 +27,12 @@ mod partial_eq_eq {
             }
         }
     }
-    impl Eq for Counter {}
 
     impl PartialEq for ModeMatch {
         fn eq(&self, other: &Self) -> bool {
             core::mem::discriminant(self) == core::mem::discriminant(other)
         }
     }
-    impl Eq for ModeMatch {}
 
     impl<'a> PartialEq for CaptureData<'a> {
         fn eq(&self, other: &Self) -> bool {
@@ -49,10 +41,25 @@ mod partial_eq_eq {
                 && self.counter_value == other.counter_value
         }
     }
+
+    impl<'a> PartialEq for CaptureType<'a> {
+        fn eq(&self, other: &Self) -> bool {
+            match (self, other) {
+                (Self::Single(l0), Self::Single(r0)) => l0 == r0,
+                (Self::Multiple(l0), Self::Multiple(r0)) => l0 == r0,
+                _ => false,
+            }
+        }
+    }
+
+    impl Eq for Subrules {}
+    impl Eq for SimpleRules {}
+    impl Eq for Counter {}
+    impl Eq for ModeMatch {}
 }
 
-/// Реализация трейта для получения ссылки
 #[cfg(not(tarpaulin_include))]
+/// Реализация трейта для получения ссылки
 mod as_ref_str {
 
     use super::*;
