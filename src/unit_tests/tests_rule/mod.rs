@@ -1,6 +1,7 @@
 use super::*;
 mod tests_auto_generate_rule;
 mod tests_eq;
+mod tests_next;
 use crate::unit_tests::mock_obj::CustomClassError;
 
 /// Проверка конструктора `Rule`
