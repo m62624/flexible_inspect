@@ -65,7 +65,7 @@ jobs:
       - name: Coverage test (tarpaulin)
         run: |
           docker pull ${{ env.IMAGE }} || true
-          docker run --security-opt seccomp=unconfined ${{ env.IMAGE }} cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
+          docker run --security-opt seccomp=unconfined ${{ env.IMAGE }} RUST_LOG=trace cargo tarpaulin --engine llvm --out xml --output-dir ./coverage/
 
       # Шаг для копирования отчета о покрытии из контейнера
       - name: Copy coverage report from container
