@@ -23,6 +23,7 @@ venv.bak/
 # coverage 
 /.build_rs_cov.profraw
 /coverage
+/build_rs_cov.profraw
 # builds
 /WHEELS
 /Windows
