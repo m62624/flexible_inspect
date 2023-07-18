@@ -1,5 +1,3 @@
-use crate::captures::CaptureData;
-
 use super::*;
 
 /// Проверка создание ошибки для python без получения переменных с extra

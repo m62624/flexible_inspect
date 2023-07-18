@@ -144,3 +144,56 @@ mod fn_new {
         });
     }
 }
+
+mod fn_run {
+    use super::*;
+    use crate::rule::next::NextStep;
+
+    /// Проверка метода `run` на объекте `CartridgeWrapper`
+    /// Все этапы проходят успешно
+    #[test]
+    fn run_t_0() -> PyResult<()> {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| -> PyResult<()> {
+            let class_py = mock_obj::make_obj(
+                py,
+                "GOTCHA : {data}",
+                Some(vec![
+                    Rule::spawn(r"\w", MatchRequirement::MustBeFound)?,
+                    Rule::spawn(r"aboba", MatchRequirement::MustBeFound)?,
+                    Rule::spawn(r"aboba(?=end)", MatchRequirement::MustBeFound)?,
+                ]),
+            );
+
+            let cartridge = CartridgeWrapper::new(py, class_py)?;
+            let text = "abobaend";
+            let result = cartridge.sync_run(text);
+            dbg!(&result);
+            assert_eq!(result, NextStep::Finish);
+            Ok(())
+        })
+    }
+
+    #[test]
+    fn run_t_1() -> PyResult<()> {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| -> PyResult<()> {
+            let class_py = mock_obj::make_obj(
+                py,
+                "GOTCHA : {data}",
+                Some(vec![
+                    Rule::spawn(r"\w", MatchRequirement::MustBeFound)?,
+                    Rule::spawn(r"aba", MatchRequirement::MustBeFound)?,
+                    Rule::spawn(r"aboba(?=end)", MatchRequirement::MustBeFound)?,
+                ]),
+            );
+
+            let cartridge = CartridgeWrapper::new(py, class_py)?;
+            let text = "abobaend";
+            let result = cartridge.sync_run(text);
+            dbg!(&result);
+            assert_eq!(result, NextStep::Error(None));
+            Ok(())
+        })
+    }
+}
