@@ -1,4 +1,5 @@
 use super::*;
+mod runner;
 mod tests_auto_generate_rule;
 mod tests_eq;
 mod tests_next;
