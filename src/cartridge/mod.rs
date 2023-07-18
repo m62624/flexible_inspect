@@ -1,7 +1,7 @@
 use super::rule::slice::RuleContext;
 use super::rule::{SimpleRules, Subrules as RootRules};
 use super::*;
-
+mod runner;
 /// `Cartridge` - структура для хранения правил и тело класса для создания ошибки
 #[derive(Debug)]
 pub struct Cartridge {
