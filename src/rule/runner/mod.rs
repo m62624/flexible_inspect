@@ -41,22 +41,22 @@ impl Rule {
                     }
                 }
                 ModeMatch::AllRulesForAtLeastOneMatch => {
-                    // if let NextStep::Error(v) = Self::all_rules_for_at_least_one_match(&mut stack) {
-                    //     return NextStep::Error(v);
-                    // }
+                    if let NextStep::Error(v) = Self::all_rules_for_at_least_one_match(&mut stack) {
+                        return NextStep::Error(v);
+                    }
                 }
                 ModeMatch::AtLeastOneRuleForAllMatches => {
-                    // if let NextStep::Error(v) = Self::at_least_one_rule_for_all_matches(&mut stack)
-                    // {
-                    //     return NextStep::Error(v);
-                    // }
+                    if let NextStep::Error(v) = Self::at_least_one_rule_for_all_matches(&mut stack)
+                    {
+                        return NextStep::Error(v);
+                    }
                 }
                 ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {
-                    // if let NextStep::Error(v) =
-                    //     Self::at_least_one_rule_for_at_least_one_match(&mut stack)
-                    // {
-                    //     return NextStep::Error(v);
-                    // }
+                    if let NextStep::Error(v) =
+                        Self::at_least_one_rule_for_at_least_one_match(&mut stack)
+                    {
+                        return NextStep::Error(v);
+                    }
                 }
             }
         }
