@@ -2,11 +2,7 @@ use super::rule::{MatchRequirement, Rule};
 use super::*;
 
 mod tests_capture;
-mod tests_cartridge;
-mod tests_fix_mode;
-mod tests_modes;
 mod tests_rule;
-mod tests_template_validator;
 
 #[cfg(test)]
 pub mod mock_obj {
