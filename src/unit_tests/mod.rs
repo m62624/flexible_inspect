@@ -5,6 +5,7 @@ mod tests_captures;
 mod tests_cartridge;
 mod tests_custom_error;
 mod tests_rule;
+mod tests_template_validator;
 
 #[cfg(test)]
 pub mod mock_obj {
