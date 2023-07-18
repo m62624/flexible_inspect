@@ -18,7 +18,7 @@ impl CartridgeWrapper {
         // Проверяем, что это класс
         if let Ok(class_py) = py_class.downcast::<types::PyType>(py) {
             // Проверяем, что у класса есть атрибут `RULES_FROM_CLASS_PY`
-            if let Ok(_) = class_py.getattr(MESSAGE_WITH_EXTRA_FROM_CLASS_PY) {
+            if class_py.getattr(MESSAGE_WITH_EXTRA_FROM_CLASS_PY).is_ok() {
                 if let Ok(py_list) = class_py.getattr(RULES_FROM_CLASS_PY) {
                     // Проверяем, что это список
                     if let Ok(py_list) = py_list.downcast::<types::PyList>() {
