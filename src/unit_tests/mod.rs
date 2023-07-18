@@ -2,6 +2,8 @@ use super::rule::{MatchRequirement, Rule};
 use super::*;
 
 mod tests_captures;
+mod tests_cartridge;
+mod tests_custom_error;
 mod tests_rule;
 
 #[cfg(test)]

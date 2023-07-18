@@ -1,4 +1,5 @@
 use super::*;
+mod tests_auto_generate_rule;
 mod tests_eq;
 use crate::unit_tests::mock_obj::CustomClassError;
 
