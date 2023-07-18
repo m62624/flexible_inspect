@@ -36,22 +36,38 @@ impl Rule {
             );
             match frame.0.content_unchecked().mod_match {
                 ModeMatch::AllRulesForAllMatches => {
+                    trace!(
+                        "loading mode AllRulesForAllMatches for the rule `{}`",
+                        frame.0.as_ref()
+                    );
                     if let NextStep::Error(v) = Self::all_rules_for_all_matches(&mut stack) {
                         return NextStep::Error(v);
                     }
                 }
                 ModeMatch::AllRulesForAtLeastOneMatch => {
+                    trace!(
+                        "loading mode AllRulesForAtLeastOneMatch for the rule `{}`",
+                        frame.0.as_ref()
+                    );
                     if let NextStep::Error(v) = Self::all_rules_for_at_least_one_match(&mut stack) {
                         return NextStep::Error(v);
                     }
                 }
                 ModeMatch::AtLeastOneRuleForAllMatches => {
+                    trace!(
+                        "loading mode AtLeastOneRuleForAllMatches for the rule `{}`",
+                        frame.0.as_ref()
+                    );
                     if let NextStep::Error(v) = Self::at_least_one_rule_for_all_matches(&mut stack)
                     {
                         return NextStep::Error(v);
                     }
                 }
                 ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {
+                    trace!(
+                        "loading mode AtLeastOneRuleForAtLeastOneMatch for the rule `{}`",
+                        frame.0.as_ref()
+                    );
                     if let NextStep::Error(v) =
                         Self::at_least_one_rule_for_at_least_one_match(&mut stack)
                     {

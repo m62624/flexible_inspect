@@ -12,10 +12,6 @@ impl Rule {
         stack: &mut VecDeque<(&Rule, CaptureData)>,
     ) -> NextStep {
         // Создаем временный стек, в который будем складывать все правила, которые нужно обработать
-        trace!(
-            "the `all_rules_for_all_matches` method for rule `{}` is running",
-            stack.front().unwrap().0.as_ref()
-        );
         let mut temp_stack: VecDeque<(&Rule, CaptureData)> = VecDeque::new();
         trace!("temporary stack created");
         // Начнем проход по `stack`, `stack_temp` будет расширять `stack`

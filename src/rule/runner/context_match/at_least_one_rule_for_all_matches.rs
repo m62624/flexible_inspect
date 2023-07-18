@@ -91,11 +91,7 @@ impl Rule {
 
                         if !one_rule_found {
                             'not_regex_set: for rule in simple_rules.all_rules.iter() {
-                                trace!(
-                                    " received rules that are not in `RegexSet` : (`{}`, `{:#?}`)",
-                                    &rule.as_ref(),
-                                    rule.content_unchecked().requirement
-                                );
+                           
                                 if !temp_stack.iter().any(|&(r, _)| r == rule) {
                                     trace!(
                                         "received rules that are not in `RegexSet` : `{}`",
