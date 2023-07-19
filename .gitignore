@@ -29,6 +29,7 @@ venv.bak/
 /Windows
 /Linux
 /macOS
+/site
 #dk
 /.dockerignore
 /Dockerfile
