@@ -15,11 +15,11 @@
 
 ## [1.0.0] - 2023.07.10
 
-## Added
+### Added
 - Combination of different rules with modifiers, with results of these rules automatically passed to subexpressions.
 - Installation via PyPi, Github packages
 
-## Features
+### Features
 - `Cartridge`: A structure that contains a class for creating an error, class rules by which the check is done, and a message with a possible valid value.
 - `Rule`: A structure for storing a regular expression with modifiers.
 - `Root rule`: All rules that are in the first step of the cartridge.
