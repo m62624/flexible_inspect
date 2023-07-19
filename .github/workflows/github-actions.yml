@@ -92,7 +92,7 @@ jobs:
     runs-on: ubuntu-latest
     # Проверяем, что это тег
     # if: startsWith(github.ref, 'refs/tags/v') && github.ref == 'refs/heads/main'
-    if: startsWith(github.event.ref, 'refs/tags/v') && github.ref == 'refs/heads/main'
+    if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
       # Шаг для входа в Docker Registry
       - name: Log in to GitHub Docker Registry
