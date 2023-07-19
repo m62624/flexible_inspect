@@ -68,6 +68,14 @@ class Rule:
         """
         ...
 
+    @staticmethod
+    def auto_generate(requirements: MatchRequirement, texts: List[str]) -> Rule:
+        """
+        Automatically generate a rule based on the inner value
+        > Recommendation : use for pattern prototyping
+        """
+        ...
+
     def extend(self, nested_rules: List['Rule']) -> Rule:
         """
         Extend the rule with nested rules.
@@ -124,6 +132,12 @@ class Rule:
     def mode_at_least_one_rule_for_at_least_one_match(self) -> Rule:
         """
         At least one rule should work successfully for at least one match
+        """
+        ...
+
+    def duplicate_matches(self) -> Rule:
+        """
+        Allow duplicate matches
         """
         ...
 

@@ -3,6 +3,8 @@ use grex::RegExpBuilder;
 
 #[pymethods]
 impl Rule {
+    /// Generate a regular expression based on the given text.
+    /// Recommendation : use for pattern prototyping
     #[staticmethod]
     pub fn auto_generate(
         match_requirement: MatchRequirement,
