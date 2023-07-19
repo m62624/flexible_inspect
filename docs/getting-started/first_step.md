@@ -185,3 +185,61 @@ class ErrorCheckText(PystvalException):
         )
     ]
 ```
+Here we see success, create new rules, make nesting more complicated add modifiers
+
+<details>
+<summary>Show log</summary>
+
+```bash
+[2023-07-19T04:56:01Z INFO  pystval::cartridge::runner] all rules of the `<class '__main__.ErrorCheckText'>` are run
+[2023-07-19T04:56:01Z INFO  pystval::rule::next] 
+    the result: rule: (`---\s?.+\s?---`, `MustBeFound`),
+    `Captures: Single(
+        {
+            "---\nThis is an example of text with different nesting of characters. It has regular letters, numbers, punctuation marks, as well as special characters, emoji and even Unicode characters. Some characters can be nested within each other, such as quotation marks \" \" or parentheses ( ) [ [123] [123] [1234] ] [ [123456789] ]. Special characters such as the tilde ~ or the dollar sign $ can also be used.\n---",
+        },
+    )`,
+    
+[2023-07-19T04:56:01Z INFO  pystval::rule::next] 
+    the result: rule: (`\[[^\[\]]+\]`, `MustBeFound`),
+    `Captures: Single(
+        {
+            "[123]",
+            "[123456789]",
+            "[1234]",
+        },
+    )`,
+    
+[2023-07-19T04:56:01Z INFO  pystval::rule::runner::context_match::all_rules_for_all_matches] for all matches all rules worked successfully
+[2023-07-19T04:56:01Z INFO  pystval::rule::next] 
+    the result: rule: (`\[[^\[\]]+\]`, `MustBeFound`),
+    `Captures: Single(
+        {
+            "[123]",
+            "[123456789]",
+            "[1234]",
+        },
+    )`,
+    
+[2023-07-19T04:56:01Z INFO  pystval::rule::next] 
+    the result: rule: (`\d+`, `MustBeFound`),
+    `Captures: Single(
+        {
+            "1234",
+        },
+    )`,
+    
+[2023-07-19T04:56:01Z INFO  pystval::rule::runner::context_match::at_least_one_rule_for_all_matches] found one rule for all matches: \d+
+[2023-07-19T04:56:01Z INFO  pystval::rule::next] 
+    the result: rule: (`\d+`, `MustBeFound`),
+    `Captures: Single(
+        {
+            "1234",
+        },
+    )`,
+    
+text is valid
+```
+
+</details>
+</br>
