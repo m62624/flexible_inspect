@@ -21,6 +21,7 @@ nav:
   - Modifiers: modifiers.md
   - Formating messages: formatting_the_error_message.md
   - Syntax Regex: syntax_regex/regex.md
+  - Auto pattern creation: syntax_regex/auto_pattern_creation.md
   - Requirements: requirements.md
   - Changelog: changelog.md
   - License: LICENSE.md
