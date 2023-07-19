@@ -1,6 +1,6 @@
 [package]
 name = "pystval"
-version = "1.0.0"
+version = "1.1.0"
 authors = ["Mansur Azatbek <mansur62624@gmail.com>"]
 description = "Library for creating a custom validator"
 edition = "2021"
