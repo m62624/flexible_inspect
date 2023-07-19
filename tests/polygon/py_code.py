@@ -20,9 +20,9 @@ class ErrorCheckText(PystvalException):
             [
                 Rule(r"\[[^\[\]]+\]", MatchRequirement.MustBeFound).extend(
                     [
-                        Rule(r"\d+", MatchRequirement.MustBeFound),
-                        Rule(r"\d{4}", MatchRequirement.MustBeFound)
-                    ]),
+                        Rule.auto_generate(MatchRequirement.MustBeFound, [
+                            "[1234]", "[123]", "[123456789]"])
+                    ]).mode_at_least_one_rule_for_at_least_one_match()
             ]
         )
     ]
