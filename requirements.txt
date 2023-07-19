@@ -1,0 +1,2 @@
+# Необходимо для сборки документаций 
+mkdocs-include-markdown-plugin
