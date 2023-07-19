@@ -1,12 +1,25 @@
 # Changelog
-## [1.0.0] - 2023.07.10
-**Added**
 
+
+## [1.1.0] - 2023.07.19
+
+### Added
+- New static method `auto_generate` in `Rule` class. This method allows users to generate regular expressions based on given text input. This is especially useful for quick pattern prototyping. It takes a `MatchRequirement` and a list of strings as input and returns a `Rule` instance with a generated regular expression.
+
+### Fixed
+- Issue with the `matching mod`. The problem with `all_rules_for_all_matches` not allowing the upper stack to transition to other modes has been resolved.
+
+### Changed
+- For user convenience, all documentation from the README file has been transferred to Read the Docs. Now, you can find comprehensive, neatly organized, and searchable project documentation at our Read the Docs page.
+
+
+## [1.0.0] - 2023.07.10
+
+## Added
 - Combination of different rules with modifiers, with results of these rules automatically passed to subexpressions.
 - Installation via PyPi, Github packages
 
-**Features**
-
+## Features
 - `Cartridge`: A structure that contains a class for creating an error, class rules by which the check is done, and a message with a possible valid value.
 - `Rule`: A structure for storing a regular expression with modifiers.
 - `Root rule`: All rules that are in the first step of the cartridge.
