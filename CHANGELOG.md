@@ -10,7 +10,7 @@
 - Issue with the `matching mod`. The problem with `all_rules_for_all_matches` not allowing the upper stack to transition to other modes has been resolved.
 
 ### Changed
-- For user convenience, all documentation from the README file has been transferred to Read the Docs. Now, you can find comprehensive, neatly organized, and searchable project documentation at our Read the Docs page.
+- For user convenience, all documentation from the `README`` file has been transferred to Read the Docs. Now, you can find comprehensive, neatly organized, and searchable project documentation at our [Read the Docs](https://readthedocs.org/projects/pystval/) page.
 
 
 ## [1.0.0] - 2023.07.10
