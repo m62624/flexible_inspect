@@ -30,11 +30,20 @@ impl<'de> Deserialize<'de> for SerializableRegexSet {
     }
 }
 
+#[pymethods]
 impl Rule {
     /// Сериализует правило в JSON
     pub fn serialize(&self) -> PyResult<String> {
         let json = serde_json::to_string(self)
             .map_err(|str| PyValueError::new_err(format!("Error serialize json: {}", str)));
         Ok(json?)
+    }
+
+    /// Десериализует правило из JSON
+    #[staticmethod]
+    pub fn deserialize(json: String) -> PyResult<Self> {
+        let rule = serde_json::from_str(&json)
+            .map_err(|str| PyValueError::new_err(format!("Error deserialize json: {}", str)));
+        Ok(rule?)
     }
 }
