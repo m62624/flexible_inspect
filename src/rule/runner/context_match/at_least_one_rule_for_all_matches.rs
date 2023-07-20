@@ -45,7 +45,7 @@ impl Rule {
                         'skip_text: for text in &texts {
                             // Проходимся по всем индексам, которые вернул `RegexSet`
                             'skip_this_rule: for index in
-                                Rule::get_selected_rules(&simple_rules.regex_set, text)
+                                Rule::get_selected_rules(&simple_rules.rgxst.regex_set, text)
                             {
                                 trace!(
                                     "retrieved rules from `RegexSet` : `{}`",

@@ -69,7 +69,9 @@ impl Subrules {
 impl SimpleRules {
     pub fn new(all_rules: Vec<Rule>) -> Self {
         Self {
-            regex_set: regex::RegexSet::new(&all_rules).unwrap(),
+            rgxst: SerializableRegexSet {
+                regex_set: regex::RegexSet::new(&all_rules).unwrap(),
+            },
             all_rules,
         }
     }

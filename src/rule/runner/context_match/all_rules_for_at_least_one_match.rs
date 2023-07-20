@@ -41,7 +41,9 @@ impl Rule {
                         {
                             // 1 Этап
                             // Получаем правила из `RegexSet`
-                            for index in Rule::get_selected_rules(&simple_rules.regex_set, text) {
+                            for index in
+                                Rule::get_selected_rules(&simple_rules.rgxst.regex_set, text)
+                            {
                                 trace!(
                                     "retrieved rules from `RegexSet` : `{}`",
                                     &simple_rules.all_rules[index].as_ref()

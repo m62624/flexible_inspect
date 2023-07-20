@@ -23,7 +23,7 @@ impl CartridgeWrapper {
         //==========================================
         // Проверка простых правил
         if let Some(simple_rules) = &self.0.root_rules.simple_rules {
-            let selected_rules = Rule::get_selected_rules(&simple_rules.regex_set, text);
+            let selected_rules = Rule::get_selected_rules(&simple_rules.rgxst.regex_set, text);
 
             // Правила отобранные из regexset
             for index in &selected_rules {
@@ -79,7 +79,7 @@ impl CartridgeWrapper {
         // Если есть простые правила, идем дальше
         if let Some(self_simple_rules) = &self.0.root_rules.simple_rules {
             let selected_rules = Arc::new(Rule::get_selected_rules(
-                &self_simple_rules.regex_set,
+                &self_simple_rules.rgxst.regex_set,
                 &text,
             ));
             // Правила отобранные из `RegexSet` для task 1

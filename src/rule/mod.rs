@@ -6,6 +6,7 @@ mod generator;
 mod getters;
 /// Модуль для инициализации `Rule`
 mod init;
+mod json_format;
 /// Модуль для модификации `Rule`
 mod modifiers;
 /// Модуль для запуска `Rule`
@@ -30,14 +31,14 @@ pub mod slice;
 
 /// `Rule` - a class for storing a rule with different modifiers
 #[pyclass]
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
+#[derive(Debug, Clone, Default, PartialEq, Eq, Serialize, Deserialize)]
 pub struct Rule {
     content: Option<TakeRuleForExtend>,
 }
 
 /// Содержимое `Rule`, необходим для модификаций Rule через std::mem::take\
 /// --> Rule
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub struct TakeRuleForExtend {
     pub str_with_type: RegexRaw,
     pub requirement: MatchRequirement,
@@ -51,7 +52,7 @@ pub struct TakeRuleForExtend {
 /// так как мы не можем знать размер правила, + мы не можем использовать время жизни
 /// так как используется в pyclass\
 /// --> TakeRuleForExtend
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum RegexRaw {
     DefaultR(Box<str>),
     FancyR(Box<str>),
@@ -63,7 +64,7 @@ pub enum RegexRaw {
 
 /// `MatchRequirement` - rule modifier, specifies whether a match should be found or not
 #[pyclass]
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Serialize, Deserialize)]
 pub enum MatchRequirement {
     /// По правилу должно быть найдено совпадение
     MustBeFound,
@@ -75,14 +76,14 @@ pub enum MatchRequirement {
 /// для текущего правила, также используется как RootRules для классов\
 /// --> TakeRuleForExtend\
 /// --> Cartridge
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Subrules {
     pub simple_rules: Option<SimpleRules>,
     pub complex_rules: Option<Vec<Rule>>,
 }
 
 /// `Counter` - модификатор правила, является счетчиком совпадения
-#[derive(Debug, Clone, Copy)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum Counter {
     /// Ровно столько раз, сколько указано X
     Only(usize),
@@ -93,7 +94,7 @@ pub enum Counter {
 }
 
 #[pyclass]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Copy, Serialize, Deserialize)]
 pub enum ModeMatch {
     /// Все подправила должны сработать успешно для всех совпадений
     AllRulesForAllMatches,
@@ -115,8 +116,13 @@ pub enum ModeMatch {
 */
 
 /// --> Subrules
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct SimpleRules {
     pub all_rules: Vec<Rule>,
+    pub rgxst: SerializableRegexSet,
+}
+
+#[derive(Debug, Clone)]
+pub struct SerializableRegexSet {
     pub regex_set: regex::RegexSet,
 }

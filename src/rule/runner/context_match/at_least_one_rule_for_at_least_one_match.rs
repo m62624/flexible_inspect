@@ -39,7 +39,7 @@ impl Rule {
                             // 1 Этап
                             // Получаем правила из `RegexSet`
                             'skip_rule: for index in
-                                Rule::get_selected_rules(&simple_rules.regex_set, text)
+                                Rule::get_selected_rules(&simple_rules.rgxst.regex_set, text)
                             {
                                 trace!(
                                     "retrieved rules from `RegexSet` : `{}`",

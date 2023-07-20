@@ -12,6 +12,8 @@ use std::sync::Once;
 use lazy_static::lazy_static;
 use std::collections::HashMap;
 use std::sync::Arc;
+use serde::{Serialize, Deserialize, Serializer, Deserializer};
+use serde::de::Error as DeError;
 //=====================================================================
 /// Модуль для создания ошибок
 mod base_error;
