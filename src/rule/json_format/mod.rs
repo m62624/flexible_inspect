@@ -1,3 +1,5 @@
+use pyo3::exceptions::PyValueError;
+
 use super::*;
 
 impl Serialize for SerializableRegexSet {
@@ -6,7 +8,9 @@ impl Serialize for SerializableRegexSet {
     where
         S: Serializer,
     {
+        // Получаем вектор шаблонов
         let patterns = self.regex_set.patterns();
+        // Сериализуем вектор шаблонов
         patterns.serialize(serializer)
     }
 }
@@ -17,8 +21,20 @@ impl<'de> Deserialize<'de> for SerializableRegexSet {
     where
         D: Deserializer<'de>,
     {
-        let patterns: Vec<&str> = Deserialize::deserialize(deserializer)?;
-        let regex_set = regex::RegexSet::new(&patterns).map_err(DeError::custom)?;
+        // десериализуем вектор шаблонов
+        let patterns: Vec<&str> =
+            Deserialize::deserialize(deserializer).map_err(DeError::custom)?;
+        // компилируем в `RegexSet`
+        let regex_set = regex::RegexSet::new(&patterns).unwrap();
         Ok(Self { regex_set })
+    }
+}
+
+impl Rule {
+    /// Сериализует правило в JSON
+    pub fn serialize(&self) -> PyResult<String> {
+        let json = serde_json::to_string(self)
+            .map_err(|str| PyValueError::new_err(format!("Error serialize json: {}", str)));
+        Ok(json?)
     }
 }
