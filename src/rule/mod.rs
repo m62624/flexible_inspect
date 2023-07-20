@@ -122,6 +122,8 @@ pub struct SimpleRules {
     pub rgxst: SerializableRegexSet,
 }
 
+/// `SerializableRegexSet` - хранит в себе `RegexSet` для сериализации и десериализации
+/// --> SimpleRules
 #[derive(Debug, Clone)]
 pub struct SerializableRegexSet {
     pub regex_set: regex::RegexSet,
