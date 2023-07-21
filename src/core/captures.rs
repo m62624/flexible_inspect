@@ -29,7 +29,6 @@ impl<'s> CaptureData<'s> {
         // флаг для проверки `Counter`
         let flag_check_counter = rule.content_unchecked().counter.is_some();
         // На первый взгляд мы видим дублирование кода, но каждый `match` работает с разными структурами
-
         match &rule.content_unchecked().str_with_type {
             RegexRaw::DefaultR(pattern) => {
                 // создаем регулярное выражение
