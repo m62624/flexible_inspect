@@ -313,21 +313,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "coruval"
-version = "0.1.0"
-dependencies = [
- "async-std",
- "env_logger",
- "fancy-regex",
- "grex",
- "lazy_static",
- "log",
- "pyo3",
- "regex",
- "wasm-bindgen",
-]
-
-[[package]]
 name = "crossbeam-utils"
 version = "0.8.16"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -844,6 +829,21 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 1.0.109",
+]
+
+[[package]]
+name = "pystval"
+version = "1.2.0"
+dependencies = [
+ "async-std",
+ "env_logger",
+ "fancy-regex",
+ "grex",
+ "lazy_static",
+ "log",
+ "pyo3",
+ "regex",
+ "wasm-bindgen",
 ]
 
 [[package]]
