@@ -1,6 +1,8 @@
+use super::rule::{RegexRaw, Rule};
+use std::collections::{HashMap, HashSet};
 
 /// Структура для хранения типа захвата, с дублированием данных или без
-#[derive(Debug)]
+#[derive(Debug, Clone)]
 pub enum CaptureType<'s> {
     Single(HashSet<&'s str>),
     Multiple(Vec<&'s str>),

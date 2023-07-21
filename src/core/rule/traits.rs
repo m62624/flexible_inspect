@@ -1,8 +1,9 @@
-use super::rule::{RegexRaw, Rule};
+use super::captures::*;
 use super::*;
 
 /// Реализация трейта по сравнению элементов
 mod partial_eq_eq {
+
     use super::*;
 
     impl PartialEq for Subrules {
@@ -30,7 +31,7 @@ mod partial_eq_eq {
 
     impl PartialEq for ModeMatch {
         fn eq(&self, other: &Self) -> bool {
-            core::mem::discriminant(self) == core::mem::discriminant(other)
+            mem::discriminant(self) == mem::discriminant(other)
         }
     }
 
@@ -82,6 +83,22 @@ mod as_ref_str {
     impl AsRef<TakeRuleForExtend> for &TakeRuleForExtend {
         fn as_ref(&self) -> &TakeRuleForExtend {
             self
+        }
+    }
+}
+
+mod hash_set {
+    use super::*;
+
+    impl Hash for Rule {
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+            self.content_unchecked().hash(state);
+        }
+    }
+
+    impl Hash for SimpleRules {
+        fn hash<H: std::hash::Hasher>(&self, _: &mut H) {
+            self.all_rules.hasher();
         }
     }
 }
