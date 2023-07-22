@@ -1,8 +1,11 @@
+mod bytes_rule;
+
 use super::*;
 use crate::core::rule::slice::SlisedRules;
 
 impl Rule {
-    pub fn extend(&mut self, nested_rules: IndexSet<Rule>) -> Self {
+    /// A method for adding nested rules
+    pub fn extend<T: IntoIterator<Item = Rule>>(&mut self, nested_rules: T) -> Self {
         let sliced_rules = SlisedRules::slice_rules(nested_rules);
         if sliced_rules.is_some() {
             self.content_mut_unchecked().mutable_modifiers.subrules = Some(Subrules::new(

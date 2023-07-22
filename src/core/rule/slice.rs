@@ -8,8 +8,8 @@ pub struct SlisedRules {
 }
 
 impl SlisedRules {
-    /// the method for sorting all nested rules
-    pub fn slice_rules(all_rules: IndexSet<Rule>) -> SlisedRules {
+    /// A method for sorting all nested rules
+    pub fn slice_rules<T: IntoIterator<Item = Rule>>(all_rules: T) -> SlisedRules {
         /*
         We do not save directly via `insert` to `IndexSet` as we would lose the ordering,
         we need the order to properly check rules that are not in `RegexSet` when searching through the index.
@@ -40,7 +40,7 @@ impl SlisedRules {
         }
     }
 
-    /// the method for checking if there are any rules
+    /// A method for checking if there are any rules
     pub fn is_some(&self) -> bool {
         if !self.simple_rules.is_empty()
             || !self.complex_rules.is_empty()
