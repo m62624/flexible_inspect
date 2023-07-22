@@ -26,7 +26,7 @@ pub struct TakeRuleForExtend {
     pub mutable_modifiers: MutableModifiers,
 }
 
-/// Separating types of regular expressions. The hidden modifier that is defined based on the regular expression.
+/// Separating types of regular expressions. The hidden modifier that is defined based on the regular expression. Only RegexBytes are excluded. This can be specified if necessary.
 /*
 A structure for storing the strings themselves, wrapped in a Box,
 so there is a lifetime limit if the structure is exported to other languages.
