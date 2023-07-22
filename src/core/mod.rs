@@ -1,2 +1,2 @@
 use super::*;
-mod rule;
+pub mod rule;

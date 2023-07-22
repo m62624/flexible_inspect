@@ -31,9 +31,14 @@ use std::{
     collections::{HashMap, HashSet},
     sync::Once,
 };
+use thiserror::Error;
 // =====================================================================
 mod core;
 mod export_lang;
+mod unit_tests;
+// =====================================================================
+pub use crate::core::rule::{MatchRequirement, Rule};
+
 // =====================================================================
 /// For one-time initialization to the logger
 static INIT: Once = Once::new();
