@@ -27,8 +27,22 @@ ppppppppp
 //! The template for exporting the validator to other programming languages and making it easier to work with validator versions for different languages. ( for example, to port a library to python, or to prepare code in wasm )
 
 use log::*;
-use std::collections::{HashMap, HashSet};
+use std::{
+    collections::{HashMap, HashSet},
+    sync::Once,
+};
 // =====================================================================
 mod core;
 mod export_lang;
+// =====================================================================
+/// For one-time initialization to the logger
+static INIT: Once = Once::new();
+// =====================================================================
+#[cfg(not(tarpaulin_include))]
+pub fn init_logger() {
+    // env_logger is called only once
+    INIT.call_once(|| {
+        env_logger::init();
+    });
+}
 // =====================================================================

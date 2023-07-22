@@ -1,48 +1,24 @@
 use super::*;
 
-/// Реализация трейта по сравнению элементов
-mod partial_eq_eq {
-
+mod partial_eq_eq_trait {
     use super::*;
 
-    impl PartialEq for Subrules {
-        fn eq(&self, other: &Self) -> bool {
-            self.simple_rules == other.simple_rules && self.complex_rules == other.complex_rules
-        }
-    }
-
+    /*
+    we implement only for simple rules, since we always create a `RegexSet` based on it with all rule regulars,
+    which means they are identical anyway, so we only need to compare `all_rules`
+     */
     impl PartialEq for SimpleRules {
         fn eq(&self, other: &Self) -> bool {
             self.all_rules == other.all_rules
         }
     }
 
-    impl PartialEq for Counter {
-        fn eq(&self, other: &Self) -> bool {
-            match (self, other) {
-                (Self::Only(l0), Self::Only(r0)) => l0 == r0,
-                (Self::MoreThan(l0), Self::MoreThan(r0)) => l0 == r0,
-                (Self::LessThan(l0), Self::LessThan(r0)) => l0 == r0,
-                _ => false,
-            }
-        }
-    }
-
-    impl PartialEq for ModeMatch {
-        fn eq(&self, other: &Self) -> bool {
-            mem::discriminant(self) == mem::discriminant(other)
-        }
-    }
-
-    impl Eq for Subrules {}
     impl Eq for SimpleRules {}
-    impl Eq for Counter {}
-    impl Eq for ModeMatch {}
 }
 
 #[cfg(not(tarpaulin_include))]
 /// Реализация трейта для получения ссылки
-mod as_ref_str {
+mod as_ref_str_trait {
 
     use super::*;
 
@@ -70,18 +46,24 @@ mod as_ref_str {
     }
 }
 
-mod hash_set {
+mod hash_trait {
     use super::*;
-
-    impl Hash for Rule {
-        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-            self.content_unchecked().hash(state);
-        }
-    }
-
+    /*
+    we implement only for simple rules, since we always create a `RegexSet` based on it with all the regulars of the rule,
+    which means that they are identical anyway, so we only need to hash `all_rules`
+     */
     impl Hash for SimpleRules {
         fn hash<H: std::hash::Hasher>(&self, _: &mut H) {
             self.all_rules.hasher();
+        }
+    }
+
+    impl Hash for Subrules {
+        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
+            self.simple_rules.hash(state);
+            if let Some(value) = &self.complex_rules {
+                value.hasher();
+            }
         }
     }
 }

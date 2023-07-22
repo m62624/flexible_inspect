@@ -6,12 +6,12 @@ impl Rule {
     /// так как модификатор берет себе правило как владелец и возращает новое
     /// на основе него, с другими модфикаторами или же подправилами
     pub fn content_unchecked(&self) -> &TakeRuleForExtend {
-        self.content.as_ref().expect(ERR_OPTION)
+        self.0.as_ref().expect(ERR_OPTION)
     }
 
     /// То же самое что и `content_unchecked`, только для изменения содержимого
     pub fn content_mut_unchecked(&mut self) -> &mut TakeRuleForExtend {
-        self.content.as_mut().expect(ERR_OPTION)
+        self.0.as_mut().expect(ERR_OPTION)
     }
 
     /// Получаем отобранные правила из `RegexSet`

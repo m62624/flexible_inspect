@@ -5,6 +5,7 @@ use std::mem;
 
 // =====================================================================
 mod getters;
+mod init;
 mod traits;
 // =====================================================================
 
@@ -15,10 +16,8 @@ If we just implemented the method with `&mut self`,
 we would change the internal values of the modifiers, but we would not return the structure itself.
 Therefore, to avoid cloning the structure again, we borrow it via `mem::take`.
 */
-#[derive(Debug, Clone, Default, PartialEq, Eq)]
-pub struct Rule {
-    content: Option<TakeRuleForExtend>,
-}
+#[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
+pub struct Rule(Option<TakeRuleForExtend>);
 
 /// We divide using the structure into a hidden modifier, which cannot be changed, and what can be changed.
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
@@ -58,14 +57,14 @@ pub enum MatchRequirement {
 }
 
 /// A structure that stores a set of regular expressions.
-#[derive(Debug, Clone, Hash)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Subrules {
     pub simple_rules: Option<SimpleRules>,
-    pub complex_rules: Option<Vec<Rule>>,
+    pub complex_rules: Option<IndexSet<Rule>>,
 }
 
 /// A structure for realization of modifier-counters
-#[derive(Debug, Clone, Copy, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Counter {
     Only(usize),
     MoreThan(usize),
@@ -73,7 +72,7 @@ pub enum Counter {
 }
 
 /// A structure defining the operation mode of the validator subrules.
-#[derive(Debug, Clone, Copy, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ModeMatch {
     AllRulesForAllMatches,
     AllRulesForAtLeastOneMatch,
