@@ -21,7 +21,7 @@ lazy_static = "1.4.0"
 fancy-regex = "0.11.0"
 regex = "1.9.1"
 grex = "1.4.1"
-
+indexmap = "2.0.0"
 
 # Next are the optional libraries for building for other targets
 

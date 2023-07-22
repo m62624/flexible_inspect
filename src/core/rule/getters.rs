@@ -16,7 +16,7 @@ impl Rule {
 
     /// Получаем отобранные правила из `RegexSet`
     pub fn get_selected_rules(regex_set: &regex::RegexSet, text: &str) -> Vec<usize> {
-        regex_set.matches(text).iter().collect::<Vec<_>>()
+        regex_set.matches(text).iter().collect()
     }
 }
 

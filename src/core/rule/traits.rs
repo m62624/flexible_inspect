@@ -1,4 +1,3 @@
-use super::captures::*;
 use super::*;
 
 /// Реализация трейта по сравнению элементов
@@ -35,24 +34,6 @@ mod partial_eq_eq {
         }
     }
 
-    impl<'a> PartialEq for CaptureData<'a> {
-        fn eq(&self, other: &Self) -> bool {
-            self.text_for_capture == other.text_for_capture
-                && self.hashmap_for_error == other.hashmap_for_error
-                && self.counter_value == other.counter_value
-        }
-    }
-
-    impl<'a> PartialEq for CaptureType<'a> {
-        fn eq(&self, other: &Self) -> bool {
-            match (self, other) {
-                (Self::Single(l0), Self::Single(r0)) => l0 == r0,
-                (Self::Multiple(l0), Self::Multiple(r0)) => l0 == r0,
-                _ => false,
-            }
-        }
-    }
-
     impl Eq for Subrules {}
     impl Eq for SimpleRules {}
     impl Eq for Counter {}
@@ -68,8 +49,10 @@ mod as_ref_str {
     impl AsRef<str> for RegexRaw {
         fn as_ref(&self) -> &str {
             match self {
-                RegexRaw::DefaultR(value) => value,
-                RegexRaw::FancyR(value) => value,
+                RegexRaw::DefaultRegex(value) => value,
+                RegexRaw::FancyRegex(value) => value,
+                RegexRaw::DefaultBytes(value) => value,
+                RegexRaw::FancyBytes(value) => value,
             }
         }
     }
