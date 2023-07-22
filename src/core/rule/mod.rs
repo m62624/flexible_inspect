@@ -36,8 +36,7 @@ so there is a lifetime limit if the structure is exported to other languages.
 pub enum RegexRaw {
     DefaultRegex(Box<str>),
     FancyRegex(Box<str>),
-    DefaultBytes(Box<str>),
-    FancyBytes(Box<str>),
+    RegexBytes(Box<str>),
 }
 
 /// A structure for storing all modifiers that can be changed by the user.
