@@ -20,15 +20,4 @@ impl Rule {
     }
 }
 
-const ERR_OPTION: &str =
-    "If you saved `Rule` in a variable, but used `extend` afterwards on the variable itself:
-    
-x = Rule(\"X\")
-x.extend(Rule(\"Y\"))
-
-* Please use this syntax:
-
-x = Rule(\"X\").extend(Rule(\"Y\"))
-* or 
-x = Rule(\"X\")
-x = x.extend(Rule(\"Y\"))";
+const ERR_OPTION: &str = " The body of `Rule` is missing, maybe you used modifiers, they borrow `Rule`, modifiers modify it and return the already modified version";
