@@ -42,7 +42,11 @@ impl RegexRaw {
 }
 
 impl Subrules {
-    pub fn new(simple_rules: SimpleRules, complex_rules: IndexSet<Rule>) -> Self {
+    pub fn new(
+        simple_rules: SimpleRules,
+        complex_rules: IndexSet<Rule>,
+        bytes_rules: IndexSet<Rule>,
+    ) -> Self {
         Self {
             simple_rules: match !simple_rules.all_rules.is_empty() {
                 true => Some(simple_rules),
@@ -50,6 +54,10 @@ impl Subrules {
             },
             complex_rules: match !complex_rules.is_empty() {
                 true => Some(complex_rules),
+                false => None,
+            },
+            bytes_rules: match !bytes_rules.is_empty() {
+                true => Some(bytes_rules),
                 false => None,
             },
         }

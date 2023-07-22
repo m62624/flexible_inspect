@@ -6,6 +6,8 @@ use std::mem;
 // =====================================================================
 mod getters;
 mod init;
+mod modifiers;
+mod slice;
 mod traits;
 // =====================================================================
 
@@ -60,6 +62,7 @@ pub enum MatchRequirement {
 pub struct Subrules {
     pub simple_rules: Option<SimpleRules>,
     pub complex_rules: Option<IndexSet<Rule>>,
+    pub bytes_rules: Option<IndexSet<Rule>>,
 }
 
 /// A structure for realization of modifier-counters
