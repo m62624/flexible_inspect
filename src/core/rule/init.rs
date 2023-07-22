@@ -44,7 +44,7 @@ impl RegexRaw {
 impl Subrules {
     pub fn new(
         simple_rules: SimpleRules,
-        complex_rules: IndexSet<Rule>,
+        complex_rules: Vec<Rule>,
         bytes_rules: IndexSet<Rule>,
     ) -> Self {
         Self {

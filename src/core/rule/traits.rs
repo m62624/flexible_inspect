@@ -62,17 +62,10 @@ mod hash_trait {
     impl Hash for Subrules {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
             self.simple_rules.hash(state);
-            if let Some(value) = &self.complex_rules {
-                value.hasher();
+            self.complex_rules.hash(state);
+            if let Some(bytes_rules) = &self.bytes_rules {
+                bytes_rules.hasher();
             }
         }
     }
 }
-
-// #[test]
-// fn hahs_subrlues() {
-//     let subrule_1 = Subrules {
-//         simple_rules: IndexSet::from([1]),
-//         complex_rules: todo!(),
-//     };
-// }

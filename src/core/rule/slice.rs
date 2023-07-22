@@ -1,14 +1,7 @@
 use super::*;
 
-/// the struct for sorting all nested rules
-pub struct SlisedRules {
-    pub simple_rules: IndexSet<Rule>,
-    pub complex_rules: IndexSet<Rule>,
-    pub bytes_rules: IndexSet<Rule>,
-}
-
 impl SlisedRules {
-    /// A method for sorting all nested rules
+    /// The method for sorting all nested rules
     pub fn slice_rules<T: IntoIterator<Item = Rule>>(all_rules: T) -> SlisedRules {
         /*
         We do not save directly via `insert` to `IndexSet` as we would lose the ordering,
@@ -17,16 +10,14 @@ impl SlisedRules {
         so there is no need to follow the queue for `complex rules`
         */
         let mut o_simple_rules = Vec::new();
-        let mut o_complex_rules = IndexSet::new();
+        let mut o_complex_rules = Vec::new();
         let mut o_bytes_rules = Vec::new();
 
         all_rules
             .into_iter()
             .for_each(|rule| match rule.content_unchecked().str_with_type {
                 RegexRaw::DefaultRegex(_) => o_simple_rules.push(rule),
-                RegexRaw::FancyRegex(_) => {
-                    o_complex_rules.insert(rule);
-                }
+                RegexRaw::FancyRegex(_) => o_complex_rules.push(rule),
                 RegexRaw::RegexBytes(_) => o_bytes_rules.push(rule),
             });
 

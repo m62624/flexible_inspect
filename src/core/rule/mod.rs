@@ -61,16 +61,26 @@ pub enum MatchRequirement {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Subrules {
     pub simple_rules: Option<SimpleRules>,
-    pub complex_rules: Option<IndexSet<Rule>>,
+    pub complex_rules: Option<Vec<Rule>>,
     pub bytes_rules: Option<IndexSet<Rule>>,
 }
 
-/// A structure for realization of modifier-counters
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
-pub enum Counter {
-    Only(usize),
-    MoreThan(usize),
-    LessThan(usize),
+/// The struct for sorting all nested rules
+pub struct SlisedRules {
+    /// `IndexSet` provides access to items in `O(1)` time on average when using the contains method.
+    pub simple_rules: IndexSet<Rule>,
+    pub complex_rules: Vec<Rule>,
+    /// `IndexSet` provides access to items in `O(1)` time on average when using the contains method.
+    pub bytes_rules: IndexSet<Rule>,
+}
+
+/// Structure that stores regular expressions from which you can initialize in `RegexSet`
+#[derive(Debug, Clone)]
+pub struct SimpleRules {
+    /// `IndexSet` provides access to items in `O(1)` time on average when using the contains method.
+    pub all_rules: IndexSet<Rule>,
+    /// `RegexSet` Match multiple, possibly overlapping, regexes in a single search.
+    pub regex_set: regex::RegexSet,
 }
 
 /// A structure defining the operation mode of the validator subrules.
@@ -82,10 +92,10 @@ pub enum ModeMatch {
     AtLeastOneRuleForAtLeastOneMatch,
 }
 
-/// Structure that stores regular expressions from which you can initialize in `RegexSet`
-/// ( Match multiple, possibly overlapping, regexes in a single search. )
-#[derive(Debug, Clone)]
-pub struct SimpleRules {
-    pub all_rules: IndexSet<Rule>,
-    pub regex_set: regex::RegexSet,
+/// A structure for realization of modifier-counters
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
+pub enum Counter {
+    Only(usize),
+    MoreThan(usize),
+    LessThan(usize),
 }
