@@ -1,5 +1,6 @@
 use super::*;
 
+///
 mod partial_eq_eq_trait {
     use super::*;
 
@@ -17,7 +18,7 @@ mod partial_eq_eq_trait {
 }
 
 #[cfg(not(tarpaulin_include))]
-/// Реализация трейта для получения ссылки
+/// Implementation of the trait to get the `str pattern` from the `Rule` structure.
 mod as_ref_str_trait {
 
     use super::*;
@@ -27,8 +28,7 @@ mod as_ref_str_trait {
             match self {
                 RegexRaw::DefaultRegex(value) => value,
                 RegexRaw::FancyRegex(value) => value,
-                RegexRaw::DefaultBytes(value) => value,
-                RegexRaw::FancyBytes(value) => value,
+                RegexRaw::RegexBytes(value) => value,
             }
         }
     }
@@ -48,6 +48,7 @@ mod as_ref_str_trait {
 
 mod hash_trait {
     use super::*;
+
     /*
     we implement only for simple rules, since we always create a `RegexSet` based on it with all the regulars of the rule,
     which means that they are identical anyway, so we only need to hash `all_rules`
@@ -67,3 +68,11 @@ mod hash_trait {
         }
     }
 }
+
+// #[test]
+// fn hahs_subrlues() {
+//     let subrule_1 = Subrules {
+//         simple_rules: IndexSet::from([1]),
+//         complex_rules: todo!(),
+//     };
+// }
