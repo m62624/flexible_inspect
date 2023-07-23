@@ -1,7 +1,8 @@
 // =======================================================
+mod another_traits;
 mod getters;
 mod init;
-mod traits;
+mod modifiers;
 // =======================================================
 
 use super::*;
@@ -32,5 +33,5 @@ pub struct SimpleRulesBytes {
     /// and then those that are not in `RegexSet` through `!contains`, so we use `IndexSet` for better performance.
     pub all_rules: IndexSet<RuleBytes>,
     /// `RegexSet` Match multiple, possibly overlapping, regexes in a single search.
-    pub regex_set: regex::RegexSet,
+    pub regex_set: regex::bytes::RegexSet,
 }
