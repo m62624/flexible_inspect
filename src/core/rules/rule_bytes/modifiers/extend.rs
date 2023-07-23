@@ -1,6 +1,5 @@
-use crate::core::rules::traits::RuleBase;
-
 use super::*;
+use crate::core::rules::traits::RuleBase;
 
 /// a method for extending the rule with nested rules
 pub fn extend<T: IntoIterator<Item = RuleBytes>>(

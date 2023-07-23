@@ -4,7 +4,6 @@ mod getters;
 mod init;
 mod modifiers;
 // =======================================================
-
 use super::*;
 
 /// A structure for checking bytes with regular expressions
@@ -34,4 +33,9 @@ pub struct SimpleRulesBytes {
     pub all_rules: IndexSet<RuleBytes>,
     /// `RegexSet` Match multiple, possibly overlapping, regexes in a single search.
     pub regex_set: regex::bytes::RegexSet,
+}
+
+pub struct CaptureDataBytes<'s> {
+    pub text_for_capture: &'s [u8],
+    pub c_data: CaptureData,
 }

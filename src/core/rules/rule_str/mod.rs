@@ -1,11 +1,11 @@
 // =======================================================
+mod another_traits;
 mod getters;
 mod init;
 mod modifiers;
-mod another_traits;
 // =======================================================
-
 use super::*;
+use std::collections::HashSet;
 
 /// A structure for checking strings with regular expressions
 
@@ -49,4 +49,9 @@ pub struct SimpleRules {
     pub all_rules: IndexSet<Rule>,
     /// `RegexSet` Match multiple, possibly overlapping, regexes in a single search.
     pub regex_set: regex::RegexSet,
+}
+
+pub struct CaptureDataStr<'s> {
+    pub text_for_capture: HashSet<&'s str>,
+    pub c_data: CaptureData,
 }

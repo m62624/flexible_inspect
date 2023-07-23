@@ -7,8 +7,13 @@ pub mod traits;
 use super::*;
 use crate::Rule;
 use indexmap::IndexSet;
-use std::hash::Hash;
+use std::{collections::HashMap, hash::Hash};
 // =======================================================
+
+pub struct CaptureData {
+    pub hashmap_for_error: HashMap<String, String>,
+    pub counter_value: usize,
+}
 
 /// The struct for sorting all nested rules
 pub struct SlisedRules {
