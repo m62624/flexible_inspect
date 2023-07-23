@@ -1,6 +1,6 @@
 use super::*;
 
-///
+#[cfg(not(tarpaulin_include))]
 mod partial_eq_eq_trait {
     use super::*;
 
@@ -18,7 +18,6 @@ mod partial_eq_eq_trait {
 }
 
 #[cfg(not(tarpaulin_include))]
-/// Implementation of the trait to get the `str pattern` from the `Rule` structure.
 mod as_ref_str_trait {
 
     use super::*;
@@ -46,6 +45,7 @@ mod as_ref_str_trait {
     }
 }
 
+#[cfg(not(tarpaulin_include))]
 mod hash_trait {
     use super::*;
 

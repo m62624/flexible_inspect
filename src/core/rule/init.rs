@@ -35,6 +35,8 @@ impl RegexRaw {
             return RegexRaw::DefaultRegex(pattern.into_boxed_str());
         } else if fancy_regex::Regex::new(&pattern).is_ok() {
             return RegexRaw::FancyRegex(pattern.into_boxed_str());
+        } else if regex::bytes::Regex::new(&pattern).is_ok() {
+            return RegexRaw::RegexBytes(pattern.into_boxed_str());
         } else {
             panic!("`{}` regular expression is incorrect", pattern)
         }

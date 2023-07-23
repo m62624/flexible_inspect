@@ -1,5 +1,7 @@
 use super::*;
 
+const ERR_OPTION: &str = " The body of `Rule` is missing, maybe you used modifiers, they borrow `Rule`, modifiers modify it and return the already modified version";
+
 impl Rule {
     /// Use for direct access to the structure body
     pub(crate) fn content_unchecked(&self) -> &TakeRuleForExtend {
@@ -16,5 +18,3 @@ impl Rule {
         regex_set.matches(text).iter().collect()
     }
 }
-
-const ERR_OPTION: &str = " The body of `Rule` is missing, maybe you used modifiers, they borrow `Rule`, modifiers modify it and return the already modified version";
