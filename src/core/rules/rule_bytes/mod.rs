@@ -3,6 +3,8 @@ mod another_traits;
 mod getters;
 mod init;
 mod modifiers;
+use std::collections::HashSet;
+
 // =======================================================
 use super::*;
 
@@ -36,6 +38,7 @@ pub struct SimpleRulesBytes {
 }
 
 pub struct CaptureDataBytes<'s> {
-    pub text_for_capture: &'s [u8],
-    pub c_data: CaptureData,
+    pub text_for_capture: HashSet<&'s [u8]>,
+    pub hashmap_for_error: HashMap<String, &'s [u8]>,
+    pub counter_value: usize,
 }

@@ -53,5 +53,6 @@ pub struct SimpleRules {
 
 pub struct CaptureDataStr<'s> {
     pub text_for_capture: HashSet<&'s str>,
-    pub c_data: CaptureData,
+    pub hashmap_for_error: HashMap<String, String>,
+    pub counter_value: usize,
 }

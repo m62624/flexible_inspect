@@ -10,11 +10,6 @@ use indexmap::IndexSet;
 use std::{collections::HashMap, hash::Hash};
 // =======================================================
 
-pub struct CaptureData {
-    pub hashmap_for_error: HashMap<String, String>,
-    pub counter_value: usize,
-}
-
 /// The struct for sorting all nested rules
 pub struct SlisedRules {
     /// `IndexSet` provides access to items in `O(1)` time on average when using the contains method.
