@@ -36,10 +36,8 @@ use thiserror::Error;
 // =====================================================================
 mod core;
 mod export_lang;
-#[cfg(test)]
-mod unit_tests;
 // =====================================================================
-pub use crate::core::rule::{MatchRequirement, Rule};
+// pub use crate::core::rule::{MatchRequirement, Rule};
 
 // =====================================================================
 /// For one-time initialization to the logger
@@ -55,7 +53,4 @@ pub fn init_logger() {
 }
 // =====================================================================
 const DEFAULT_CAPTURE: &str = "main_capture";
-
-const ERR_OPTION: &str = " The body of `Rule` is missing, maybe you used modifiers, they borrow `Rule`, modifiers modify it and return the already modified version";
-
 // =====================================================================

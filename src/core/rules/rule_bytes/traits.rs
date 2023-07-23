@@ -8,13 +8,13 @@ mod partial_eq_eq_trait {
     we implement only for simple rules, since we always create a `RegexSet` based on it with all rule regulars,
     which means they are identical anyway, so we only need to compare `all_rules`
      */
-    impl PartialEq for SimpleRules {
+    impl PartialEq for SimpleRulesBytes {
         fn eq(&self, other: &Self) -> bool {
             self.all_rules == other.all_rules
         }
     }
 
-    impl Eq for SimpleRules {}
+    impl Eq for SimpleRulesBytes {}
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -22,24 +22,14 @@ mod as_ref_str_trait {
 
     use super::*;
 
-    impl AsRef<str> for RegexRaw {
+    impl AsRef<str> for RuleBytes {
         fn as_ref(&self) -> &str {
-            match self {
-                RegexRaw::DefaultRegex(value) => value,
-                RegexRaw::FancyRegex(value) => value,
-                RegexRaw::RegexBytes(value) => value,
-            }
+            self.content_unchecked().str_bytes.as_ref()
         }
     }
 
-    impl AsRef<str> for Rule {
-        fn as_ref(&self) -> &str {
-            self.content_unchecked().str_with_type.as_ref()
-        }
-    }
-
-    impl AsRef<TakeRuleForExtend> for &TakeRuleForExtend {
-        fn as_ref(&self) -> &TakeRuleForExtend {
+    impl AsRef<TakeRuleBytesForExtend> for &TakeRuleBytesForExtend {
+        fn as_ref(&self) -> &TakeRuleBytesForExtend {
             self
         }
     }
@@ -53,19 +43,9 @@ mod hash_trait {
     we implement only for simple rules, since we always create a `RegexSet` based on it with all the regulars of the rule,
     which means that they are identical anyway, so we only need to hash `all_rules`
      */
-    impl Hash for SimpleRules {
+    impl Hash for SimpleRulesBytes {
         fn hash<H: std::hash::Hasher>(&self, _: &mut H) {
             self.all_rules.hasher();
-        }
-    }
-
-    impl Hash for Subrules {
-        fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-            self.simple_rules.hash(state);
-            self.complex_rules.hash(state);
-            if let Some(bytes_rules) = &self.bytes_rules {
-                bytes_rules.hasher();
-            }
         }
     }
 }

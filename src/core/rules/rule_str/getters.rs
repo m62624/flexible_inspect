@@ -1,7 +1,5 @@
 use super::*;
 
-
-
 impl Rule {
     /// Use for direct access to the structure body
     pub(crate) fn content_unchecked(&self) -> &TakeRuleForExtend {
