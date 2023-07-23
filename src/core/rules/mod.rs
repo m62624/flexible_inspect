@@ -3,7 +3,6 @@ mod init;
 pub mod rule_bytes;
 pub mod rule_str;
 pub mod traits;
-
 // =======================================================
 use super::*;
 use crate::Rule;
