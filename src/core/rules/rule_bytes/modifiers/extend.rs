@@ -2,6 +2,7 @@ use crate::core::rules::traits::RuleBase;
 
 use super::*;
 
+/// a method for extending the rule with nested rules
 pub fn extend<T: IntoIterator<Item = RuleBytes>>(
     rule: &mut RuleBytes,
     nested_rules: T,

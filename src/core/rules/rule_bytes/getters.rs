@@ -1,6 +1,6 @@
+use super::*;
 use crate::core::rules::traits::{RuleBase, RuleBytesExtendBase};
 
-use super::*;
 impl RuleBase for RuleBytes {
     type TakeRuleType = TakeRuleBytesForExtend;
     /// Use for direct access to the structure body

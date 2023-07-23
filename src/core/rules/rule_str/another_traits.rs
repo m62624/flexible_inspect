@@ -1,6 +1,7 @@
 use super::*;
 use crate::core::rules::traits::RuleBase;
 
+/// Here we implement a traite for comparing elements to use in `collections` and using `contains`.
 #[cfg(not(tarpaulin_include))]
 mod partial_eq_eq_trait {
     use super::*;
@@ -18,6 +19,7 @@ mod partial_eq_eq_trait {
     impl Eq for SimpleRules {}
 }
 
+/// Here we implement a trait to retrieve the regular expression string directly
 #[cfg(not(tarpaulin_include))]
 mod as_ref_str_trait {
     use super::*;
@@ -44,6 +46,7 @@ mod as_ref_str_trait {
     }
 }
 
+/// Here we implement a trait to hash the data for `IndexSet`
 #[cfg(not(tarpaulin_include))]
 mod hash_trait {
     use super::*;

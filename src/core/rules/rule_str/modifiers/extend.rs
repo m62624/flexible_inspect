@@ -1,6 +1,7 @@
 use super::*;
 use crate::core::rules::traits::RuleBase;
 
+/// a method for extending the rule with nested rules
 pub fn extend<T: IntoIterator<Item = Rule>>(rule: &mut Rule, nested_rules: T) -> Rule {
     let sliced_rules = SlisedRules::new(nested_rules);
     if sliced_rules.is_some() {
