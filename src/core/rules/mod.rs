@@ -15,6 +15,7 @@ pub struct GeneralModifiers {
     pub mod_match: ModeMatch,
 }
 
+/// A structure for storing regular expressions
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum RegexRaw {
     DefaultRegex(Box<str>),
