@@ -37,6 +37,7 @@ use std::sync::Once;
 // =====================================================================
 pub use crate::core::rules::rule_bytes::RuleBytes;
 pub use crate::core::rules::rule_str::Rule;
+pub use crate::core::rules::traits::RuleModifiers;
 pub use crate::core::rules::MatchRequirement;
 // =====================================================================
 /// For one-time initialization to the logger
