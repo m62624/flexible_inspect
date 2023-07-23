@@ -2,7 +2,7 @@ use super::*;
 
 impl Rule {
     /// The method to change regular expression behavior to byte checks `&[u8]`
-    pub fn bytes(&mut self) -> Self {
+    pub fn for_bytes(&mut self) -> Self {
         self.content_mut_unchecked().str_with_type = RegexRaw::RegexBytes(
             self.content_unchecked()
                 .str_with_type
