@@ -1,7 +1,8 @@
 // =======================================================
 mod getters;
 mod init;
-mod traits;
+mod modifiers;
+mod another_traits;
 // =======================================================
 
 use super::*;
@@ -42,8 +43,8 @@ pub struct Subrules {
 /// Structure that stores regular expressions from which you can initialize in `RegexSet`
 #[derive(Debug, Clone)]
 pub struct SimpleRules {
-    /// Here the queue can change, not the collection itself, 
-    /// but the way of processing rules at the beginning from `RegexSet` 
+    /// Here the queue can change, not the collection itself,
+    /// but the way of processing rules at the beginning from `RegexSet`
     /// and then those that are not in `RegexSet` through `!contains`, so we use `IndexSet` for better performance.
     pub all_rules: IndexSet<Rule>,
     /// `RegexSet` Match multiple, possibly overlapping, regexes in a single search.
