@@ -35,17 +35,20 @@ pub struct CaptureData<'s> {
 }
 
 impl<'s> CaptureData<'s> {
-    pub fn find_captures(rule: &Rule, text: &'s str) -> Self {
+    fn find_captures(rule: &Rule, text_str: Option<&'s str>, text_bytes: Option<&[u8]>) -> Self {
         let mut hashmap_for_error = HashMap::new();
         // ==========================================================
         let mut text_for_capture: HashSet<&str> = HashSet::new();
         let mut bytes_for_capture: HashSet<&[u8]> = HashSet::new();
         // ==========================================================
-        let mut counter_value: usize = 0;
         let flag_check_counter = rule.content_unchecked().mutable_modifiers.counter.is_some();
+        let mut counter_value: usize = 0;
         // At first glance we see code duplication, but each `match` works with different structures
         match &rule.content_unchecked().str_with_type {
-            RegexRaw::DefaultRegex(pattern) => {}
+            RegexRaw::DefaultRegex(pattern) => {
+                let re = regex::Regex::new(pattern).unwrap();
+                // re.captures_iter()
+            }
             RegexRaw::FancyRegex(pattern) => {}
             RegexRaw::RegexBytes(pattern) => {}
         }

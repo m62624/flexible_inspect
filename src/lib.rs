@@ -27,6 +27,7 @@ ppppppppp
 //! The template for exporting the validator to other programming languages and making it easier to work with validator versions for different languages. ( for example, to port a library to python, or to prepare code in wasm )
 
 use log::*;
+use std::env;
 use std::{
     collections::{HashMap, HashSet},
     sync::Once,
@@ -35,6 +36,7 @@ use thiserror::Error;
 // =====================================================================
 mod core;
 mod export_lang;
+#[cfg(test)]
 mod unit_tests;
 // =====================================================================
 pub use crate::core::rule::{MatchRequirement, Rule};
@@ -47,7 +49,13 @@ static INIT: Once = Once::new();
 pub fn init_logger() {
     // env_logger is called only once
     INIT.call_once(|| {
+        env::set_var("RUST_BACKTRACE", "0");
         env_logger::init();
     });
 }
+// =====================================================================
+const DEFAULT_CAPTURE: &str = "main_capture";
+
+const ERR_OPTION: &str = " The body of `Rule` is missing, maybe you used modifiers, they borrow `Rule`, modifiers modify it and return the already modified version";
+
 // =====================================================================

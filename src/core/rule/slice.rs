@@ -16,7 +16,7 @@ impl SlisedRules {
         let mut o_complex_rules = Vec::new();
         let mut o_bytes_rules = Vec::new();
 
-        let mut rule_access = |root_type: &Rule, rule: Rule| {
+        let mut rule_access = |root_type: &Rule, rule: &Rule| {
             // Common part of the panic message
             let panic_msg = format!(
 "\n\n\nonly regular expressions for `&str` strings can be added to a regular expression for `&str` strings, not for &[u8] bytes.
@@ -36,13 +36,11 @@ If you want to add a regular expression for &[u8] bytes, then use the `for_bytes
                     if let RegexRaw::RegexBytes(_) = rule.content_unchecked().str_with_type {
                         panic!("{}", panic_msg)
                     }
-                    o_simple_rules.push(rule);
                 }
                 RegexRaw::FancyRegex(_) => {
                     if let RegexRaw::RegexBytes(_) = rule.content_unchecked().str_with_type {
                         panic!("{}", panic_msg)
                     }
-                    o_complex_rules.push(rule);
                 }
                 RegexRaw::RegexBytes(_) => {
                     if let RegexRaw::DefaultRegex(_) | RegexRaw::FancyRegex(_) =
@@ -61,14 +59,20 @@ Problem rule \"( {:?},{:#?} )\"
             rule.content_unchecked().mutable_modifiers.requirement
 )
                     }
-                    o_bytes_rules.push(rule);
                 }
             }
         };
 
         all_rules
             .into_iter()
-            .for_each(|rule| rule_access(&root_rule, rule));
+            .for_each(|rule| {
+                rule_access(&root_rule, &rule);
+                match rule.content_unchecked().str_with_type{
+                    RegexRaw::DefaultRegex(_) => o_simple_rules.push(rule),
+                    RegexRaw::FancyRegex(_) => o_complex_rules.push(rule),
+                    RegexRaw::RegexBytes(_) => o_bytes_rules.push(rule),
+                }
+            });
 
         let o_simple_rules: IndexSet<_> = o_simple_rules.into_iter().collect();
         let o_bytes_rules: IndexSet<_> = o_bytes_rules.into_iter().collect();
