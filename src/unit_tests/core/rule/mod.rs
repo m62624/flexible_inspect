@@ -1,3 +1,5 @@
+mod captures;
+mod extend;
 use super::*;
 
 /// Проверка конструктора `Rule`
