@@ -1,5 +1,6 @@
 // =======================================================
 mod getters;
+mod init;
 mod traits;
 // =======================================================
 
@@ -19,8 +20,15 @@ pub struct Rule(Option<TakeRuleForExtend>);
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TakeRuleForExtend {
     pub str_with_type: RegexRaw,
-    pub subrules: Subrules,
+    pub subrules: Option<Subrules>,
     pub general_modifiers: GeneralModifiers,
+}
+
+/// A structure for storing regular expressions
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum RegexRaw {
+    DefaultRegex(Box<str>),
+    FancyRegex(Box<str>),
 }
 
 /// A structure that stores a set of regular expressions.

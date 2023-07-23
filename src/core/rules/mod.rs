@@ -1,4 +1,5 @@
 // =======================================================
+mod init;
 mod rule_bytes;
 mod rule_str;
 // =======================================================
@@ -13,13 +14,6 @@ pub struct GeneralModifiers {
     pub requirement: MatchRequirement,
     pub counter: Option<Counter>,
     pub mod_match: ModeMatch,
-}
-
-/// A structure for storing regular expressions
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
-pub enum RegexRaw {
-    DefaultRegex(Box<str>),
-    FancyRegex(Box<str>),
 }
 
 /// A structure that defines what action is required when finding regular expression matches.
