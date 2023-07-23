@@ -26,11 +26,18 @@ ppppppppp
 */
 //! The template for exporting the validator to other programming languages and making it easier to work with validator versions for different languages. ( for example, to port a library to python, or to prepare code in wasm )
 
-use std::env;
-use std::sync::Once;
 // =====================================================================
 mod core;
 mod export_lang;
+#[cfg(test)]
+mod unit_tests;
+// =====================================================================
+use std::env;
+use std::sync::Once;
+// =====================================================================
+pub use crate::core::rules::rule_bytes::RuleBytes;
+pub use crate::core::rules::rule_str::Rule;
+pub use crate::core::rules::MatchRequirement;
 // =====================================================================
 /// For one-time initialization to the logger
 static INIT: Once = Once::new();
