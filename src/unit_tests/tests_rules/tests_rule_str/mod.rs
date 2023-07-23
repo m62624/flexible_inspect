@@ -1,4 +1,5 @@
 mod tests_extend;
+mod tests_captures;
 use super::*;
 
 /// Проверка конструктора на корректное регулярное выражение Default Regex

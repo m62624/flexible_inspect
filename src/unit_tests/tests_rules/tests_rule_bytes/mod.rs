@@ -1,3 +1,4 @@
+mod tests_captures;
 mod tests_extend;
 use super::*;
 
