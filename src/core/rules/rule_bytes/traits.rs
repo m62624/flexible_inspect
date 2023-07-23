@@ -1,4 +1,5 @@
 use super::*;
+use crate::core::rules::traits::RuleBase;
 
 #[cfg(not(tarpaulin_include))]
 mod partial_eq_eq_trait {
@@ -19,7 +20,6 @@ mod partial_eq_eq_trait {
 
 #[cfg(not(tarpaulin_include))]
 mod as_ref_str_trait {
-
     use super::*;
 
     impl AsRef<str> for RuleBytes {
