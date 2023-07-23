@@ -51,6 +51,7 @@ pub struct SimpleRules {
     pub regex_set: regex::RegexSet,
 }
 
+#[derive(Debug)]
 pub struct CaptureDataStr<'s> {
     pub text_for_capture: HashSet<&'s str>,
     pub hashmap_for_error: HashMap<String, String>,

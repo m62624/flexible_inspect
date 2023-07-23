@@ -37,6 +37,7 @@ pub struct SimpleRulesBytes {
     pub regex_set: regex::bytes::RegexSet,
 }
 
+#[derive(Debug)]
 pub struct CaptureDataBytes<'s> {
     pub text_for_capture: HashSet<&'s [u8]>,
     pub hashmap_for_error: HashMap<String, &'s [u8]>,
