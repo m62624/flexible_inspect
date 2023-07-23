@@ -1,13 +1,22 @@
 // =======================================================
 mod init;
-pub mod traits;
 pub mod rule_bytes;
 pub mod rule_str;
+pub mod traits;
+
 // =======================================================
 use super::*;
+use crate::Rule;
 use indexmap::IndexSet;
 use std::hash::Hash;
 // =======================================================
+
+/// The struct for sorting all nested rules
+pub struct SlisedRules {
+    /// `IndexSet` provides access to items in `O(1)` time on average when using the contains method.
+    pub simple_rules: IndexSet<Rule>,
+    pub complex_rules: Vec<Rule>,
+}
 
 /// A Structure for common `Rule` modifiers
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
