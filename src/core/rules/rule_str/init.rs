@@ -24,9 +24,9 @@ impl TakeRuleForExtend {
 impl RegexRaw {
     fn new(pattern: String) -> Self {
         if regex::Regex::new(&pattern).is_ok() {
-            return RegexRaw::DefaultRegex(pattern.into_boxed_str());
+            RegexRaw::DefaultRegex(pattern.into_boxed_str())
         } else if fancy_regex::Regex::new(&pattern).is_ok() {
-            return RegexRaw::FancyRegex(pattern.into_boxed_str());
+            RegexRaw::FancyRegex(pattern.into_boxed_str())
         } else {
             panic!("`{}` regular expression is incorrect", pattern)
         }

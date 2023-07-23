@@ -41,10 +41,6 @@ impl SlisedRules {
 
     /// A method for checking if there are any rules
     pub fn is_some(&self) -> bool {
-        if !self.simple_rules.is_empty() || !self.complex_rules.is_empty() {
-            true
-        } else {
-            false
-        }
+        !self.simple_rules.is_empty() || !self.complex_rules.is_empty()
     }
 }
