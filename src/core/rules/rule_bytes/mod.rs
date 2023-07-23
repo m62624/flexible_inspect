@@ -5,6 +5,14 @@ mod traits;
 
 use super::*;
 
+/// A structure for checking bytes with regular expressions
+
+/*
+Stores all values in the `Option`, so that if we change the modifiers we can return this structure again without `cloning`.
+If we just implemented the method with `&mut self`,
+we would change the internal values of the modifiers, but we would not return the structure itself.
+Therefore, to avoid cloning the structure again, we borrow it via `mem::take`.
+*/
 #[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
 pub struct RuleBytes(Option<TakeRuleBytesForExtend>);
 
