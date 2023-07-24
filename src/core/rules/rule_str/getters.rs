@@ -24,7 +24,7 @@ impl<'a> RuleExtendBase<'a> for Rule {
         regex_set.matches(text).iter().collect()
     }
 
-    fn find_captures(rule: &Rule, text: &'a str) -> CaptureDataStr<'a> {
+    fn find_captures(rule: &Rule, text: &'a str) -> CaptureData<'a> {
         captures::find_captures(rule, text)
     }
 }

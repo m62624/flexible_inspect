@@ -1,9 +1,9 @@
 use super::*;
 use crate::core::rules::traits::RuleBase;
 
-pub fn find_captures<'a>(rule: &RuleBytes, text_bytes: &'a [u8]) -> CaptureDataBytes<'a> {
-    let mut hashmap_for_error: HashMap<String, &[u8]> = HashMap::new();
-    let mut text_for_capture = HashSet::new();
+pub fn find_captures<'a>(rule: &RuleBytes, text_bytes: &'a [u8]) -> CaptureData<'a> {
+    let mut hashmap_for_error: HashMap<String, String> = HashMap::new();
+    let mut text_for_capture: HashSet<CaptureType> = HashSet::new();
     let mut counter_value: usize = 0;
     // флаг для проверки `Counter`
     let flag_check_counter = rule.content_unchecked().general_modifiers.counter.is_some();
@@ -15,8 +15,8 @@ pub fn find_captures<'a>(rule: &RuleBytes, text_bytes: &'a [u8]) -> CaptureDataB
         if let Some(value) = capture.get(0) {
             hashmap_for_error
                 .entry(DEFAULT_CAPTURE.into())
-                .or_insert_with(|| value.as_bytes());
-            text_for_capture.insert(value.as_bytes());
+                .or_insert_with(|| bytes_to_byte_string(value.as_bytes()));
+            text_for_capture.insert(CaptureType::Bytes(value.as_bytes()));
             // в одном `regex` может быть несколько групп, но все
             // они нужны для получения главного совпадения, потому
             // повышение идет только в `main capture`
@@ -30,14 +30,19 @@ pub fn find_captures<'a>(rule: &RuleBytes, text_bytes: &'a [u8]) -> CaptureDataB
                 if let Some(value) = capture.name(name) {
                     hashmap_for_error
                         .entry(name.into())
-                        .or_insert_with(|| value.as_bytes());
+                        .or_insert_with(|| bytes_to_byte_string(value.as_bytes()));
                 }
             }
         })
     });
-    CaptureDataBytes {
+    CaptureData {
         text_for_capture,
         hashmap_for_error,
         counter_value,
     }
+}
+
+fn bytes_to_byte_string(bytes: &[u8]) -> String {
+    let byte_string: Vec<String> = bytes.iter().map(|byte| byte.to_string()).collect();
+    format!("[{}]", byte_string.join(","))
 }

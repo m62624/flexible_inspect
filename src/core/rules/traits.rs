@@ -1,6 +1,6 @@
 use crate::{Rule, RuleBytes};
 
-use super::{rule_bytes::CaptureDataBytes, rule_str::CaptureDataStr};
+use super::CaptureData;
 
 /// This trait requires implementations of the most basic methods for any `Rule`.
 pub trait RuleBase {
@@ -18,7 +18,7 @@ pub trait RuleExtendBase<'s>: RuleBase {
 
     /// This method finds matches on a regular expression.
     /// Saves one first match for each group to fill in the error message, and all matches to pass on to the next rule check
-    fn find_captures(rule: &Rule, text: &'s str) -> CaptureDataStr<'s>;
+    fn find_captures(rule: &Rule, text: &'s str) -> CaptureData<'s>;
 }
 
 /// This trait requires method implementations that are different for different structures
@@ -28,7 +28,7 @@ pub trait RuleBytesExtendBase<'s>: RuleBase {
 
     /// This method finds matches on a regular expression.
     /// Saves one first match for each group to fill in the error message, and all matches to pass on to the next rule check
-    fn find_captures(rule: &RuleBytes, text_bytes: &'s [u8]) -> CaptureDataBytes<'s>;
+    fn find_captures(rule: &RuleBytes, text_bytes: &'s [u8]) -> CaptureData<'s>;
 }
 
 /// This trait requires modifier implementations for any `Rules`

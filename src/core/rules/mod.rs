@@ -7,7 +7,10 @@ pub mod traits;
 use super::*;
 use crate::Rule;
 use indexmap::IndexSet;
-use std::{collections::HashMap, hash::Hash};
+use std::{
+    collections::{HashMap, HashSet},
+    hash::Hash,
+};
 // =======================================================
 
 /// The struct for sorting all nested rules
@@ -47,4 +50,19 @@ pub enum Counter {
     Only(usize),
     MoreThan(usize),
     LessThan(usize),
+}
+
+/// A structure that stores the type of capture
+#[derive(Debug, PartialEq, Eq, Hash)]
+pub enum CaptureType<'s> {
+    Str(&'s str),
+    Bytes(&'s [u8]),
+}
+
+/// A structure that stores all the data for processing the capture
+#[derive(Debug)]
+pub struct CaptureData<'s> {
+    pub text_for_capture: HashSet<CaptureType<'s>>,
+    pub hashmap_for_error: HashMap<String, String>,
+    pub counter_value: usize,
 }

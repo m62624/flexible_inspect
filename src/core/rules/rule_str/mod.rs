@@ -51,10 +51,3 @@ pub struct SimpleRules {
     /// `RegexSet` Match multiple, possibly overlapping, regexes in a single search.
     pub regex_set: regex::RegexSet,
 }
-
-#[derive(Debug)]
-pub struct CaptureDataStr<'s> {
-    pub text_for_capture: HashSet<&'s str>,
-    pub hashmap_for_error: HashMap<String, String>,
-    pub counter_value: usize,
-}

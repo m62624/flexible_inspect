@@ -25,7 +25,7 @@ impl<'a> RuleBytesExtendBase<'a> for RuleBytes {
         regex_set.matches(text_bytes).iter().collect()
     }
 
-    fn find_captures(rule: &RuleBytes, text_bytes: &'a [u8]) -> CaptureDataBytes<'a> {
+    fn find_captures(rule: &RuleBytes, text_bytes: &'a [u8]) -> CaptureData<'a> {
         captures::find_captures(rule, text_bytes)
     }
 }

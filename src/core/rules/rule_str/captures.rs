@@ -1,9 +1,9 @@
 use super::*;
 use crate::core::rules::traits::RuleBase;
 
-pub fn find_captures<'a>(rule: &Rule, text: &'a str) -> CaptureDataStr<'a> {
+pub fn find_captures<'a>(rule: &Rule, text: &'a str) -> CaptureData<'a> {
     let mut hashmap_for_error = HashMap::new();
-    let mut text_for_capture = HashSet::new();
+    let mut text_for_capture: HashSet<CaptureType> = HashSet::new();
     let mut counter_value: usize = 0;
     // флаг для проверки `Counter`
     let flag_check_counter = rule.content_unchecked().general_modifiers.counter.is_some();
@@ -19,7 +19,7 @@ pub fn find_captures<'a>(rule: &Rule, text: &'a str) -> CaptureDataStr<'a> {
                     hashmap_for_error
                         .entry(DEFAULT_CAPTURE.into())
                         .or_insert_with(|| value.as_str().into());
-                    text_for_capture.insert(value.as_str());
+                    text_for_capture.insert(CaptureType::Str(value.as_str()));
                     // в одном `regex` может быть несколько групп, но все
                     // они нужны для получения главного совпадения, потому
                     // повышение идет только в `main capture`
@@ -49,7 +49,7 @@ pub fn find_captures<'a>(rule: &Rule, text: &'a str) -> CaptureDataStr<'a> {
                         hashmap_for_error
                             .entry(DEFAULT_CAPTURE.into())
                             .or_insert_with(|| value.as_str().into());
-                        text_for_capture.insert(value.as_str());
+                        text_for_capture.insert(CaptureType::Str(value.as_str()));
                         // в одном `regex` может быть несколько групп, но все
                         // они нужны для получения главного совпадения, потому
                         // повышение идет только в `main capture`
@@ -71,9 +71,10 @@ pub fn find_captures<'a>(rule: &Rule, text: &'a str) -> CaptureDataStr<'a> {
             });
         }
     }
-    CaptureDataStr {
+    CaptureData {
         text_for_capture,
         hashmap_for_error,
         counter_value,
     }
 }
+
