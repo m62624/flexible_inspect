@@ -5,7 +5,7 @@ use crate::MatchRequirement;
 use std::collections::HashMap;
 
 /// All optional modifiers `NextStep` to have a unified type
-#[derive(Debug)]
+#[derive(Debug, PartialEq, Eq)]
 pub enum NextStep {
     Go,
     Finish,
