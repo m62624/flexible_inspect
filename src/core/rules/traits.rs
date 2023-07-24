@@ -29,7 +29,7 @@ pub trait RuleBytesExtendBase<'s>: RuleBase {
     fn find_captures(rule: &RuleBytes, text_bytes: &'s [u8]) -> CaptureDataBytes<'s>;
 }
 
-/// This trait requires modifier implementations for any Rules
+/// This trait requires modifier implementations for any `Rules`
 pub trait RuleModifiers {
     type RuleType;
 
