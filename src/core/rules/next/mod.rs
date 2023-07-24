@@ -4,7 +4,7 @@ use super::{captures::CaptureData, traits::RuleBase};
 use crate::MatchRequirement;
 use std::collections::HashMap;
 
-/// All optional modifiers return `NextStep` to have a unified type
+/// All optional modifiers `NextStep` to have a unified type
 #[derive(Debug)]
 pub enum NextStep {
     Go,
@@ -23,8 +23,7 @@ impl NextStep {
                         {
                             return NextStep::Error(value);
                         };
-                        // TODO: check modifiers
-                        return NextStep::Go;
+                        NextStep::Go
                     }
                     (true, false) => {
                         if let NextStep::Error(value) =
@@ -32,27 +31,10 @@ impl NextStep {
                         {
                             return NextStep::Error(value);
                         };
-                        // TODO: check modifiers
-                        return NextStep::Finish;
+                        NextStep::Finish
                     }
-                    (false, true) => {
-                        if let NextStep::Error(value) =
-                            modifier_arena::modifier_runner(rule, captures)
-                        {
-                            return NextStep::Error(value);
-                        };
-                        // TODO: check modifiers
-                        return NextStep::Error(None);
-                    }
-                    (false, false) => {
-                        if let NextStep::Error(value) =
-                            modifier_arena::modifier_runner(rule, captures)
-                        {
-                            return NextStep::Error(value);
-                        };
-                        // TODO: check modifiers
-                        return NextStep::Error(None);
-                    }
+                    (false, true) => NextStep::Error(None),
+                    (false, false) => NextStep::Error(None),
                 }
             }
             MatchRequirement::MustNotBeFound => {
@@ -63,19 +45,10 @@ impl NextStep {
                         {
                             return NextStep::Error(value);
                         };
-                        // TODO: check modifiers
-                        return NextStep::Go;
+                        NextStep::Go
                     }
                     (true, false) => {
-                        if let NextStep::Error(value) =
-                            modifier_arena::modifier_runner(rule, captures)
-                        {
-                            return NextStep::Error(value);
-                        };
-                        // TODO: check modifiers
-                        return NextStep::Error(Some(std::mem::take(
-                            &mut captures.hashmap_for_error,
-                        )));
+                        NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)))
                     }
                     (false, true) => {
                         if let NextStep::Error(value) =
@@ -83,8 +56,7 @@ impl NextStep {
                         {
                             return NextStep::Error(value);
                         };
-                        // TODO: check modifiers
-                        return NextStep::Finish;
+                        NextStep::Finish
                     }
                     (false, false) => {
                         if let NextStep::Error(value) =
@@ -92,12 +64,10 @@ impl NextStep {
                         {
                             return NextStep::Error(value);
                         };
-                        // TODO: check modifiers
-                        return NextStep::Finish;
+                        NextStep::Finish
                     }
                 }
             }
         }
-        NextStep::Finish
     }
 }
