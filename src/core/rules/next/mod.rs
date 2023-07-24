@@ -7,4 +7,3 @@ pub enum NextStep {
     Finish,
     Error(Option<HashMap<String, String>>),
 }
-

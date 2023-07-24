@@ -5,8 +5,10 @@ use super::{rule_bytes::CaptureDataBytes, rule_str::CaptureDataStr};
 /// This trait requires implementations of the most basic methods for any `Rule`.
 pub trait RuleBase {
     type TakeRuleType;
+    type SubRulesType;
     fn content_unchecked(&self) -> &Self::TakeRuleType;
     fn content_mut_unchecked(&mut self) -> &mut Self::TakeRuleType;
+    fn get_subrules(&self) -> Option<&Self::SubRulesType>;
 }
 
 /// This trait requires method implementations that are different for different structures
