@@ -1,5 +1,9 @@
 use super::*;
-use crate::core::rules::traits::RuleBase;
+use crate::core::rules::{
+    captures::{CaptureData, CaptureType},
+    traits::RuleBase,
+};
+use std::collections::HashMap;
 
 pub fn find_captures<'a>(rule: &RuleBytes, text_bytes: &'a [u8]) -> CaptureData<'a> {
     let mut hashmap_for_error: HashMap<String, String> = HashMap::new();

@@ -1,6 +1,9 @@
 use super::SimpleRulesBytes;
 use super::*;
-use crate::core::rules::traits::{RuleBase, RuleBytesExtendBase};
+use crate::core::rules::{
+    captures::CaptureData,
+    traits::{RuleBase, RuleBytesExtendBase},
+};
 impl RuleBase for RuleBytes {
     type TakeRuleType = TakeRuleBytesForExtend;
     type SubRulesType = SimpleRulesBytes;
@@ -16,6 +19,10 @@ impl RuleBase for RuleBytes {
 
     fn get_subrules(&self) -> Option<&Self::SubRulesType> {
         self.content_unchecked().subrules_bytes.as_ref()
+    }
+
+    fn get_requirement(&self) -> &MatchRequirement {
+        &self.content_unchecked().general_modifiers.requirement
     }
 }
 

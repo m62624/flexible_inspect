@@ -1,4 +1,4 @@
-use crate::core::rules::{traits::RuleBytesExtendBase, CaptureType};
+use crate::core::rules::{captures::CaptureType, traits::RuleBytesExtendBase};
 use std::collections::HashSet;
 
 use super::*;

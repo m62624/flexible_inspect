@@ -1,5 +1,9 @@
 use super::*;
-use crate::core::rules::traits::RuleBase;
+use crate::core::rules::{
+    captures::{CaptureData, CaptureType},
+    traits::RuleBase,
+};
+use std::collections::HashMap;
 
 pub fn find_captures<'a>(rule: &Rule, text: &'a str) -> CaptureData<'a> {
     let mut hashmap_for_error = HashMap::new();
@@ -77,4 +81,3 @@ pub fn find_captures<'a>(rule: &Rule, text: &'a str) -> CaptureData<'a> {
         counter_value,
     }
 }
-

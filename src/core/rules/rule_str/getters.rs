@@ -1,5 +1,8 @@
 use super::*;
-use crate::core::rules::traits::{RuleBase, RuleExtendBase};
+use crate::core::rules::{
+    captures::CaptureData,
+    traits::{RuleBase, RuleExtendBase},
+};
 
 impl RuleBase for Rule {
     type TakeRuleType = TakeRuleForExtend;
@@ -15,6 +18,10 @@ impl RuleBase for Rule {
     }
     fn get_subrules(&self) -> Option<&Self::SubRulesType> {
         self.content_unchecked().subrules.as_ref()
+    }
+
+    fn get_requirement(&self) -> &MatchRequirement {
+        &self.content_unchecked().general_modifiers.requirement
     }
 }
 

@@ -1,7 +1,7 @@
 use std::collections::HashSet;
 
 use crate::core::{
-    rules::{traits::RuleExtendBase, CaptureType},
+    rules::{captures::CaptureType, traits::RuleExtendBase},
     DEFAULT_CAPTURE,
 };
 
