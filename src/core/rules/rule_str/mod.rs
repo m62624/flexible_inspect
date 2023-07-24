@@ -1,5 +1,6 @@
 // =======================================================
 mod another_traits;
+mod captures;
 mod getters;
 mod init;
 mod modifiers;
