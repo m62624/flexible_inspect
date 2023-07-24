@@ -43,4 +43,8 @@ pub trait RuleModifiers {
     fn counter_is_equal(&mut self, count: usize) -> Self::RuleType;
     fn counter_more_than(&mut self, count: usize) -> Self::RuleType;
     fn counter_less_than(&mut self, count: usize) -> Self::RuleType;
+
+    fn mode_all_rules_for_at_least_one_match(&mut self) -> Self::RuleType;
+    fn mode_at_least_one_rule_for_all_matches(&mut self) -> Self::RuleType;
+    fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self::RuleType;
 }

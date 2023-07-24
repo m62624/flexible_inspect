@@ -26,4 +26,22 @@ impl RuleModifiers for Rule {
         self.content_mut_unchecked().general_modifiers.counter = Some(Counter::LessThan(count));
         std::mem::take(self)
     }
+
+    fn mode_all_rules_for_at_least_one_match(&mut self) -> Self::RuleType {
+        self.content_mut_unchecked().general_modifiers.mod_match =
+            ModeMatch::AllRulesForAtLeastOneMatch;
+        std::mem::take(self)
+    }
+
+    fn mode_at_least_one_rule_for_all_matches(&mut self) -> Self::RuleType {
+        self.content_mut_unchecked().general_modifiers.mod_match =
+            ModeMatch::AtLeastOneRuleForAllMatches;
+        std::mem::take(self)
+    }
+
+    fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self::RuleType {
+        self.content_mut_unchecked().general_modifiers.mod_match =
+            ModeMatch::AtLeastOneRuleForAtLeastOneMatch;
+        std::mem::take(self)
+    }
 }
