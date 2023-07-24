@@ -2,12 +2,9 @@ use super::*;
 use crate::init_logger;
 
 impl Rule {
-    pub fn new<T: ToString>(pattern: T, requirement: MatchRequirement) -> Self {
+    pub fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
         init_logger();
-        Self(Some(TakeRuleForExtend::new(
-            pattern.to_string(),
-            requirement,
-        )))
+        Self(Some(TakeRuleForExtend::new(pattern.into(), requirement)))
     }
 }
 
