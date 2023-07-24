@@ -23,6 +23,10 @@ impl RuleBase for Rule {
     fn get_requirement(&self) -> &MatchRequirement {
         &self.content_unchecked().general_modifiers.requirement
     }
+
+    fn get_counter(&self) -> Option<Counter> {
+        self.content_unchecked().general_modifiers.counter
+    }
 }
 
 impl<'a> RuleExtendBase<'a> for Rule {

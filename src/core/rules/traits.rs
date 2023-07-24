@@ -1,4 +1,4 @@
-use super::captures::CaptureData;
+use super::{captures::CaptureData, Counter};
 use crate::{MatchRequirement, Rule, RuleBytes};
 
 /// This trait requires implementations of the most basic methods for any `Rule`.
@@ -9,6 +9,7 @@ pub trait RuleBase {
     fn content_mut_unchecked(&mut self) -> &mut Self::TakeRuleType;
     fn get_subrules(&self) -> Option<&Self::SubRulesType>;
     fn get_requirement(&self) -> &MatchRequirement;
+    fn get_counter(&self) -> Option<Counter>;
 }
 
 /// This trait requires method implementations that are different for different structures
