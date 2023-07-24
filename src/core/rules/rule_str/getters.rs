@@ -1,8 +1,5 @@
 use super::*;
-use crate::core::rules::{
-    captures::CaptureData,
-    traits::{RuleBase, RuleExtendBase},
-};
+use crate::core::rules::traits::RuleBase;
 
 impl RuleBase for Rule {
     type TakeRuleType = TakeRuleForExtend;
@@ -26,16 +23,5 @@ impl RuleBase for Rule {
 
     fn get_counter(&self) -> Option<Counter> {
         self.content_unchecked().general_modifiers.counter
-    }
-}
-
-impl<'a> RuleExtendBase<'a> for Rule {
-    /// Get selected rules from `RegexSet`
-    fn get_selected_rules(regex_set: &regex::RegexSet, text: &str) -> Vec<usize> {
-        regex_set.matches(text).iter().collect()
-    }
-
-    fn find_captures(rule: &Rule, text: &'a str) -> CaptureData<'a> {
-        captures::find_captures(rule, text)
     }
 }
