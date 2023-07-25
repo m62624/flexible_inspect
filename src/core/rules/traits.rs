@@ -1,5 +1,6 @@
-use super::{captures::CaptureData, next::NextStep, Counter};
+use super::{CaptureData, Counter};
 use crate::MatchRequirement;
+use std::hash::Hash;
 
 /// This trait requires implementations of the most basic methods for any `Rule`.
 pub trait RuleBase {
@@ -12,30 +13,9 @@ pub trait RuleBase {
     fn get_counter(&self) -> Option<Counter>;
 }
 
-/// This trait requires method implementations that are different for different structures
-pub trait RuleExtendBase<'s>: RuleBase {
-    type RuleType;
-    /// This method returns the indices of the selected rules that will exactly trigger based on the data ( `&str` | `&[u8]` )
-    fn get_selected_rules(regex_set: &regex::RegexSet, text: &str) -> Vec<usize>;
-
-    /// This method finds matches on a regular expression.
-    /// Saves one first match for each group to fill in the error message, and all matches to pass on to the next rule check
-    fn find_captures(rule: &Self::RuleType, text: &'s str) -> CaptureData<'s>;
-
-    fn run(rule: &Self::RuleType, text: &str) -> NextStep;
-}
-
-/// This trait requires method implementations that are different for different structures
-pub trait RuleBytesExtendBase<'s>: RuleBase {
-    type RuleType;
-    /// This method returns the indices of the selected rules that will exactly trigger based on the data ( `&str` | `&[u8]` )
-    fn get_selected_rules(regex_set: &regex::bytes::RegexSet, text_bytes: &[u8]) -> Vec<usize>;
-
-    /// This method finds matches on a regular expression.
-    /// Saves one first match for each group to fill in the error message, and all matches to pass on to the next rule check
-    fn find_captures(rule: &Self::RuleType, text_bytes: &'s [u8]) -> CaptureData<'s>;
-
-    fn run(rule: &Self::RuleType, text: &[u8]) -> NextStep;
+pub trait CalculateValueRules<RGX, RGSST, INPT: PartialEq + Eq + Hash> {
+    fn get_selected_rules(regex_set: RGSST, text: INPT) -> Vec<usize>;
+    fn find_captures(rule: RGX, capture: INPT) -> CaptureData<INPT>;
 }
 
 /// This trait requires modifier implementations for any `Rules`

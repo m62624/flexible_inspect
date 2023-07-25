@@ -1,18 +1,12 @@
 use super::*;
-use crate::core::rules::{captures::CaptureData, traits::RuleBytesExtendBase};
+use crate::core::rules::traits::CalculateValueRules;
 
-impl<'a> RuleBytesExtendBase<'a> for RuleBytes {
-    type RuleType = RuleBytes;
-    /// Get selected rules from `RegexSet`
-    fn get_selected_rules(regex_set: &regex::bytes::RegexSet, text_bytes: &[u8]) -> Vec<usize> {
-        regex_set.matches(text_bytes).iter().collect()
+impl CalculateValueRules<RuleBytes, regex::bytes::RegexSet, &[u8]> for Rule {
+    fn get_selected_rules(regex_set: regex::bytes::RegexSet, text: &[u8]) -> Vec<usize> {
+        regex_set.matches(text).into_iter().collect()
     }
 
-    fn find_captures(rule: &Self::RuleType, text_bytes: &'a [u8]) -> CaptureData<'a> {
-        captures::find_captures(rule, text_bytes)
-    }
-
-    fn run(rule: &Self::RuleType, text: &[u8]) -> next::NextStep {
-        todo!()
+    fn find_captures(rule: RuleBytes, capture: &[u8]) -> CaptureData<&[u8]> {
+        captures::find_captures(rule, capture)
     }
 }

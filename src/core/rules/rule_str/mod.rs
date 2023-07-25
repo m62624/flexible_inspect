@@ -5,9 +5,8 @@ mod getters;
 mod init;
 mod modifiers;
 mod utils;
-// =======================================================
+// ======================================================
 use super::*;
-use std::collections::HashSet;
 
 /// A structure for checking strings with regular expressions
 

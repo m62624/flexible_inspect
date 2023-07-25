@@ -1,13 +1,15 @@
-use super::*;
-use crate::core::rules::{
-    captures::{CaptureData, CaptureType},
-    traits::RuleBase,
+use crate::{
+    core::{
+        rules::{traits::RuleBase, CaptureData},
+        DEFAULT_CAPTURE,
+    },
+    RuleBytes,
 };
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
-pub fn find_captures<'a>(rule: &RuleBytes, text_bytes: &'a [u8]) -> CaptureData<'a> {
+pub fn find_captures(rule: RuleBytes, capture: &[u8]) -> CaptureData<&[u8]> {
     let mut hashmap_for_error: HashMap<String, String> = HashMap::new();
-    let mut text_for_capture: HashSet<CaptureType> = HashSet::new();
+    let mut text_for_capture: HashSet<&[u8]> = HashSet::new();
     let mut counter_value: usize = 0;
     // флаг для проверки `Counter`
     let flag_check_counter = rule.content_unchecked().general_modifiers.counter.is_some();
@@ -15,12 +17,12 @@ pub fn find_captures<'a>(rule: &RuleBytes, text_bytes: &'a [u8]) -> CaptureData<
     // создаем регулярное выражение
     let re = regex::bytes::Regex::new(&rule.content_unchecked().str_bytes.as_ref()).unwrap();
     // получаем совпадения и повышаем `counter` по необходимости
-    re.captures_iter(text_bytes).for_each(|capture| {
+    re.captures_iter(capture).for_each(|capture| {
         if let Some(value) = capture.get(0) {
             hashmap_for_error
                 .entry(DEFAULT_CAPTURE.into())
                 .or_insert_with(|| bytes_to_byte_string(value.as_bytes()));
-            text_for_capture.insert(CaptureType::Bytes(value.as_bytes()));
+            text_for_capture.insert(value.as_bytes());
             // в одном `regex` может быть несколько групп, но все
             // они нужны для получения главного совпадения, потому
             // повышение идет только в `main capture`

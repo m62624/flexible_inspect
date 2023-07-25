@@ -1,13 +1,18 @@
-use super::*;
-use crate::core::rules::{
-    captures::{CaptureData, CaptureType},
-    traits::RuleBase,
-};
-use std::collections::HashMap;
+use std::collections::{HashMap, HashSet};
 
-pub fn find_captures<'a>(rule: &Rule, text: &'a str) -> CaptureData<'a> {
+use crate::{
+    core::{
+        rules::{traits::RuleBase, CaptureData},
+        DEFAULT_CAPTURE,
+    },
+    Rule,
+};
+
+use super::RegexRaw;
+
+pub fn find_captures(rule: Rule, capture: &str) -> CaptureData<&str> {
     let mut hashmap_for_error = HashMap::new();
-    let mut text_for_capture: HashSet<CaptureType> = HashSet::new();
+    let mut text_for_capture: HashSet<&str> = HashSet::new();
     let mut counter_value: usize = 0;
     // флаг для проверки `Counter`
     let flag_check_counter = rule.content_unchecked().general_modifiers.counter.is_some();
@@ -18,12 +23,12 @@ pub fn find_captures<'a>(rule: &Rule, text: &'a str) -> CaptureData<'a> {
             // создаем регулярное выражение
             let re = regex::Regex::new(pattern).unwrap();
             // получаем совпадения и повышаем `counter` по необходимости
-            re.captures_iter(text).for_each(|capture| {
+            re.captures_iter(capture).for_each(|capture| {
                 if let Some(value) = capture.get(0) {
                     hashmap_for_error
                         .entry(DEFAULT_CAPTURE.into())
                         .or_insert_with(|| value.as_str().into());
-                    text_for_capture.insert(CaptureType::Str(value.as_str()));
+                    text_for_capture.insert(value.as_str());
                     // в одном `regex` может быть несколько групп, но все
                     // они нужны для получения главного совпадения, потому
                     // повышение идет только в `main capture`
@@ -47,13 +52,13 @@ pub fn find_captures<'a>(rule: &Rule, text: &'a str) -> CaptureData<'a> {
             // создаем регулярное выражение
             let re = fancy_regex::Regex::new(pattern).unwrap();
             // получаем совпадения и повышаем `counter` по необходимости
-            re.captures_iter(text).for_each(|capture| {
+            re.captures_iter(capture).for_each(|capture| {
                 if let Ok(capture) = capture {
                     if let Some(value) = capture.get(0) {
                         hashmap_for_error
                             .entry(DEFAULT_CAPTURE.into())
                             .or_insert_with(|| value.as_str().into());
-                        text_for_capture.insert(CaptureType::Str(value.as_str()));
+                        text_for_capture.insert(value.as_str());
                         // в одном `regex` может быть несколько групп, но все
                         // они нужны для получения главного совпадения, потому
                         // повышение идет только в `main capture`
