@@ -45,17 +45,32 @@ where
                 for text in &frame.1.text_for_capture {
                     if let Some(simple_rules) = &frame.0.get_simple_rules() {
                         for index in R::get_selected_rules(simple_rules.1, text) {
+                            let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
                             trace!(
                                 "found `({}, {:#?})` rule from `RegexSet` for `{}` data",
-                                simple_rules.0.get_index(index).unwrap().get_str(),
-                                simple_rules.0.get_index(index).unwrap().get_requirement(),
+                                rule_from_regexset.get_str(),
+                                rule_from_regexset.get_requirement(),
                                 text
                             );
-                            let captures =
-                                R::find_captures(simple_rules.0.get_index(index).unwrap(), text);
                             // ============================= LOG =============================
+                            let mut captures = R::find_captures(rule_from_regexset, text);
+                            if let NextStep::Error(error) =
+                                NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
+                            {
+                                return NextStep::Error(error);
+                            }
                             *counter_of_each_rule.entry(index).or_insert(0) += 1;
+                            if counter_of_each_rule[&index] == frame.1.text_for_capture.len() {
+                                // ============================= LOG =============================
+                                trace!(
+                                    "the ({}, {:#?}) rule worked successfully for all matches",
+                                    rule_from_regexset.get_str(),
+                                    rule_from_regexset.get_requirement(),
+                                );
+                                // ============================= LOG =============================
+                                temp_stack.push_back((&rule_from_regexset, captures));
+                            }
                         }
                     }
                 }
