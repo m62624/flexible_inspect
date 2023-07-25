@@ -11,7 +11,7 @@ pub fn all_rules_for_all_matches<'a, R, C>(
     stack: &mut VecDeque<(&R::RuleType, CaptureData<C>)>,
 ) -> NextStep
 where
-    C: PartialEq + Eq + Hash + Debug + Display,
+    C: PartialEq + Eq + Hash + Display,
     R: CalculateValueRules<'a, C> + Debug,
     R::RuleType: RuleBase<RegexSet = &'a R::RegexSet>,
 {
@@ -24,8 +24,9 @@ where
     while let Some(mut frame) = stack.pop_front() {
         // ============================= LOG =============================
         debug!(
-            "\ncheck the state of the rule `{}` \nfrom the local stack `{}`",
+            "\ncheck the state of the rule `({}, {:#?})` \nfrom the local stack `{}`",
             frame.0.get_str(),
+            frame.0.get_requirement(),
             rule_ref.get_str()
         );
         // ============================= LOG =============================
@@ -35,8 +36,9 @@ where
                 let mut counter_of_each_rule: HashMap<usize, usize> = HashMap::new();
                 // ============================= LOG =============================
                 debug!(
-                    "success, run subrules from the root rule `{}`",
-                    rule_ref.get_str()
+                    "success, run subrules from the root rule `({}, {:#?})`",
+                    rule_ref.get_str(),
+                    rule_ref.get_requirement()
                 );
                 // ============================= LOG =============================
 
@@ -45,8 +47,9 @@ where
                         for index in R::get_selected_rules(simple_rules.1, text) {
                             // ============================= LOG =============================
                             trace!(
-                                "found `{:#?}` rule from RegexSet for `{}` data",
+                                "found `({}, {:#?})` rule from `RegexSet` for `{}` data",
                                 simple_rules.0.get_index(index).unwrap().get_str(),
+                                simple_rules.0.get_index(index).unwrap().get_requirement(),
                                 text
                             );
                             let captures =
@@ -60,8 +63,9 @@ where
             NextStep::Finish => {
                 // ============================= LOG =============================
                 debug!(
-                    "the rule `{}` is finished, the result is `Ok`",
-                    frame.0.get_str()
+                    "the rule `({}, {:#?})` is finished, the result is `Ok`",
+                    frame.0.get_str(),
+                    frame.0.get_requirement()
                 );
                 // ============================= LOG =============================
             }

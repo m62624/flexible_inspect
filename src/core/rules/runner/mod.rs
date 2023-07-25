@@ -30,7 +30,7 @@ Step 3
 */
 pub fn run<'a, R, C>(rule: &R::RuleType, data: C) -> NextStep
 where
-    C: PartialEq + Eq + Hash + Debug + Display,
+    C: PartialEq + Eq + Hash + Display,
     R: CalculateValueRules<'a, C> + Debug,
     R::RuleType: RuleBase<RegexSet = &'a R::RegexSet>,
 {
