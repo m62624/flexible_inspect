@@ -31,11 +31,11 @@ pub trait RuleBase {
 /// That is, `next` + `mode matching` will be common for them.
 /// The main thing is to implement separately `Captures` for `&str` and `&[u8]`
 /// the rest will be the same
-pub trait CalculateValueRules<T: PartialEq + Eq + Hash> {
+pub trait CalculateValueRules<'a, T: PartialEq + Eq + Hash> {
     type RuleType;
-    type RegexSet;
-    fn get_selected_rules(regex_set: Self::RegexSet, text: T) -> Vec<usize>;
-    fn find_captures<'a>(rule: &Self::RuleType, capture: T) -> CaptureData<T>;
+    type RegexSet: 'a;
+    fn get_selected_rules(regex_set: &Self::RegexSet, text: T) -> Vec<usize>;
+    fn find_captures(rule: &Self::RuleType, capture: T) -> CaptureData<T>;
 }
 
 /// This trait requires modifier implementations for any `Rules`

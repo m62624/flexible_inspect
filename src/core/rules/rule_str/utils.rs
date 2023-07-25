@@ -1,10 +1,10 @@
 use super::*;
 use crate::core::rules::traits::CalculateValueRules;
 
-impl CalculateValueRules<&str> for Rule {
+impl CalculateValueRules<'_, &str> for Rule {
     type RegexSet = regex::RegexSet;
     type RuleType = Rule;
-    fn get_selected_rules(regex_set: Self::RegexSet, text: &str) -> Vec<usize> {
+    fn get_selected_rules(regex_set: &Self::RegexSet, text: &str) -> Vec<usize> {
         regex_set.matches(text).into_iter().collect()
     }
 
