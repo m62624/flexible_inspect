@@ -1,9 +1,7 @@
 mod tests_counter_status;
 
 use super::*;
-use crate::core::rules::next::NextStep;
-use crate::core::rules::traits::RuleBytesExtendBase;
-use crate::core::rules::traits::RuleExtendBase;
+use crate::core::rules::{next::NextStep, traits::CalculateValueRules};
 use crate::core::DEFAULT_CAPTURE;
 use std::collections::HashMap;
 
@@ -13,6 +11,7 @@ mod core_rule_tests {
     use super::*;
 
     mod rule_without_modifiers {
+
         use super::*;
 
         /// MustBeFound
@@ -23,7 +22,7 @@ mod core_rule_tests {
             let rule = Rule::new(r"\d+", MatchRequirement::MustBeFound);
             let mut captures = Rule::find_captures(&rule, "123412");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Finish
             );
         }
@@ -37,7 +36,7 @@ mod core_rule_tests {
                 .extend([Rule::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = Rule::find_captures(&rule, "123412");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Go
             );
         }
@@ -51,7 +50,7 @@ mod core_rule_tests {
                 .extend([Rule::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = Rule::find_captures(&rule, "abc");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Error(None)
             );
         }
@@ -64,7 +63,7 @@ mod core_rule_tests {
             let rule = Rule::new(r"\d+", MatchRequirement::MustBeFound);
             let mut captures = Rule::find_captures(&rule, "abc");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Error(None)
             );
         }
@@ -77,7 +76,7 @@ mod core_rule_tests {
             let rule = Rule::new(r"\d+", MatchRequirement::MustNotBeFound);
             let mut captures = Rule::find_captures(&rule, "123412");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Error(Some(HashMap::from([(
                     DEFAULT_CAPTURE.into(),
                     "123412".into()
@@ -94,7 +93,7 @@ mod core_rule_tests {
                 .extend([Rule::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = Rule::find_captures(&rule, "123412");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Go
             );
         }
@@ -108,7 +107,7 @@ mod core_rule_tests {
                 .extend([Rule::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = Rule::find_captures(&rule, "abc");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Finish
             );
         }
@@ -121,7 +120,7 @@ mod core_rule_tests {
             let rule = Rule::new(r"\d+", MatchRequirement::MustNotBeFound);
             let mut captures = Rule::find_captures(&rule, "abc");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Finish
             );
         }
@@ -137,7 +136,7 @@ mod core_rule_tests {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustBeFound);
             let mut captures = RuleBytes::find_captures(&rule, b"123412");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Finish
             );
         }
@@ -151,7 +150,7 @@ mod core_rule_tests {
                 .extend([RuleBytes::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = RuleBytes::find_captures(&rule, b"123412");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Go
             );
         }
@@ -165,7 +164,7 @@ mod core_rule_tests {
                 .extend([RuleBytes::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = RuleBytes::find_captures(&rule, b"abc");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Error(None)
             );
         }
@@ -178,7 +177,7 @@ mod core_rule_tests {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustBeFound);
             let mut captures = RuleBytes::find_captures(&rule, b"abc");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Error(None)
             );
         }
@@ -191,7 +190,7 @@ mod core_rule_tests {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustNotBeFound);
             let mut captures = RuleBytes::find_captures(&rule, b"123412");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Error(Some(HashMap::from([(
                     DEFAULT_CAPTURE.into(),
                     "[49,50,51,52,49,50]".into()
@@ -208,7 +207,7 @@ mod core_rule_tests {
                 .extend([RuleBytes::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = RuleBytes::find_captures(&rule, b"123412");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Go
             );
         }
@@ -222,7 +221,7 @@ mod core_rule_tests {
                 .extend([RuleBytes::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = RuleBytes::find_captures(&rule, b"abc");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Finish
             );
         }
@@ -235,7 +234,7 @@ mod core_rule_tests {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustNotBeFound);
             let mut captures = RuleBytes::find_captures(&rule, b"abc");
             assert_eq!(
-                NextStep::next_or_finish_or_error(rule, &mut captures),
+                NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Finish
             );
         }
