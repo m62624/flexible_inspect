@@ -12,7 +12,7 @@ pub enum NextStep {
 
 impl NextStep {
     pub fn next_or_finish_or_error<R: RuleBase, T: PartialEq + Eq + Hash>(
-        rule: R,
+        rule: &R,
         captures: &mut CaptureData<T>,
     ) -> NextStep {
         match rule.get_requirement() {

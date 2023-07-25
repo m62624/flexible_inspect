@@ -1,6 +1,6 @@
 // =======================================================
 mod init;
-mod next;
+pub mod next;
 pub mod rule_bytes;
 pub mod rule_str;
 mod runner;

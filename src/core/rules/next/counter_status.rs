@@ -6,7 +6,7 @@ use crate::core::rules::{
 
 impl Counter {
     pub fn counter_status<R: RuleBase, T: PartialEq + Eq + Hash>(
-        rule: R,
+        rule: &R,
         captures: &mut CaptureData<T>,
     ) -> NextStep {
         if let Some(counter) = rule.get_counter() {
