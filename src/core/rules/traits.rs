@@ -14,10 +14,11 @@ pub trait RuleBase {
     type TakeRuleType;
     type SubRulesType;
     type RuleType;
+    type RegexSet;
     fn content_unchecked(&self) -> &Self::TakeRuleType;
     fn content_mut_unchecked(&mut self) -> &mut Self::TakeRuleType;
     fn get_subrules(&self) -> Option<&Self::SubRulesType>;
-    fn get_simple_rules(&self) -> Option<&IndexSet<Self::RuleType>>;
+    fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)>;
     fn get_complex_rules(&self) -> Option<&Vec<Self::RuleType>>;
     fn get_requirement(&self) -> &MatchRequirement;
     fn get_counter(&self) -> Option<Counter>;

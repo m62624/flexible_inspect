@@ -4,6 +4,7 @@ use crate::core::rules::traits::RuleBase;
 impl RuleBase for Rule {
     type TakeRuleType = TakeRuleForExtend;
     type SubRulesType = Subrules;
+    type RegexSet = regex::RegexSet;
     type RuleType = Rule;
     /// Use for direct access to the structure body
     fn content_unchecked(&self) -> &Self::TakeRuleType {
@@ -34,10 +35,10 @@ impl RuleBase for Rule {
         self.content_unchecked().subrules.as_ref()
     }
 
-    fn get_simple_rules(&self) -> Option<&IndexSet<Self::RuleType>> {
+    fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
         if let Some(subrules) = self.get_subrules() {
             if let Some(simple_rules) = &subrules.simple_rules {
-                return Some(&simple_rules.all_rules);
+                return Some((&simple_rules.all_rules, &simple_rules.regex_set));
             }
         }
         None

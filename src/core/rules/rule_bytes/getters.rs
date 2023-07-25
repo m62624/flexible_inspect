@@ -5,6 +5,7 @@ impl RuleBase for RuleBytes {
     type TakeRuleType = TakeRuleBytesForExtend;
     type SubRulesType = SimpleRulesBytes;
     type RuleType = RuleBytes;
+    type RegexSet = regex::bytes::RegexSet;
     /// Use for direct access to the structure body
     fn content_unchecked(&self) -> &Self::TakeRuleType {
         self.0.as_ref().expect(ERR_OPTION)
@@ -35,9 +36,9 @@ impl RuleBase for RuleBytes {
         self.content_unchecked().subrules_bytes.as_ref()
     }
 
-    fn get_simple_rules(&self) -> Option<&IndexSet<Self::RuleType>> {
-        if let Some(v) = self.get_subrules() {
-            return Some(&v.all_rules);
+    fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
+        if let Some(value) = self.get_subrules() {
+            return Some((&value.all_rules, &value.regex_set));
         }
         None
     }
