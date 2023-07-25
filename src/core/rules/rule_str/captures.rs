@@ -1,16 +1,11 @@
+use crate::core::rules::{traits::RuleBase, CaptureData};
+use crate::core::DEFAULT_CAPTURE;
+use crate::Rule;
 use std::collections::{HashMap, HashSet};
-
-use crate::{
-    core::{
-        rules::{traits::RuleBase, CaptureData},
-        DEFAULT_CAPTURE,
-    },
-    Rule,
-};
 
 use super::RegexRaw;
 
-pub fn find_captures(rule: Rule, capture: &str) -> CaptureData<&str> {
+pub fn find_captures<'a>(rule: Rule, capture: &'a str) -> CaptureData<&'a str> {
     let mut hashmap_for_error = HashMap::new();
     let mut text_for_capture: HashSet<&str> = HashSet::new();
     let mut counter_value: usize = 0;

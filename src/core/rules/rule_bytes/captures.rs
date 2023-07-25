@@ -1,10 +1,6 @@
-use crate::{
-    core::{
-        rules::{traits::RuleBase, CaptureData},
-        DEFAULT_CAPTURE,
-    },
-    RuleBytes,
-};
+use crate::core::rules::{traits::RuleBase, CaptureData};
+use crate::core::DEFAULT_CAPTURE;
+use crate::RuleBytes;
 use std::collections::{HashMap, HashSet};
 
 pub fn find_captures(rule: RuleBytes, capture: &[u8]) -> CaptureData<&[u8]> {

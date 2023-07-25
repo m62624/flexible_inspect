@@ -13,9 +13,11 @@ pub trait RuleBase {
     fn get_counter(&self) -> Option<Counter>;
 }
 
-pub trait CalculateValueRules<RGX, RGSST, INPT: PartialEq + Eq + Hash> {
-    fn get_selected_rules(regex_set: RGSST, text: INPT) -> Vec<usize>;
-    fn find_captures(rule: RGX, capture: INPT) -> CaptureData<INPT>;
+pub trait CalculateValueRules<INPT: PartialEq + Eq + Hash> {
+    type RuleType;
+    type RegexSet;
+    fn get_selected_rules(regex_set: Self::RegexSet, text: INPT) -> Vec<usize>;
+    fn find_captures(rule: Self::RuleType, capture: INPT) -> CaptureData<INPT>;
 }
 
 /// This trait requires modifier implementations for any `Rules`
