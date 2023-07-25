@@ -3,7 +3,7 @@ use crate::core::DEFAULT_CAPTURE;
 use crate::RuleBytes;
 use std::collections::{HashMap, HashSet};
 
-pub fn find_captures(rule: RuleBytes, capture: &[u8]) -> CaptureData<&[u8]> {
+pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<&'a [u8]> {
     let mut hashmap_for_error: HashMap<String, String> = HashMap::new();
     let mut text_for_capture: HashSet<&[u8]> = HashSet::new();
     let mut counter_value: usize = 0;

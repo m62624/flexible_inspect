@@ -5,7 +5,7 @@ use std::collections::{HashMap, HashSet};
 
 use super::RegexRaw;
 
-pub fn find_captures<'a>(rule: Rule, capture: &'a str) -> CaptureData<&'a str> {
+pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<&'a str> {
     let mut hashmap_for_error = HashMap::new();
     let mut text_for_capture: HashSet<&str> = HashSet::new();
     let mut counter_value: usize = 0;

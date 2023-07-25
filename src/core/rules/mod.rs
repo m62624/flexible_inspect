@@ -3,6 +3,7 @@ mod init;
 mod next;
 pub mod rule_bytes;
 pub mod rule_str;
+mod runner;
 pub mod traits;
 // =======================================================
 use super::*;

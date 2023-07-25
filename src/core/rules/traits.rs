@@ -1,3 +1,8 @@
+/*
+Here we implement traits for two types of `Rule`, they are string `Rule` and byte `Rule`. 
+They are necessary to avoid code duplicates. Especially in context_match, where there are several modes
+*/
+
 use super::{CaptureData, Counter};
 use crate::MatchRequirement;
 use std::hash::Hash;
@@ -13,11 +18,16 @@ pub trait RuleBase {
     fn get_counter(&self) -> Option<Counter>;
 }
 
-pub trait CalculateValueRules<INPT: PartialEq + Eq + Hash> {
+/// The main trait for `context_match`, that is, 
+/// the implementation of the modifier nesting logic will be common for two different rule structures. 
+/// That is, `next` + `mode matching` will be common for them.
+/// The main thing is to implement separately `Captures` for `&str` and `&[u8]`
+/// the rest will be the same
+pub trait CalculateValueRules<T: PartialEq + Eq + Hash>{
     type RuleType;
     type RegexSet;
-    fn get_selected_rules(regex_set: Self::RegexSet, text: INPT) -> Vec<usize>;
-    fn find_captures(rule: Self::RuleType, capture: INPT) -> CaptureData<INPT>;
+    fn get_selected_rules(regex_set: Self::RegexSet, text: T) -> Vec<usize>;
+    fn find_captures<'a>(rule: &Self::RuleType, capture: T) -> CaptureData<T>;
 }
 
 /// This trait requires modifier implementations for any `Rules`

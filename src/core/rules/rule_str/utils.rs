@@ -8,7 +8,7 @@ impl CalculateValueRules<&str> for Rule {
         regex_set.matches(text).into_iter().collect()
     }
 
-    fn find_captures(rule: Self::RuleType, capture: &str) -> rules::CaptureData<&str> {
+    fn find_captures<'a>(rule: &Self::RuleType, capture: &'a str) -> rules::CaptureData<&'a str> {
         captures::find_captures(rule, capture)
     }
 }
