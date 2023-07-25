@@ -3,6 +3,8 @@ Here we implement traits for two types of `Rule`, they are string `Rule` and byt
 They are necessary to avoid code duplicates. Especially in context_match, where there are several modes
 */
 
+use indexmap::IndexSet;
+
 use super::{CaptureData, Counter, ModeMatch};
 use crate::MatchRequirement;
 use std::hash::Hash;
@@ -11,9 +13,12 @@ use std::hash::Hash;
 pub trait RuleBase {
     type TakeRuleType;
     type SubRulesType;
+    type RuleType;
     fn content_unchecked(&self) -> &Self::TakeRuleType;
     fn content_mut_unchecked(&mut self) -> &mut Self::TakeRuleType;
     fn get_subrules(&self) -> Option<&Self::SubRulesType>;
+    fn get_simple_rules(&self) -> Option<&IndexSet<Self::RuleType>>;
+    fn get_complex_rules(&self) -> Option<&Vec<Self::RuleType>>;
     fn get_requirement(&self) -> &MatchRequirement;
     fn get_counter(&self) -> Option<Counter>;
     fn get_mode_match(&self) -> &ModeMatch;

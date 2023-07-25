@@ -4,6 +4,7 @@ use crate::core::rules::traits::RuleBase;
 impl RuleBase for Rule {
     type TakeRuleType = TakeRuleForExtend;
     type SubRulesType = Subrules;
+    type RuleType = Rule;
     /// Use for direct access to the structure body
     fn content_unchecked(&self) -> &Self::TakeRuleType {
         self.0.as_ref().expect(ERR_OPTION)
@@ -12,9 +13,6 @@ impl RuleBase for Rule {
     /// Use for direct access and modification to the body of the structure
     fn content_mut_unchecked(&mut self) -> &mut Self::TakeRuleType {
         self.0.as_mut().expect(ERR_OPTION)
-    }
-    fn get_subrules(&self) -> Option<&Self::SubRulesType> {
-        self.content_unchecked().subrules.as_ref()
     }
 
     fn get_requirement(&self) -> &MatchRequirement {
@@ -31,5 +29,26 @@ impl RuleBase for Rule {
 
     fn as_str(&self) -> &str {
         self.content_unchecked().str_with_type.as_ref()
+    }
+    fn get_subrules(&self) -> Option<&Self::SubRulesType> {
+        self.content_unchecked().subrules.as_ref()
+    }
+
+    fn get_simple_rules(&self) -> Option<&IndexSet<Self::RuleType>> {
+        if let Some(subrules) = self.get_subrules() {
+            if let Some(simple_rules) = &subrules.simple_rules {
+                return Some(&simple_rules.all_rules);
+            }
+        }
+        None
+    }
+
+    fn get_complex_rules(&self) -> Option<&Vec<Self::RuleType>> {
+        if let Some(subrules) = self.get_subrules() {
+            if let Some(complex_rules) = &subrules.complex_rules {
+                return Some(&complex_rules);
+            }
+        }
+        None
     }
 }

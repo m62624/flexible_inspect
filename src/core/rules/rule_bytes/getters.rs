@@ -4,6 +4,7 @@ use crate::core::rules::traits::RuleBase;
 impl RuleBase for RuleBytes {
     type TakeRuleType = TakeRuleBytesForExtend;
     type SubRulesType = SimpleRulesBytes;
+    type RuleType = RuleBytes;
     /// Use for direct access to the structure body
     fn content_unchecked(&self) -> &Self::TakeRuleType {
         self.0.as_ref().expect(ERR_OPTION)
@@ -12,10 +13,6 @@ impl RuleBase for RuleBytes {
     /// Use for direct access and modification to the body of the structure
     fn content_mut_unchecked(&mut self) -> &mut Self::TakeRuleType {
         self.0.as_mut().expect(ERR_OPTION)
-    }
-
-    fn get_subrules(&self) -> Option<&Self::SubRulesType> {
-        self.content_unchecked().subrules_bytes.as_ref()
     }
 
     fn get_requirement(&self) -> &MatchRequirement {
@@ -32,5 +29,20 @@ impl RuleBase for RuleBytes {
 
     fn as_str(&self) -> &str {
         &self.content_unchecked().str_bytes.as_ref()
+    }
+
+    fn get_subrules(&self) -> Option<&Self::SubRulesType> {
+        self.content_unchecked().subrules_bytes.as_ref()
+    }
+
+    fn get_simple_rules(&self) -> Option<&IndexSet<Self::RuleType>> {
+        if let Some(v) = self.get_subrules() {
+            return Some(&v.all_rules);
+        }
+        None
+    }
+
+    fn get_complex_rules(&self) -> Option<&Vec<Self::RuleType>> {
+        None
     }
 }
