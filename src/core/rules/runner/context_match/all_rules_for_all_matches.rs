@@ -4,14 +4,14 @@ use crate::core::rules::CaptureData;
 use log::{debug, error, info};
 use std::{collections::VecDeque, fmt::Debug, hash::Hash};
 
-pub fn all_rules_for_all_matches<R, C>(
+pub fn all_rules_for_all_matches<'a, R, C>(
     rule_ref: &R::RuleType,
     stack: &mut VecDeque<(&R::RuleType, CaptureData<C>)>,
 ) -> NextStep
 where
     C: PartialEq + Eq + Hash + Debug,
-    R: CalculateValueRules<C>,
-    R::RuleType: RuleBase,
+    R: CalculateValueRules<'a, C>,
+    R::RuleType: RuleBase<RegexSet = &'a R::RegexSet>,
 {
     // ============================= LOG =============================
     debug!("the local rule stack `{}` is received", {
@@ -36,6 +36,12 @@ where
                     rule_ref.as_str()
                 );
                 // ============================= LOG =============================
+
+                for text in frame.1.text_for_capture {
+                    if let Some(simple_rules) = &frame.0.get_simple_rules() {
+                        for index in R::get_selected_rules(simple_rules.1, text) {}
+                    }
+                }
             }
             NextStep::Finish => {
                 // ============================= LOG =============================
