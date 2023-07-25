@@ -58,9 +58,8 @@ wasm-bindgen = { version = "0.2.87", optional = true }
 
 # ========================================================
 [features]
-rust-lib = []
 python-lib = ["dep:pyo3"]
-wasm-js = ["dep:wasm-bindgen"]
+wasm = ["dep:wasm-bindgen"]
 # ========================================================
 
 
