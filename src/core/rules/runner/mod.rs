@@ -3,6 +3,7 @@ use super::*;
 use crate::core::rules::next::NextStep;
 use crate::core::rules::traits::{CalculateValueRules, RuleBase};
 use log::debug;
+use std::fmt::Display;
 use std::{collections::VecDeque, fmt::Debug};
 
 /// Main method for iteratively running a rule
@@ -29,15 +30,15 @@ Step 3
 */
 pub fn run<'a, R, C>(rule: &R::RuleType, data: C) -> NextStep
 where
-    C: PartialEq + Eq + Hash + Debug,
-    R: CalculateValueRules<'a, C>,
+    C: PartialEq + Eq + Hash + Debug + Display,
+    R: CalculateValueRules<'a, C> + Debug,
     R::RuleType: RuleBase<RegexSet = &'a R::RegexSet>,
 {
     // ============================= LOG =============================
     debug!("running the root rule `{}`", rule.get_str());
     // ============================= LOG =============================
 
-    let mut stack = VecDeque::from([(rule, R::find_captures(&rule, data))]);
+    let mut stack = VecDeque::from([(rule, R::find_captures(&rule, &data))]);
     while let Some(frame) = stack.front() {
         match frame.0.get_mode_match() {
             ModeMatch::AllRulesForAllMatches => {

@@ -6,13 +6,13 @@ They are necessary to avoid code duplicates. Especially in context_match, where 
 use super::{CaptureData, Counter, ModeMatch};
 use crate::MatchRequirement;
 use indexmap::IndexSet;
-use std::hash::Hash;
+use std::{fmt::Debug, hash::Hash};
 
 /// This trait requires implementations of the most basic methods for any `Rule`.
 pub trait RuleBase {
     type TakeRuleType;
     type SubRulesType;
-    type RuleType;
+    type RuleType: Debug;
     type RegexSet;
     fn content_unchecked(&self) -> &Self::TakeRuleType;
     fn content_mut_unchecked(&mut self) -> &mut Self::TakeRuleType;
@@ -30,11 +30,13 @@ pub trait RuleBase {
 /// That is, `next` + `mode matching` will be common for them.
 /// The main thing is to implement separately `Captures` for `&str` and `&[u8]`
 /// the rest will be the same
+///
+
 pub trait CalculateValueRules<'a, T: PartialEq + Eq + Hash> {
-    type RuleType;
+    type RuleType: RuleBase<RuleType = Self::RuleType>;
     type RegexSet: 'a;
-    fn get_selected_rules(regex_set: &Self::RegexSet, text: T) -> Vec<usize>;
-    fn find_captures(rule: &Self::RuleType, capture: T) -> CaptureData<T>;
+    fn get_selected_rules(regex_set: &Self::RegexSet, text: &T) -> Vec<usize>;
+    fn find_captures(rule: &Self::RuleType, capture: &T) -> CaptureData<T>;
 }
 
 /// This trait requires modifier implementations for any `Rules`

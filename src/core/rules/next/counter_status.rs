@@ -1,8 +1,5 @@
 use super::*;
-use crate::core::rules::{
-    traits::{CalculateValueRules, RuleBase},
-    Counter,
-};
+use crate::core::rules::{traits::RuleBase, Counter};
 
 impl Counter {
     pub fn counter_status<R: RuleBase, T: PartialEq + Eq + Hash>(
