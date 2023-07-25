@@ -9,10 +9,8 @@ pub mod traits;
 use super::*;
 use crate::Rule;
 use indexmap::IndexSet;
-use std::{
-    collections::{HashMap, HashSet},
-    hash::Hash,
-};
+use std::collections::{HashMap, HashSet};
+use std::hash::Hash;
 // =======================================================
 
 /// The struct for sorting all nested rules
