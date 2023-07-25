@@ -44,3 +44,9 @@ impl SlisedRules {
         !self.simple_rules.is_empty() || !self.complex_rules.is_empty()
     }
 }
+
+impl<T: PartialEq + Eq + Hash> CaptureData<T> {
+    pub fn is_some(&self) -> bool {
+        !self.text_for_capture.is_empty()
+    }
+}
