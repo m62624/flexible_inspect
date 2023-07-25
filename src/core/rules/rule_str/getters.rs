@@ -28,7 +28,7 @@ impl RuleBase for Rule {
         &self.content_unchecked().general_modifiers.mod_match
     }
 
-    fn as_str(&self) -> &str {
+    fn get_str(&self) -> &str {
         self.content_unchecked().str_with_type.as_ref()
     }
     fn get_subrules(&self) -> Option<&Self::SubRulesType> {
