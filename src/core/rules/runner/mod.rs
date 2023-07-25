@@ -34,7 +34,7 @@ where
     R::RuleType: RuleBase<RegexSet = &'a R::RegexSet>,
 {
     // ============================= LOG =============================
-    debug!("running the root rule `{}`", rule.as_str());
+    debug!("running the root rule `{}`", rule.get_str());
     // ============================= LOG =============================
 
     let mut stack = VecDeque::from([(rule, R::find_captures(&rule, data))]);
