@@ -28,4 +28,8 @@ impl RuleBase for Rule {
     fn get_mode_match(&self) -> &ModeMatch {
         &self.content_unchecked().general_modifiers.mod_match
     }
+
+    fn as_str(&self) -> &str {
+        self.content_unchecked().str_with_type.as_ref()
+    }
 }

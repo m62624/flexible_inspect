@@ -17,6 +17,7 @@ pub trait RuleBase {
     fn get_requirement(&self) -> &MatchRequirement;
     fn get_counter(&self) -> Option<Counter>;
     fn get_mode_match(&self) -> &ModeMatch;
+    fn as_str(&self) -> &str;
 }
 
 /// The main trait for `context_match`, that is,
