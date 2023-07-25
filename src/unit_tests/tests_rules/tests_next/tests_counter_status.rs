@@ -4,7 +4,7 @@ use super::*;
 #[test]
 fn test_counter_t_0() {
     let rule = Rule::new(r"\w", MatchRequirement::MustBeFound).counter_is_equal(4);
-    let mut captures = Rule::find_captures(&rule, "a b c d");
+    let mut captures = Rule::find_captures(&rule, &"a b c d");
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut captures),
         NextStep::Finish
@@ -15,7 +15,7 @@ fn test_counter_t_0() {
 #[test]
 fn test_counter_t_1() {
     let rule = Rule::new(r"\w", MatchRequirement::MustBeFound).counter_is_equal(4);
-    let mut captures = Rule::find_captures(&rule, "a b c");
+    let mut captures = Rule::find_captures(&rule, &"a b c");
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut captures),
         NextStep::Error(Some(HashMap::from([(DEFAULT_CAPTURE.into(), "a".into())])))
@@ -26,7 +26,7 @@ fn test_counter_t_1() {
 #[test]
 fn test_counter_t_2() {
     let rule = Rule::new(r"\w", MatchRequirement::MustBeFound).counter_less_than(4);
-    let mut captures = Rule::find_captures(&rule, "a b c");
+    let mut captures = Rule::find_captures(&rule, &"a b c");
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut captures),
         NextStep::Finish
@@ -37,7 +37,7 @@ fn test_counter_t_2() {
 #[test]
 fn test_counter_t_3() {
     let rule = Rule::new(r"\w", MatchRequirement::MustBeFound).counter_less_than(4);
-    let mut captures = Rule::find_captures(&rule, "a b c d e");
+    let mut captures = Rule::find_captures(&rule, &"a b c d e");
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut captures),
         NextStep::Error(Some(HashMap::from([(DEFAULT_CAPTURE.into(), "a".into())])))
@@ -48,7 +48,7 @@ fn test_counter_t_3() {
 #[test]
 fn test_counter_t_4() {
     let rule = Rule::new(r"\w", MatchRequirement::MustBeFound).counter_more_than(4);
-    let mut captures = Rule::find_captures(&rule, "a b c d e f g");
+    let mut captures = Rule::find_captures(&rule, &"a b c d e f g");
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut captures),
         NextStep::Finish
@@ -59,7 +59,7 @@ fn test_counter_t_4() {
 #[test]
 fn test_counter_t_5() {
     let rule = Rule::new(r"\w", MatchRequirement::MustBeFound).counter_more_than(4);
-    let mut captures = Rule::find_captures(&rule, "a b c");
+    let mut captures = Rule::find_captures(&rule, &"a b c");
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut captures),
         NextStep::Error(Some(HashMap::from([(DEFAULT_CAPTURE.into(), "a".into())])))
