@@ -27,11 +27,11 @@ Step 3
  Of course, it depends on the pattern itself, but in general, they can be longer than regular rules.
  That's why we leave them at the end to try to weed out long calculations at the beginning of the queue
 */
-pub fn run<R, C>(rule: &R::RuleType, data: C) -> NextStep
+pub fn run<'a, R, C>(rule: &R::RuleType, data: C) -> NextStep
 where
     C: PartialEq + Eq + Hash + Debug,
-    R: CalculateValueRules<C>,
-    R::RuleType: RuleBase,
+    R: CalculateValueRules<'a, C>,
+    R::RuleType: RuleBase<RegexSet = &'a R::RegexSet>,
 {
     // ============================= LOG =============================
     debug!("running the root rule `{}`", rule.as_str());
