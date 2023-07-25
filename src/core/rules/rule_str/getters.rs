@@ -24,4 +24,8 @@ impl RuleBase for Rule {
     fn get_counter(&self) -> Option<Counter> {
         self.content_unchecked().general_modifiers.counter
     }
+
+    fn get_mode_match(&self) -> &ModeMatch {
+        &self.content_unchecked().general_modifiers.mod_match
+    }
 }

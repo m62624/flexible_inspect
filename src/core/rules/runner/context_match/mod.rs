@@ -35,7 +35,24 @@ where
     let mut stack: VecDeque<(&<R as CalculateValueRules<T>>::RuleType, CaptureData<T>)> =
         VecDeque::from([(rule, R::find_captures(&rule, data))]);
     while let Some(frame) = stack.front() {
-        frame.0.content_unchecked();
+        match frame.0.get_mode_match() {
+            ModeMatch::AllRulesForAllMatches => {
+                // TODO: implement
+                todo!()
+            }
+            ModeMatch::AllRulesForAtLeastOneMatch => {
+                // TODO: implement
+                todo!()
+            }
+            ModeMatch::AtLeastOneRuleForAllMatches => {
+                // TODO: implement
+                todo!()
+            }
+            ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {
+                // TODO: implement
+                todo!()
+            }
+        }
     }
     NextStep::Finish
 }
