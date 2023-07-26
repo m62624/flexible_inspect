@@ -34,9 +34,13 @@ where
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
             NextStep::Go => {
                 if let Some(simple_rules) = &frame.0.get_simple_rules() {
+                    // count of how many times one rule has worked for different matches
                     let mut counter_of_each_rule = HashMap::new();
+                    // which matches have already been processed in the rule
+                    // is necessary so you don't have to go through them again in the second cycle.
                     let mut selected_text = HashMap::new();
-                    let mut selected_rules: HashSet<_> = HashSet::new();
+                    // rules that have passed the selections for all matches
+                    let mut selected_rules = HashSet::new();
                     // ============================= LOG =============================
                     debug!(
                         "success, run subrules from the root rule `({}, {:#?})`",
@@ -50,6 +54,7 @@ where
                     we get those rules that will definitely work, then check their modifiers
                      */
                     for data in &frame.1.text_for_capture {
+                        // we get the indexes of the rules that are in the RegexSet
                         for index in R::get_selected_rules(simple_rules.1, data) {
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
@@ -166,7 +171,7 @@ where
                 );
                 // ===============================================================
             }
-            NextStep::Error(_) => {}
+            NextStep::Error(err) => return NextStep::Error(err),
         }
     }
     NextStep::Finish
