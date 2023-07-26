@@ -16,19 +16,15 @@ where
     R: CalculateValueRules<'a, C> + Debug,
     C: PartialEq + Eq + Hash + Debug,
 {
-    // ============================= LOG =============================
-    debug!("the local rule stack `{}` is received", {
-        rule_ref.get_str()
-    });
-    // ===============================================================
     let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
     while let Some(mut frame) = stack.pop_front() {
         // ============================= LOG =============================
         debug!(
-            "\ncheck the state of the rule `({}, {:#?})` \nfrom the local stack `{}`",
+            "\ncheck the state of the rule `({}, {:#?})` \nfrom the local stack `({}, {:#?})`",
             frame.0.get_str(),
             frame.0.get_requirement(),
-            rule_ref.get_str()
+            rule_ref.get_str(),
+            rule_ref.get_requirement()
         );
         // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
