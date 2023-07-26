@@ -32,11 +32,11 @@ pub trait RuleBase {
 /// the rest will be the same
 ///
 
-pub trait CalculateValueRules<'a, T: PartialEq + Eq + Hash> {
+pub trait CalculateValueRules<'a, C: PartialEq + Eq + Hash> {
     type RuleType: RuleBase<RuleType = Self::RuleType, RegexSet = Self::RegexSet>;
     type RegexSet: 'a;
-    fn get_selected_rules(regex_set: &Self::RegexSet, text: &T) -> Vec<usize>;
-    fn find_captures(rule: &Self::RuleType, capture: &T) -> CaptureData<T>;
+    fn get_selected_rules(regex_set: &Self::RegexSet, text: &C) -> Vec<usize>;
+    fn find_captures(rule: &Self::RuleType, capture: &C) -> CaptureData<C>;
 }
 
 /// This trait requires modifier implementations for any `Rules`
@@ -44,7 +44,7 @@ pub trait RuleModifiers {
     type RuleType;
 
     /// a method for extending the rule with nested rules
-    fn extend<T: IntoIterator<Item = Self::RuleType>>(&mut self, nested_rules: T)
+    fn extend<R: IntoIterator<Item = Self::RuleType>>(&mut self, nested_rules: R)
         -> Self::RuleType;
 
     fn counter_is_equal(&mut self, count: usize) -> Self::RuleType;

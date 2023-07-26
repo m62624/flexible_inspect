@@ -30,8 +30,8 @@ Step 3
 */
 pub fn run<'a, R, C>(rule: &R::RuleType, data: C) -> NextStep
 where
-    C: PartialEq + Eq + Hash + Debug,
     R: CalculateValueRules<'a, C> + Debug,
+    C: PartialEq + Eq + Hash + Debug,
 {
     // ============================= LOG =============================
     debug!("running the root rule `{}`", rule.get_str());

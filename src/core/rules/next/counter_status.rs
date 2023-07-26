@@ -2,9 +2,9 @@ use super::*;
 use crate::core::rules::{traits::RuleBase, Counter};
 
 impl Counter {
-    pub fn counter_status<R: RuleBase, T: PartialEq + Eq + Hash>(
+    pub fn counter_status<R: RuleBase, C: PartialEq + Eq + Hash>(
         rule: &R,
-        captures: &mut CaptureData<T>,
+        captures: &mut CaptureData<C>,
     ) -> NextStep {
         if let Some(counter) = rule.get_counter() {
             match counter {

@@ -11,9 +11,9 @@ pub enum NextStep {
 }
 
 impl NextStep {
-    pub fn next_or_finish_or_error<R: RuleBase, T: PartialEq + Eq + Hash>(
+    pub fn next_or_finish_or_error<R: RuleBase, C: PartialEq + Eq + Hash>(
         rule: &R,
-        captures: &mut CaptureData<T>,
+        captures: &mut CaptureData<C>,
     ) -> NextStep {
         match rule.get_requirement() {
             MatchRequirement::MustBeFound => {

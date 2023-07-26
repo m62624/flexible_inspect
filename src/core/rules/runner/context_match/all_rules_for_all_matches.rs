@@ -11,8 +11,8 @@ pub fn all_rules_for_all_matches<'a, R, C>(
     stack: &mut VecDeque<(&R::RuleType, CaptureData<C>)>,
 ) -> NextStep
 where
-    C: PartialEq + Eq + Hash + Debug,
     R: CalculateValueRules<'a, C> + Debug,
+    C: PartialEq + Eq + Hash + Debug,
 {
     // ============================= LOG =============================
     debug!("the local rule stack `{}` is received", {
