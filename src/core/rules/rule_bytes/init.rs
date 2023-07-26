@@ -2,10 +2,10 @@ use super::*;
 use crate::init_logger;
 
 impl RuleBytes {
-    pub fn new<T: ToString>(pattern: T, requirement: MatchRequirement) -> Self {
+    pub fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
         init_logger();
         Self(Some(TakeRuleBytesForExtend::new(
-            pattern.to_string(),
+            pattern.into(),
             requirement,
         )))
     }

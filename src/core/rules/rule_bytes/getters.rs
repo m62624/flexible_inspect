@@ -44,7 +44,7 @@ impl RuleBase for RuleBytes {
         None
     }
 
-    fn get_complex_rules(&self) -> Option<&Vec<Self::RuleType>> {
+    fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>> {
         None
     }
 }

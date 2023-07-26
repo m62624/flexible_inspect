@@ -31,7 +31,7 @@ impl RegexRaw {
 }
 
 impl Subrules {
-    pub fn new(simple_rules: SimpleRules, complex_rules: Vec<Rule>) -> Self {
+    pub fn new(simple_rules: SimpleRules, complex_rules: IndexSet<Rule>) -> Self {
         Self {
             simple_rules: match !simple_rules.all_rules.is_empty() {
                 true => Some(simple_rules),

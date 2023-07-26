@@ -44,7 +44,7 @@ impl RuleBase for Rule {
         None
     }
 
-    fn get_complex_rules(&self) -> Option<&Vec<Self::RuleType>> {
+    fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>> {
         if let Some(subrules) = self.get_subrules() {
             if let Some(complex_rules) = &subrules.complex_rules {
                 return Some(&complex_rules);

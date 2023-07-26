@@ -18,7 +18,7 @@ pub struct SlisedRules {
     /// The rules are in the `IndexSet` collection to preserve
     /// the order of the rules during index retrieval from the `RegexSet` and to avoid duplicate rules
     pub simple_rules: IndexSet<Rule>,
-    pub complex_rules: Vec<Rule>,
+    pub complex_rules: IndexSet<Rule>,
 }
 
 /// A Structure for common `Rule` modifiers

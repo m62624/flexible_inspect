@@ -38,7 +38,7 @@ pub enum RegexRaw {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Subrules {
     pub simple_rules: Option<SimpleRules>,
-    pub complex_rules: Option<Vec<Rule>>,
+    pub complex_rules: Option<IndexSet<Rule>>,
 }
 
 /// Structure that stores regular expressions from which you can initialize in `RegexSet`

@@ -64,7 +64,9 @@ mod hash_trait {
     impl Hash for Subrules {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
             self.simple_rules.hash(state);
-            self.complex_rules.hash(state);
+            if let Some(value) = &self.simple_rules {
+                value.hash(state);
+            }
         }
     }
 }
