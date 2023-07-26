@@ -147,7 +147,11 @@ where
                     for data in &frame.1.text_for_capture {
                         for cmplx_rule in complex_rules {
                             // ============================= LOG =============================
-                            trace!("the rule {} from `complex_rules`", cmplx_rule.get_str());
+                            trace!(
+                                "the rule `({}, {:#?})` from `complex_rules`",
+                                cmplx_rule.get_str(),
+                                cmplx_rule.get_requirement()
+                            );
                             // ===============================================================
                             let mut captures = R::find_captures(cmplx_rule, data);
                             if let NextStep::Error(err) =
@@ -166,7 +170,6 @@ where
                         }
                     }
                 }
-                stack.extend(temp_stack.drain(..))
             }
             NextStep::Finish => {
                 // ============================= LOG =============================
@@ -189,6 +192,10 @@ where
             }
         }
     }
+    // ================= (LOG) =================
+    info!("for all matches all rules worked successfully");
+    // =========================================
+    stack.extend(temp_stack.drain(..));
     NextStep::Finish
 }
 
