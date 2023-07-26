@@ -33,7 +33,7 @@ pub trait RuleBase {
 ///
 
 pub trait CalculateValueRules<'a, T: PartialEq + Eq + Hash> {
-    type RuleType: RuleBase<RuleType = Self::RuleType>;
+    type RuleType: RuleBase<RuleType = Self::RuleType, RegexSet = Self::RegexSet>;
     type RegexSet: 'a;
     fn get_selected_rules(regex_set: &Self::RegexSet, text: &T) -> Vec<usize>;
     fn find_captures(rule: &Self::RuleType, capture: &T) -> CaptureData<T>;

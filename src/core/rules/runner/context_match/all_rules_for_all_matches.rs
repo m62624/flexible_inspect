@@ -11,9 +11,8 @@ pub fn all_rules_for_all_matches<'a, R, C>(
     stack: &mut VecDeque<(&R::RuleType, CaptureData<C>)>,
 ) -> NextStep
 where
-    C: PartialEq + Eq + Hash + Display,
+    C: PartialEq + Eq + Hash + Debug,
     R: CalculateValueRules<'a, C> + Debug,
-    R::RuleType: RuleBase<RegexSet = &'a R::RegexSet>,
 {
     // ============================= LOG =============================
     debug!("the local rule stack `{}` is received", {
@@ -48,7 +47,7 @@ where
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
                             trace!(
-                                "found `({}, {:#?})` rule from `RegexSet` for `{}` data",
+                                "found `({}, {:#?})` rule from `RegexSet` for `{:#?}` data",
                                 rule_from_regexset.get_str(),
                                 rule_from_regexset.get_requirement(),
                                 text
