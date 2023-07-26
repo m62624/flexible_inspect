@@ -177,7 +177,16 @@ where
                 );
                 // ===============================================================
             }
-            NextStep::Error(err) => return NextStep::Error(err),
+            NextStep::Error(err) => {
+                // ================= (LOG) =================
+                error!(
+                    "the rule (`{}`, `{:#?}`) didn't work",
+                    &frame.0.get_str(),
+                    &frame.0.get_requirement(),
+                );
+                // =========================================
+                return NextStep::Error(err);
+            }
         }
     }
     NextStep::Finish
