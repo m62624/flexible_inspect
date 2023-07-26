@@ -1,7 +1,6 @@
 use crate::core::rules::next::NextStep;
 use crate::core::rules::traits::{CalculateValueRules, RuleBase};
 use crate::core::rules::CaptureData;
-use indexmap::IndexSet;
 use log::{debug, error, info, trace};
 use std::collections::{HashMap, HashSet};
 use std::{collections::VecDeque, fmt::Debug, hash::Hash};
@@ -91,7 +90,7 @@ where
                             if counter_of_each_rule[&index] == frame.1.text_for_capture.len() {
                                 // ============================= LOG =============================
                                 trace!(
-                                    "the ({}, {:#?}) rule worked successfully for all matches",
+                                    "the ({}, {:#?}) rule worked successfully for all matches (`RegexSet`)",
                                     rule_from_regexset.get_str(),
                                     rule_from_regexset.get_requirement(),
                                 );
@@ -138,8 +137,11 @@ where
                 if let Some(complex_rules) = frame.0.get_complex_rules() {
                     for data in &frame.1.text_for_capture {
                         for cmplx_rule in complex_rules {
+                            // ============================= LOG =============================
+                            trace!("the rule {} from `complex_rules`", cmplx_rule.get_str());
+                            // ===============================================================
                             let mut captures = R::find_captures(cmplx_rule, data);
-                            if let NextStep::Error(error) =
+                            if let NextStep::Error(err) =
                                 NextStep::next_or_finish_or_error(cmplx_rule, &mut captures)
                             {
                                 // ============================= LOG =============================
@@ -149,7 +151,7 @@ where
                                     data
                                 );
                                 // ===============================================================
-                                return NextStep::Error(error);
+                                return NextStep::Error(err);
                             }
                         }
                     }
