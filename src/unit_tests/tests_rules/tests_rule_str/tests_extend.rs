@@ -18,10 +18,10 @@ fn extend_t_0() {
         Rule::new(r"\s", MatchRequirement::MustBeFound),
         Rule::new(r"123", MatchRequirement::MustBeFound),
     ]);
-    let complex_rules = vec![
+    let complex_rules = IndexSet::from([
         Rule::new(r"\d+(?=\w+)", MatchRequirement::MustBeFound),
         Rule::new(r"\d+(?=\w+)[1-9]", MatchRequirement::MustBeFound),
-    ];
+    ]);
 
     assert_eq!(
         rule.content_unchecked()

@@ -1,3 +1,5 @@
+use log::info;
+
 use super::RegexRaw;
 use crate::core::rules::{traits::RuleBase, CaptureData};
 use crate::core::DEFAULT_CAPTURE;
@@ -71,6 +73,15 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<&'a str> 
             });
         }
     }
+
+    // ============================= LOG =============================
+    info!(
+        "the {} rule found a match: \n{:#?}",
+        rule.get_str(),
+        text_for_capture
+    );
+    // ===============================================================
+
     CaptureData {
         text_for_capture,
         hashmap_for_error,

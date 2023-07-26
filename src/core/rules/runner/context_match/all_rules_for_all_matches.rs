@@ -1,9 +1,9 @@
 use crate::core::rules::next::NextStep;
 use crate::core::rules::traits::{CalculateValueRules, RuleBase};
 use crate::core::rules::CaptureData;
+use indexmap::IndexSet;
 use log::{debug, error, info, trace};
-use std::collections::HashMap;
-use std::fmt::Display;
+use std::collections::{HashMap, HashSet};
 use std::{collections::VecDeque, fmt::Debug, hash::Hash};
 
 pub fn all_rules_for_all_matches<'a, R, C>(
@@ -31,16 +31,21 @@ where
         // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
             NextStep::Go => {
-                let mut counter_of_each_rule: HashMap<usize, usize> = HashMap::new();
-                // ============================= LOG =============================
-                debug!(
-                    "success, run subrules from the root rule `({}, {:#?})`",
-                    rule_ref.get_str(),
-                    rule_ref.get_requirement()
-                );
-                // ===============================================================
-                for text in &frame.1.text_for_capture {
-                    if let Some(simple_rules) = &frame.0.get_simple_rules() {
+                if let Some(simple_rules) = &frame.0.get_simple_rules() {
+                    let mut counter_of_each_rule: HashMap<usize, usize> = HashMap::new();
+                    let mut selected_text: HashMap<
+                        &<R as CalculateValueRules<C>>::RuleType,
+                        HashSet<&C>,
+                    > = HashMap::new();
+                    let mut selected_rules: HashSet<_> = HashSet::new();
+                    // ============================= LOG =============================
+                    debug!(
+                        "success, run subrules from the root rule `({}, {:#?})`",
+                        rule_ref.get_str(),
+                        rule_ref.get_requirement()
+                    );
+                    // ===============================================================
+                    for text in &frame.1.text_for_capture {
                         for index in R::get_selected_rules(simple_rules.1, text) {
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
@@ -61,9 +66,14 @@ where
                                     rule_from_regexset.get_str(),
                                     text
                                 );
-                                return NextStep::Error(error);
                                 // ===============================================================
+                                return NextStep::Error(error);
                             }
+                            selected_text
+                                .entry(rule_from_regexset)
+                                .or_insert_with(HashSet::new)
+                                .insert(text);
+
                             *counter_of_each_rule.entry(index).or_insert(0) += 1;
                             if counter_of_each_rule[&index] == frame.1.text_for_capture.len() {
                                 // ============================= LOG =============================
@@ -73,10 +83,31 @@ where
                                     rule_from_regexset.get_requirement(),
                                 );
                                 // ===============================================================
-                                temp_stack.push_back((&rule_from_regexset, captures));
+                                selected_rules.insert(rule_from_regexset);
+                                temp_stack.push_back((rule_from_regexset, captures));
                             }
                         }
-                        
+                    }
+
+                    for text in &frame.1.text_for_capture {
+                        for rule in simple_rules.0 {
+                            if !selected_rules.contains(rule) {
+                                if let Some(value) = selected_text.get(rule) {
+                                    if !value.contains(text) {
+                                        if let NextStep::Error(err) =
+                                            not_in_regeset::<R, C>(rule, text)
+                                        {
+                                            return NextStep::Error(err);
+                                        }
+                                    }
+                                } else {
+                                    if let NextStep::Error(err) = not_in_regeset::<R, C>(rule, text)
+                                    {
+                                        return NextStep::Error(err);
+                                    }
+                                }
+                            }
+                        }
                     }
                 }
             }
@@ -91,6 +122,33 @@ where
             }
             NextStep::Error(_) => {}
         }
+    }
+    NextStep::Finish
+}
+
+fn not_in_regeset<'a, R, C>(rule: &R::RuleType, data: &C) -> NextStep
+where
+    R: CalculateValueRules<'a, C> + Debug,
+    C: PartialEq + Eq + Hash + Debug,
+{
+    // ============================= LOG =============================
+    trace!(
+        "the rule `({}, {:#?})` is not in `RegexSet` for data `{:#?}`",
+        rule.get_str(),
+        rule.get_requirement(),
+        data
+    );
+    // ===============================================================
+    let mut captures = R::find_captures(rule, data);
+    if let NextStep::Error(error) = NextStep::next_or_finish_or_error(rule, &mut captures) {
+        // ============================= LOG =============================
+        error!(
+            "the rule `{}` failed condition for data `{:#?}`",
+            rule.get_str(),
+            data
+        );
+        return NextStep::Error(error);
+        // ===============================================================
     }
     NextStep::Finish
 }
