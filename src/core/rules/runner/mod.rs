@@ -3,7 +3,6 @@ use super::*;
 use crate::core::rules::next::NextStep;
 use crate::core::rules::traits::{CalculateValueRules, RuleBase};
 use log::debug;
-use std::fmt::Display;
 use std::{collections::VecDeque, fmt::Debug};
 
 /// Main method for iteratively running a rule
@@ -35,7 +34,7 @@ where
 {
     // ============================= LOG =============================
     debug!("running the root rule `{}`", rule.get_str());
-    // ============================= LOG =============================
+    // ===============================================================
 
     let mut stack = VecDeque::from([(rule, R::find_captures(&rule, &data))]);
     while let Some(frame) = stack.front() {

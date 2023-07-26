@@ -18,7 +18,7 @@ where
     debug!("the local rule stack `{}` is received", {
         rule_ref.get_str()
     });
-    // ============================= LOG =============================
+    // ===============================================================
     let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
     while let Some(mut frame) = stack.pop_front() {
         // ============================= LOG =============================
@@ -28,8 +28,7 @@ where
             frame.0.get_requirement(),
             rule_ref.get_str()
         );
-        // ============================= LOG =============================
-
+        // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
             NextStep::Go => {
                 let mut counter_of_each_rule: HashMap<usize, usize> = HashMap::new();
@@ -39,8 +38,7 @@ where
                     rule_ref.get_str(),
                     rule_ref.get_requirement()
                 );
-                // ============================= LOG =============================
-
+                // ===============================================================
                 for text in &frame.1.text_for_capture {
                     if let Some(simple_rules) = &frame.0.get_simple_rules() {
                         for index in R::get_selected_rules(simple_rules.1, text) {
@@ -52,7 +50,7 @@ where
                                 rule_from_regexset.get_requirement(),
                                 text
                             );
-                            // ============================= LOG =============================
+                            // ===============================================================
                             let mut captures = R::find_captures(rule_from_regexset, text);
                             if let NextStep::Error(error) =
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
@@ -67,7 +65,7 @@ where
                                     rule_from_regexset.get_str(),
                                     rule_from_regexset.get_requirement(),
                                 );
-                                // ============================= LOG =============================
+                                // ===============================================================
                                 temp_stack.push_back((&rule_from_regexset, captures));
                             }
                         }
@@ -81,7 +79,7 @@ where
                     frame.0.get_str(),
                     frame.0.get_requirement()
                 );
-                // ============================= LOG =============================
+                // ===============================================================
             }
             NextStep::Error(_) => {}
         }
