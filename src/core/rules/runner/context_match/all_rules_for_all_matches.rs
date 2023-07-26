@@ -55,7 +55,14 @@ where
                             if let NextStep::Error(error) =
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
+                                // ============================= LOG =============================
+                                error!(
+                                    "the rule `{}` failed condition for data `{:#?}`",
+                                    rule_from_regexset.get_str(),
+                                    text
+                                );
                                 return NextStep::Error(error);
+                                // ===============================================================
                             }
                             *counter_of_each_rule.entry(index).or_insert(0) += 1;
                             if counter_of_each_rule[&index] == frame.1.text_for_capture.len() {
@@ -69,6 +76,7 @@ where
                                 temp_stack.push_back((&rule_from_regexset, captures));
                             }
                         }
+                        
                     }
                 }
             }
