@@ -15,7 +15,8 @@ use std::hash::Hash;
 
 /// The struct for sorting all nested rules
 pub struct SlisedRules {
-    /// `IndexSet` provides access to items in `O(1)` time on average when using the contains method.
+    /// The rules are in the `IndexSet` collection to preserve
+    /// the order of the rules during index retrieval from the `RegexSet` and to avoid duplicate rules
     pub simple_rules: IndexSet<Rule>,
     pub complex_rules: Vec<Rule>,
 }

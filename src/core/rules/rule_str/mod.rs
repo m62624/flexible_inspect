@@ -38,16 +38,14 @@ pub enum RegexRaw {
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct Subrules {
     pub simple_rules: Option<SimpleRules>,
-    /// Since we are looping through all elements without changing the queue order, we can use the vector
     pub complex_rules: Option<Vec<Rule>>,
 }
 
 /// Structure that stores regular expressions from which you can initialize in `RegexSet`
 #[derive(Debug, Clone)]
 pub struct SimpleRules {
-    /// Here the queue can change, not the collection itself,
-    /// but the way of processing rules at the beginning from `RegexSet`
-    /// and then those that are not in `RegexSet` through `!contains`, so we use `IndexSet` for better performance.
+    /// The rules are in the `IndexSet` collection to preserve
+    /// the order of the rules during index retrieval from the `RegexSet` and to avoid duplicate rules
     pub all_rules: IndexSet<Rule>,
     /// `RegexSet` Match multiple, possibly overlapping, regexes in a single search.
     pub regex_set: regex::RegexSet,
