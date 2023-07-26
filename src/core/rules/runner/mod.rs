@@ -2,7 +2,7 @@ mod context_match;
 use super::*;
 use crate::core::rules::next::NextStep;
 use crate::core::rules::traits::{CalculateValueRules, RuleBase};
-use log::debug;
+use log::{debug, trace};
 use std::{collections::VecDeque, fmt::Debug};
 
 /// Main method for iteratively running a rule
@@ -38,6 +38,11 @@ where
 
     let mut stack = VecDeque::from([(rule, R::find_captures(rule, &data))]);
     while let Some(frame) = stack.front() {
+        trace!(
+            "the stack is {:?} from ({})",
+            frame.0.get_mode_match(),
+            frame.0.get_str()
+        );
         match frame.0.get_mode_match() {
             ModeMatch::AllRulesForAllMatches => {
                 if let NextStep::Error(value) =
@@ -48,7 +53,11 @@ where
             }
             ModeMatch::AllRulesForAtLeastOneMatch => {
                 // TODO: implement
-                todo!()
+                if let NextStep::Error(value) =
+                    context_match::all_rules_for_at_least_one_match::<R, C>(rule, &mut stack)
+                {
+                    return NextStep::Error(value);
+                }
             }
             ModeMatch::AtLeastOneRuleForAllMatches => {
                 // TODO: implement
