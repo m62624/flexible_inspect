@@ -23,8 +23,8 @@ pub struct Rule(Option<TakeRuleForExtend>);
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TakeRuleForExtend {
     pub str_with_type: RegexRaw,
-    pub subrules: Option<Subrules>,
     pub general_modifiers: GeneralModifiers,
+    pub subrules: Option<Subrules>,
 }
 
 /// A structure for storing regular expressions
