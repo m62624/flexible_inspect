@@ -76,8 +76,9 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<&'a str> 
 
     // ============================= LOG =============================
     info!(
-        "the {} rule found a match: \n{:#?}",
+        "the `({}, {:#?})` rule found a match: \n{:#?}",
         rule.get_str(),
+        rule.get_requirement(),
         text_for_capture
     );
     // ===============================================================
