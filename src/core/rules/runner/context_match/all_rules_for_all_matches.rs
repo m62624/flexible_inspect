@@ -118,21 +118,25 @@ where
                                 // and exclude them
                                 if let Some(value) = selected_text.get(rule) {
                                     if !value.contains(data) {
+                                        let mut captures = R::find_captures(rule, data);
                                         if let NextStep::Error(err) =
-                                            not_in_regexset::<R, C>(rule, data)
+                                            not_in_regexset::<R, C>(rule, data, &mut captures)
                                         {
                                             return NextStep::Error(err);
                                         }
+                                        temp_stack.push_back((rule, captures));
                                     }
                                 } else {
+                                    let mut captures = R::find_captures(rule, data);
                                     // If there were no successful matches in this rule,
                                     // it means that this is the first time
                                     // this rule has been run for validation
                                     if let NextStep::Error(err) =
-                                        not_in_regexset::<R, C>(rule, data)
+                                        not_in_regexset::<R, C>(rule, data, &mut captures)
                                     {
                                         return NextStep::Error(err);
                                     }
+                                    temp_stack.push_back((rule, captures));
                                 }
                             }
                         }
@@ -158,6 +162,7 @@ where
                                 // ===============================================================
                                 return NextStep::Error(err);
                             }
+                            temp_stack.push_back((cmplx_rule, captures));
                         }
                     }
                 }
@@ -179,7 +184,11 @@ where
 }
 
 // Function for checking rules not included in `RegexSet`.
-fn not_in_regexset<'a, R, C>(rule: &R::RuleType, data: &C) -> NextStep
+fn not_in_regexset<'a, R, C>(
+    rule: &R::RuleType,
+    data: &C,
+    captures: &mut CaptureData<C>,
+) -> NextStep
 where
     R: CalculateValueRules<'a, C> + Debug,
     C: PartialEq + Eq + Hash + Debug,
@@ -192,8 +201,8 @@ where
         data
     );
     // ===============================================================
-    let mut captures = R::find_captures(rule, data);
-    if let NextStep::Error(error) = NextStep::next_or_finish_or_error(rule, &mut captures) {
+
+    if let NextStep::Error(error) = NextStep::next_or_finish_or_error(rule, captures) {
         // ============================= LOG =============================
         error!(
             "the rule `{}` failed condition for data `{:#?}`",
