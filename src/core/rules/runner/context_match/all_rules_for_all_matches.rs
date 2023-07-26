@@ -10,7 +10,7 @@ pub fn all_rules_for_all_matches<'a, R, C>(
     // this parameter is required for logs
     rule_ref: &R::RuleType,
     // get a unique stack of one root rule, necessary to bypass the recursion constraint
-    stack: &mut VecDeque<(&R::RuleType, CaptureData<C>)>,
+    stack: &mut VecDeque<(&'a R::RuleType, CaptureData<C>)>,
 ) -> NextStep
 where
     R: CalculateValueRules<'a, C> + Debug,
@@ -161,6 +161,7 @@ where
                         }
                     }
                 }
+                stack.extend(temp_stack.drain(..))
             }
             NextStep::Finish => {
                 // ============================= LOG =============================

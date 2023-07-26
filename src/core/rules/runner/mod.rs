@@ -27,7 +27,7 @@ Step 3
  Of course, it depends on the pattern itself, but in general, they can be longer than regular rules.
  That's why we leave them at the end to try to weed out long calculations at the beginning of the queue
 */
-pub fn run<'a, R, C>(rule: &R::RuleType, data: C) -> NextStep
+pub fn run<'a, R, C>(rule: &'a R::RuleType, data: C) -> NextStep
 where
     R: CalculateValueRules<'a, C> + Debug,
     C: PartialEq + Eq + Hash + Debug,
@@ -36,7 +36,7 @@ where
     debug!("running the root rule `{}`", rule.get_str());
     // ===============================================================
 
-    let mut stack = VecDeque::from([(rule, R::find_captures(&rule, &data))]);
+    let mut stack = VecDeque::from([(rule, R::find_captures(rule, &data))]);
     while let Some(frame) = stack.front() {
         match frame.0.get_mode_match() {
             ModeMatch::AllRulesForAllMatches => {
