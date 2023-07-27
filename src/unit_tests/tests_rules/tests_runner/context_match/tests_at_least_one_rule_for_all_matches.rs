@@ -1,4 +1,4 @@
-use super::*;
+use crate::prelude::*;
 use crate::core::rules::{self, next::NextStep};
 
 #[test]

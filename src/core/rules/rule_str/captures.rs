@@ -1,9 +1,8 @@
 use log::info;
-
 use super::RegexRaw;
 use crate::core::rules::{traits::RuleBase, CaptureData};
 use crate::core::DEFAULT_CAPTURE;
-use crate::Rule;
+use crate::prelude::Rule;
 use std::collections::{HashMap, HashSet};
 
 pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<&'a str> {

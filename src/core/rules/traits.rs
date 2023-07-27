@@ -4,9 +4,9 @@ They are necessary to avoid code duplicates. Especially in context_match, where 
 */
 
 use super::{CaptureData, Counter, ModeMatch};
-use crate::MatchRequirement;
+use crate::prelude::MatchRequirement;
 use indexmap::IndexSet;
-use std::{borrow::Borrow, fmt::Debug, hash::Hash};
+use std::{fmt::Debug, hash::Hash};
 
 /// This trait requires implementations of the most basic methods for any `Rule`.
 pub trait RuleBase {

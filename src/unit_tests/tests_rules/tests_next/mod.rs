@@ -1,8 +1,7 @@
 mod tests_counter_status;
-
-use super::*;
 use crate::core::rules::{next::NextStep, traits::CalculateValueRules};
 use crate::core::DEFAULT_CAPTURE;
+use crate::prelude::*;
 use std::collections::HashMap;
 
 /// Проверка Next для двух типов `Rule`, технический хватает только тест одного типа,

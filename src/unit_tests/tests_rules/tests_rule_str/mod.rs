@@ -1,6 +1,6 @@
-mod tests_extend;
 mod tests_captures;
-use super::*;
+mod tests_extend;
+use crate::prelude::*;
 
 /// Проверка конструктора на корректное регулярное выражение Default Regex
 #[test]

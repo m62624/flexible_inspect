@@ -1,6 +1,5 @@
 use crate::core::rules::{self, next::NextStep};
-
-use super::*;
+use crate::prelude::*;
 
 #[test]
 fn test_runner_t_0() {

@@ -24,7 +24,7 @@ ppppppppp
 
 :D
 */
-//! The template for exporting the validator to other programming languages and making it easier to work with validator versions for different languages. ( for example, to port a library to python, or to prepare code in wasm )
+//! Library for data validation based on custom regular expressions with modifiers
 
 // =====================================================================
 mod core;
@@ -32,13 +32,16 @@ mod export_lang;
 #[cfg(test)]
 mod unit_tests;
 // =====================================================================
-use std::env;
 use std::sync::Once;
 // =====================================================================
-pub use crate::core::rules::rule_bytes::RuleBytes;
-pub use crate::core::rules::rule_str::Rule;
-pub use crate::core::rules::traits::RuleModifiers;
-pub use crate::core::rules::MatchRequirement;
+pub mod prelude {
+    pub use crate::core::cartridges::*;
+    pub use crate::core::rules::rule_bytes::RuleBytes;
+    pub use crate::core::rules::rule_str::Rule;
+    pub use crate::core::rules::traits::RuleModifiers;
+    pub use crate::core::rules::MatchRequirement;
+    pub use crate::core::validator::*;
+}
 // =====================================================================
 /// For one-time initialization to the logger
 static INIT: Once = Once::new();
@@ -48,7 +51,6 @@ static INIT: Once = Once::new();
 pub fn init_logger() {
     // env_logger is called only once
     INIT.call_once(|| {
-        env::set_var("RUST_BACKTRACE", "0");
         env_logger::init();
     });
 }

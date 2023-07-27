@@ -1,6 +1,6 @@
 mod tests_captures;
 mod tests_extend;
-use super::*;
+use crate::prelude::*;
 
 /// Проверка конструктора на корректное регулярное выражение байтов
 #[test]

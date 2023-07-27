@@ -1,5 +1,5 @@
 use super::{rule_str::RegexRaw, traits::RuleBase, *};
-use crate::Rule;
+use crate::prelude::Rule;
 
 impl GeneralModifiers {
     pub fn new(requirement: MatchRequirement) -> Self {

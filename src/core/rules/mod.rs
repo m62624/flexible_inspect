@@ -7,7 +7,7 @@ pub mod runner;
 pub mod traits;
 // =======================================================
 use super::*;
-use crate::Rule;
+use crate::prelude::Rule;
 use indexmap::IndexSet;
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
