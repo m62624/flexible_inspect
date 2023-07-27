@@ -34,6 +34,7 @@ pyo3 = { version = "0.19.1", optional = true, features = ["abi3", "abi3-py37","g
 # Wasm bindings
 # ========================================================
 wasm-bindgen = { version = "0.2.87", optional = true }
+async-trait = "0.1.72"
 # ========================================================
 
 
