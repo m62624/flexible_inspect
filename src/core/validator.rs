@@ -3,14 +3,12 @@ use super::{
     rules::traits::RuleBase,
 };
 use crate::prelude::*;
-pub trait ValidatorBase<T, I, U, IC>
+pub trait ValidatorBase<T, I>
 where
     T: RuleBase,
     I: IntoIterator<Item = T>,
-    U: CartridgeBase<T, I>,
-    IC: IntoIterator<Item = U>,
 {
-    fn new(cartridges: IC) -> Self;
+    fn new(cartridges: I) -> Self;
     fn validate<S: AsRef<str>>(&self, text: S) -> Box<dyn CartridgeBase<T, I>>;
 }
 
@@ -22,12 +20,11 @@ where
     cartridges: I,
 }
 
-impl<I, IC> ValidatorBase<Rule, I, CartridgeRule<Rule, I>, IC> for TemplateValidator<Rule, I>
+impl<I> ValidatorBase<Rule, I> for TemplateValidator<Rule, I>
 where
     I: IntoIterator<Item = Rule>,
-    IC: IntoIterator<Item = CartridgeRule<Rule, I>>,
 {
-    fn new(cartridges: IC) -> Self {
+    fn new(cartridges: I) -> Self {
         Self { cartridges }
     }
     fn validate<S: AsRef<str>>(&self, text: S) -> Box<dyn CartridgeBase<Rule, I>> {
@@ -35,13 +32,11 @@ where
     }
 }
 
-impl<I, IC> ValidatorBase<RuleBytes, I, CartridgeRuleBytes<RuleBytes, I>, IC>
-    for TemplateValidator<RuleBytes, I>
+impl<I> ValidatorBase<RuleBytes, I> for TemplateValidator<RuleBytes, I>
 where
     I: IntoIterator<Item = RuleBytes>,
-    IC: IntoIterator<Item = CartridgeRuleBytes<RuleBytes, I>>,
 {
-    fn new(cartridges: IC) -> Self {
+    fn new(cartridges: I) -> Self {
         Self { cartridges }
     }
 
