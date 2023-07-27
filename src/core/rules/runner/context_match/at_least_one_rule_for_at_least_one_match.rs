@@ -48,6 +48,14 @@ where
                             if let NextStep::Error(error) =
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
+                                // ============================= LOG =============================
+                                trace!(
+                                    "the rule `({}, {:#?})` is not passed for `{:#?}` data",
+                                    rule_from_regexset.get_str(),
+                                    rule_from_regexset.get_requirement(),
+                                    data
+                                );
+                                // ===============================================================
                                 err_value = error;
                                 continue 'skip_this_rule;
                             }
