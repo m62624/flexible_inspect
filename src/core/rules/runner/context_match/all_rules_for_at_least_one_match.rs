@@ -33,7 +33,7 @@ where
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
             NextStep::Go => {
                 // Хранит ошибку, если она есть
-                let mut err: Option<HashMap<String, String>> = None;
+                let mut err_value: Option<HashMap<String, String>> = None;
                 // Статус, что нашли одно совпадение на которое сработали все правила
                 let mut rule_matched_for_any_text = false;
 
@@ -61,7 +61,7 @@ where
                                     data
                                 );
                                 // ===============================================================
-                                err = error;
+                                err_value = error;
                                 continue 'skip_data;
                             }
                             selected_rules.insert(rule_from_regexset);
@@ -74,7 +74,7 @@ where
                                 if let NextStep::Error(error) =
                                     NextStep::next_or_finish_or_error(rule, &mut captures)
                                 {
-                                    err = error;
+                                    err_value = error;
                                     continue 'skip_data;
                                 }
                                 temp_stack.push_back((rule, captures));
@@ -94,7 +94,7 @@ where
                             if let NextStep::Error(error) =
                                 NextStep::next_or_finish_or_error(cmplx_rule, &mut captures)
                             {
-                                err = error;
+                                err_value = error;
                                 continue 'skip_data;
                             }
                             temp_stack.push_back((cmplx_rule, captures));
@@ -113,16 +113,16 @@ where
                     error!("all of the rules do not match any text");
 
                     // =========================================
-                    return NextStep::Error(err);
+                    return NextStep::Error(err_value);
                 }
             }
             NextStep::Finish => (),
-            NextStep::Error(err) => {
+            NextStep::Error(err_value) => {
                 // ================= (LOG) =================
                 error!("all of the rules do not match any text");
 
                 // =========================================
-                return NextStep::Error(err);
+                return NextStep::Error(err_value);
             }
         }
     }
