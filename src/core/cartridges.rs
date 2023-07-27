@@ -7,7 +7,7 @@ pub trait CartridgeBase<T: RuleBase, I: IntoIterator<Item = T>> {
     fn rules(&self) -> &I;
 }
 
-pub struct Cartridge<T, I>
+pub struct CartridgeRule<T, I>
 where
     T: RuleBase,
     I: IntoIterator<Item = T>,
@@ -17,10 +17,19 @@ where
     rules: I,
 }
 
-impl<T, I> Cartridge<T, I>
+pub struct CartridgeRuleBytes<T, I>
 where
     T: RuleBase,
     I: IntoIterator<Item = T>,
+{
+    id: i64,
+    message: String,
+    rules: I,
+}
+
+impl<I> CartridgeRule<Rule, I>
+where
+    I: IntoIterator<Item = Rule>,
 {
     pub fn new<S: Into<String>>(id: i64, message: S, rules: I) -> Self {
         Self {
@@ -31,10 +40,39 @@ where
     }
 }
 
-impl<'a, T, I> CartridgeBase<T, I> for Cartridge<T, I>
+impl<I> CartridgeRuleBytes<RuleBytes, I>
 where
-    T: RuleBase + 'a,
-    I: IntoIterator<Item = T> + AsRef<&'a T> + 'a,
+    I: IntoIterator<Item = RuleBytes>,
+{
+    pub fn new<S: Into<String>>(id: i64, message: S, rules: I) -> Self {
+        Self {
+            id,
+            message: message.into(),
+            rules,
+        }
+    }
+}
+
+impl<'a, I> CartridgeBase<Rule, I> for CartridgeRule<Rule, I>
+where
+    I: IntoIterator<Item = Rule>,
+{
+    fn id(&mut self) -> &mut i64 {
+        &mut self.id
+    }
+
+    fn message(&mut self) -> &mut String {
+        &mut self.message
+    }
+
+    fn rules(&self) -> &I {
+        &self.rules
+    }
+}
+
+impl<'a, I> CartridgeBase<RuleBytes, I> for CartridgeRuleBytes<RuleBytes, I>
+where
+    I: IntoIterator<Item = RuleBytes>,
 {
     fn id(&mut self) -> &mut i64 {
         &mut self.id
@@ -50,11 +88,11 @@ where
 }
 
 #[test]
-fn test_iter() {
-    let mut cartridge_1 = Cartridge::new(
-        -1,
-        "this is error message",
+fn x() {
+    let mut cartridge = CartridgeRule::new(
+        0,
+        "message",
         [Rule::new(r"\d+", MatchRequirement::MustNotBeFound)],
     );
-    // cartridge_1.
+    let x = cartridge.rules();
 }
