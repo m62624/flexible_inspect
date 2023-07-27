@@ -37,13 +37,16 @@ where
                     rule_ref.get_requirement()
                 );
                 // ===============================================================
-
-                // Статус, нашли ли мы одно правило для всех совпадений
+                // Status, whether we found one rule for all matches
                 let mut one_rule_found = false;
-                // Хранит ошибку, если она есть
+                // Stores the error, if any
                 let mut error_value: Option<HashMap<String, String>> = None;
                 let mut selected_rules = HashSet::new();
                 if let Some(simple_rules) = &frame.0.get_simple_rules() {
+                    /*
+                    The first step is to get a RegexSet for each match, based on it,
+                    we get those rules that will definitely work, then check their modifiers
+                     */
                     'skip_data: for data in &frame.1.text_for_capture {
                         'skip_this_rule: for index in R::get_selected_rules(simple_rules.1, data) {
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
@@ -89,6 +92,7 @@ where
                     }
                     counter_one_rule.clear();
                     if !one_rule_found {
+                        // The second step, in this stage we go through those rules and matches that are not in `RegexSet`.
                         'not_in_regexset: for rule in simple_rules.0 {
                             if !selected_rules.contains(rule) {
                                 // ============================= LOG =============================
@@ -124,6 +128,7 @@ where
                         }
                     }
                 }
+                // The hird step, bypass the rules with the Lookahead and Lookbehind regex.
                 if let Some(cmplx_rules) = frame.0.get_complex_rules() {
                     if !one_rule_found {
                         'skip_this_cmplx_rule: for rule in cmplx_rules {

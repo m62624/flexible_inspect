@@ -39,14 +39,18 @@ where
                     rule_ref.get_requirement()
                 );
                 // ===============================================================
-
-                // Хранит ошибку, если она есть
+                // Stores the error, if any
                 let mut err_value: Option<HashMap<String, String>> = None;
-                // Статус, что нашли одно совпадение на которое сработали все правила
+                // Status that we found one match for which all the rules worked
                 let mut rule_matched_for_any_text = false;
                 'skip_data: for data in &frame.1.text_for_capture {
                     if let Some(simple_rules) = frame.0.get_simple_rules() {
+                        // rules that have passed the selections for all matches
                         let mut selected_rules = HashSet::new();
+                        /*
+                        The first step is to get a RegexSet for each match, based on it,
+                        we get those rules that will definitely work, then check their modifiers
+                         */
                         for index in R::get_selected_rules(simple_rules.1, data) {
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
@@ -74,7 +78,7 @@ where
                             selected_rules.insert(rule_from_regexset);
                             temp_stack.push_back((rule_from_regexset, captures));
                         }
-
+                        // The second step, in this stage we go through those rules and matches that are not in `RegexSet`.
                         for rule in simple_rules.0 {
                             if !selected_rules.contains(rule) {
                                 let mut captures = R::find_captures(rule, data);
@@ -88,6 +92,7 @@ where
                             }
                         }
                     }
+                    // The hird step, bypass the rules with the Lookahead and Lookbehind regex.
                     if let Some(cmpl_rules) = frame.0.get_complex_rules() {
                         for cmplx_rule in cmpl_rules {
                             // ============================= LOG =============================
