@@ -52,7 +52,6 @@ where
                 }
             }
             ModeMatch::AllRulesForAtLeastOneMatch => {
-                // TODO: implement
                 if let NextStep::Error(value) =
                     context_match::all_rules_for_at_least_one_match::<R, C>(rule, &mut stack)
                 {
@@ -60,8 +59,11 @@ where
                 }
             }
             ModeMatch::AtLeastOneRuleForAllMatches => {
-                // TODO: implement
-                todo!()
+                if let NextStep::Error(value) =
+                    context_match::at_least_one_rule_for_all_matches::<R, C>(rule, &mut stack)
+                {
+                    return NextStep::Error(value);
+                }
             }
             ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {
                 // TODO: implement
