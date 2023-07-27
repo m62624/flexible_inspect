@@ -1,61 +1,60 @@
 use super::rules::traits::RuleBase;
-use crate::{prelude::Rule, prelude::RuleBytes};
+use crate::prelude::*;
 
-pub trait CartridgeBase<'a, T: RuleBase> {
-    fn id(&mut self) -> i64;
-    fn message(&mut self) -> &String;
+pub trait CartridgeBase<T: RuleBase, I: IntoIterator<Item = T>> {
+    fn id(&mut self) -> &mut i64;
+    fn message(&mut self) -> &mut String;
+    fn rules(&self) -> &I;
 }
 
-pub struct CartridgeRule<T: IntoIterator<Item = Rule>> {
-    id: i64,
-    message: String,
-    rules: T,
-}
-
-pub struct CartridgeRuleBytes<T: IntoIterator<Item = RuleBytes>> {
-    id: i64,
-    message: String,
-    rules: T,
-}
-
-impl<T: IntoIterator<Item = Rule>> CartridgeRule<T> {
-    pub fn new<S: Into<String>>(id: i64, message: S, rules: T) -> Self {
-        Self {
-            id,
-            message: message.into(),
-            rules,
-        }
-    }
-}
-
-impl<T: IntoIterator<Item = RuleBytes>> CartridgeRuleBytes<T> {
-    pub fn new<S: Into<String>>(id: i64, message: S, rules: T) -> Self {
-        Self {
-            id,
-            message: message.into(),
-            rules,
-        }
-    }
-}
-
-impl<'a, T: IntoIterator<Item = Rule> + AsRef<&'a T> + 'a> CartridgeBase<'a, Rule>
-    for CartridgeRule<T>
+pub struct Cartridge<T, I>
+where
+    T: RuleBase,
+    I: IntoIterator<Item = T>,
 {
-    fn id(&mut self) -> i64 {
-        self.id
+    id: i64,
+    message: String,
+    rules: I,
+}
+
+impl<T, I> Cartridge<T, I>
+where
+    T: RuleBase,
+    I: IntoIterator<Item = T>,
+{
+    pub fn new<S: Into<String>>(id: i64, message: S, rules: I) -> Self {
+        Self {
+            id,
+            message: message.into(),
+            rules,
+        }
+    }
+}
+
+impl<'a, T, I> CartridgeBase<T, I> for Cartridge<T, I>
+where
+    T: RuleBase + 'a,
+    I: IntoIterator<Item = T> + AsRef<&'a T> + 'a,
+{
+    fn id(&mut self) -> &mut i64 {
+        &mut self.id
     }
 
-    fn message(&mut self) -> &String {
-        &self.message
+    fn message(&mut self) -> &mut String {
+        &mut self.message
+    }
+
+    fn rules(&self) -> &I {
+        &self.rules
     }
 }
 
 #[test]
-fn x() {
-    let rule = Rule::new("x", super::rules::MatchRequirement::MustBeFound);
-    let cartridge = CartridgeRule::new(1, "x", [rule]);
-    let s = cartridge.rules.as_ref();
-    cartridge.rules.as_ref().into_iter().for_each(|rule| {
-        println!("{:#?}", rule);
-    });
+fn test_iter() {
+    let mut cartridge_1 = Cartridge::new(
+        -1,
+        "this is error message",
+        [Rule::new(r"\d+", MatchRequirement::MustNotBeFound)],
+    );
+    // cartridge_1.
 }
