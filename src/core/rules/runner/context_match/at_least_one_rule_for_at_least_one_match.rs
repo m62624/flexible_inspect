@@ -85,9 +85,10 @@ where
 
                                 // ============================= LOG =============================
                                 info!(
-                                    "found one rule for all matches: ({}, {:#?})",
+                                    "found one rule `({}, {:#?})` for match `{:#?}`",
                                     rule.get_str(),
-                                    rule.get_requirement()
+                                    rule.get_requirement(),
+                                    data
                                 );
                                 // ===============================================================
                                 found_rule = true;
@@ -115,9 +116,10 @@ where
                                 }
                                 // ============================= LOG =============================
                                 info!(
-                                    "found one rule for all matches: ({}, {:#?})",
+                                    "found one rule `({}, {:#?})` for match `{:#?}`",
                                     rule.get_str(),
-                                    rule.get_requirement()
+                                    rule.get_requirement(),
+                                    data
                                 );
                                 // ===============================================================
                                 found_rule = true;
