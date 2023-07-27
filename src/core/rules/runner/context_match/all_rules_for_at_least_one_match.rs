@@ -32,11 +32,18 @@ where
         // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
             NextStep::Go => {
+                // ============================= LOG =============================
+                debug!(
+                    "success, run subrules from the root rule `({}, {:#?})`",
+                    rule_ref.get_str(),
+                    rule_ref.get_requirement()
+                );
+                // ===============================================================
+
                 // Хранит ошибку, если она есть
                 let mut err_value: Option<HashMap<String, String>> = None;
                 // Статус, что нашли одно совпадение на которое сработали все правила
                 let mut rule_matched_for_any_text = false;
-
                 'skip_data: for data in &frame.1.text_for_capture {
                     if let Some(simple_rules) = frame.0.get_simple_rules() {
                         let mut selected_rules = HashSet::new();
@@ -55,8 +62,8 @@ where
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
                                 // ============================= LOG =============================
-                                error!(
-                                    "the rule `{}` failed condition for data `{:#?}`",
+                                trace!(
+                                    "the rule `{}` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )",
                                     rule_from_regexset.get_str(),
                                     data
                                 );
@@ -100,7 +107,7 @@ where
                             temp_stack.push_back((cmplx_rule, captures));
                         }
                     }
-                    info!("all rules passed successfully for the text `{:#?}` ", data);
+                    info!("all rules passed successfully for the data `{:#?}` ", data);
                     // Если дошли до конца цикла (в рамках одного элемента), значит все правила сработали
                     rule_matched_for_any_text = true;
                     break;
@@ -110,7 +117,7 @@ where
                     stack.extend(temp_stack.drain(..));
                 } else {
                     // ================= (LOG) =================
-                    error!("all of the rules do not match any text");
+                    error!("all of the rules do not match any data");
 
                     // =========================================
                     return NextStep::Error(err_value);
@@ -127,7 +134,7 @@ where
             }
             NextStep::Error(err_value) => {
                 // ================= (LOG) =================
-                error!("all of the rules do not match any text");
+                error!("all of the rules do not match any data");
 
                 // =========================================
                 return NextStep::Error(err_value);

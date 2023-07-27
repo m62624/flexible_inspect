@@ -28,6 +28,14 @@ where
         // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
             NextStep::Go => {
+                // ============================= LOG =============================
+                debug!(
+                    "success, run subrules from the root rule `({}, {:#?})`",
+                    rule_ref.get_str(),
+                    rule_ref.get_requirement()
+                );
+                // ===============================================================
+
                 let mut err_value: Option<HashMap<String, String>> = None;
                 // Статус, что нашли одно правило на одно совпадение
                 let mut found_rule = false;

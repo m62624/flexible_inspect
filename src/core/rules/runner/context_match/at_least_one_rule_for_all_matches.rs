@@ -30,6 +30,14 @@ where
         let mut counter_one_rule = HashMap::new();
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
             NextStep::Go => {
+                // ============================= LOG =============================
+                debug!(
+                    "success, run subrules from the root rule `({}, {:#?})`",
+                    rule_ref.get_str(),
+                    rule_ref.get_requirement()
+                );
+                // ===============================================================
+
                 // Статус, нашли ли мы одно правило для всех совпадений
                 let mut one_rule_found = false;
                 // Хранит ошибку, если она есть
@@ -54,6 +62,14 @@ where
                                     rule_from_regexset,
                                     &mut captures,
                                 ) {
+                                    // ============================= LOG =============================
+                                    trace!(
+                                    "the rule `{}` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )",
+                                    rule_from_regexset.get_str(),
+                                    data
+                                );
+                                    // ===============================================================
+
                                     error_value = err;
                                     continue 'skip_this_rule;
                                 }

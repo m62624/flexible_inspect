@@ -29,6 +29,14 @@ where
         // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
             NextStep::Go => {
+                // ============================= LOG =============================
+                debug!(
+                    "success, run subrules from the root rule `({}, {:#?})`",
+                    rule_ref.get_str(),
+                    rule_ref.get_requirement()
+                );
+                // ===============================================================
+
                 if let Some(simple_rules) = &frame.0.get_simple_rules() {
                     // count of how many times one rule has worked for different matches
                     let mut counter_of_each_rule = HashMap::new();
@@ -37,14 +45,6 @@ where
                     let mut selected_text = HashMap::new();
                     // rules that have passed the selections for all matches
                     let mut selected_rules = HashSet::new();
-                    // ============================= LOG =============================
-                    debug!(
-                        "success, run subrules from the root rule `({}, {:#?})`",
-                        rule_ref.get_str(),
-                        rule_ref.get_requirement()
-                    );
-                    // ===============================================================
-
                     /*
                     The first step is to get a RegexSet for each match, based on it,
                     we get those rules that will definitely work, then check their modifiers
