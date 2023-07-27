@@ -57,13 +57,9 @@ where
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
                                 // ============================= LOG =============================
-                                trace!(
-                                    "the rule `({}, {:#?})` is not passed for `{:#?}` data",
-                                    rule_from_regexset.get_str(),
-                                    rule_from_regexset.get_requirement(),
-                                    data
-                                );
+                                trace!("the rule `{}` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )", rule_from_regexset.get_str(), data );
                                 // ===============================================================
+
                                 err_value = error;
                                 continue 'skip_this_rule;
                             }
