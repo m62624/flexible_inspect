@@ -1,7 +1,11 @@
 use super::rules::traits::RuleBase;
 use crate::prelude::*;
 
-pub trait CartridgeBase<T: RuleBase, I: IntoIterator<Item = T>> {
+pub trait CartridgeBase<T, I>
+where
+    T: RuleBase,
+    I: IntoIterator<Item = T>,
+{
     fn id(&mut self) -> &mut i64;
     fn message(&mut self) -> &mut String;
     fn rules(&self) -> &I;
@@ -53,7 +57,7 @@ where
     }
 }
 
-impl<'a, I> CartridgeBase<Rule, I> for CartridgeRule<Rule, I>
+impl<I> CartridgeBase<Rule, I> for CartridgeRule<Rule, I>
 where
     I: IntoIterator<Item = Rule>,
 {
@@ -70,7 +74,7 @@ where
     }
 }
 
-impl<'a, I> CartridgeBase<RuleBytes, I> for CartridgeRuleBytes<RuleBytes, I>
+impl<I> CartridgeBase<RuleBytes, I> for CartridgeRuleBytes<RuleBytes, I>
 where
     I: IntoIterator<Item = RuleBytes>,
 {
@@ -85,14 +89,4 @@ where
     fn rules(&self) -> &I {
         &self.rules
     }
-}
-
-#[test]
-fn x() {
-    let mut cartridge = CartridgeRule::new(
-        0,
-        "message",
-        [Rule::new(r"\d+", MatchRequirement::MustNotBeFound)],
-    );
-    let x = cartridge.rules();
 }
