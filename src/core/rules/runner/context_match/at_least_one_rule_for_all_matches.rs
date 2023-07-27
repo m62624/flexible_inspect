@@ -1,12 +1,9 @@
-use log::{debug, error, info, trace};
-
 use crate::core::rules::traits::RuleBase;
 use crate::core::rules::{next::NextStep, traits::CalculateValueRules, CaptureData};
+use log::{debug, error, info, trace};
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::Debug;
 use std::hash::Hash;
-
-use super::*;
 
 /// in this mode, at least one rule must be passed for all matches
 pub fn at_least_one_rule_for_all_matches<'a, R, C>(
@@ -85,7 +82,9 @@ where
                                     rule.get_requirement(),
                                 );
                                 // ===============================================================
-                               'skip_this_rule_not_in_regexset: for data in &frame.1.text_for_capture {
+                                'skip_this_rule_not_in_regexset: for data in
+                                    &frame.1.text_for_capture
+                                {
                                     let mut captures = R::find_captures(rule, data);
                                     if let NextStep::Error(err) =
                                         NextStep::next_or_finish_or_error(rule, &mut captures)
@@ -151,7 +150,15 @@ where
                     return NextStep::Error(error_value);
                 }
             }
-            NextStep::Finish => (),
+            NextStep::Finish => {
+                // ============================= LOG =============================
+                debug!(
+                    "the rule `({}, {:#?})` is finished, the result is `Ok`",
+                    frame.0.get_str(),
+                    frame.0.get_requirement()
+                );
+                // ===============================================================
+            }
             NextStep::Error(err) => {
                 // ============================= LOG =============================
                 error!("not found one rule for all matches");

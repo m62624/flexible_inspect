@@ -116,7 +116,15 @@ where
                     return NextStep::Error(err_value);
                 }
             }
-            NextStep::Finish => (),
+            NextStep::Finish => {
+                // ============================= LOG =============================
+                debug!(
+                    "the rule `({}, {:#?})` is finished, the result is `Ok`",
+                    frame.0.get_str(),
+                    frame.0.get_requirement()
+                );
+                // ===============================================================
+            }
             NextStep::Error(err_value) => {
                 // ================= (LOG) =================
                 error!("all of the rules do not match any text");
