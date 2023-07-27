@@ -1,11 +1,4 @@
-use log::{debug, error, info, trace};
-
 use super::*;
-use crate::core::rules::traits::RuleBase;
-use crate::core::rules::{next::NextStep, traits::CalculateValueRules, CaptureData};
-use std::collections::{HashMap, HashSet, VecDeque};
-use std::fmt::Debug;
-use std::hash::Hash;
 
 /// in this mode all rules must be passed for at least one match
 pub fn all_rules_for_at_least_one_match<'a, R, C>(

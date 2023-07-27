@@ -1,9 +1,4 @@
-use crate::core::rules::next::NextStep;
-use crate::core::rules::traits::{CalculateValueRules, RuleBase};
-use crate::core::rules::CaptureData;
-use log::{debug, error, info, trace};
-use std::collections::{HashMap, HashSet};
-use std::{collections::VecDeque, fmt::Debug, hash::Hash};
+use super::*;
 
 /// in this mode, a rule must be passed for each match
 pub fn all_rules_for_all_matches<'a, R, C>(

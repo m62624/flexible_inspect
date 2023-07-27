@@ -1,9 +1,4 @@
-use crate::core::rules::traits::RuleBase;
-use crate::core::rules::{next::NextStep, traits::CalculateValueRules, CaptureData};
-use log::{debug, error, info, trace};
-use std::collections::{HashMap, HashSet, VecDeque};
-use std::fmt::Debug;
-use std::hash::Hash;
+use super::*;
 
 /// in this mode, at least one rule must be passed for all matches
 pub fn at_least_one_rule_for_all_matches<'a, R, C>(
