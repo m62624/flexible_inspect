@@ -11,7 +11,7 @@ pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<&'a
     let mut counter_value: usize = 0;
     // flag to check `Counter`
     let flag_check_counter = rule.content_unchecked().general_modifiers.counter.is_some();
-    let re = regex::bytes::Regex::new(&rule.content_unchecked().str_bytes.as_ref()).unwrap();
+    let re = regex::bytes::Regex::new(rule.content_unchecked().str_bytes.as_ref()).unwrap();
     // get matches and increase `counter` as necessary
     re.captures_iter(capture).for_each(|capture| {
         if let Some(value) = capture.get(0) {

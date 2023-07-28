@@ -97,9 +97,7 @@ where
                                     rule.get_requirement(),
                                 );
                                 // ===============================================================
-                                'skip_this_rule_not_in_regexset: for data in
-                                    &frame.1.text_for_capture
-                                {
+                                if let Some(data) = frame.1.text_for_capture.iter().next() {
                                     let mut captures = R::find_captures(rule, data);
                                     if let NextStep::Error(err) =
                                         NextStep::next_or_finish_or_error(rule, &mut captures)
@@ -116,7 +114,6 @@ where
                                     );
                                     // ===============================================================
                                     temp_stack.push_back((rule, captures));
-                                    break 'skip_this_rule_not_in_regexset;
                                 }
                                 one_rule_found = true;
                             }

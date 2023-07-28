@@ -35,7 +35,7 @@ impl RuleBase for RuleBytes {
     }
 
     fn get_str(&self) -> &str {
-        &self.content_unchecked().str_bytes.as_ref()
+        self.content_unchecked().str_bytes.as_ref()
     }
 
     fn get_subrules(&self) -> Option<&Self::SubRulesType> {
