@@ -1,3 +1,4 @@
+use crate::core::rules::traits::CalculateValueRules;
 use crate::core::rules::{self, next::NextStep};
 use crate::prelude::*;
 use std::collections::HashMap;
@@ -15,7 +16,7 @@ fn test_runner_t_0() {
     ])]);
 
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, text),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Error(None)
     );
 }
@@ -33,7 +34,7 @@ fn test_runner_t_1() {
     ])]);
 
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, text),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Finish
     );
 }
@@ -51,7 +52,7 @@ fn test_runner_t_2() {
     ])]);
 
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, text),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Error(Some(HashMap::from([("main_capture".into(), "111".into())])))
     );
 }
@@ -69,7 +70,7 @@ fn test_runner_t_3() {
     ])]);
 
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, text),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Error(None)
     );
 }
@@ -87,7 +88,7 @@ fn test_runner_t_4() {
     ])]);
 
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, text),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Finish
     );
 }
@@ -105,7 +106,7 @@ fn test_runner_t_5() {
     ])]);
 
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, text),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Finish
     );
 }

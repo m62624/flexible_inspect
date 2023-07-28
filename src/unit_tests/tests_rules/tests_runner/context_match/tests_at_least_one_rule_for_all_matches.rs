@@ -1,3 +1,4 @@
+use crate::core::rules::traits::CalculateValueRules;
 use crate::prelude::*;
 use crate::core::rules::{self, next::NextStep};
 
@@ -15,7 +16,7 @@ fn test_runner_t_0() {
     ])
     .mode_at_least_one_rule_for_all_matches()]);
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, text),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Finish
     );
 }
@@ -34,7 +35,7 @@ fn test_runner_t_1() {
     ])
     .mode_at_least_one_rule_for_all_matches()]);
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, text),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Error(None)
     );
 }
@@ -52,7 +53,7 @@ fn test_runner_t_2() {
     ])
     .mode_at_least_one_rule_for_all_matches()]);
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, text),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Finish
     );
 }
@@ -70,7 +71,7 @@ fn test_runner_t_3() {
     ])
     .mode_at_least_one_rule_for_all_matches()]);
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, text),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Error(None)
     );
 }
@@ -89,7 +90,7 @@ fn test_runner_t_4() {
     ])
     .mode_at_least_one_rule_for_all_matches()]);
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, text),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Finish
     );
 }
