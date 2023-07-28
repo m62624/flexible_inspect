@@ -1,7 +1,7 @@
 // =======================================================
 mod another_traits;
 mod captures;
-mod getters;
+mod base;
 mod init;
 mod modifiers;
 mod utils;

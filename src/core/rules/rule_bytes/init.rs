@@ -1,18 +1,8 @@
 use super::*;
 use crate::init_logger;
 
-impl RuleBytes {
-    pub fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
-        init_logger();
-        Self(Some(TakeRuleBytesForExtend::new(
-            pattern.into(),
-            requirement,
-        )))
-    }
-}
-
 impl TakeRuleBytesForExtend {
-    fn new(pattern: String, requirement: MatchRequirement) -> Self {
+    pub fn new(pattern: String, requirement: MatchRequirement) -> Self {
         Self {
             str_bytes: if regex::bytes::Regex::new(&pattern).is_ok() {
                 pattern.into_boxed_str()

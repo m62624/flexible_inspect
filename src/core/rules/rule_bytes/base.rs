@@ -1,11 +1,22 @@
+use super::SimpleRulesBytes;
 use super::*;
 use crate::core::rules::traits::RuleBase;
+use crate::init_logger;
 
-impl RuleBase for Rule {
-    type TakeRuleType = TakeRuleForExtend;
-    type SubRulesType = Subrules;
-    type RegexSet = regex::RegexSet;
-    type RuleType = Rule;
+impl RuleBase for RuleBytes {
+    type TakeRuleType = TakeRuleBytesForExtend;
+    type SubRulesType = SimpleRulesBytes;
+    type RuleType = RuleBytes;
+    type RegexSet = regex::bytes::RegexSet;
+
+    fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
+        init_logger();
+        Self(Some(TakeRuleBytesForExtend::new(
+            pattern.into(),
+            requirement,
+        )))
+    }
+
     /// Use for direct access to the structure body
     fn content_unchecked(&self) -> &Self::TakeRuleType {
         self.0.as_ref().expect(ERR_OPTION)
@@ -29,27 +40,21 @@ impl RuleBase for Rule {
     }
 
     fn get_str(&self) -> &str {
-        self.content_unchecked().str_with_type.as_ref()
+        &self.content_unchecked().str_bytes.as_ref()
     }
+
     fn get_subrules(&self) -> Option<&Self::SubRulesType> {
-        self.content_unchecked().subrules.as_ref()
+        self.content_unchecked().subrules_bytes.as_ref()
     }
 
     fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
-        if let Some(subrules) = self.get_subrules() {
-            if let Some(simple_rules) = &subrules.simple_rules {
-                return Some((&simple_rules.all_rules, &simple_rules.regex_set));
-            }
+        if let Some(value) = self.get_subrules() {
+            return Some((&value.all_rules, &value.regex_set));
         }
         None
     }
 
     fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>> {
-        if let Some(subrules) = self.get_subrules() {
-            if let Some(complex_rules) = &subrules.complex_rules {
-                return Some(&complex_rules);
-            }
-        }
         None
     }
 }

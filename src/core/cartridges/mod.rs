@@ -8,7 +8,6 @@ use std::{collections::HashSet, fmt::Debug, hash::Hash, sync::Arc};
 pub trait CartridgeBase<T, I, D>
 where
     T: RuleBase,
-    I: IntoIterator<Item = T>,
     D: PartialEq + Eq + Hash + Debug,
 {
     /// Based on the received error code, you can implement your own actions
@@ -16,51 +15,53 @@ where
     /// Error messages, with the possibility of outputting additional data
     fn message(&mut self) -> &mut String;
     /// Rules for validation
-    fn rules(&self) -> &Option<I>;
+    fn root_rule(&self) -> &T;
     fn run(&mut self, data: D) -> NextStep;
 }
 
 /// Container for `rules` + `error message` + `error code`
 #[derive(Debug)]
-pub struct Cartridge<T, I>(Arc<TakeCartridgeForAsync<T, I>>)
+pub struct Cartridge<T>(Arc<TakeCartridgeForAsync<T>>)
 where
-    T: RuleBase,
-    I: IntoIterator<Item = T>;
+    T: RuleBase + RuleModifiers;
 
-impl<T, I> Cartridge<T, I>
+impl<T> Cartridge<T>
 where
-    T: RuleBase,
-    I: IntoIterator<Item = T>,
+    T: RuleBase + RuleModifiers<RuleType = T>,
 {
-    pub fn new<S: Into<String>>(id: i64, message: S, rules: I) -> Self {
+    pub fn new<S, I>(id: i64, message: S, rules: I) -> Self
+    where
+        S: Into<String>,
+        I: IntoIterator<Item = T>,
+    {
         Self(Arc::new(TakeCartridgeForAsync::new(id, message, rules)))
     }
 }
 
 /// This structure is needed to pass to the async task
 #[derive(Debug, Default)]
-pub struct TakeCartridgeForAsync<T, I>
+pub struct TakeCartridgeForAsync<T>
 where
     T: RuleBase,
-    I: IntoIterator<Item = T>,
 {
-    root_rule: Option<T>,
+    root_rule: T,
     id: i64,
     message: String,
-    rules: Option<I>,
 }
 
-impl<T, I> TakeCartridgeForAsync<T, I>
+impl<T> TakeCartridgeForAsync<T>
 where
-    T: RuleBase,
-    I: IntoIterator<Item = T>,
+    T: RuleBase + RuleModifiers<RuleType = T>,
 {
-    pub fn new<S: Into<String>>(id: i64, message: S, rules: I) -> Self {
+    pub fn new<S, I>(id: i64, message: S, rules: I) -> Self
+    where
+        S: Into<String>,
+        I: IntoIterator<Item = T>,
+    {
         Self {
-            root_rule: None,
+            root_rule: T::new("SYSTEM_ROOT_RULE", MatchRequirement::MustBeFound).extend(rules),
             id,
             message: message.into(),
-            rules: Some(rules),
         }
     }
 }

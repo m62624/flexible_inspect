@@ -1,15 +1,7 @@
 use super::*;
-use crate::init_logger;
-
-impl Rule {
-    pub fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
-        init_logger();
-        Self(Some(TakeRuleForExtend::new(pattern.into(), requirement)))
-    }
-}
 
 impl TakeRuleForExtend {
-    fn new(pattern: String, requirement: MatchRequirement) -> Self {
+   pub fn new(pattern: String, requirement: MatchRequirement) -> Self {
         Self {
             str_with_type: RegexRaw::new(pattern),
             subrules: None,

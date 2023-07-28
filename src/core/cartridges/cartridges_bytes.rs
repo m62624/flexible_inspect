@@ -1,6 +1,6 @@
 use super::*;
 
-impl<I> CartridgeBase<RuleBytes, I, &[u8]> for TakeCartridgeForAsync<RuleBytes, I>
+impl<I> CartridgeBase<RuleBytes, I, &[u8]> for TakeCartridgeForAsync<RuleBytes>
 where
     I: IntoIterator<Item = RuleBytes>,
 {
@@ -12,15 +12,13 @@ where
         &mut self.message
     }
 
-    fn rules(&self) -> &Option<I> {
-        &self.rules
+    fn root_rule(&self) -> &RuleBytes {
+        &self.root_rule
     }
 
     fn run(&mut self, data: &[u8]) -> NextStep {
-        let root_rule = RuleBytes::new(":: ROOT_RULE ::", MatchRequirement::MustBeFound)
-            .extend(std::mem::take(&mut self.rules).unwrap());
         rules::runner::run::<RuleBytes, &[u8]>(
-            &root_rule,
+            &self.root_rule,
             CaptureData {
                 text_for_capture: HashSet::from([data]),
                 hashmap_for_error: Default::default(),
