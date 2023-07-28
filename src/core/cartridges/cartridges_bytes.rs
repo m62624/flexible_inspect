@@ -1,9 +1,6 @@
 use super::*;
 
-impl<I> CartridgeBase<RuleBytes, I, &[u8]> for TakeCartridgeForAsync<RuleBytes>
-where
-    I: IntoIterator<Item = RuleBytes>,
-{
+impl CartridgeBase<RuleBytes, &[u8]> for Cartridge<RuleBytes> {
     fn id(&self) -> i64 {
         self.id
     }

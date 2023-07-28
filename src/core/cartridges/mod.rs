@@ -1,11 +1,12 @@
 mod cartridges_bytes;
 mod cartridges_str;
+mod root_mode_matching;
 use super::rules::{self, next::NextStep, traits::RuleBase, CaptureData};
 use crate::prelude::*;
-use std::{collections::HashSet, fmt::Debug, hash::Hash, sync::Arc};
+use std::{collections::HashSet, fmt::Debug, hash::Hash};
 
 /// This trait is required for single access to `Rule cartridges` or `RuleBytes cartridges`
-pub trait CartridgeBase<T, I, D>
+pub trait CartridgeBase<T, D>
 where
     T: RuleBase,
     D: PartialEq + Eq + Hash + Debug,
@@ -19,28 +20,9 @@ where
     fn run(&mut self, data: D) -> NextStep;
 }
 
-/// Container for `rules` + `error message` + `error code`
-#[derive(Debug)]
-pub struct Cartridge<T>(Arc<TakeCartridgeForAsync<T>>)
-where
-    T: RuleBase + RuleModifiers;
-
-impl<T> Cartridge<T>
-where
-    T: RuleBase + RuleModifiers<RuleType = T>,
-{
-    pub fn new<S, I>(id: i64, message: S, rules: I) -> Self
-    where
-        S: Into<String>,
-        I: IntoIterator<Item = T>,
-    {
-        Self(Arc::new(TakeCartridgeForAsync::new(id, message, rules)))
-    }
-}
-
 /// This structure is needed to pass to the async task
 #[derive(Debug, Default)]
-pub struct TakeCartridgeForAsync<T>
+pub struct Cartridge<T>
 where
     T: RuleBase,
 {
@@ -49,7 +31,7 @@ where
     message: String,
 }
 
-impl<T> TakeCartridgeForAsync<T>
+impl<T> Cartridge<T>
 where
     T: RuleBase + RuleModifiers<RuleType = T>,
 {
