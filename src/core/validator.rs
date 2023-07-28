@@ -3,35 +3,38 @@ use super::rules::traits::RuleBase;
 use crate::prelude::*;
 use async_trait::async_trait;
 use std::hash::Hash;
-
-pub trait ValidatorBase<R, I, C, D>
+use std::marker::PhantomData;
+pub trait ValidatorBase<R, I, C, IC, D>
 where
     R: RuleBase,
     I: IntoIterator<Item = R>,
-    C: IntoIterator<Item = CartridgeRule<R, I>>, // Исправление: Здесь используем CartridgeRule
+    C: CartridgeBase<R, I>,
+    IC: IntoIterator<Item = C>,
     D: PartialEq + Eq + Hash,
 {
-    fn new(cartridges: C) -> Self;
+    fn new(cartridges: IC) -> Self;
     fn validate(&self, data: D) -> Box<dyn CartridgeBase<R, I>>;
-    // async fn async_validate(&self, data: D) -> Box<dyn CartridgeBase<R, I>>;
 }
 
-pub struct TemplateValidator<R, I, C>
+pub struct TemplateValidator<R, I, C, IC>
 where
     R: RuleBase,
     I: IntoIterator<Item = R>,
-    C: IntoIterator<Item = CartridgeRule<R, I>>, // Исправление: Здесь используем CartridgeRule
+    C: CartridgeBase<R, I>,
+    IC: IntoIterator<Item = C>,
 {
-    cartridges: C,
+    cartridge: IC,
+    phantom_data: PhantomData<(R, I)>,
 }
 
-impl<I, C> ValidatorBase<Rule, I, C, &str> for TemplateValidator<Rule, I, C>
+impl<I, IC> ValidatorBase<Rule, I, CartridgeRule<Rule, I>, IC, &str>
+    for TemplateValidator<Rule, I, CartridgeRule<Rule, I>, IC>
 where
     I: IntoIterator<Item = Rule>,
-    C: IntoIterator<Item = CartridgeRule<Rule, I>>, // Исправление: Здесь используем CartridgeRule
+    IC: IntoIterator<Item = CartridgeRule<Rule, I>>,
 {
-    fn new(cartridges: C) -> Self {
-        Self { cartridges }
+    fn new(cartridges: IC) -> Self {
+        todo!()
     }
 
     fn validate(&self, data: &str) -> Box<dyn CartridgeBase<Rule, I>> {
@@ -43,19 +46,40 @@ where
     // }
 }
 
-impl<I, C> ValidatorBase<RuleBytes, I, C, &[u8]> for TemplateValidator<RuleBytes, I, C>
+impl<I, IC> ValidatorBase<RuleBytes, I, CartridgeRuleBytes<RuleBytes, I>, IC, &[u8]>
+    for TemplateValidator<RuleBytes, I, CartridgeRuleBytes<RuleBytes, I>, IC>
 where
     I: IntoIterator<Item = RuleBytes>,
-    C: IntoIterator<Item = CartridgeRule<RuleBytes, I>>, // Исправление: Здесь используем CartridgeRule
+    IC: IntoIterator<Item = CartridgeRuleBytes<RuleBytes, I>>,
 {
-    fn new(cartridges: C) -> Self {
-        Self { cartridges }
+    fn new(cartridges: IC) -> Self {
+        todo!()
     }
 
     fn validate(&self, data: &[u8]) -> Box<dyn CartridgeBase<RuleBytes, I>> {
         todo!()
     }
-    // async fn async_validate(&self, data: &[u8]) -> Box<dyn CartridgeBase<[&u8], I>> {
-    //     todo!()
-    // }
+}
+
+#[test]
+fn x() {
+    let cartridge_1 = CartridgeRule::new(
+        1,
+        "the error message from `cartridge_1`",
+        [Rule::new(r".+", MatchRequirement::MustBeFound)],
+    );
+
+    let cartridge_2 = CartridgeRule::new(
+        1,
+        "the error message from `cartridge_2`",
+        [Rule::new(r"\d+", MatchRequirement::MustNotBeFound)],
+    );
+    let cartridge_bytes = CartridgeRuleBytes::new(
+        1,
+        "the error message from `cartridge_bytes`",
+        [RuleBytes::new(r".+", MatchRequirement::MustBeFound)],
+    );
+    // let
+    let validator_1 = TemplateValidator::new([cartridge_1, cartridge_2]);
+    let validator_2 = TemplateValidator::new([cartridge_bytes]);
 }
