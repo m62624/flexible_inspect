@@ -5,7 +5,6 @@ use super::rules::MatchRequirement;
 use crate::prelude::{Rule, RuleBytes};
 use std::fmt::Debug;
 use std::hash::Hash;
-use std::marker::PhantomData;
 pub trait ValidatorBase<R, C, IC, D>
 where
     R: RuleBase,
@@ -17,27 +16,17 @@ where
     fn validate(&self, data: D) -> Option<Vec<Box<dyn CartridgeBase<R, D>>>>;
 }
 
-pub struct TemplateValidator<R, C, IC, D>
-where
-    R: RuleBase,
-    C: CartridgeBase<R, D>,
-    IC: IntoIterator<Item = C>,
-    D: PartialEq + Eq + Hash + Debug,
-{
+pub struct TemplateValidator<IC> {
     cartridges: IC,
-    phantom_data: PhantomData<(R, D)>,
 }
 
-impl<'a, C, IC> ValidatorBase<Rule, C, IC, &'a str> for TemplateValidator<Rule, C, IC, &'a str>
+impl<'a, C, IC> ValidatorBase<Rule, C, IC, &'a str> for TemplateValidator<IC>
 where
     C: CartridgeBase<Rule, &'a str>,
     IC: IntoIterator<Item = C> + AsRef<[C]>,
 {
     fn new(cartridges: IC) -> Self {
-        Self {
-            cartridges,
-            phantom_data: PhantomData,
-        }
+        Self { cartridges }
     }
 
     fn validate(&self, data: &'a str) -> Option<Vec<Box<dyn CartridgeBase<Rule, &'a str>>>> {
@@ -51,17 +40,13 @@ where
     }
 }
 
-impl<'a, C, IC> ValidatorBase<RuleBytes, C, IC, &'a [u8]>
-    for TemplateValidator<RuleBytes, C, IC, &'a [u8]>
+impl<'a, C, IC> ValidatorBase<RuleBytes, C, IC, &'a [u8]> for TemplateValidator<IC>
 where
     C: CartridgeBase<RuleBytes, &'a [u8]>,
     IC: IntoIterator<Item = C> + AsRef<[C]>,
 {
     fn new(cartridges: IC) -> Self {
-        Self {
-            cartridges,
-            phantom_data: PhantomData,
-        }
+        Self { cartridges }
     }
 
     fn validate(&self, data: &'a [u8]) -> Option<Vec<Box<dyn CartridgeBase<RuleBytes, &'a [u8]>>>> {
