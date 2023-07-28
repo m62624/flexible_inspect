@@ -1,4 +1,4 @@
-use crate::core::rules::traits::CalculateValueRules;
+use crate::core::rules::traits::{CalculateValueRules, RuleBase};
 use crate::core::rules::{self, next::NextStep};
 use crate::prelude::*;
 
@@ -15,7 +15,7 @@ fn test_runner_t_0() {
     ])
     .mode_all_rules_for_at_least_one_match()]);
     assert_eq!(
-        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule,&text)),
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Finish
     );
 }

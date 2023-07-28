@@ -11,6 +11,8 @@ mod core_rule_tests {
 
     mod rule_without_modifiers {
 
+        use crate::core::rules::traits::RuleBase;
+
         use super::*;
 
         /// MustBeFound
@@ -126,6 +128,8 @@ mod core_rule_tests {
     }
 
     mod rule_bytes_without_modifiers {
+        use crate::core::rules::traits::RuleBase;
+
         use super::*;
         /// MustBeFound
         /// Captures - TRUE

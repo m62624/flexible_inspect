@@ -1,6 +1,6 @@
-use crate::core::rules::traits::CalculateValueRules;
-use crate::prelude::*;
+use crate::core::rules::traits::{CalculateValueRules, RuleBase};
 use crate::core::rules::{self, next::NextStep};
+use crate::prelude::*;
 
 #[test]
 fn test_runner_t_0() {
