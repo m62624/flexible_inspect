@@ -9,12 +9,8 @@ impl RuleBase for RuleBytes {
     type RuleType = RuleBytes;
     type RegexSet = regex::bytes::RegexSet;
 
-    fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
-        init_logger();
-        Self(Some(TakeRuleBytesForExtend::new(
-            pattern.into(),
-            requirement,
-        )))
+    fn _new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
+        RuleBytes::new(pattern, requirement)
     }
 
     /// Use for direct access to the structure body

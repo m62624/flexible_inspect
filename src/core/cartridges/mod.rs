@@ -41,7 +41,7 @@ where
         I: IntoIterator<Item = T>,
     {
         Self {
-            root_rule: T::new("SYSTEM_ROOT_RULE", MatchRequirement::MustBeFound).extend(rules),
+            root_rule: T::_new("SYSTEM_ROOT_RULE", MatchRequirement::MustBeFound).extend(rules),
             id,
             message: message.into(),
         }

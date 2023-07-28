@@ -7,9 +7,8 @@ impl RuleBase for Rule {
     type RegexSet = regex::RegexSet;
     type RuleType = Rule;
 
-    fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
-        init_logger();
-        Self(Some(TakeRuleForExtend::new(pattern.into(), requirement)))
+    fn _new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
+        Rule::new(pattern, requirement)
     }
     /// Use for direct access to the structure body
     fn content_unchecked(&self) -> &Self::TakeRuleType {

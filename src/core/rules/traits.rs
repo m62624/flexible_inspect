@@ -15,7 +15,7 @@ pub trait RuleBase {
     type RuleType: Debug;
     type RegexSet;
 
-    fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self;
+    fn _new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self;
     fn content_unchecked(&self) -> &Self::TakeRuleType;
     fn content_mut_unchecked(&mut self) -> &mut Self::TakeRuleType;
     fn get_subrules(&self) -> Option<&Self::SubRulesType>;
