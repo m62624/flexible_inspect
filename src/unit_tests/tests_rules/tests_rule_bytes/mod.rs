@@ -1,6 +1,6 @@
 mod tests_captures;
 mod tests_extend;
-use crate::{core::rules::traits::RuleBase, prelude::*};
+use crate::prelude::*;
 
 /// Проверка конструктора на корректное регулярное выражение байтов
 #[test]

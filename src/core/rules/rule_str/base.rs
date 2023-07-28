@@ -1,5 +1,5 @@
 use super::*;
-use crate::{core::rules::traits::RuleBase, init_logger};
+use crate::core::rules::traits::RuleBase;
 
 impl RuleBase for Rule {
     type TakeRuleType = TakeRuleForExtend;

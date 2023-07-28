@@ -1,7 +1,6 @@
 use super::SimpleRulesBytes;
 use super::*;
 use crate::core::rules::traits::RuleBase;
-use crate::init_logger;
 
 impl RuleBase for RuleBytes {
     type TakeRuleType = TakeRuleBytesForExtend;

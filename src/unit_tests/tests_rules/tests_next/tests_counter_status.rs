@@ -1,5 +1,3 @@
-use crate::core::rules::traits::RuleBase;
-
 use super::*;
 
 /// Проверяем счетчик, где найдено ровно 4 (включительно) совпадения

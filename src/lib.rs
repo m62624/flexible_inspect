@@ -34,14 +34,15 @@ mod unit_tests;
 // =====================================================================
 use std::sync::Once;
 // =====================================================================
+
 pub mod prelude {
     pub use crate::core::cartridges::*;
-    pub use crate::core::rules::rule_bytes::RuleBytes;
-    pub use crate::core::rules::rule_str::Rule;
     pub use crate::core::rules::traits::RuleModifiers;
     pub use crate::core::rules::MatchRequirement;
+    pub use crate::core::rules::{rule_bytes::RuleBytes, rule_str::Rule};
     pub use crate::core::validator::*;
 }
+
 // =====================================================================
 /// For one-time initialization to the logger
 static INIT: Once = Once::new();

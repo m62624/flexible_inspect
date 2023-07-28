@@ -1,4 +1,4 @@
-use crate::core::rules::traits::{CalculateValueRules, RuleBase};
+use crate::core::rules::traits::CalculateValueRules;
 use crate::core::rules::{self, next::NextStep};
 use crate::prelude::*;
 
