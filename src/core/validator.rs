@@ -1,75 +1,63 @@
-// use super::cartridges::CartridgeBase;
-// use super::rules::traits::RuleBase;
-// use crate::prelude::*;
-// use async_trait::async_trait;
-// use std::hash::Hash;
-// use std::marker::PhantomData;
-// pub trait ValidatorBase<R, I, C, IC, D>
-// where
-//     R: RuleBase,
-//     I: IntoIterator<Item = R>,
-//     C: CartridgeBase<R, I>,
-//     IC: IntoIterator<Item = C>,
-//     D: PartialEq + Eq + Hash,
-// {
-//     fn new(cartridges: IC) -> Self;
-//     fn validate(&self, data: D) -> Box<dyn CartridgeBase<R, I>>;
-// }
+use super::cartridges::{self, CartridgeBase};
+use super::rules::next::NextStep;
+use super::rules::traits::RuleBase;
+use crate::prelude::{Rule, RuleBytes};
+use std::fmt::Debug;
+use std::hash::Hash;
+use std::marker::PhantomData;
+pub trait ValidatorBase<R, C, IC, D>
+where
+    R: RuleBase,
+    C: CartridgeBase<R, D>,
+    IC: IntoIterator<Item = C>,
+    D: PartialEq + Eq + Hash + Debug,
+{
+    fn new(cartridges: IC) -> Self;
+    fn validate(&self, data: &D) -> Option<Vec<Box<dyn CartridgeBase<R, D>>>>;
+}
 
-// pub struct TemplateValidator<R, I, C, IC>
-// where
-//     R: RuleBase,
-//     I: IntoIterator<Item = R>,
-//     C: CartridgeBase<R, I>,
-//     IC: IntoIterator<Item = C>,
-// {
-//     cartridge: IC,
-//     phantom_data: PhantomData<(R, I)>,
-// }
+pub struct TemplateValidator<R, C, IC, D>
+where
+    R: RuleBase,
+    C: CartridgeBase<R, D>,
+    IC: IntoIterator<Item = C>,
+    D: PartialEq + Eq + Hash + Debug,
+{
+    cartridges: IC,
+    phantom_data: PhantomData<(R, D)>,
+}
+impl<'a, C, IC> ValidatorBase<Rule, C, IC, &'a str> for TemplateValidator<Rule, C, IC, &'a str>
+where
+    C: CartridgeBase<Rule, &'a str>,
+    IC: IntoIterator<Item = C> + AsRef<[C]>,
+{
+    fn new(cartridges: IC) -> Self {
+        Self {
+            cartridges,
+            phantom_data: PhantomData,
+        }
+    }
 
-// impl<I, IC> ValidatorBase<Rule, I, CartridgeRule<Rule, I>, IC, &str>
-//     for TemplateValidator<Rule, I, CartridgeRule<Rule, I>, IC>
-// where
-//     I: IntoIterator<Item = Rule>,
-//     IC: IntoIterator<Item = CartridgeRule<Rule, I>>,
-// {
-//     fn new(cartridges: IC) -> Self {
-//         todo!()
-//     }
-
-//     fn validate(&self, data: &str) -> Box<dyn CartridgeBase<Rule, I>> {
-//         todo!()
-//     }
-
-//     // async fn async_validate(&self, data: &str) -> Box<dyn CartridgeBase<&str, I>> {
-//     //     todo!()
-//     // }
-// }
-
-// impl<I, IC> ValidatorBase<RuleBytes, I, CartridgeRuleBytes<RuleBytes, I>, IC, &[u8]>
-//     for TemplateValidator<RuleBytes, I, CartridgeRuleBytes<RuleBytes, I>, IC>
-// where
-//     I: IntoIterator<Item = RuleBytes>,
-//     IC: IntoIterator<Item = CartridgeRuleBytes<RuleBytes, I>>,
-// {
-//     fn new(cartridges: IC) -> Self {
-//         todo!()
-//     }
-
-//     fn validate(&self, data: &[u8]) -> Box<dyn CartridgeBase<RuleBytes, I>> {
-//         todo!()
-//     }
-// }
+    fn validate(&self, data: &&'a str) -> Option<Vec<Box<dyn CartridgeBase<Rule, &'a str>>>> {
+        let mut result: Option<Vec<Box<dyn CartridgeBase<Rule, &'a str>>>> = Some(Vec::new());
+        for cartridge in self.cartridges.as_ref().into_iter() {
+            if let NextStep::Error(err) = cartridge.run(data) {
+                
+            }
+        }
+        result
+    }
+}
 
 // #[test]
 // fn x() {
-//     let cartridge_1 = CartridgeRule::new(
+//     let cartridge_1 = Cartridge::new(
 //         1,
 //         "the error message from `cartridge_1`",
 //         [Rule::new(r".+", MatchRequirement::MustBeFound)],
 //     );
 
-//     let cartridge_2 = CartridgeRule::new(
+//     let cartridge_2 = Cartridge::new(
 //         1,
 //         "the error message from `cartridge_2`",
 //         [Rule::new(r"\d+", MatchRequirement::MustNotBeFound)],
