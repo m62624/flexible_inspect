@@ -1,19 +1,21 @@
-use super::rules::traits::RuleBase;
+use super::rules::{self, next::NextStep, traits::RuleBase, CaptureData};
 use crate::prelude::*;
-use std::sync::Arc;
+use std::{collections::HashSet, fmt::Debug, hash::Hash, sync::Arc};
 
 /// This trait is required for single access to `Rule cartridges` or `RuleBytes cartridges`
-pub trait CartridgeBase<T, I>
+pub trait CartridgeBase<T, I, D>
 where
     T: RuleBase,
     I: IntoIterator<Item = T>,
+    D: PartialEq + Eq + Hash + Debug,
 {
     /// Based on the received error code, you can implement your own actions
     fn id(&self) -> i64;
     /// Error messages, with the possibility of outputting additional data
     fn message(&mut self) -> &mut String;
     /// Rules for validation
-    fn rules(&self) -> &I;
+    fn rules(&self) -> &Option<I>;
+    fn run(&mut self, data: D) -> NextStep;
 }
 
 /// Container for `rules` + `error message` + `error code`
@@ -34,7 +36,7 @@ where
 }
 
 /// This structure is needed to pass to the async task
-#[derive(Debug)]
+#[derive(Debug, Default)]
 pub struct TakeCartridgeForAsync<T, I>
 where
     T: RuleBase,
@@ -42,7 +44,7 @@ where
 {
     id: i64,
     message: String,
-    rules: I,
+    rules: Option<I>,
 }
 
 impl<T, I> TakeCartridgeForAsync<T, I>
@@ -54,14 +56,14 @@ where
         Self {
             id,
             message: message.into(),
-            rules,
+            rules: Some(rules),
         }
     }
 }
 
-impl<I> CartridgeBase<Rule, I> for TakeCartridgeForAsync<Rule, I>
+impl<I> CartridgeBase<Rule, I, &str> for TakeCartridgeForAsync<Rule, I>
 where
-    I: IntoIterator<Item = Rule>,
+    I: IntoIterator<Item = Rule> + Default,
 {
     fn id(&self) -> i64 {
         self.id
@@ -71,12 +73,25 @@ where
         &mut self.message
     }
 
-    fn rules(&self) -> &I {
+    fn rules(&self) -> &Option<I> {
         &self.rules
+    }
+
+    fn run(&mut self, data: &str) -> NextStep {
+        let root_rule = Rule::new(":: ROOT_RULE ::", MatchRequirement::MustBeFound)
+            .extend(std::mem::take(&mut self.rules).unwrap());
+        rules::runner::run::<Rule, &str>(
+            &root_rule,
+            CaptureData {
+                text_for_capture: HashSet::from([data]),
+                hashmap_for_error: Default::default(),
+                counter_value: Default::default(),
+            },
+        )
     }
 }
 
-impl<I> CartridgeBase<RuleBytes, I> for TakeCartridgeForAsync<RuleBytes, I>
+impl<I> CartridgeBase<RuleBytes, I, &[u8]> for TakeCartridgeForAsync<RuleBytes, I>
 where
     I: IntoIterator<Item = RuleBytes>,
 {
@@ -88,7 +103,20 @@ where
         &mut self.message
     }
 
-    fn rules(&self) -> &I {
+    fn rules(&self) -> &Option<I> {
         &self.rules
+    }
+
+    fn run(&mut self, data: &[u8]) -> NextStep {
+        let root_rule = RuleBytes::new(":: ROOT_RULE ::", MatchRequirement::MustBeFound)
+            .extend(std::mem::take(&mut self.rules).unwrap());
+        rules::runner::run::<RuleBytes, &[u8]>(
+            &root_rule,
+            CaptureData {
+                text_for_capture: HashSet::from([data]),
+                hashmap_for_error: Default::default(),
+                counter_value: Default::default(),
+            },
+        )
     }
 }
