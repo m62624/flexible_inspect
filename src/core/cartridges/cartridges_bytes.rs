@@ -5,15 +5,15 @@ impl CartridgeBase<RuleBytes, &[u8]> for Cartridge<RuleBytes> {
         self.id
     }
 
-    fn message(&mut self) -> &mut String {
-        &mut self.message
+    fn message(&self) -> &mut String {
+        todo!()
     }
 
     fn root_rule(&self) -> &RuleBytes {
         &self.root_rule
     }
 
-    fn run(&mut self, data: &[u8]) -> NextStep {
+    fn run(&self, data: &[u8]) -> NextStep {
         rules::runner::run::<RuleBytes, &[u8]>(
             &self.root_rule,
             CaptureData {

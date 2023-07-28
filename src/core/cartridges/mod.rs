@@ -14,10 +14,10 @@ where
     /// Based on the received error code, you can implement your own actions
     fn id(&self) -> i64;
     /// Error messages, with the possibility of outputting additional data
-    fn message(&mut self) -> &mut String;
+    fn message(&self) -> &mut String;
     /// Rules for validation
     fn root_rule(&self) -> &T;
-    fn run(&mut self, data: D) -> NextStep;
+    fn run(&self, data: D) -> NextStep;
 }
 
 /// This structure is needed to pass to the async task
