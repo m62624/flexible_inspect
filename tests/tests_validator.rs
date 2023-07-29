@@ -11,9 +11,8 @@ fn test_validator_t_0() {
         404,
         "html document error, password section missing",
         [
-            Rule::new(".+", MatchRequirement::MustBeFound).extend([Rule::new(
-                r#"<input type="password" id="password".+
-                <br>"#,
+            Rule::new("label.+\n.+", MatchRequirement::MustBeFound).extend([Rule::new(
+                r#"<input type="password" id="password".+"#,
                 MatchRequirement::MustBeFound,
             )]),
         ],
@@ -31,15 +30,13 @@ fn test_validator_t_1() {
         404,
         "html document error, password section missing",
         [
-            Rule::new(".+", MatchRequirement::MustBeFound).extend([Rule::new(
-                r#"<input type="password" id="password".+
-                <br>"#,
+            Rule::new("label.+\n.+", MatchRequirement::MustBeFound).extend([Rule::new(
+                r#"<input type="password" id="password".+"#,
                 MatchRequirement::MustBeFound,
             )]),
         ],
     )
     .mode_at_least_one_rule_for_at_least_one_match();
-
     let validator_for_html = TemplateValidator::new([check_password]);
     assert!(validator_for_html.validate(&file_html).is_err());
 }
