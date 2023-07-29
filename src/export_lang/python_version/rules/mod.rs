@@ -1,5 +1,6 @@
 pub mod rule_bytes;
 pub mod rule_str;
+pub mod traits;
 
 use crate::core::rules::rule_bytes::RuleBytes;
 use crate::core::rules::rule_str::Rule;

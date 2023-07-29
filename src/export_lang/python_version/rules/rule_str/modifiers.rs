@@ -1,38 +1,17 @@
 use super::*;
 use crate::core::rules::traits::RuleModifiers;
-use log::error;
-use pyo3::{exceptions, PyResult};
+use crate::export_lang::python_version::rules::traits::PyRuleModifiers;
+use pyo3::PyResult;
+
+impl PyRuleModifiers for PyRule {
+    type RuleTypePy = PyRule;
+}
 
 #[pymethods]
 impl PyRule {
     pub fn extend(&mut self, py: Python, nested_rules: PyObject) -> PyResult<Self> {
-        if let Ok(list) = nested_rules.downcast::<types::PyList>(py) {
-            self.0 = self.0.extend(
-                list.iter()
-                    .map(|rule| {
-                        if let Ok(mut py_rule) = rule.extract::<PyRule>() {
-                            Ok(py_rule.to_rust())
-                        } else {
-                            let err_msg = format!("`{}` -- expected `Rule`", rule);
-                            // ================= (LOG) =================
-                            error!("{}", err_msg);
-                            // =========================================
-                            return Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg));
-                        }
-                    })
-                    .collect::<PyResult<Vec<_>>>()?,
-            );
-        } else {
-            let err_msg = format!(
-                "`{}` -- expected `List` --> List [Rule, Rule, Rule]",
-                nested_rules
-            );
-            // ================= (LOG) =================
-            error!("{}", err_msg);
-            // =========================================
-            return Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg));
-        }
-
+        let collect = self.to_rust_for_extend::<PyRule>(py, nested_rules, "Rule")?;
+        self.0 = self.0.extend(collect);
         Ok(std::mem::take(self))
     }
 }

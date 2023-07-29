@@ -1,6 +1,6 @@
 mod modifiers;
 
-use super::*;
+use super::{traits::PyRuleBase, *};
 
 #[pyclass(name = "Rule")]
 #[derive(Default, Clone)]
@@ -14,8 +14,10 @@ impl PyRule {
     }
 }
 
-impl PyRule {
+impl PyRuleBase for PyRule {
+    type RulTypeRust = Rule;
+
     fn to_rust(&mut self) -> Rule {
-       std::mem::take(&mut self.0)
+        std::mem::take(&mut self.0)
     }
 }
