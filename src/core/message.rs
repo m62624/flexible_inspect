@@ -2,7 +2,7 @@ use lazy_static::lazy_static;
 use std::collections::HashMap;
 
 pub fn filling_message(
-    message_template: String,
+    message_template: &str,
     error_data: Option<HashMap<String, String>>,
 ) -> String {
     lazy_static! {
