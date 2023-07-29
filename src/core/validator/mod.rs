@@ -7,6 +7,7 @@ use super::message::filling_message;
 use super::rules::next::NextStep;
 use super::rules::traits::RuleBase;
 use crate::prelude::{Rule, RuleBytes};
+use async_trait::async_trait;
 use log::trace;
 use std::fmt::Debug;
 use std::hash::Hash;
