@@ -11,22 +11,18 @@ where
     T: RuleBase,
     D: PartialEq + Eq + Hash + Debug,
 {
-    /// Based on the received error code, you can implement your own actions
-    fn id(&self) -> i64;
-    /// Error messages, with the possibility of outputting additional data
-    fn message(&self) -> &mut String;
-    /// Rules for validation
-    fn root_rule(&self) -> &T;
     fn run(&self, data: D) -> NextStep;
+    fn get_id(&self) -> i64;
+    fn get_message(&self) -> &str;
 }
 
 /// This structure is needed to pass to the async task
-#[derive(Debug, Default)]
+#[derive(Debug, Default, Clone)]
 pub struct Cartridge<T>
 where
     T: RuleBase,
 {
-    root_rule: T,
+    pub(crate) root_rule: T,
     id: i64,
     message: String,
 }

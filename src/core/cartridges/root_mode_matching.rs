@@ -12,7 +12,7 @@ where
         self.root_rule = self.root_rule.mode_at_least_one_rule_for_all_matches();
         std::mem::take(self)
     }
-    
+
     pub fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self {
         self.root_rule = self
             .root_rule

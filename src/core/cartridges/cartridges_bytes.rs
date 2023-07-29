@@ -1,18 +1,6 @@
 use super::*;
 
 impl CartridgeBase<RuleBytes, &[u8]> for Cartridge<RuleBytes> {
-    fn id(&self) -> i64 {
-        self.id
-    }
-
-    fn message(&self) -> &mut String {
-        todo!()
-    }
-
-    fn root_rule(&self) -> &RuleBytes {
-        &self.root_rule
-    }
-
     fn run(&self, data: &[u8]) -> NextStep {
         rules::runner::run::<RuleBytes, &[u8]>(
             &self.root_rule,
@@ -22,5 +10,13 @@ impl CartridgeBase<RuleBytes, &[u8]> for Cartridge<RuleBytes> {
                 counter_value: Default::default(),
             },
         )
+    }
+
+    fn get_id(&self) -> i64 {
+        self.id
+    }
+
+    fn get_message(&self) -> &str {
+        &self.message
     }
 }

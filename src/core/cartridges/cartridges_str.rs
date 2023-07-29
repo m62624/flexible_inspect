@@ -1,18 +1,6 @@
 use super::*;
 
 impl CartridgeBase<Rule, &str> for Cartridge<Rule> {
-    fn id(&self) -> i64 {
-        self.id
-    }
-
-    fn message(&self) -> &mut String {
-        todo!()
-    }
-
-    fn root_rule(&self) -> &Rule {
-        &self.root_rule
-    }
-
     fn run(&self, data: &str) -> NextStep {
         rules::runner::run::<Rule, &str>(
             &self.root_rule,
@@ -22,5 +10,13 @@ impl CartridgeBase<Rule, &str> for Cartridge<Rule> {
                 counter_value: Default::default(),
             },
         )
+    }
+    
+    fn get_id(&self) -> i64 {
+        self.id
+    }
+
+    fn get_message(&self) -> &str {
+        &self.message
     }
 }
