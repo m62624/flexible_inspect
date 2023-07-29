@@ -1,9 +1,8 @@
 use super::base_error::PystvalError;
-use super::cartridges::{Cartridge, CartridgeBase};
+use super::cartridges::CartridgeBase;
 use super::message::filling_message;
 use super::rules::next::NextStep;
 use super::rules::traits::RuleBase;
-use super::rules::MatchRequirement;
 use crate::prelude::{Rule, RuleBytes};
 use std::fmt::Debug;
 use std::hash::Hash;
@@ -34,7 +33,7 @@ where
 
     fn validate(&self, data: &'a str) -> Result<(), Vec<PystvalError>> {
         let mut error = Vec::new();
-        for cartridge in self.cartridges.as_ref().into_iter() {
+        for cartridge in self.cartridges.as_ref().iter() {
             if let NextStep::Error(extra_with_value) = cartridge.run(data) {
                 error.push(PystvalError::new(
                     cartridge.get_id(),
@@ -61,7 +60,7 @@ where
 
     fn validate(&self, data: &'a [u8]) -> Result<(), Vec<PystvalError>> {
         let mut error = Vec::new();
-        for cartridge in self.cartridges.as_ref().into_iter() {
+        for cartridge in self.cartridges.as_ref().iter() {
             if let NextStep::Error(extra_with_value) = cartridge.run(data) {
                 error.push(PystvalError::new(
                     cartridge.get_id(),

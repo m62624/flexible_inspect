@@ -8,7 +8,7 @@ pub fn filling_message(
     lazy_static! {
         static ref RE: regex::Regex = regex::Regex::new(r"\{(.+?)\}").unwrap();
     }
-    let result = RE.replace_all(&message_template, |caps: &regex::Captures| {
+    let result = RE.replace_all(message_template, |caps: &regex::Captures| {
         let key = caps.get(1).unwrap().as_str();
         if let Some(value) = error_data.as_ref().and_then(|data| data.get(key)) {
             value
