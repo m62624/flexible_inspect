@@ -14,6 +14,7 @@ where
     fn run(&self, data: D) -> NextStep;
     fn get_id(&self) -> i64;
     fn get_message(&self) -> &str;
+    fn get_root_rule(&self) -> &T;
 }
 
 /// This structure is needed to pass to the async task

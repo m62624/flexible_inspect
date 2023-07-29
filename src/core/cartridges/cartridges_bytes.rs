@@ -19,4 +19,8 @@ impl CartridgeBase<RuleBytes, &[u8]> for Cartridge<RuleBytes> {
     fn get_message(&self) -> &str {
         &self.message
     }
+
+    fn get_root_rule(&self) -> &RuleBytes {
+        &self.root_rule
+    }
 }
