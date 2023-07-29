@@ -1,0 +1,45 @@
+use pystval::prelude::*;
+use std::fs::read_to_string;
+
+const doc_html_1: &str = "tests/files/doc_html_1.html";
+const doc_html_1_with_error: &str = "tests/files/doc_html_1_error.html";
+/// Проверяем что есть input password в html документе
+#[test]
+fn test_validator_t_0() {
+    let file_html = read_to_string(doc_html_1).unwrap();
+    let check_password = Cartridge::new(
+        404,
+        "html document error, password section missing",
+        [
+            Rule::new(".+", MatchRequirement::MustBeFound).extend([Rule::new(
+                r#"<input type="password" id="password".+
+                <br>"#,
+                MatchRequirement::MustBeFound,
+            )]),
+        ],
+    )
+    .mode_at_least_one_rule_for_at_least_one_match();
+
+    let validator_for_html = TemplateValidator::new([check_password]);
+    assert!(validator_for_html.validate(&file_html).is_ok());
+}
+
+#[test]
+fn test_validator_t_1() {
+    let file_html = read_to_string(doc_html_1_with_error).unwrap();
+    let check_password = Cartridge::new(
+        404,
+        "html document error, password section missing",
+        [
+            Rule::new(".+", MatchRequirement::MustBeFound).extend([Rule::new(
+                r#"<input type="password" id="password".+
+                <br>"#,
+                MatchRequirement::MustBeFound,
+            )]),
+        ],
+    )
+    .mode_at_least_one_rule_for_at_least_one_match();
+
+    let validator_for_html = TemplateValidator::new([check_password]);
+    assert!(validator_for_html.validate(&file_html).is_err());
+}
