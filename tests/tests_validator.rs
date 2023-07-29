@@ -1,12 +1,12 @@
 use pystval::prelude::*;
 use std::fs::read_to_string;
 
-const doc_html_1: &str = "tests/files/doc_html_1.html";
-const doc_html_1_with_error: &str = "tests/files/doc_html_1_error.html";
+const DOC_HTML_1: &str = "tests/files/doc_html_1.html";
+const DOC_HTML_1_WITH_ERROR: &str = "tests/files/doc_html_1_error.html";
 /// Проверяем что есть input password в html документе
 #[test]
 fn test_validator_t_0() {
-    let file_html = read_to_string(doc_html_1).unwrap();
+    let file_html = read_to_string(DOC_HTML_1).unwrap();
     let check_password = Cartridge::new(
         404,
         "html document error, password section missing",
@@ -26,7 +26,7 @@ fn test_validator_t_0() {
 
 #[test]
 fn test_validator_t_1() {
-    let file_html = read_to_string(doc_html_1_with_error).unwrap();
+    let file_html = read_to_string(DOC_HTML_1_WITH_ERROR).unwrap();
     let check_password = Cartridge::new(
         404,
         "html document error, password section missing",
