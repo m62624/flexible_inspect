@@ -13,28 +13,20 @@ use std::fmt::Debug;
 use std::hash::Hash;
 use std::marker::PhantomData;
 
+/// Use trait for `overloading` methods of `&str` and `&[u8]` types
+#[async_trait]
 pub trait ValidatorBase<R, C, IC, D>
 where
     R: RuleBase,
-    C: CartridgeBase<R, D> + Debug,
-    IC: IntoIterator<Item = C>,
+    C: CartridgeBase<R, D> + Debug + Sync,
+    IC: IntoIterator<Item = C> + Sync,
     D: PartialEq + Eq + Hash + Debug,
 {
     fn new(cartridges: IC) -> Self;
     fn validate(&self, data: D) -> Result<(), Vec<PystvalError>>;
-}
-
-// Определите новый трейт для асинхронной валидации
-#[async_trait]
-pub trait ValidatorBaseAsync<R, C, IC, D>
-where
-    R: RuleBase,
-    C: CartridgeBase<R, D> + Debug,
-    IC: IntoIterator<Item = C>,
-    D: PartialEq + Eq + Hash + Debug,
-{
     async fn async_validate(&self, data: D) -> Result<(), Vec<PystvalError>>;
 }
+
 
 pub struct TemplateValidator<IC, D>
 where
