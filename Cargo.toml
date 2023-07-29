@@ -1,6 +1,6 @@
 [package]
 name = "pystval"
-version = "1.2.0"
+version = "2.0.0"
 authors = ["Mansur Azatbek <mansur62624@gmail.com>"]
 description = "Library for creating a custom validator"
 edition = "2021"
@@ -20,6 +20,7 @@ async-std = { version = "1.12.0", features = ["attributes"] }
 lazy_static = "1.4.0"
 fancy-regex = "0.11.0"
 regex = "1.9.1"
+async-trait = "0.1.72"
 grex = "1.4.1"
 indexmap = "2.0.0"
 
@@ -34,7 +35,6 @@ pyo3 = { version = "0.19.1", optional = true, features = ["abi3", "abi3-py37","g
 # Wasm bindings
 # ========================================================
 wasm-bindgen = { version = "0.2.87", optional = true }
-async-trait = "0.1.72"
 # ========================================================
 
 
