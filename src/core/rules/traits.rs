@@ -3,10 +3,13 @@ Here we implement traits for two types of `Rule`, they are string `Rule` and byt
 They are necessary to avoid code duplicates. Especially in context_match, where there are several modes
 */
 
+// =======================================================
 use super::{CaptureData, Counter, ModeMatch};
 use crate::prelude::MatchRequirement;
 use indexmap::IndexSet;
 use std::{fmt::Debug, hash::Hash};
+// =======================================================
+
 
 /// This trait requires implementations of the most basic methods for any `Rule`.
 pub trait RuleBase {

@@ -1,4 +1,5 @@
 use std::{error::Error, fmt};
+
 #[derive(Debug, Clone)]
 pub struct PystvalError {
     id: i64,

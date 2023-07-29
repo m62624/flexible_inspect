@@ -1,6 +1,9 @@
+// =======================================================
 mod validate_bytes;
 mod validate_str;
+// =======================================================
 
+// =======================================================
 use super::base_error::PystvalError;
 use super::cartridges::CartridgeBase;
 use super::message::filling_message;
@@ -12,6 +15,7 @@ use log::trace;
 use std::fmt::Debug;
 use std::hash::Hash;
 use std::marker::PhantomData;
+// =======================================================
 
 /// Use trait for `overloading` methods of `&str` and `&[u8]` types
 #[async_trait]

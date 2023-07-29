@@ -32,24 +32,33 @@ pub struct GeneralModifiers {
 /// A structure that defines what action is required when finding regular expression matches.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum MatchRequirement {
+    /// the match must be found
     MustBeFound,
+    /// the match must not be found
     MustNotBeFound,
 }
 
 /// A structure defining the operation mode of the validator subrules.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ModeMatch {
+    /// all rules must pass the test for all matches
     AllRulesForAllMatches,
+    /// all rules must pass the test for at least one match
     AllRulesForAtLeastOneMatch,
+    /// at least one rule must pass the test for all matches
     AtLeastOneRuleForAllMatches,
+    /// at least one rule must pass the test for at least one match
     AtLeastOneRuleForAtLeastOneMatch,
 }
 
 /// A structure for realization of modifier-counters
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Counter {
+    /// counter == match
     Only(usize),
+    /// counter >= match
     MoreThan(usize),
+    /// counter <= match
     LessThan(usize),
 }
 
