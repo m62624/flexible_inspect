@@ -49,7 +49,7 @@ static INIT: Once = Once::new();
 // =====================================================================
 /// Initialization of the logger (disable backtrace)
 #[cfg(not(tarpaulin_include))]
-pub fn init_logger() {
+fn init_logger() {
     // env_logger is called only once
     INIT.call_once(|| {
         env_logger::init();
