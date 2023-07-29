@@ -48,15 +48,24 @@ pub trait CalculateValueRules<'a, C: PartialEq + Eq + Hash> {
 pub trait RuleModifiers {
     type RuleType;
 
-    /// a method for extending the rule with nested rules
+    /// modifier for extending the rule with nested rules
+    /// ( **by default, all rules must pass every match check** )
     fn extend<R: IntoIterator<Item = Self::RuleType>>(&mut self, nested_rules: R)
         -> Self::RuleType;
 
+    /// modifier to set the match counter, condition counter == match
     fn counter_is_equal(&mut self, count: usize) -> Self::RuleType;
+    /// modifier to set the match counter, condition counter >= match
     fn counter_more_than(&mut self, count: usize) -> Self::RuleType;
+    /// modifier to set the match counter, condition counter <= match
     fn counter_less_than(&mut self, count: usize) -> Self::RuleType;
-
+    /// modifier to change the rule matching mode,
+    /// `all rules` must pass the test for at least `one match`
     fn mode_all_rules_for_at_least_one_match(&mut self) -> Self::RuleType;
+    /// modifier to change the rule matching mode,
+    /// at least `one rule` must pass the test for `all matches`
     fn mode_at_least_one_rule_for_all_matches(&mut self) -> Self::RuleType;
+    /// modifier to change the rule matching mode,
+    /// at least `one rule` must pass the test for at least `one match`
     fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self::RuleType;
 }

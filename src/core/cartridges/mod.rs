@@ -11,13 +11,20 @@ where
     T: RuleBase,
     D: PartialEq + Eq + Hash + Debug,
 {
+    /// Run the validation for one `cartridge`
     fn run(&self, data: D) -> NextStep;
+    /// Get the `error code`
     fn get_id(&self) -> i64;
+    /// Get an `error message` with data
     fn get_message(&self) -> &str;
+    /// Get the `root rule`
     fn get_root_rule(&self) -> &T;
 }
 
-/// This structure is needed to pass to the async task
+/// The container structure for `custom rules`, `error message` and `error code`.\
+/// Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.\
+/// ( *Each cartridge can only hold one type at a time, `Rule` or `RuleBytes`* )
+/// **by default, all rules must pass every match check**
 #[derive(Debug, Default, Clone)]
 pub struct Cartridge<T>
 where

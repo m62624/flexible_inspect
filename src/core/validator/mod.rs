@@ -28,6 +28,7 @@ where
 }
 
 
+/// The structure for creating unique validators, load different `cartridges` to validate data.
 pub struct TemplateValidator<IC, D>
 where
     D: PartialEq + Eq + Hash + Debug,
