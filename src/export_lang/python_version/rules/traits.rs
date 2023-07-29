@@ -9,8 +9,17 @@ pub trait PyRuleBase {
 }
 
 pub trait PyRuleModifiers: PyRuleBase {
-    type RuleTypePy;
-    fn to_rust_for_extend<ConvertToRust>(
+    type PyRuleType;
+
+    /// modifier to set the match counter, condition counter == match
+    fn _counter_is_equal(&mut self, count: usize) -> Self::PyRuleType;
+    fn _counter_more_than(&mut self, count: usize) -> Self::PyRuleType;
+
+    fn _counter_less_than(&mut self, count: usize) -> Self::PyRuleType;
+    fn _mode_all_rules_for_at_least_one_match(&mut self) -> Self::PyRuleType;
+    fn _mode_at_least_one_rule_for_all_matches(&mut self) -> Self::PyRuleType;
+    fn _mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self::PyRuleType;
+    fn _to_rust_for_extend<ConvertToRust>(
         &mut self,
         py: Python,
         nested_rules: PyObject,
