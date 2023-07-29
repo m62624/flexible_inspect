@@ -11,6 +11,7 @@ use async_trait::async_trait;
 use log::trace;
 use std::fmt::Debug;
 use std::hash::Hash;
+use std::marker::PhantomData;
 
 pub trait ValidatorBase<R, C, IC, D>
 where
@@ -23,6 +24,22 @@ where
     fn validate(&self, data: D) -> Result<(), Vec<PystvalError>>;
 }
 
-pub struct TemplateValidator<IC> {
+// Определите новый трейт для асинхронной валидации
+#[async_trait]
+pub trait ValidatorBaseAsync<R, C, IC, D>
+where
+    R: RuleBase,
+    C: CartridgeBase<R, D> + Debug,
+    IC: IntoIterator<Item = C>,
+    D: PartialEq + Eq + Hash + Debug,
+{
+    async fn async_validate(&self, data: D) -> Result<(), Vec<PystvalError>>;
+}
+
+pub struct TemplateValidator<IC, D>
+where
+    D: PartialEq + Eq + Hash + Debug,
+{
     cartridges: IC,
+    _phantom: PhantomData<D>,
 }
