@@ -1,2 +1,2 @@
-use super::*;
-mod rules;
+mod tests_cartridges;
+mod tests_rules;
