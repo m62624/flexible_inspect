@@ -17,7 +17,7 @@ mod core_rule_tests {
         /// Captures - TRUE
         /// Subrules - NONE
         #[test]
-        fn next_or_finish_or_error_t_0() {
+        fn fn_next_or_finish_or_error_t_0() {
             let rule = Rule::new(r"\d+", MatchRequirement::MustBeFound);
             let mut captures = Rule::find_captures(&rule, &"123412");
             assert_eq!(
@@ -30,7 +30,7 @@ mod core_rule_tests {
         /// Captures - TRUE
         /// Subrules - TRUE
         #[test]
-        fn next_or_finish_or_error_t_1() {
+        fn fn_next_or_finish_or_error_t_1() {
             let rule = Rule::new(r"\d+", MatchRequirement::MustBeFound)
                 .extend([Rule::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = Rule::find_captures(&rule, &"123412");
@@ -44,7 +44,7 @@ mod core_rule_tests {
         /// Captures - FALSE
         /// Subrules - TRUE
         #[test]
-        fn next_or_finish_or_error_t_2() {
+        fn fn_next_or_finish_or_error_t_2() {
             let rule = Rule::new(r"\d+", MatchRequirement::MustBeFound)
                 .extend([Rule::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = Rule::find_captures(&rule, &"abc");
@@ -58,7 +58,7 @@ mod core_rule_tests {
         /// Captures - FALSE
         /// Subrules - FALSE
         #[test]
-        fn next_or_finish_or_error_t_3() {
+        fn fn_next_or_finish_or_error_t_3() {
             let rule = Rule::new(r"\d+", MatchRequirement::MustBeFound);
             let mut captures = Rule::find_captures(&rule, &"abc");
             assert_eq!(
@@ -71,7 +71,7 @@ mod core_rule_tests {
         /// Captures - TRUE
         /// Subrules - NONE
         #[test]
-        fn next_or_finish_or_error_t_4() {
+        fn fn_next_or_finish_or_error_t_4() {
             let rule = Rule::new(r"\d+", MatchRequirement::MustNotBeFound);
             let mut captures = Rule::find_captures(&rule, &"123412");
             assert_eq!(
@@ -87,7 +87,7 @@ mod core_rule_tests {
         /// Captures - TRUE
         /// Subrules - TRUE
         #[test]
-        fn next_or_finish_or_error_t_5() {
+        fn fn_next_or_finish_or_error_t_5() {
             let rule = Rule::new(r"\d+", MatchRequirement::MustNotBeFound)
                 .extend([Rule::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = Rule::find_captures(&rule, &"123412");
@@ -101,7 +101,7 @@ mod core_rule_tests {
         /// Captures - FALSE
         /// Subrules - TRUE
         #[test]
-        fn next_or_finish_or_error_t_6() {
+        fn fn_next_or_finish_or_error_t_6() {
             let rule = Rule::new(r"\d+", MatchRequirement::MustNotBeFound)
                 .extend([Rule::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = Rule::find_captures(&rule, &"abc");
@@ -115,7 +115,7 @@ mod core_rule_tests {
         /// Captures - FALSE
         /// Subrules - FALSE
         #[test]
-        fn next_or_finish_or_error_t_7() {
+        fn fn_next_or_finish_or_error_t_7() {
             let rule = Rule::new(r"\d+", MatchRequirement::MustNotBeFound);
             let mut captures = Rule::find_captures(&rule, &"abc");
             assert_eq!(
@@ -132,7 +132,7 @@ mod core_rule_tests {
         /// Captures - TRUE
         /// Subrules - NONE
         #[test]
-        fn next_or_finish_or_error_t_0() {
+        fn fn_next_or_finish_or_error_t_0() {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustBeFound);
             let mut captures = RuleBytes::find_captures(&rule, &b"123412".as_ref());
             assert_eq!(
@@ -145,7 +145,7 @@ mod core_rule_tests {
         /// Captures - TRUE
         /// Subrules - TRUE
         #[test]
-        fn next_or_finish_or_error_t_1() {
+        fn fn_next_or_finish_or_error_t_1() {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustBeFound)
                 .extend([RuleBytes::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = RuleBytes::find_captures(&rule, &b"123412".as_ref());
@@ -159,7 +159,7 @@ mod core_rule_tests {
         /// Captures - FALSE
         /// Subrules - TRUE
         #[test]
-        fn next_or_finish_or_error_t_2() {
+        fn fn_next_or_finish_or_error_t_2() {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustBeFound)
                 .extend([RuleBytes::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = RuleBytes::find_captures(&rule, &b"abc".as_ref());
@@ -173,7 +173,7 @@ mod core_rule_tests {
         /// Captures - FALSE
         /// Subrules - FALSE
         #[test]
-        fn next_or_finish_or_error_t_3() {
+        fn fn_next_or_finish_or_error_t_3() {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustBeFound);
             let mut captures = RuleBytes::find_captures(&rule, &b"abc".as_ref());
             assert_eq!(
@@ -186,7 +186,7 @@ mod core_rule_tests {
         /// Captures - TRUE
         /// Subrules - NONE
         #[test]
-        fn next_or_finish_or_error_t_4() {
+        fn fn_next_or_finish_or_error_t_4() {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustNotBeFound);
             let mut captures = RuleBytes::find_captures(&rule, &b"123412".as_ref());
             assert_eq!(
@@ -202,7 +202,7 @@ mod core_rule_tests {
         /// Captures - TRUE
         /// Subrules - TRUE
         #[test]
-        fn next_or_finish_or_error_t_5() {
+        fn fn_next_or_finish_or_error_t_5() {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustNotBeFound)
                 .extend([RuleBytes::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = RuleBytes::find_captures(&rule, &b"123412".as_ref());
@@ -216,7 +216,7 @@ mod core_rule_tests {
         /// Captures - FALSE
         /// Subrules - TRUE
         #[test]
-        fn next_or_finish_or_error_t_6() {
+        fn fn_next_or_finish_or_error_t_6() {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustNotBeFound)
                 .extend([RuleBytes::new(r"\d", MatchRequirement::MustBeFound)]);
             let mut captures = RuleBytes::find_captures(&rule, &b"abc".as_ref());
@@ -230,7 +230,7 @@ mod core_rule_tests {
         /// Captures - FALSE
         /// Subrules - FALSE
         #[test]
-        fn next_or_finish_or_error_t_7() {
+        fn fn_next_or_finish_or_error_t_7() {
             let rule = RuleBytes::new(r"\d+", MatchRequirement::MustNotBeFound);
             let mut captures = RuleBytes::find_captures(&rule, &b"abc".as_ref());
             assert_eq!(

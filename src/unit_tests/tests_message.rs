@@ -1,9 +1,7 @@
-use std::collections::HashMap;
-
-use crate::core::message::filling_message;
+use super::*;
 
 #[test]
-fn test_filling_message_t_0() {
+fn fn_filling_message_t_0() {
     let message_template = "Hello, {x}!".to_owned();
     let error_data = Some(HashMap::from([("x".to_owned(), "world".to_owned())]));
     assert_eq!(
@@ -13,21 +11,21 @@ fn test_filling_message_t_0() {
 }
 
 #[test]
-fn test_filling_message_t_1() {
+fn fn_filling_message_t_1() {
     let message_template = "Hello, {x}!".to_owned();
     let error_data = Some(HashMap::from([("y".to_owned(), "world".to_owned())]));
     assert_eq!(filling_message(&message_template, error_data), "Hello, ___!");
 }
 
 #[test]
-fn test_filling_message_t_2() {
+fn fn_filling_message_t_2() {
     let message_template = "Hello, {x}!".to_owned();
     let error_data = None;
     assert_eq!(filling_message(&message_template, error_data), "Hello, ___!");
 }
 
 #[test]
-fn test_filling_message_t_3() {
+fn fn_filling_message_t_3() {
     let message_template = "{x} {y} {z}".to_owned();
     let error_data = Some(HashMap::from([
         ("x".to_owned(), "1".to_owned()),
