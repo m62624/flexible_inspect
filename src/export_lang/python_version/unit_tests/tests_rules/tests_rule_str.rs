@@ -1,17 +1,17 @@
 use super::*;
 
 #[test]
-fn rule_new_t_0() {
+fn fn_new_t_0() {
     PyRule::new(r"x".into(), PyMatchRequirement::MustBeFound);
 }
 
 #[test]
-fn rule_new_t_1() {
+fn fn_new_t_1() {
     dbg!(PyRule::new(r"x".into(), PyMatchRequirement::MustNotBeFound));
 }
 
 #[test]
 #[should_panic]
-fn rule_new_e_0() {
+fn fn_new_e_0() {
     PyRule::new(r"\x".into(), PyMatchRequirement::MustBeFound);
 }
