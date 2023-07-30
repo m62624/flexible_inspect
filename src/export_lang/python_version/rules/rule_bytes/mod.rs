@@ -3,13 +3,13 @@ mod modifiers;
 use super::{traits::PyRuleBase, *};
 
 #[pyclass(name = "RuleBytes")]
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Debug)]
 pub struct PyRuleBytes(RuleBytes);
 
 #[pymethods]
 impl PyRuleBytes {
     #[new]
-    fn new(pattern: String, requirement: PyMatchRequirement) -> Self {
+    pub fn new(pattern: String, requirement: PyMatchRequirement) -> Self {
         Self(RuleBytes::new(pattern, requirement.to_rust()))
     }
 }

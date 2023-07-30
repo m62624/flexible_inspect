@@ -1,4 +1,7 @@
+mod cartridges;
 mod rules;
+#[cfg(test)]
+mod unit_tests;
 
 use pyo3::{pymodule, types::PyModule, PyResult, Python};
 

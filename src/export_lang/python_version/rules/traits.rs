@@ -20,7 +20,6 @@ pub trait PyRuleModifiers: PyRuleBase {
     fn _mode_at_least_one_rule_for_all_matches(&mut self) -> Self::PyRuleType;
     fn _mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self::PyRuleType;
     fn _to_rust_for_extend<ConvertToRust>(
-        &mut self,
         py: Python,
         nested_rules: PyObject,
         message_type_rule: &str,

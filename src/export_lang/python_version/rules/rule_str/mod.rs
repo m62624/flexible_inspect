@@ -3,13 +3,13 @@ mod modifiers;
 use super::{traits::PyRuleBase, *};
 
 #[pyclass(name = "Rule")]
-#[derive(Default, Clone)]
+#[derive(Default, Clone, Debug)]
 pub struct PyRule(Rule);
 
 #[pymethods]
 impl PyRule {
     #[new]
-    fn new(pattern: String, requirement: PyMatchRequirement) -> Self {
+    pub fn new(pattern: String, requirement: PyMatchRequirement) -> Self {
         Self(Rule::new(pattern, requirement.to_rust()))
     }
 }

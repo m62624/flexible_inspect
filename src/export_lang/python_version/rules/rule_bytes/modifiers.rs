@@ -50,7 +50,7 @@ impl PyRuleBytes {
     /// modifier for extending the rule with nested rules
     /// ( **by default, all rules must pass every match check** )
     pub fn extend(&mut self, py: Python, nested_rules: PyObject) -> PyResult<Self> {
-        let collect = self._to_rust_for_extend::<PyRuleBytes>(py, nested_rules, "RuleBytes")?;
+        let collect = PyRuleBytes::_to_rust_for_extend::<PyRuleBytes>(py, nested_rules, "RuleBytes")?;
         self.0 = self.0.extend(collect);
         Ok(std::mem::take(self))
     }
