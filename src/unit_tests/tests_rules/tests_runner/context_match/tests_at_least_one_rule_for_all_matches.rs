@@ -1,9 +1,7 @@
-use crate::core::rules::traits::CalculateValueRules;
-use crate::core::rules::{self, next::NextStep};
-use crate::prelude::*;
+use super::*;
 
 #[test]
-fn test_runner_t_0() {
+fn fn_runner_t_0() {
     let text = "[ [123] [123] [1234] ] [ [123456789] [12345678] ]";
     let rule: Rule = Rule::new(r".+", MatchRequirement::MustBeFound).extend([Rule::new(
         r"\[[^\[\]]+\]",
@@ -22,7 +20,7 @@ fn test_runner_t_0() {
 }
 
 #[test]
-fn test_runner_t_1() {
+fn fn_runner_t_1() {
     let text = "[ [123] [123] [1234] ] [ [123456789] [12345678] ]";
     let rule: Rule = Rule::new(r".+", MatchRequirement::MustBeFound).extend([Rule::new(
         r"\[[^\[\]]+\]",
@@ -41,7 +39,7 @@ fn test_runner_t_1() {
 }
 
 #[test]
-fn test_runner_t_2() {
+fn fn_runner_t_2() {
     let text = "[ [123] [123] [1234] ] [ [123456789] [12345678] ]";
     let rule: Rule = Rule::new(r".+", MatchRequirement::MustBeFound).extend([Rule::new(
         r"\[[^\[\]]+\]",
@@ -59,7 +57,7 @@ fn test_runner_t_2() {
 }
 
 #[test]
-fn test_runner_t_3() {
+fn fn_runner_t_3() {
     let text = "[ [123] [123] [1234] ] [ [123456789] [12345678] ]";
     let rule: Rule = Rule::new(r".+", MatchRequirement::MustBeFound).extend([Rule::new(
         r"\[[^\[\]]+\]",
@@ -77,7 +75,7 @@ fn test_runner_t_3() {
 }
 
 #[test]
-fn test_runner_t_4() {
+fn fn_runner_t_4() {
     let text = "[ [123] [123] [1234] ] [ [123456789] [12345678] ]";
     let rule: Rule = Rule::new(r".+", MatchRequirement::MustBeFound).extend([Rule::new(
         r"\[[^\[\]]+\]",

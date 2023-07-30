@@ -1,6 +1,9 @@
 mod tests_captures;
 mod tests_extend;
+use crate::core::rules::traits::CalculateValueRules;
+use crate::core::rules::traits::RuleBase;
 use crate::prelude::*;
+use std::collections::HashSet;
 
 /// Проверка конструктора на корректное регулярное выражение байтов
 #[test]

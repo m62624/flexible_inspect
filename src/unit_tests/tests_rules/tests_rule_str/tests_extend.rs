@@ -4,7 +4,7 @@ use indexmap::IndexSet;
 
 /// Проверяем, что сортировка работает корректно
 #[test]
-fn extend_t_0() {
+fn fn_extend_t_0() {
     let rule = Rule::new(r"some text (?=\.)", MatchRequirement::MustBeFound).extend([
         Rule::new(r"\d", MatchRequirement::MustBeFound),
         Rule::new(r"\d+(?=\w+)", MatchRequirement::MustBeFound),
@@ -48,7 +48,7 @@ fn extend_t_0() {
 
 /// Проверяем на значение None если коллекция пустая
 #[test]
-fn extend_t_1() {
+fn fn_extend_t_1() {
     let rule = Rule::new(r"some text (?=\.)", MatchRequirement::MustBeFound).extend([]);
     assert_eq!(rule.content_unchecked().subrules, None);
 }

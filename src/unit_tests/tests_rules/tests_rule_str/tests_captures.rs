@@ -1,12 +1,8 @@
-use std::collections::HashSet;
-
-use crate::core::{rules::traits::CalculateValueRules, DEFAULT_CAPTURE};
-
 use super::*;
 
 /// Проверяем, что работает `Captures`, `Default Regex`
 #[test]
-fn find_captures_t_0() {
+fn fn_find_captures_t_0() {
     let text = "1 2 3 4 567";
     let rule = Rule::new(r"(?P<aboba>\d+)", MatchRequirement::MustBeFound);
     let captures_1 = Rule::find_captures(&rule, &text);
