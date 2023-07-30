@@ -1,5 +1,4 @@
-use crate::export_lang::python_version::rules::rule_str::PyRule;
-use crate::export_lang::python_version::rules::PyMatchRequirement;
+use super::*;
 
 #[test]
 fn rule_new_t_0() {

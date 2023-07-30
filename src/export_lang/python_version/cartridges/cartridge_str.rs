@@ -1,8 +1,4 @@
-use crate::core::{cartridges::Cartridge, rules::rule_str::Rule};
-use crate::export_lang::python_version::rules::rule_str::PyRule;
-use crate::export_lang::python_version::rules::traits::PyRuleModifiers;
-use pyo3::prelude::*;
-use pyo3::{pyclass, pymethods};
+use super::*;
 
 use super::traits::PyCartridgeBase;
 #[pyclass(name = "Cartridge")]

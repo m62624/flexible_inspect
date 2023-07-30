@@ -1,10 +1,4 @@
-use crate::core::{cartridges::Cartridge, rules::rule_bytes::RuleBytes};
-use crate::export_lang::python_version::rules::rule_bytes::PyRuleBytes;
-use crate::export_lang::python_version::rules::traits::PyRuleModifiers;
-use pyo3::prelude::*;
-use pyo3::pymethods;
-
-use super::traits::PyCartridgeBase;
+use super::*;
 
 #[pyclass(name = "CartridgeBytes")]
 #[derive(Default, Clone, Debug)]
