@@ -1,3 +1,3 @@
-mod cartridge;
-mod cartridge_bytes;
+pub mod cartridge;
+pub mod cartridge_bytes;
 mod traits;
