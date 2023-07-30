@@ -2,26 +2,20 @@ mod validator_bytes;
 mod validator_str;
 
 use super::cartridges::traits::PyCartridgeBase;
-use super::rules::traits::PyRuleBase;
-use crate::core::cartridges::CartridgeBase;
 use crate::core::rules::rule_bytes::RuleBytes;
-use crate::core::rules::traits::RuleBase;
 use crate::core::validator::TemplateValidator;
+use crate::core::validator::ValidatorBase;
 use crate::core::{cartridges::Cartridge, rules::rule_str::Rule};
-use async_trait::async_trait;
+use crate::export_lang::python_version::cartridges::cartridge_bytes::PyCartridgeBytes;
+use crate::export_lang::python_version::cartridges::cartridge_str::PyCartridge;
 use log::error;
 use pyo3::{exceptions, pyclass};
 use pyo3::{prelude::*, types};
-use std::fmt::Debug;
-use std::hash::Hash;
 use std::sync::Arc;
 
-#[async_trait]
-pub trait PyTemplateValidatorBase: PyCartridgeBase {
-    type CartridgeTypeRust: PyCartridgeBase;
-
-    
-    fn _to_rust_for_extend<ConvertToRust>(
+pub trait PyTemplateValidatorBase {
+    type CartridgeTypeRust;
+    fn _to_rust_for_new<ConvertToRust>(
         py: Python,
         nested_rules: PyObject,
         message_type_rule: &str,
