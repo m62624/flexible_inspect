@@ -31,7 +31,6 @@ where
     async fn async_validate(&self, data: D) -> Result<(), Vec<PystvalError>>;
 }
 
-
 /// The structure for creating unique validators, load different `cartridges` to validate data.
 pub struct TemplateValidator<IC, D>
 where
