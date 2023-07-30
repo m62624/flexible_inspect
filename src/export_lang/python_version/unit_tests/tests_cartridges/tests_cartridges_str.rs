@@ -1,10 +1,4 @@
-use crate::core::rules::{traits::RuleBase, ModeMatch};
-use crate::export_lang::python_version::cartridges::cartridge_str::PyCartridge;
-use crate::export_lang::python_version::cartridges::traits::PyCartridgeBase;
-use crate::export_lang::python_version::rules::rule_str::PyRule;
-use pyo3::{types::PyList, IntoPy, Python};
-
-use super::FakeObject;
+use super::*;
 
 #[test]
 fn fn_new_t_0() {

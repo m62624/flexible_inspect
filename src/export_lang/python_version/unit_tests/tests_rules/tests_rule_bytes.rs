@@ -88,3 +88,36 @@ mod fn_counter_status {
         assert_eq!(rule.to_rust().get_counter().unwrap(), Counter::MoreThan(1));
     }
 }
+
+mod fn_extend {
+
+    use super::*;
+
+    #[test]
+    fn fn_extend_t_0() {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| {
+            let nested_rules = [
+                PyRuleBytes::new(r"qw".into(), PyMatchRequirement::MustBeFound),
+                PyRuleBytes::new(r"qw".into(), PyMatchRequirement::MustBeFound),
+            ];
+            PyRuleBytes::new(r"qw".into(), PyMatchRequirement::MustBeFound)
+                .extend(
+                    py,
+                    PyList::new(py, nested_rules.into_iter().map(|x| x.into_py(py))).into_py(py),
+                )
+                .unwrap();
+        });
+    }
+
+    #[test]
+    #[should_panic]
+    fn fn_extend_t_1() {
+        pyo3::prepare_freethreaded_python();
+        Python::with_gil(|py| {
+            PyRuleBytes::new(r"qw".into(), PyMatchRequirement::MustBeFound)
+                .extend(py, PyList::new(py, [FakeObject.into_py(py)]).into_py(py))
+                .unwrap();
+        });
+    }
+}

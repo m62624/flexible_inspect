@@ -1,12 +1,5 @@
-use crate::core::rules::ModeMatch;
-use crate::export_lang::python_version::cartridges::cartridge_bytes::PyCartridgeBytes;
-use crate::export_lang::python_version::cartridges::traits::PyCartridgeBase;
-use crate::export_lang::python_version::rules::rule_bytes::PyRuleBytes;
-use crate::{
-    core::rules::traits::RuleBase,
-    export_lang::python_version::unit_tests::tests_cartridges::FakeObject,
-};
-use pyo3::{types::PyList, IntoPy, Python};
+
+use super::*;
 
 #[test]
 fn fn_new_t_0() {
