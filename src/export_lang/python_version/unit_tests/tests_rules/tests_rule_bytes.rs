@@ -60,3 +60,31 @@ mod matching_modes {
         );
     }
 }
+
+mod fn_counter_status {
+    use super::*;
+
+    #[test]
+    fn fn_counter_status_t_0() {
+        let mut rule =
+            PyRuleBytes::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_is_equal(1);
+
+        assert_eq!(rule.to_rust().get_counter().unwrap(), Counter::Only(1));
+    }
+
+    #[test]
+    fn fn_counter_status_t_1() {
+        let mut rule =
+            PyRuleBytes::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_less_than(1);
+
+        assert_eq!(rule.to_rust().get_counter().unwrap(), Counter::LessThan(1));
+    }
+
+    #[test]
+    fn fn_counter_status_t_2() {
+        let mut rule =
+            PyRuleBytes::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_more_than(1);
+
+        assert_eq!(rule.to_rust().get_counter().unwrap(), Counter::MoreThan(1));
+    }
+}
