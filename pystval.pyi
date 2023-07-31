@@ -105,13 +105,13 @@ class RuleBytes:
 
     Parameters
     ----------
-    `nested_rules` : `List[Rule]`
+    `nested_rules` : `List[RuleBytes]`
         The nested rules to be added
 
     Raises
     ------
     `TypeError`
-        If `nested_rules` is not a list of `Rule` objects
+        If `nested_rules` is not a list of `RuleBytes` objects
 
         """
     ...
