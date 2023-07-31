@@ -1,5 +1,5 @@
-mod validator_bytes;
-mod validator_str;
+pub mod validator_bytes;
+pub mod validator_str;
 
 use super::cartridges::traits::PyCartridgeBase;
 use crate::core::rules::rule_bytes::RuleBytes;
@@ -18,7 +18,7 @@ pub trait PyTemplateValidatorBase {
     fn _to_rust_for_new<ConvertToRust>(
         py: Python,
         nested_rules: PyObject,
-        message_type_rule: &str,
+        message_type_cartridge: &str,
     ) -> PyResult<Vec<Self::CartridgeTypeRust>>
     where
         ConvertToRust:
@@ -31,7 +31,7 @@ pub trait PyTemplateValidatorBase {
                     if let Ok(mut rule) = py_rule.extract::<ConvertToRust>() {
                         Ok(rule.to_rust())
                     } else {
-                        let err_msg = format!("`{}` -- expected `{message_type_rule}`", py_rule);
+                        let err_msg = format!("`{}` -- expected `{message_type_cartridge}`", py_rule);
                         // ================= (LOG) =================
                         error!("{}", err_msg);
                         // =========================================
@@ -41,7 +41,7 @@ pub trait PyTemplateValidatorBase {
                 .collect::<PyResult<Vec<_>>>()?)
         } else {
             let err_msg = format!(
-                "`{}` -- expected `List` --> List [{message_type_rule}, {message_type_rule}, {message_type_rule}]",
+                "`{}` -- expected `List` --> List [{message_type_cartridge}, {message_type_cartridge}, {message_type_cartridge}]",
                 nested_rules
             );
             // ================= (LOG) =================

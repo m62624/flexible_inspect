@@ -3,7 +3,9 @@ use super::*;
 #[pyclass(name = "TemplateValidatorBytes")]
 pub struct PyTemplateValidatorBytes(TemplateValidator<Vec<Cartridge<RuleBytes>>, Arc<[u8]>>);
 
+#[pymethods]
 impl PyTemplateValidatorBytes {
+    #[new]
     pub fn new(py: Python, cartridges: PyObject) -> PyResult<Self> {
         Ok(Self(TemplateValidator::new(
             PyTemplateValidatorBytes::_to_rust_for_new::<PyCartridgeBytes>(
