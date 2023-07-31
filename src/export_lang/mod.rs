@@ -4,6 +4,3 @@ mod core_extension;
 mod python_version;
 #[cfg(feature = "wasm")]
 mod wasm_version;
-mod additional_implementation {
-
-}
