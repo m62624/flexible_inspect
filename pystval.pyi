@@ -1,5 +1,5 @@
 """
-The Data validator is a universal tool for checking the correctness of data in string and byte formats. It allows you to determine whether the data conforms to certain rules and provides the ability to find errors and inconsistencies.\
+The Data validator is a universal tool for checking the correctness of data in string and byte formats. It allows you to determine whether the data conforms to certain rules and provides the ability to find errors and inconsistencies.\\
 The project aims to create a versatile and flexible tool for validating data in different formats, ensuring accuracy, reliability and usability.
 """
 
@@ -16,6 +16,10 @@ class MatchRequirement(enum.Enum):
 
 # ========================================================
 class Rule:
+    """
+    The structure for checking strings with regular expressions
+    """
+
     def __init__(self, pattern: str, requirement: MatchRequirement) -> None:
         ...
 
@@ -79,6 +83,10 @@ class Rule:
 
 # ========================================================
 class RuleBytes:
+    """
+    The structure for checking bytes with regular expressions
+    """
+
     def __init__(self, pattern: str, requirement: MatchRequirement) -> None:
         ...
 
@@ -142,6 +150,13 @@ class RuleBytes:
 
 # ========================================================
 class Cartridge:
+    """
+    The container structure for `custom rules`, `error message` and `error code`.\\
+    Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.\\
+    ( Each cartridge can only hold one type at a time, `Rule` or `RuleBytes` )\\
+    by default, all rules must pass every match check
+    """
+
     def __init__(self, id: int, message: str, root_rules: List[Rule]) -> None:
         ...
 
@@ -170,6 +185,13 @@ class Cartridge:
 
 # ========================================================
 class CartridgeBytes:
+    """
+    The container structure for `custom rules`, `error message` and `error code`.\\
+    Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.\\
+    ( Each cartridge can only hold one type at a time, `Rule` or `RuleBytes` )\\
+    by default, all rules must pass every match check
+    """
+
     def __init__(self, id: int, message: str, root_rules: List[RuleBytes]) -> None:
         ...
 
@@ -198,6 +220,10 @@ class CartridgeBytes:
 
 # ========================================================
 class TemplateValidator:
+    """
+    The structure for creating unique validators, load different `cartridges` to validate data.
+    """
+
     def __init__(self, rules: List[Cartridge]) -> None:
         ...
 
@@ -233,6 +259,10 @@ class TemplateValidator:
 
 # ========================================================
 class TemplateValidatorBytes:
+    """
+    The structure for creating unique validators, load different `cartridges` to validate data.
+    """
+
     def __init__(self, rules: List[CartridgeBytes]) -> None:
         ...
 

@@ -8,7 +8,7 @@ mod utils;
 // =======================================================
 use super::*;
 
-/// A structure for checking bytes with regular expressions
+/// The structure for checking bytes with regular expressions
 
 /*
 Stores all values in the `Option`, so that if we change the modifiers we can return this structure again without `cloning`.
