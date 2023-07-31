@@ -4,6 +4,12 @@ use super::*;
 #[derive(Default, Clone, Debug)]
 pub struct PyCartridgeBytes(Cartridge<RuleBytes>);
 
+impl From<PyCartridgeBytes> for Cartridge<RuleBytes> {
+    fn from(value: PyCartridgeBytes) -> Self {
+        value.0
+    }
+}
+
 #[pymethods]
 impl PyCartridgeBytes {
     #[new]
@@ -34,12 +40,5 @@ impl PyCartridgeBytes {
     pub fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self {
         self.0 = self.0.mode_at_least_one_rule_for_at_least_one_match();
         std::mem::take(self)
-    }
-}
-
-impl PyCartridgeBase for PyCartridgeBytes {
-    type CartridgeType = Cartridge<RuleBytes>;
-    fn to_rust(&mut self) -> Self::CartridgeType {
-        std::mem::take(&mut self.0)
     }
 }

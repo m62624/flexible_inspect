@@ -1,46 +1,41 @@
 use super::*;
 use crate::core::rules::traits::RuleModifiers;
-use crate::export_lang::python_version::rules::traits::PyRuleModifiers;
+use crate::export_lang::python_version::rules::PyRuleModifiers;
 use pyo3::PyResult;
 
 impl PyRuleModifiers for PyRule {
     type PyRuleType = PyRule;
-
+    type RustRuleType = Rule;
     fn _counter_is_equal(&mut self, count: usize) -> Self::PyRuleType {
-        let rule_with_counter = self.to_rust().counter_is_equal(count);
-        self.0 = rule_with_counter;
+        self.0 = <PyRule as Into<Rule>>::into(std::mem::take(self)).counter_is_equal(count);
         std::mem::take(self)
     }
 
     fn _counter_more_than(&mut self, count: usize) -> Self::PyRuleType {
-        let rule_with_counter = self.to_rust().counter_more_than(count);
-        self.0 = rule_with_counter;
+        self.0 = <PyRule as Into<Rule>>::into(std::mem::take(self)).counter_more_than(count);
         std::mem::take(self)
     }
 
     fn _counter_less_than(&mut self, count: usize) -> Self::PyRuleType {
-        let rule_with_counter = self.to_rust().counter_less_than(count);
-        self.0 = rule_with_counter;
+        self.0 = <PyRule as Into<Rule>>::into(std::mem::take(self)).counter_less_than(count);
         std::mem::take(self)
     }
 
     fn _mode_all_rules_for_at_least_one_match(&mut self) -> Self::PyRuleType {
-        let rule_new_mode = self.to_rust().mode_all_rules_for_at_least_one_match();
-        self.0 = rule_new_mode;
+        self.0 = <PyRule as Into<Rule>>::into(std::mem::take(self))
+            .mode_all_rules_for_at_least_one_match();
         std::mem::take(self)
     }
 
     fn _mode_at_least_one_rule_for_all_matches(&mut self) -> Self::PyRuleType {
-        let rule_new_mode = self.to_rust().mode_at_least_one_rule_for_all_matches();
-        self.0 = rule_new_mode;
+        self.0 = <PyRule as Into<Rule>>::into(std::mem::take(self))
+            .mode_at_least_one_rule_for_all_matches();
         std::mem::take(self)
     }
 
     fn _mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self::PyRuleType {
-        let rule_new_mode = self
-            .to_rust()
+        self.0 = <PyRule as Into<Rule>>::into(std::mem::take(self))
             .mode_at_least_one_rule_for_at_least_one_match();
-        self.0 = rule_new_mode;
         std::mem::take(self)
     }
 }

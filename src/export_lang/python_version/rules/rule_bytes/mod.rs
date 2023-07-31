@@ -1,6 +1,6 @@
 mod modifiers;
 
-use super::{traits::PyRuleBase, *};
+use super::*;
 
 #[pyclass(name = "RuleBytes")]
 #[derive(Default, Clone, Debug)]
@@ -10,14 +10,12 @@ pub struct PyRuleBytes(RuleBytes);
 impl PyRuleBytes {
     #[new]
     pub fn new(pattern: String, requirement: PyMatchRequirement) -> Self {
-        Self(RuleBytes::new(pattern, requirement.to_rust()))
+        Self(RuleBytes::new(pattern, requirement.into()))
     }
 }
 
-impl PyRuleBase for PyRuleBytes {
-    type RulTypeRust = RuleBytes;
-
-    fn to_rust(&mut self) -> RuleBytes {
-        std::mem::take(&mut self.0)
+impl From<PyRuleBytes> for RuleBytes {
+    fn from(value: PyRuleBytes) -> Self {
+        value.0
     }
 }

@@ -1,9 +1,14 @@
 use super::*;
 
-use super::traits::PyCartridgeBase;
 #[pyclass(name = "Cartridge")]
 #[derive(Default, Clone, Debug)]
 pub struct PyCartridge(Cartridge<Rule>);
+
+impl From<PyCartridge> for Cartridge<Rule> {
+    fn from(value: PyCartridge) -> Self {
+        value.0
+    }
+}
 
 #[pymethods]
 impl PyCartridge {
@@ -35,12 +40,5 @@ impl PyCartridge {
     pub fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self {
         self.0 = self.0.mode_at_least_one_rule_for_at_least_one_match();
         std::mem::take(self)
-    }
-}
-
-impl PyCartridgeBase for PyCartridge {
-    type CartridgeType = Cartridge<Rule>;
-    fn to_rust(&mut self) -> Self::CartridgeType {
-        std::mem::take(&mut self.0)
     }
 }

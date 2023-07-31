@@ -1,5 +1,3 @@
-use pyo3::types::PyBytes;
-
 use super::*;
 
 #[pyclass(name = "TemplateValidatorBytes")]
@@ -13,7 +11,7 @@ impl PyTemplateValidatorBaseRust for PyTemplateValidatorBytes {
 #[pymethods]
 impl PyTemplateValidatorBytes {
     #[new]
-    pub fn new(py: Python, cartridges: PyObject) -> PyResult<Self> {
+    pub fn new(py: Python, cartridges: Vec<PyCartridge<RuleBytes>>) -> PyResult<Self> {
         Ok(Self(Arc::new(PyTemplateValidatorBytesAsync(
             TemplateValidator::new(PyTemplateValidatorBytes::_to_rust_for_new::<
                 PyCartridgeBytes,

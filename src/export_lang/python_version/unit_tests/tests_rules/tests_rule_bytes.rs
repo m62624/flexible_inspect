@@ -33,7 +33,7 @@ mod matching_modes {
             .mode_all_rules_for_at_least_one_match();
 
         assert_eq!(
-            rule.to_rust().get_mode_match(),
+            <PyRuleBytes as Into<RuleBytes>>::into(rule).get_mode_match(),
             &ModeMatch::AllRulesForAtLeastOneMatch
         );
     }
@@ -44,7 +44,7 @@ mod matching_modes {
             .mode_at_least_one_rule_for_at_least_one_match();
 
         assert_eq!(
-            rule.to_rust().get_mode_match(),
+            <PyRuleBytes as Into<RuleBytes>>::into(rule).get_mode_match(),
             &ModeMatch::AtLeastOneRuleForAtLeastOneMatch
         );
     }
@@ -55,7 +55,7 @@ mod matching_modes {
             .mode_at_least_one_rule_for_all_matches();
 
         assert_eq!(
-            rule.to_rust().get_mode_match(),
+            <PyRuleBytes as Into<RuleBytes>>::into(rule).get_mode_match(),
             &ModeMatch::AtLeastOneRuleForAllMatches
         );
     }
@@ -69,7 +69,7 @@ mod fn_counter_status {
         let mut rule =
             PyRuleBytes::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_is_equal(1);
 
-        assert_eq!(rule.to_rust().get_counter().unwrap(), Counter::Only(1));
+        assert_eq!(<PyRuleBytes as Into<RuleBytes>>::into(rule).get_counter().unwrap(), Counter::Only(1));
     }
 
     #[test]
@@ -77,7 +77,7 @@ mod fn_counter_status {
         let mut rule =
             PyRuleBytes::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_less_than(1);
 
-        assert_eq!(rule.to_rust().get_counter().unwrap(), Counter::LessThan(1));
+        assert_eq!(<PyRuleBytes as Into<RuleBytes>>::into(rule).get_counter().unwrap(), Counter::LessThan(1));
     }
 
     #[test]
@@ -85,7 +85,7 @@ mod fn_counter_status {
         let mut rule =
             PyRuleBytes::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_more_than(1);
 
-        assert_eq!(rule.to_rust().get_counter().unwrap(), Counter::MoreThan(1));
+        assert_eq!(<PyRuleBytes as Into<RuleBytes>>::into(rule).get_counter().unwrap(), Counter::MoreThan(1));
     }
 }
 

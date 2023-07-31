@@ -41,7 +41,9 @@ fn fn_new_t_2() {
         let mut cartridge_byte =
             PyCartridgeBytes::new(py, 1, "f byte".into(), rules_bytes).unwrap();
         assert_eq!(
-            cartridge_byte.to_rust().root_rule.get_mode_match(),
+            <PyCartridgeBytes as Into<Cartridge<RuleBytes>>>::into(cartridge_byte)
+                .root_rule
+                .get_mode_match(),
             &ModeMatch::AllRulesForAllMatches
         );
     })
@@ -62,7 +64,9 @@ fn fn_new_t_3() {
             .unwrap()
             .mode_all_rules_for_at_least_one_match();
         assert_eq!(
-            cartridge_byte.to_rust().root_rule.get_mode_match(),
+            <PyCartridgeBytes as Into<Cartridge<RuleBytes>>>::into(cartridge_byte)
+                .root_rule
+                .get_mode_match(),
             &ModeMatch::AllRulesForAtLeastOneMatch
         );
     })
@@ -83,7 +87,9 @@ fn fn_new_t_4() {
             .unwrap()
             .mode_at_least_one_rule_for_all_matches();
         assert_eq!(
-            cartridge_byte.to_rust().root_rule.get_mode_match(),
+            <PyCartridgeBytes as Into<Cartridge<RuleBytes>>>::into(cartridge_byte)
+                .root_rule
+                .get_mode_match(),
             &ModeMatch::AtLeastOneRuleForAllMatches
         );
     })
@@ -104,7 +110,9 @@ fn fn_new_t_5() {
             .unwrap()
             .mode_at_least_one_rule_for_at_least_one_match();
         assert_eq!(
-            cartridge_byte.to_rust().root_rule.get_mode_match(),
+            <PyCartridgeBytes as Into<Cartridge<RuleBytes>>>::into(cartridge_byte)
+                .root_rule
+                .get_mode_match(),
             &ModeMatch::AtLeastOneRuleForAtLeastOneMatch
         );
     })
