@@ -36,6 +36,6 @@ pub struct TemplateValidator<IC, D>
 where
     D: PartialEq + Eq + Hash + Debug,
 {
-    cartridges: IC,
+    pub(crate) cartridges: IC,
     _phantom: PhantomData<D>,
 }
