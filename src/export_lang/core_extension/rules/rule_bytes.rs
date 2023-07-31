@@ -1,12 +1,11 @@
-
 use super::*;
 
-impl CartridgeBase<Rule, &str> for Cartridge<Rule> {
-    fn run(&self, data: &str) -> NextStep {
-        rules::runner::run::<Rule, &str>(
+impl CartridgeBase<RuleBytes, Arc<[u8]>> for Cartridge<RuleBytes> {
+    fn run(&self, data: Arc<[u8]>) -> NextStep {
+        crate::core::rules::runner::run::<RuleBytes, &[u8]>(
             &self.root_rule,
             CaptureData {
-                text_for_capture: HashSet::from([data]),
+                text_for_capture: HashSet::from([data.as_ref()]),
                 hashmap_for_error: Default::default(),
                 counter_value: Default::default(),
             },
@@ -21,7 +20,7 @@ impl CartridgeBase<Rule, &str> for Cartridge<Rule> {
         &self.message
     }
 
-    fn get_root_rule(&self) -> &Rule {
+    fn get_root_rule(&self) -> &RuleBytes {
         &self.root_rule
     }
 }

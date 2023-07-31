@@ -31,8 +31,8 @@ where
     T: RuleBase,
 {
     pub(crate) root_rule: T,
-    id: i64,
-    message: String,
+    pub(crate) id: i64,
+    pub(crate) message: String,
 }
 
 impl<T> Cartridge<T>
