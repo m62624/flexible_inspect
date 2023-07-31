@@ -35,6 +35,10 @@ pyo3 = { version = "0.19.1", optional = true, features = [
     "multiple-pymethods",
     "extension-module",
 ] }
+pyo3-asyncio = { version = "0.19", optional = true, features = [
+    "attributes",
+    "async-std-runtime",
+] }
 # ========================================================
 
 
@@ -64,7 +68,7 @@ wasm-bindgen = { version = "0.2.87", optional = true }
 
 # ========================================================
 [features]
-python-lib = ["dep:pyo3"]
+python-lib = ["dep:pyo3", "dep:pyo3-asyncio"]
 wasm = ["dep:wasm-bindgen"]
 # ========================================================
 
