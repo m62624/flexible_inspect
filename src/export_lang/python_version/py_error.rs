@@ -8,6 +8,12 @@ use std::fmt;
 #[derive(Debug)]
 pub struct PyPystvalError(PystvalError);
 
+impl PyPystvalError {
+    pub fn new(id: i64, msg: String) -> Self {
+        Self(PystvalError::new(id, msg))
+    }
+}
+
 impl fmt::Display for PyPystvalError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         self.0.fmt(f)
