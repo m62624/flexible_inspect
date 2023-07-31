@@ -19,6 +19,10 @@ impl PyPystvalError {
     pub fn get_code(&self) -> i64 {
         self.0.id
     }
+
+    pub fn get_message(&self) -> String {
+        self.0.msg.to_string()
+    }
 }
 
 impl fmt::Display for PyPystvalError {
