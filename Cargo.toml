@@ -28,7 +28,13 @@ indexmap = "2.0.0"
 
 # Python bindings
 # ========================================================
-pyo3 = { version = "0.19.1", optional = true, features = ["abi3", "abi3-py37","generate-import-lib", "multiple-pymethods"] }
+pyo3 = { version = "0.19.1", optional = true, features = [
+    "abi3",
+    "abi3-py37",
+    "generate-import-lib",
+    "multiple-pymethods",
+    "extension-module",
+] }
 # ========================================================
 
 
