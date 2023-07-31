@@ -63,6 +63,6 @@ pub trait PyTemplateValidatorBase<D>
 where
     D: PartialEq + Eq + Hash + Debug,
 {
-    fn _validate(&self, data: D) -> Option<Vec<PyPystvalError>>;
-    async fn _async_validate(&self, data: D) -> Option<Vec<PyPystvalError>>;
+    fn _validate(&self, data: D) -> Option<Vec<PyErr>>;
+    async fn _async_validate(&self, data: D) -> Option<Vec<PyErr>>;
 }

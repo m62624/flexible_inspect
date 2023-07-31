@@ -19,7 +19,7 @@ impl PyTemplateValidatorBytes {
         ))))
     }
 
-    fn validate(&self, data: Vec<u8>) -> Option<Vec<PyPystvalError>> {
+    fn validate(&self, data: Vec<u8>) -> Option<Vec<PyErr>> {
         self.0._validate(data)
     }
 
@@ -34,20 +34,25 @@ impl PyTemplateValidatorBytes {
 
 #[async_trait]
 impl PyTemplateValidatorBase<Vec<u8>> for PyTemplateValidatorBytesAsync {
-    fn _validate(&self, data: Vec<u8>) -> Option<Vec<PyPystvalError>> {
+    fn _validate(&self, data: Vec<u8>) -> Option<Vec<PyErr>> {
         trace!("{:#?}", &self.0.cartridges.iter());
         let mut error = Vec::new();
         for cartridge in self.0.cartridges.iter() {
             if let NextStep::Error(extra_with_value) = cartridge.run(data.as_slice()) {
-                error.push(PyPystvalError::new(
-                    <Cartridge<RuleBytes> as CartridgeBase<RuleBytes, &[u8]>>::get_id(cartridge),
-                    filling_message(
-                        <Cartridge<RuleBytes> as CartridgeBase<RuleBytes, &[u8]>>::get_message(
+                error.push(
+                    PyPystvalError::new(
+                        <Cartridge<RuleBytes> as CartridgeBase<RuleBytes, &[u8]>>::get_id(
                             cartridge,
                         ),
-                        extra_with_value,
-                    ),
-                ));
+                        filling_message(
+                            <Cartridge<RuleBytes> as CartridgeBase<RuleBytes, &[u8]>>::get_message(
+                                cartridge,
+                            ),
+                            extra_with_value,
+                        ),
+                    )
+                    .into(),
+                )
             }
         }
         if error.is_empty() {
@@ -57,7 +62,7 @@ impl PyTemplateValidatorBase<Vec<u8>> for PyTemplateValidatorBytesAsync {
         }
     }
 
-    async fn _async_validate(&self, data: Vec<u8>) -> Option<Vec<PyPystvalError>> {
+    async fn _async_validate(&self, data: Vec<u8>) -> Option<Vec<PyErr>> {
         self._validate(data)
     }
 }

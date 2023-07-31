@@ -21,7 +21,7 @@ impl PyTemplateValidator {
         ))))
     }
 
-    fn validate(&self, data: String) -> Option<Vec<PyPystvalError>> {
+    fn validate(&self, data: String) -> Option<Vec<PyErr>> {
         self.0._validate(data)
     }
 
@@ -36,18 +36,21 @@ impl PyTemplateValidator {
 
 #[async_trait]
 impl PyTemplateValidatorBase<String> for PyTemplateValidatorAsync {
-    fn _validate(&self, data: String) -> Option<Vec<PyPystvalError>> {
+    fn _validate(&self, data: String) -> Option<Vec<PyErr>> {
         trace!("{:#?}", &self.0.cartridges.iter());
         let mut error = Vec::new();
         for cartridge in self.0.cartridges.iter() {
             if let NextStep::Error(extra_with_value) = cartridge.run(data.as_str()) {
-                error.push(PyPystvalError::new(
-                    <Cartridge<Rule> as CartridgeBase<Rule, &str>>::get_id(cartridge),
-                    filling_message(
-                        <Cartridge<Rule> as CartridgeBase<Rule, &str>>::get_message(cartridge),
-                        extra_with_value,
-                    ),
-                ));
+                error.push(
+                    PyPystvalError::new(
+                        <Cartridge<Rule> as CartridgeBase<Rule, &str>>::get_id(cartridge),
+                        filling_message(
+                            <Cartridge<Rule> as CartridgeBase<Rule, &str>>::get_message(cartridge),
+                            extra_with_value,
+                        ),
+                    )
+                    .into(),
+                );
             }
         }
         if error.is_empty() {
@@ -57,7 +60,7 @@ impl PyTemplateValidatorBase<String> for PyTemplateValidatorAsync {
         }
     }
 
-    async fn _async_validate(&self, data: String) -> Option<Vec<PyPystvalError>> {
+    async fn _async_validate(&self, data: String) -> Option<Vec<PyErr>> {
         self._validate(data)
     }
 }
