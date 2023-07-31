@@ -25,10 +25,10 @@ impl PyTemplateValidatorBytes {
 
     fn async_validate<'py>(&self, py: Python<'py>, data: Vec<u8>) -> PyResult<&'py PyAny> {
         let slf = Arc::clone(&self.0);
-        pyo3_asyncio::async_std::future_into_py(py, async move {
-            slf._async_validate(data).await;
-            Ok(())
-        })
+        pyo3_asyncio::async_std::future_into_py(
+            py,
+            async move { Ok(slf._async_validate(data).await) },
+        )
     }
 }
 
