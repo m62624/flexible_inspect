@@ -59,9 +59,6 @@ fn test_validator_t_2() {
     let validator_for_html = TemplateValidator::new([check_password]);
 
     async_std::task::block_on(async {
-        assert!(validator_for_html
-            .async_validate(file_html.as_str())
-            .await
-            .is_ok())
+        assert!(validator_for_html.async_validate(file_html.as_str()).await.is_ok())
     });
 }
