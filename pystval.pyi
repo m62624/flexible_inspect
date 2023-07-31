@@ -33,37 +33,40 @@ class Rule:
 
     def counter_is_equal(self, count: int) -> Rule:
         """
-    Adding a match counter, where the condition is: there must be exactly `count` matches
+    modifier to set the match counter, condition counter == match
         """
     ...
 
     def counter_more_than(self, count: int) -> Rule:
         """
-    Adding a match counter, where the condition is: there must be greater than or equal to `count` matches
+    modifier to set the match counter, condition counter >= match
         """
     ...
 
     def counter_less_than(self, count: int) -> Rule:
         """
-    Adding a match counter, where the condition is: there must be less than or equal to `count` matches
+    modifier to set the match counter, condition counter <= match
         """
     ...
 
     def mode_all_rules_for_at_least_one_match(self) -> Rule:
         """
-    All subrules should work successfully for at least one match (text)
+    modifier to change the rule matching mode,
+    `all rules` must pass the test for at least `one match`
         """
     ...
 
     def mode_at_least_one_rule_for_all_matches(self) -> Rule:
         """
-    At least one rule should work successfully for all matches
+    modifier to change the rule matching mode,
+    at least `one rule` must pass the test for `all matches`
         """
     ...
 
     def mode_at_least_one_rule_for_at_least_one_match(self) -> Rule:
         """
-    At least one rule should work successfully for at least one match
+    modifier to change the rule matching mode,
+    at least `one rule` must pass the test for at least `one match`
         """
     ...
 # ========================================================
@@ -93,37 +96,40 @@ class RuleBytes:
 
     def counter_is_equal(self, count: int) -> RuleBytes:
         """
-    Adding a match counter, where the condition is: there must be exactly `count` matches
+    modifier to set the match counter, condition counter == match
         """
     ...
 
     def counter_more_than(self, count: int) -> RuleBytes:
         """
-    Adding a match counter, where the condition is: there must be greater than or equal to `count` matches
+    modifier to set the match counter, condition counter >= match
         """
     ...
 
     def counter_less_than(self, count: int) -> RuleBytes:
         """
-    Adding a match counter, where the condition is: there must be less than or equal to `count` matches
+    modifier to set the match counter, condition counter <= match
         """
     ...
 
     def mode_all_rules_for_at_least_one_match(self) -> RuleBytes:
         """
-    All subrules should work successfully for at least one match (text)
+    modifier to change the rule matching mode,
+    `all rules` must pass the test for at least `one match`
         """
     ...
 
     def mode_at_least_one_rule_for_all_matches(self) -> RuleBytes:
         """
-    At least one rule should work successfully for all matches
+    modifier to change the rule matching mode,
+    at least `one rule` must pass the test for `all matches`
         """
     ...
 
     def mode_at_least_one_rule_for_at_least_one_match(self) -> RuleBytes:
         """
-    At least one rule should work successfully for at least one match
+    modifier to change the rule matching mode,
+    at least `one rule` must pass the test for at least `one match`
         """
     ...
 # ========================================================
@@ -135,12 +141,24 @@ class Cartridge:
         ...
 
     def mode_all_rules_for_at_least_one_match(self) -> Cartridge:
+        """
+    modifier to change the rule matching mode,
+    `all rules` must pass the test for at least `one match`
+        """
         ...
 
     def mode_at_least_one_rule_for_all_matches(self) -> Cartridge:
+        """
+    modifier to change the rule matching mode,
+    at least `one rule` must pass the test for `all matches`
+        """
         ...
 
     def mode_at_least_one_rule_for_at_least_one_match(self) -> Cartridge:
+        """
+    modifier to change the rule matching mode,
+    at least `one rule` must pass the test for at least `one match`
+        """
         ...
 # ========================================================
 
@@ -151,12 +169,24 @@ class CartridgeBytes:
         ...
 
     def mode_all_rules_for_at_least_one_match(self) -> CartridgeBytes:
+        """
+    modifier to change the rule matching mode,
+    `all rules` must pass the test for at least `one match`
+        """
         ...
 
     def mode_at_least_one_rule_for_all_matches(self) -> CartridgeBytes:
+        """
+    modifier to change the rule matching mode,
+    at least `one rule` must pass the test for `all matches`
+        """
         ...
 
     def mode_at_least_one_rule_for_at_least_one_match(self) -> CartridgeBytes:
+        """
+    modifier to change the rule matching mode,
+    at least `one rule` must pass the test for at least `one match`
+        """
         ...
 # ========================================================
 
