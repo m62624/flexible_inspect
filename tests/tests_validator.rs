@@ -20,7 +20,7 @@ fn test_validator_t_0() {
     .mode_at_least_one_rule_for_at_least_one_match();
 
     let validator_for_html = TemplateValidator::new([check_password]);
-    assert!(validator_for_html.validate(&file_html).is_ok());
+    assert!(validator_for_html.validate(file_html.as_str()).is_ok());
 }
 
 #[test]
@@ -38,7 +38,7 @@ fn test_validator_t_1() {
     )
     .mode_at_least_one_rule_for_at_least_one_match();
     let validator_for_html = TemplateValidator::new([check_password]);
-    assert!(validator_for_html.validate(&file_html).is_err());
+    assert!(validator_for_html.validate(file_html.as_str()).is_err());
 }
 
 #[test]
@@ -59,6 +59,9 @@ fn test_validator_t_2() {
     let validator_for_html = TemplateValidator::new([check_password]);
 
     async_std::task::block_on(async {
-        assert!(validator_for_html.async_validate(&file_html).await.is_ok())
+        assert!(validator_for_html
+            .async_validate(file_html.as_str())
+            .await
+            .is_ok())
     });
 }
