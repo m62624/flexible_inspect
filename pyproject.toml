@@ -17,5 +17,9 @@ classifiers = [
     "Programming Language :: Python :: Implementation :: PyPy",
 ]
 
+
+[tool.maturin]
+features = ["pyo3/extension-module"]
+
 [project.urls]
 "Homepage" = "https://github.com/m62624/pystval"
