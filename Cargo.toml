@@ -33,7 +33,6 @@ pyo3 = { version = "0.19.1", optional = true, features = [
     "abi3-py37",
     "generate-import-lib",
     "multiple-pymethods",
-    "extension-module",
 ] }
 pyo3-asyncio = { version = "0.19", optional = true, features = [
     "attributes",
