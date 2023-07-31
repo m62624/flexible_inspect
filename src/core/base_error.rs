@@ -2,7 +2,7 @@ use std::{error::Error, fmt};
 
 #[derive(Debug, Clone)]
 pub struct PystvalError {
-    id: i64,
+    pub(crate) id: i64,
     msg: String,
 }
 
