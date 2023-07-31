@@ -1,3 +1,8 @@
+"""
+The Data validator is a universal tool for checking the correctness of data in string and byte formats. It allows you to determine whether the data conforms to certain rules and provides the ability to find errors and inconsistencies.\
+The project aims to create a versatile and flexible tool for validating data in different formats, ensuring accuracy, reliability and usability.
+"""
+
 import enum
 from typing import Optional, Type, List, Any
 
@@ -197,9 +202,31 @@ class TemplateValidator:
         ...
 
     async def async_validate(self, text: str) -> None | List[PystvalException]:
+        """
+        Parameters
+        ----------
+        `data` : `str`
+            Data for verification
+
+        Raises
+        ------
+        `PystvalException`
+           This error stores an `error code` and a `message`
+        """
         ...
 
     def validate(self, text: str) -> None | List[PystvalException]:
+        """
+        Parameters
+        ----------
+        `data` : `str`
+            Data for verification
+
+        Raises
+        ------
+        `PystvalException`
+           This error stores an `error code` and a `message`
+        """
         ...
 # ========================================================
 
@@ -210,16 +237,45 @@ class TemplateValidatorBytes:
         ...
 
     async def async_validate(self, text: bytes) -> None | List[PystvalException]:
+        """
+        Parameters
+        ----------
+        `data` : `bytes`
+            Data for verification
+
+        Raises
+        ------
+        `PystvalException`
+           This error stores an `error code` and a `message`
+        """
         ...
 
     def validate(self, text: bytes) -> None | List[PystvalException]:
+        """
+        Parameters
+        ----------
+        `data` : `bytes`
+            Data for verification
+
+        Raises
+        ------
+        `PystvalException`
+           This error stores an `error code` and a `message`
+        """
+        ...
         ...
 # ==========================================================
 
 
 # ========================================================
 class PystvalException(Exception):
+    """
+    Validator errors, stores the `error code` and the `message` indicated in the `cartridge`
+    """
 
     def get_code(self) -> int:
+        """
+        Get error code
+        """
         ...
 # ========================================================
