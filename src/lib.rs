@@ -37,6 +37,7 @@ use std::sync::Once;
 // =====================================================================
 
 pub mod prelude {
+    pub use crate::core::base_error::PystvalError;
     pub use crate::core::cartridges::*;
     pub use crate::core::rules::traits::RuleModifiers;
     pub use crate::core::rules::MatchRequirement;
