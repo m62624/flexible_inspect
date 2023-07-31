@@ -3,7 +3,7 @@ use std::{error::Error, fmt};
 #[derive(Debug, Clone)]
 pub struct PystvalError {
     pub(crate) id: i64,
-    msg: String,
+    pub(crate) msg: String,
 }
 
 impl Error for PystvalError {}
@@ -20,11 +20,6 @@ impl PystvalError {
 
 impl fmt::Display for PystvalError {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
-        write!(
-            f,
-            "| ERROR CODE {id} |\n{msg}",
-            id = self.id,
-            msg = self.msg
-        )
+        write!(f, "(ERROR CODE |{id}|) {msg}", id = self.id, msg = self.msg)
     }
 }
