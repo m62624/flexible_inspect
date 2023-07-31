@@ -24,7 +24,7 @@ mod matching_modes {
 
     #[test]
     fn test_mode_match_t_0() {
-        let mut rule = PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound)
+        let rule = PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound)
             .mode_all_rules_for_at_least_one_match();
 
         assert_eq!(
@@ -35,7 +35,7 @@ mod matching_modes {
 
     #[test]
     fn test_mode_match_t_1() {
-        let mut rule = PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound)
+        let rule = PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound)
             .mode_at_least_one_rule_for_at_least_one_match();
 
         assert_eq!(
@@ -46,7 +46,7 @@ mod matching_modes {
 
     #[test]
     fn test_mode_match_t_2() {
-        let mut rule = PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound)
+        let rule = PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound)
             .mode_at_least_one_rule_for_all_matches();
 
         assert_eq!(
@@ -61,8 +61,7 @@ mod fn_counter_status {
 
     #[test]
     fn fn_counter_status_t_0() {
-        let mut rule =
-            PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_is_equal(1);
+        let rule = PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_is_equal(1);
 
         assert_eq!(
             <PyRule as Into<Rule>>::into(rule).get_counter().unwrap(),
@@ -72,8 +71,7 @@ mod fn_counter_status {
 
     #[test]
     fn fn_counter_status_t_1() {
-        let mut rule =
-            PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_less_than(1);
+        let rule = PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_less_than(1);
 
         assert_eq!(
             <PyRule as Into<Rule>>::into(rule).get_counter().unwrap(),
@@ -83,8 +81,7 @@ mod fn_counter_status {
 
     #[test]
     fn fn_counter_status_t_2() {
-        let mut rule =
-            PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_more_than(1);
+        let rule = PyRule::new(r"qw".into(), PyMatchRequirement::MustBeFound).counter_more_than(1);
 
         assert_eq!(
             <PyRule as Into<Rule>>::into(rule).get_counter().unwrap(),

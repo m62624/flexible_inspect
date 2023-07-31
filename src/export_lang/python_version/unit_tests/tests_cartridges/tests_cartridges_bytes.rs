@@ -1,4 +1,3 @@
-
 use super::*;
 
 #[test]
@@ -38,8 +37,7 @@ fn fn_new_t_2() {
         )];
         let rules_bytes =
             PyList::new(py, rust_rules_bytes.into_iter().map(|x| x.into_py(py))).into_py(py);
-        let mut cartridge_byte =
-            PyCartridgeBytes::new(py, 1, "f byte".into(), rules_bytes).unwrap();
+        let cartridge_byte = PyCartridgeBytes::new(py, 1, "f byte".into(), rules_bytes).unwrap();
         assert_eq!(
             <PyCartridgeBytes as Into<Cartridge<RuleBytes>>>::into(cartridge_byte)
                 .root_rule
@@ -60,7 +58,7 @@ fn fn_new_t_3() {
         )];
         let rules_bytes =
             PyList::new(py, rust_rules_bytes.into_iter().map(|x| x.into_py(py))).into_py(py);
-        let mut cartridge_byte = PyCartridgeBytes::new(py, 1, "f byte".into(), rules_bytes)
+        let cartridge_byte = PyCartridgeBytes::new(py, 1, "f byte".into(), rules_bytes)
             .unwrap()
             .mode_all_rules_for_at_least_one_match();
         assert_eq!(
@@ -83,7 +81,7 @@ fn fn_new_t_4() {
         )];
         let rules_bytes =
             PyList::new(py, rust_rules_bytes.into_iter().map(|x| x.into_py(py))).into_py(py);
-        let mut cartridge_byte = PyCartridgeBytes::new(py, 1, "f byte".into(), rules_bytes)
+        let cartridge_byte = PyCartridgeBytes::new(py, 1, "f byte".into(), rules_bytes)
             .unwrap()
             .mode_at_least_one_rule_for_all_matches();
         assert_eq!(
@@ -106,7 +104,7 @@ fn fn_new_t_5() {
         )];
         let rules_bytes =
             PyList::new(py, rust_rules_bytes.into_iter().map(|x| x.into_py(py))).into_py(py);
-        let mut cartridge_byte = PyCartridgeBytes::new(py, 1, "f byte".into(), rules_bytes)
+        let cartridge_byte = PyCartridgeBytes::new(py, 1, "f byte".into(), rules_bytes)
             .unwrap()
             .mode_at_least_one_rule_for_at_least_one_match();
         assert_eq!(
