@@ -4,13 +4,19 @@ use pyo3::prelude::*;
 use pyo3::pyclass;
 use std::fmt;
 
-#[pyclass(name = "PystvalError")]
+#[pyclass(name = "PystvalException")]
 #[derive(Debug)]
 pub struct PyPystvalError(PystvalError);
 
+#[pymethods]
 impl PyPystvalError {
+    #[new]
     pub fn new(id: i64, msg: String) -> Self {
         Self(PystvalError::new(id, msg))
+    }
+
+    pub fn get_code(&self) -> i64 {
+        self.0.id
     }
 }
 
