@@ -29,7 +29,7 @@ pub struct GeneralModifiers {
     pub mod_match: ModeMatch,
 }
 
-/// A structure that defines what action is required when finding regular expression matches.
+/// The structure that defines what action is required when finding regular expression matches.
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum MatchRequirement {
     /// the match must be found

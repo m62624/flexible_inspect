@@ -9,8 +9,17 @@ from typing import Optional, Type, List, Any
 
 # ========================================================
 class MatchRequirement(enum.Enum):
-    MustBeFound: int
-    MustNotBeFound: int
+    """
+    The structure that defines what action is required when finding regular expression matches.
+    """
+    MustBeFound = 0
+    """
+    The match must be found
+    """
+    MustNotBeFound = 1
+    """
+    the match must not be found
+    """
 # ========================================================
 
 
