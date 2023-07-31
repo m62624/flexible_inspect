@@ -55,7 +55,7 @@ pub trait PyRuleModifiers {
                         // ================= (LOG) =================
                         error!("{}", err_msg);
                         // =========================================
-                        return Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg));
+                        Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg))
                     }
                 })
                 .collect::<PyResult<Vec<_>>>()?)
@@ -67,7 +67,7 @@ pub trait PyRuleModifiers {
             // ================= (LOG) =================
             error!("{}", err_msg);
             // =========================================
-            return Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg));
+            Err(PyErr::new::<exceptions::PyTypeError, _>(err_msg))
         }
     }
 }

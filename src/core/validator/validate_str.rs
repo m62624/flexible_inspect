@@ -39,7 +39,7 @@ where
 }
 
 #[async_trait]
-impl<'a, C, IC> ValidatorBase<Rule, C, IC, Arc<str>> for TemplateValidator<IC, Arc<str>>
+impl<C, IC> ValidatorBase<Rule, C, IC, Arc<str>> for TemplateValidator<IC, Arc<str>>
 where
     C: CartridgeBase<Rule, Arc<str>> + Debug + Sync,
     IC: IntoIterator<Item = C> + AsRef<[C]> + Sync,

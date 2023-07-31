@@ -5,13 +5,13 @@ pub struct PyTemplateValidatorBytes(Arc<PyTemplateValidatorBytesAsync>);
 pub struct PyTemplateValidatorBytesAsync(TemplateValidator<Vec<Cartridge<RuleBytes>>, Arc<[u8]>>);
 
 impl PyTemplateValidatorBaseRust for PyTemplateValidatorBytes {
-    type CartridgeTypeRust = Cartridge<RuleBytes>;
+    type RustCartridgeType = Cartridge<RuleBytes>;
 }
 
 #[pymethods]
 impl PyTemplateValidatorBytes {
     #[new]
-    pub fn new(py: Python, cartridges: Vec<PyCartridge<RuleBytes>>) -> PyResult<Self> {
+    pub fn new(py: Python, cartridges: PyObject) -> PyResult<Self> {
         Ok(Self(Arc::new(PyTemplateValidatorBytesAsync(
             TemplateValidator::new(PyTemplateValidatorBytes::_to_rust_for_new::<
                 PyCartridgeBytes,
@@ -40,10 +40,10 @@ impl PyTemplateValidatorBase<Vec<u8>> for PyTemplateValidatorBytesAsync {
         for cartridge in self.0.cartridges.iter() {
             if let NextStep::Error(extra_with_value) = cartridge.run(data.as_slice()) {
                 error.push(PyPystvalError::new(
-                    <Cartridge<RuleBytes> as CartridgeBase<RuleBytes, &[u8]>>::get_id(&cartridge),
+                    <Cartridge<RuleBytes> as CartridgeBase<RuleBytes, &[u8]>>::get_id(cartridge),
                     filling_message(
                         <Cartridge<RuleBytes> as CartridgeBase<RuleBytes, &[u8]>>::get_message(
-                            &cartridge,
+                            cartridge,
                         ),
                         extra_with_value,
                     ),

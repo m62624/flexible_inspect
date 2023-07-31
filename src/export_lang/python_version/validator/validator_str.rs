@@ -1,5 +1,3 @@
-use pyo3::types::PyString;
-
 use super::*;
 
 #[pyclass(name = "TemplateValidator")]
@@ -7,7 +5,7 @@ pub struct PyTemplateValidator(Arc<PyTemplateValidatorAsync>);
 pub struct PyTemplateValidatorAsync(TemplateValidator<Vec<Cartridge<Rule>>, Arc<str>>);
 
 impl PyTemplateValidatorBaseRust for PyTemplateValidator {
-    type CartridgeTypeRust = Cartridge<Rule>;
+    type RustCartridgeType = Cartridge<Rule>;
 }
 
 #[pymethods]
@@ -44,9 +42,9 @@ impl PyTemplateValidatorBase<String> for PyTemplateValidatorAsync {
         for cartridge in self.0.cartridges.iter() {
             if let NextStep::Error(extra_with_value) = cartridge.run(data.as_str()) {
                 error.push(PyPystvalError::new(
-                    <Cartridge<Rule> as CartridgeBase<Rule, &str>>::get_id(&cartridge),
+                    <Cartridge<Rule> as CartridgeBase<Rule, &str>>::get_id(cartridge),
                     filling_message(
-                        <Cartridge<Rule> as CartridgeBase<Rule, &str>>::get_message(&cartridge),
+                        <Cartridge<Rule> as CartridgeBase<Rule, &str>>::get_message(cartridge),
                         extra_with_value,
                     ),
                 ));
