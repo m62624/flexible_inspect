@@ -1,6 +1,7 @@
 # Rust
 /target
 /src/main.rs
+/pkg
 # Python
 .env
 .venv
