@@ -49,7 +49,7 @@ pub mod prelude {
 /// For one-time initialization to the logger
 static INIT: Once = Once::new();
 // =====================================================================
-/// Initialization of the logger (disable backtrace)
+/// Initialization of the logger
 #[cfg(not(tarpaulin_include))]
 fn init_logger() {
     // env_logger is called only once
