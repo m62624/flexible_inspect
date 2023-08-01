@@ -26,16 +26,15 @@ indexmap = "2.0.0"
 
 # Next are the optional libraries for building for other targets
 
+
+# Python bindings
+# ========================================================
 pyo3 = { version = "0.19.1", optional = true, features = [
     "abi3",
     "abi3-py37",
     "generate-import-lib",
     "multiple-pymethods",
 ] }
-
-
-# Python bindings
-# ========================================================
 pyo3-asyncio = { version = "0.19", optional = true, features = [
     "attributes",
     "async-std-runtime",
@@ -46,6 +45,7 @@ pyo3-asyncio = { version = "0.19", optional = true, features = [
 # Wasm bindings
 # ========================================================
 wasm-bindgen = { version = "0.2.87", optional = true }
+wasm-bindgen-futures = { version = "0.4.37", optional = true }
 # ========================================================
 
 
@@ -71,10 +71,13 @@ wasm-bindgen = { version = "0.2.87", optional = true }
 [features]
 python-lib = ["dep:pyo3", "dep:pyo3-asyncio"]
 python-lib-build = ["pyo3/extension-module"]
-wasm = ["dep:wasm-bindgen"]
+wasm = ["dep:wasm-bindgen", "dep:wasm-bindgen-futures"]
 # ========================================================
 
 
 # Another metadata
 [package.metadata.maturin]
 category = "tool"
+
+[dev-dependencies]
+wasm-bindgen-test = { version = "0.3.37" }
