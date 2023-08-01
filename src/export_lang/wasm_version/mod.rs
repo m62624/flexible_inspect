@@ -1,3 +1,4 @@
+mod rules;
 use crate::core::rules::{rule_bytes::TakeRuleBytesForExtend, rule_str::TakeRuleForExtend};
 use std::{fmt::Debug, hash::Hash};
 use wasm_bindgen::prelude::wasm_bindgen;
