@@ -317,4 +317,10 @@ class PystvalException(Exception):
         Get error code
         """
         ...
+
+    def get_message(self) -> str:
+        """
+        Get error message
+        """
+        ...
 # ========================================================
