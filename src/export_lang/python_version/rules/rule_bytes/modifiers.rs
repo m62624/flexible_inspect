@@ -7,38 +7,32 @@ impl PyRuleModifiers for PyRuleBytes {
     type PyRuleType = PyRuleBytes;
     type RustRuleType = RuleBytes;
     fn _counter_is_equal(&mut self, count: usize) -> Self::PyRuleType {
-        self.0 =
-            <PyRuleBytes as Into<RuleBytes>>::into(std::mem::take(self)).counter_is_equal(count);
+        self.0 = self.0.counter_is_equal(count);
         std::mem::take(self)
     }
 
     fn _counter_more_than(&mut self, count: usize) -> Self::PyRuleType {
-        self.0 =
-            <PyRuleBytes as Into<RuleBytes>>::into(std::mem::take(self)).counter_more_than(count);
+        self.0 = self.0.counter_more_than(count);
         std::mem::take(self)
     }
 
     fn _counter_less_than(&mut self, count: usize) -> Self::PyRuleType {
-        self.0 =
-            <PyRuleBytes as Into<RuleBytes>>::into(std::mem::take(self)).counter_less_than(count);
+        self.0 = self.0.counter_less_than(count);
         std::mem::take(self)
     }
 
     fn _mode_all_rules_for_at_least_one_match(&mut self) -> Self::PyRuleType {
-        self.0 = <PyRuleBytes as Into<RuleBytes>>::into(std::mem::take(self))
-            .mode_all_rules_for_at_least_one_match();
+        self.0 = self.0.mode_all_rules_for_at_least_one_match();
         std::mem::take(self)
     }
 
     fn _mode_at_least_one_rule_for_all_matches(&mut self) -> Self::PyRuleType {
-        self.0 = <PyRuleBytes as Into<RuleBytes>>::into(std::mem::take(self))
-            .mode_at_least_one_rule_for_all_matches();
+        self.0 = self.0.mode_at_least_one_rule_for_all_matches();
         std::mem::take(self)
     }
 
     fn _mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self::PyRuleType {
-        self.0 = <PyRuleBytes as Into<RuleBytes>>::into(std::mem::take(self))
-            .mode_at_least_one_rule_for_at_least_one_match();
+        self.0 = self.0.mode_at_least_one_rule_for_at_least_one_match();
         std::mem::take(self)
     }
 }
