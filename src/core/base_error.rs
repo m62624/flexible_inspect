@@ -16,6 +16,10 @@ impl PystvalError {
     pub fn get_code(&self) -> i64 {
         self.id
     }
+
+    pub fn get_message(&self) -> &str {
+        &self.msg
+    }
 }
 
 impl fmt::Display for PystvalError {
