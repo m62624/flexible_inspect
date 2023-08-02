@@ -14,7 +14,7 @@ crate-type = ["cdylib", "rlib"]
 
 # Core library dependencies
 [dependencies]
-serde = { version = "1", features = ["derive"], optional = true }
+serde = { version = "1.0.180", features = ["derive"], optional = true }
 env_logger = "0.10.0"
 log = "0.4.19"
 async-std = { version = "1.12.0", features = ["attributes"] }
