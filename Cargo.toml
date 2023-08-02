@@ -25,6 +25,12 @@ regex = "1.9.1"
 indexmap = "2.0.0"
 # Next are the optional libraries for building for other targets
 
+# Wasm bindings
+# ========================================================
+wasm-bindgen = { version = "0.2.87", optional = true }
+wasm-bindgen-futures = { version = "0.4.37", optional = true }
+serde-wasm-bindgen = { version = "0.5.0", optional = true }
+# ========================================================
 
 # Python bindings
 # ========================================================
@@ -39,14 +45,6 @@ pyo3-asyncio = { version = "0.19", optional = true, features = [
     "async-std-runtime",
     "testing",
 ] }
-# ========================================================
-
-
-# Wasm bindings
-# ========================================================
-wasm-bindgen = { version = "0.2.87", optional = true }
-wasm-bindgen-futures = { version = "0.4.37", optional = true }
-serde-wasm-bindgen = { version = "0.5.0", optional = true }
 # ========================================================
 
 
@@ -70,8 +68,8 @@ serde-wasm-bindgen = { version = "0.5.0", optional = true }
 
 # ========================================================
 [features]
+python-lib-build = ["dep:pyo3", "dep:pyo3-asyncio", "pyo3/extension-module"]
 python-lib = ["dep:pyo3", "dep:pyo3-asyncio"]
-python-lib-build = ["pyo3/extension-module"]
 wasm = [
     "dep:wasm-bindgen",
     "dep:wasm-bindgen-futures",
@@ -87,11 +85,14 @@ serde = ["dep:serde", "indexmap/serde"]
 [package.metadata.maturin]
 category = "tool"
 
+
 [dev-dependencies]
 wasm-bindgen-test = "0.3.37"
 serde_json = "1.0.104"
-async-std = "1.12.0"
+
+
 # Specify a duplicate `pyo3` & `async-pyo3` library to use for async integration tests 
+[target.'cfg(not(target_arch = "wasm32"))'.dev-dependencies]
 pyo3 = "0.19"
 pyo3-asyncio = { version = "0.19", features = [
     "attributes",
@@ -102,5 +103,6 @@ pyo3-asyncio = { version = "0.19", features = [
 # Integration tests for the Python API
 [[test]]
 name = "tests-python-api"
-path = "tests/python/tests_python_async.rs"
+path = "tests/python/tests_validate_async.rs"
+required-features = ["python-lib"]
 harness = false
