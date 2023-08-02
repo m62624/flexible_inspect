@@ -1,6 +1,8 @@
 mod modifiers;
 use super::*;
+
 #[wasm_bindgen(js_name = Rule)]
+#[derive(Default)]
 pub struct WasmRule(Rule);
 
 #[wasm_bindgen]

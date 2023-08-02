@@ -3,6 +3,7 @@ mod rule_str;
 use super::*;
 use crate::prelude::MatchRequirement as RustMatchRequirement;
 use crate::prelude::{Rule, RuleBytes};
+use wasm_bindgen::JsValue;
 
 #[wasm_bindgen]
 pub enum MatchRequirement {
@@ -25,15 +26,20 @@ pub trait WasmRuleModifiers {
     /// modifier to set the match counter, condition counter == match
     fn _counter_is_equal(&mut self, count: usize) -> Self::WasmRuleType;
     fn _counter_more_than(&mut self, count: usize) -> Self::WasmRuleType;
-
     fn _counter_less_than(&mut self, count: usize) -> Self::WasmRuleType;
+
     fn _mode_all_rules_for_at_least_one_match(&mut self) -> Self::WasmRuleType;
     fn _mode_at_least_one_rule_for_all_matches(&mut self) -> Self::WasmRuleType;
     fn _mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self::WasmRuleType;
-    fn _to_rust_for_extend<V, T: Into<V>>(nested_rules: Vec<T>) -> Vec<Self::RustRuleType>
+    fn _to_rust_for_extend(
+        nested_rules: Vec<wasm_bindgen::JsValue>,
+    ) -> Result<Vec<Self::RustRuleType>, JsValue>
     where
-        Vec<<Self as WasmRuleModifiers>::RustRuleType>: FromIterator<V>,
+        for<'de> <Self as WasmRuleModifiers>::RustRuleType: serde::Deserialize<'de>,
     {
-        nested_rules.into_iter().map(|rule| rule.into()).collect()
+        Ok(nested_rules
+            .into_iter()
+            .map(serde_wasm_bindgen::from_value::<Self::RustRuleType>)
+            .collect::<Result<Vec<Self::RustRuleType>, _>>()?)
     }
 }
