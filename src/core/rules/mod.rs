@@ -14,6 +14,10 @@ use std::hash::Hash;
 // =======================================================
 
 /// The struct for sorting all nested rules
+#[cfg_attr(
+    any(feature = "serde", feature = "wasm"),
+    derive(Serialize, Deserialize)
+)]
 pub struct SlisedRules {
     /// The rules are in the `IndexSet` collection to preserve
     /// the order of the rules during index retrieval from the `RegexSet` and to avoid duplicate rules
@@ -22,6 +26,10 @@ pub struct SlisedRules {
 }
 
 /// A Structure for common `Rule` modifiers
+#[cfg_attr(
+    any(feature = "serde", feature = "wasm"),
+    derive(Serialize, Deserialize)
+)]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct GeneralModifiers {
     pub requirement: MatchRequirement,
@@ -30,6 +38,10 @@ pub struct GeneralModifiers {
 }
 
 /// The structure that defines what action is required when finding regular expression matches.
+#[cfg_attr(
+    any(feature = "serde", feature = "wasm"),
+    derive(Serialize, Deserialize)
+)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum MatchRequirement {
     /// the match must be found
@@ -39,6 +51,10 @@ pub enum MatchRequirement {
 }
 
 /// A structure defining the operation mode of the validator subrules.
+#[cfg_attr(
+    any(feature = "serde", feature = "wasm"),
+    derive(Serialize, Deserialize)
+)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum ModeMatch {
     /// all rules must pass the test for all matches
@@ -52,6 +68,10 @@ pub enum ModeMatch {
 }
 
 /// A structure for realization of modifier-counters
+#[cfg_attr(
+    any(feature = "serde", feature = "wasm"),
+    derive(Serialize, Deserialize)
+)]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum Counter {
     /// counter == match
