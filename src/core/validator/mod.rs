@@ -38,7 +38,7 @@ where
     any(feature = "serde", feature = "wasm"),
     derive(Serialize, Deserialize)
 )]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TemplateValidator<IC, D>
 where
     D: PartialEq + Eq + Hash + Debug,

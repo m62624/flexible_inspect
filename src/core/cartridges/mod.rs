@@ -2,8 +2,8 @@ mod cartridges_bytes;
 mod cartridges_str;
 mod root_mode_matching;
 use super::rules::{self, next::NextStep, traits::RuleBase, CaptureData};
-use crate::prelude::*;
 use super::*;
+use crate::prelude::*;
 use std::{collections::HashSet, fmt::Debug, hash::Hash};
 
 /// This trait is required for single access to `Rule cartridges` or `RuleBytes cartridges`
@@ -30,7 +30,7 @@ where
     any(feature = "serde", feature = "wasm"),
     derive(Serialize, Deserialize)
 )]
-#[derive(Debug, Default, Clone)]
+#[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
 pub struct Cartridge<T>
 where
     T: RuleBase,
