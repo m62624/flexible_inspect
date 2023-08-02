@@ -1,13 +1,12 @@
 mod modifiers;
-use super::Rule as RustRule;
 use super::*;
-#[wasm_bindgen]
-pub struct Rule(RustRule);
+#[wasm_bindgen(js_name = Rule)]
+pub struct WasmRule(Rule);
 
 #[wasm_bindgen]
-impl Rule {
+impl WasmRule {
     #[wasm_bindgen(constructor)]
     pub fn new(pattern: String, requirement: MatchRequirement) -> Self {
-        Self(RustRule::new(pattern, requirement.into()))
+        Self(Rule::new(pattern, requirement.into()))
     }
 }

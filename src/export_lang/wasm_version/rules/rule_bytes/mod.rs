@@ -1,13 +1,13 @@
 mod modifiers;
-use super::RuleBytes as RustRuleBytes;
 use super::*;
-#[wasm_bindgen]
-pub struct RuleBytes(RustRuleBytes);
+#[wasm_bindgen(js_name = RuleBytes)]
+pub struct WasmRuleBytes(RuleBytes);
 
 #[wasm_bindgen]
-impl RuleBytes {
+impl WasmRuleBytes {
     #[wasm_bindgen(constructor)]
     pub fn new(pattern: String, requirement: MatchRequirement) -> Self {
-        Self(RustRuleBytes::new(pattern, requirement.into()))
+        Self(RuleBytes::new(pattern, requirement.into()))
     }
 }
+
