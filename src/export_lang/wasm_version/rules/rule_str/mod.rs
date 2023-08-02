@@ -2,7 +2,7 @@ mod modifiers;
 use super::*;
 
 #[wasm_bindgen(js_name = Rule)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct WasmRule(Rule);
 
 #[wasm_bindgen]

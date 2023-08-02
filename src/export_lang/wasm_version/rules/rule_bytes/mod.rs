@@ -1,7 +1,8 @@
 mod modifiers;
+
 use super::*;
 #[wasm_bindgen(js_name = RuleBytes)]
-#[derive(Default)]
+#[derive(Serialize, Deserialize, Default)]
 pub struct WasmRuleBytes(RuleBytes);
 
 #[wasm_bindgen]
@@ -11,4 +12,3 @@ impl WasmRuleBytes {
         Self(RuleBytes::new(pattern, requirement.into()))
     }
 }
-
