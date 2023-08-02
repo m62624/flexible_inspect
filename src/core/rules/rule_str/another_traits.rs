@@ -92,7 +92,7 @@ mod serde_trait{
             D: Deserializer<'de>,
         {
             // десериализуем вектор шаблонов
-            let patterns: Vec<&str> =
+            let patterns: Vec<String> =
                 Deserialize::deserialize(deserializer)?;
             // компилируем в `RegexSet`
             let regex_set = regex::RegexSet::new(patterns).unwrap();
