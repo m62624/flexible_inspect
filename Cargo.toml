@@ -22,7 +22,7 @@ async-trait = "0.1.72"
 lazy_static = "1.4.0"
 fancy-regex = "0.11.0"
 regex = "1.9.1"
-indexmap = "2.0.0"
+indexmap = "2.0.0" 
 # Next are the optional libraries for building for other targets
 
 
@@ -76,8 +76,9 @@ wasm = [
     "dep:wasm-bindgen-futures",
     "dep:serde-wasm-bindgen",
     "dep:serde",
+    "indexmap/serde"
 ]
-serde = ["dep:serde"]
+serde = ["dep:serde","indexmap/serde"]
 # ========================================================
 
 
