@@ -20,7 +20,4 @@ impl CartridgeBase<RuleBytes, Arc<[u8]>> for Cartridge<RuleBytes> {
         &self.message
     }
 
-    fn get_root_rule(&self) -> &RuleBytes {
-        &self.root_rule
-    }
 }

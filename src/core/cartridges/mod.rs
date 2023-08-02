@@ -21,8 +21,6 @@ where
     fn get_id(&self) -> i64;
     /// Get an `error message` with data
     fn get_message(&self) -> &str;
-    /// Get the `root rule`
-    fn get_root_rule(&self) -> &T;
 }
 
 /// The container structure for `custom rules`, `error message` and `error code`.\

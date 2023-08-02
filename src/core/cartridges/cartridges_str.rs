@@ -19,8 +19,4 @@ impl CartridgeBase<Rule, &str> for Cartridge<Rule> {
     fn get_message(&self) -> &str {
         &self.message
     }
-
-    fn get_root_rule(&self) -> &Rule {
-        &self.root_rule
-    }
 }

@@ -41,4 +41,12 @@ impl PyCartridgeBytes {
         self.0 = self.0.mode_at_least_one_rule_for_at_least_one_match();
         std::mem::take(self)
     }
+
+    pub fn get_id(&self) -> i64 {
+        self.0.id
+    }
+
+    pub fn get_message(&self) -> &str {
+        &self.0.message
+    }
 }
