@@ -95,7 +95,7 @@ mod serde_trait{
             let patterns: Vec<&str> =
                 Deserialize::deserialize(deserializer)?;
             // компилируем в `RegexSet`
-            let regex_set = regex::RegexSet::new(&patterns).unwrap();
+            let regex_set = regex::RegexSet::new(patterns).unwrap();
             Ok(Self { regex_set })
         }
     }
