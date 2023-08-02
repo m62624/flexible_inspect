@@ -4,8 +4,9 @@ mod cartridges_str;
 mod root_mode_matching;
 // =======================================================
 use super::rules::{self, next::NextStep, traits::RuleBase, CaptureData};
-use super::*;
 use crate::prelude::*;
+#[cfg(any(feature = "serde", feature = "wasm"))]
+use serde::{Deserialize, Serialize};
 use std::{collections::HashSet, fmt::Debug, hash::Hash};
 // =======================================================
 

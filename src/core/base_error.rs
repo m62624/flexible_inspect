@@ -1,11 +1,12 @@
-use super::*;
+#[cfg(any(feature = "serde", feature = "wasm"))]
+use serde::{Deserialize, Serialize};
 use std::{error::Error, fmt};
 
 #[cfg_attr(
     any(feature = "serde", feature = "wasm"),
     derive(Serialize, Deserialize)
 )]
-#[derive(Debug, Clone,PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PystvalError {
     pub(crate) id: i64,
     pub(crate) msg: String,
