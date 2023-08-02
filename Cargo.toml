@@ -22,7 +22,7 @@ async-trait = "0.1.72"
 lazy_static = "1.4.0"
 fancy-regex = "0.11.0"
 regex = "1.9.1"
-indexmap = "2.0.0" 
+indexmap = "2.0.0"
 # Next are the optional libraries for building for other targets
 
 
@@ -37,6 +37,7 @@ pyo3 = { version = "0.19.1", optional = true, features = [
 pyo3-asyncio = { version = "0.19", optional = true, features = [
     "attributes",
     "async-std-runtime",
+    "testing",
 ] }
 # ========================================================
 
@@ -76,9 +77,9 @@ wasm = [
     "dep:wasm-bindgen-futures",
     "dep:serde-wasm-bindgen",
     "dep:serde",
-    "indexmap/serde"
+    "indexmap/serde",
 ]
-serde = ["dep:serde","indexmap/serde"]
+serde = ["dep:serde", "indexmap/serde"]
 # ========================================================
 
 
@@ -87,5 +88,11 @@ serde = ["dep:serde","indexmap/serde"]
 category = "tool"
 
 [dev-dependencies]
-wasm-bindgen-test =  "0.3.37" 
+wasm-bindgen-test = "0.3.37"
 serde_json = "1.0.104"
+
+
+[[test]]
+name = "tests-python-api"
+path = "tests/python/tests_python_api.rs"
+harness = false
