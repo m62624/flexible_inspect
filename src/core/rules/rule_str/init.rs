@@ -51,7 +51,9 @@ impl SimpleRules {
      */
     pub fn new(all_rules: IndexSet<Rule>) -> Self {
         Self {
-            regex_set: regex::RegexSet::new(&all_rules).unwrap(),
+            regex_set: RegexSetContainer {
+                regex_set: regex::RegexSet::new(&all_rules).unwrap(),
+            },
             all_rules,
         }
     }

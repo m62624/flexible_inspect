@@ -44,7 +44,7 @@ impl RuleBase for RuleBytes {
 
     fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
         if let Some(value) = self.get_subrules() {
-            return Some((&value.all_rules, &value.regex_set));
+            return Some((&value.all_rules, &value.regex_set.regex_set));
         }
         None
     }

@@ -42,7 +42,7 @@ impl RuleBase for Rule {
     fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
         if let Some(subrules) = self.get_subrules() {
             if let Some(simple_rules) = &subrules.simple_rules {
-                return Some((&simple_rules.all_rules, &simple_rules.regex_set));
+                return Some((&simple_rules.all_rules, &simple_rules.regex_set.regex_set));
             }
         }
         None

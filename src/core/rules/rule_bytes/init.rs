@@ -32,7 +32,9 @@ impl SimpleRulesBytes {
      */
     pub fn new(all_rules: IndexSet<RuleBytes>) -> Self {
         Self {
-            regex_set: regex::bytes::RegexSet::new(&all_rules).unwrap(),
+            regex_set: RegexSetContainer {
+                regex_set: regex::bytes::RegexSet::new(&all_rules).unwrap(),
+            },
             all_rules,
         }
     }

@@ -48,5 +48,10 @@ pub struct SimpleRules {
     /// the order of the rules during index retrieval from the `RegexSet` and to avoid duplicate rules
     pub all_rules: IndexSet<Rule>,
     /// `RegexSet` Match multiple, possibly overlapping, regexes in a single search.
+    pub regex_set: RegexSetContainer,
+}
+
+#[derive(Debug, Clone)]
+pub struct RegexSetContainer {
     pub regex_set: regex::RegexSet,
 }
