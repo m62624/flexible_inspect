@@ -45,6 +45,14 @@ pub mod prelude {
     pub use crate::core::validator::*;
 }
 
+#[cfg(feature = "wasm")]
+pub mod prelude_wasm {
+    pub use crate::export_lang::wasm_version::rules::rule_bytes::WasmRuleBytes;
+    pub use crate::export_lang::wasm_version::rules::rule_str::WasmRule;
+    pub use crate::export_lang::wasm_version::rules::MatchRequirement;
+    pub use crate::export_lang::wasm_version::rules::WasmRuleModifiers;
+}
+
 // =====================================================================
 /// For one-time initialization to the logger
 static INIT: Once = Once::new();

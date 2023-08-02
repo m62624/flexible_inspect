@@ -1,5 +1,5 @@
-mod rule_bytes;
-mod rule_str;
+pub mod rule_bytes;
+pub mod rule_str;
 use super::*;
 use crate::prelude::MatchRequirement as RustMatchRequirement;
 use crate::prelude::{Rule, RuleBytes};
