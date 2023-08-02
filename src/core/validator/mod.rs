@@ -9,7 +9,8 @@ use super::cartridges::CartridgeBase;
 use super::message::filling_message;
 use super::rules::next::NextStep;
 use super::rules::traits::RuleBase;
-use super::*;
+#[cfg(any(feature = "serde", feature = "wasm"))]
+use super::{Deserialize, Serialize};
 use crate::prelude::{Rule, RuleBytes};
 use async_trait::async_trait;
 use log::trace;
