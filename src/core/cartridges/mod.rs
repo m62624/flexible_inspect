@@ -3,6 +3,7 @@ mod cartridges_str;
 mod root_mode_matching;
 use super::rules::{self, next::NextStep, traits::RuleBase, CaptureData};
 use crate::prelude::*;
+use super::*;
 use std::{collections::HashSet, fmt::Debug, hash::Hash};
 
 /// This trait is required for single access to `Rule cartridges` or `RuleBytes cartridges`
@@ -25,6 +26,10 @@ where
 /// Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.\
 /// ( *Each cartridge can only hold one type at a time, `Rule` or `RuleBytes`* )
 /// **by default, all rules must pass every match check**
+#[cfg_attr(
+    any(feature = "serde", feature = "wasm"),
+    derive(Serialize, Deserialize)
+)]
 #[derive(Debug, Default, Clone)]
 pub struct Cartridge<T>
 where

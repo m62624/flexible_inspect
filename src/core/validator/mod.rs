@@ -9,6 +9,7 @@ use super::cartridges::CartridgeBase;
 use super::message::filling_message;
 use super::rules::next::NextStep;
 use super::rules::traits::RuleBase;
+use super::*;
 use crate::prelude::{Rule, RuleBytes};
 use async_trait::async_trait;
 use log::trace;
@@ -32,6 +33,10 @@ where
 }
 
 /// The structure for creating unique validators, load different `cartridges` to validate data.
+#[cfg_attr(
+    any(feature = "serde", feature = "wasm"),
+    derive(Serialize, Deserialize)
+)]
 pub struct TemplateValidator<IC, D>
 where
     D: PartialEq + Eq + Hash + Debug,
