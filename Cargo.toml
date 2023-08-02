@@ -91,6 +91,7 @@ category = "tool"
 wasm-bindgen-test = "0.3.37"
 serde_json = "1.0.104"
 async-std = "1.12.0"
+# Specify a duplicate `pyo3` & `async-pyo3` library to use for async integration tests 
 pyo3 = "0.19"
 pyo3-asyncio = { version = "0.19", features = [
     "attributes",
@@ -98,6 +99,7 @@ pyo3-asyncio = { version = "0.19", features = [
     "testing",
 ] }
 
+# Integration tests for the Python API
 [[test]]
 name = "tests-python-api"
 path = "tests/python/tests_python_async.rs"
