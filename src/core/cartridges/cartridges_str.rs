@@ -1,4 +1,3 @@
-
 use super::*;
 
 impl CartridgeBase<Rule, &str> for Cartridge<Rule> {

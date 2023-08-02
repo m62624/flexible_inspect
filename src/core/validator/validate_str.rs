@@ -1,6 +1,5 @@
-use std::sync::Arc;
-
 use super::*;
+use std::sync::Arc;
 
 #[async_trait]
 impl<'a, C, IC> ValidatorBase<Rule, C, IC, &'a str> for TemplateValidator<IC, &'a str>

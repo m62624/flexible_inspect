@@ -1,8 +1,7 @@
-use log::info;
-
 use crate::core::rules::{traits::RuleBase, CaptureData};
 use crate::core::DEFAULT_CAPTURE;
 use crate::prelude::RuleBytes;
+use log::info;
 use std::collections::{HashMap, HashSet};
 
 pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<&'a [u8]> {

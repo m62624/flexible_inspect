@@ -1,4 +1,5 @@
 use super::*;
+
 impl<T> Cartridge<T>
 where
     T: RuleBase + RuleModifiers<RuleType = T> + Default,

@@ -1,14 +1,10 @@
-// =======================================================
 mod context_match;
-// =======================================================
 
-// =======================================================
 use super::*;
 use crate::core::rules::next::NextStep;
 use crate::core::rules::traits::{CalculateValueRules, RuleBase};
 use log::{debug, trace};
 use std::{collections::VecDeque, fmt::Debug};
-// =======================================================
 
 /// Main method for iteratively running a rule
 /// Goes through all subrules, and so on to the end for each `Rule`.

@@ -4,6 +4,7 @@ pub mod cartridges;
 pub mod message;
 pub mod rules;
 pub mod validator;
+// =======================================================
 #[cfg(any(feature = "serde", feature = "wasm"))]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 // =======================================================

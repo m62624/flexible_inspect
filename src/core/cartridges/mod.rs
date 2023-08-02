@@ -1,10 +1,13 @@
+// =======================================================
 mod cartridges_bytes;
 mod cartridges_str;
 mod root_mode_matching;
+// =======================================================
 use super::rules::{self, next::NextStep, traits::RuleBase, CaptureData};
 use super::*;
 use crate::prelude::*;
 use std::{collections::HashSet, fmt::Debug, hash::Hash};
+// =======================================================
 
 /// This trait is required for single access to `Rule cartridges` or `RuleBytes cartridges`
 pub trait CartridgeBase<T, D>
