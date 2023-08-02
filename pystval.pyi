@@ -189,6 +189,17 @@ class Cartridge:
     at least `one rule` must pass the test for at least `one match`
         """
         ...
+
+    def get_id(self) -> int:
+        """
+        Get cartridge id
+        """
+        ...
+
+    def get_message(self) -> str:
+        """
+        Get an `error message` with data
+        """
 # ========================================================
 
 
@@ -224,6 +235,17 @@ class CartridgeBytes:
     at least `one rule` must pass the test for at least `one match`
         """
         ...
+
+    def get_id(self) -> int:
+        """
+        Get cartridge id
+        """
+        ...
+
+    def get_message(self) -> str:
+        """
+        Get an `error message` with data
+        """
 # ========================================================
 
 
