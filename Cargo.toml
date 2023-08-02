@@ -14,11 +14,11 @@ crate-type = ["cdylib", "rlib"]
 
 # Core library dependencies
 [dependencies]
+serde = { version = "1", features = ["derive"], optional = true }
 env_logger = "0.10.0"
 log = "0.4.19"
 async-std = { version = "1.12.0", features = ["attributes"] }
 async-trait = "0.1.72"
-serde = { version = "1", features = ["derive"] }
 lazy_static = "1.4.0"
 fancy-regex = "0.11.0"
 regex = "1.9.1"
@@ -75,7 +75,9 @@ wasm = [
     "dep:wasm-bindgen",
     "dep:wasm-bindgen-futures",
     "dep:serde-wasm-bindgen",
+    "dep:serde",
 ]
+serde = ["dep:serde"]
 # ========================================================
 
 
