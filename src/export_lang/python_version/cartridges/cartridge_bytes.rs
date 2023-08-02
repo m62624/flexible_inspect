@@ -42,10 +42,12 @@ impl PyCartridgeBytes {
         std::mem::take(self)
     }
 
+    /// Get the `error code`
     pub fn get_id(&self) -> i64 {
         self.0.id
     }
 
+    /// Get an `error message` with data
     pub fn get_message(&self) -> &str {
         &self.0.message
     }
