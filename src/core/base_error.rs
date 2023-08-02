@@ -5,7 +5,7 @@ use std::{error::Error, fmt};
     any(feature = "serde", feature = "wasm"),
     derive(Serialize, Deserialize)
 )]
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone,PartialEq, Eq)]
 pub struct PystvalError {
     pub(crate) id: i64,
     pub(crate) msg: String,
