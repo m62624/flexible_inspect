@@ -35,19 +35,22 @@ impl WasmRuleModifiers for WasmRuleBytes {
     }
 }
 
-#[wasm_bindgen]
+#[wasm_bindgen(js_class = RuleBytes)]
 impl WasmRuleBytes {
-    pub fn extend(&mut self, rules: Vec<JsValue>) -> Result<WasmRuleBytes, JsValue> {
+    pub fn extend(&mut self, rules: Vec<JsValue>) -> WasmRuleBytes {
         // self.0 = self.0.extend(Self::_to_rust_for_extend(rules)?);
         self.0 = self.0.extend(
             rules
                 .into_iter()
                 .map(|rule_js| {
-                    serde_wasm_bindgen::from_value::<WasmRuleBytes>(rule_js).and_then(|x| Ok(x.0))
+                    serde_wasm_bindgen::from_value::<WasmRuleBytes>(rule_js)
+                        .and_then(|x| Ok(x.0))
+                        .expect("\nRule loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for `completion`.\n2) You can only use the `RuleBytes` type for the root
+                        ")
                 })
-                .collect::<Result<Vec<RuleBytes>, serde_wasm_bindgen::Error>>()?,
+                .collect::<Vec<RuleBytes>>(),
         );
-        Ok(std::mem::take(self))
+        std::mem::take(self)
     }
     /// modifier to set the match counter, condition counter == match
     pub fn counter_is_equal(&mut self, count: usize) -> Self {
