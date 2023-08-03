@@ -1,6 +1,4 @@
-// use wasm_bindgen_test::*;
-
-// #[wasm_bindgen_test]
-// fn pass() {
-//     assert_eq!(1, 1);
-// }
+use super::*;
+use wasm_bindgen_test::*;
+mod tests_rule_bytes;
+mod tests_rule_str;
