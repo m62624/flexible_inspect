@@ -38,10 +38,17 @@ impl WasmRuleModifiers for WasmRuleBytes {
 #[wasm_bindgen]
 impl WasmRuleBytes {
     pub fn extend(&mut self, rules: Vec<JsValue>) -> Result<WasmRuleBytes, JsValue> {
-        self.0 = self.0.extend(Self::_to_rust_for_extend(rules)?);
+        // self.0 = self.0.extend(Self::_to_rust_for_extend(rules)?);
+        self.0 = self.0.extend(
+            rules
+                .into_iter()
+                .map(|rule_js| {
+                    serde_wasm_bindgen::from_value::<WasmRuleBytes>(rule_js).and_then(|x| Ok(x.0))
+                })
+                .collect::<Result<Vec<RuleBytes>, serde_wasm_bindgen::Error>>()?,
+        );
         Ok(std::mem::take(self))
     }
-
     /// modifier to set the match counter, condition counter == match
     pub fn counter_is_equal(&mut self, count: usize) -> Self {
         self._counter_is_equal(count)

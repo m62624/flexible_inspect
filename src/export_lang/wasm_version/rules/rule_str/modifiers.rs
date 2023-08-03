@@ -35,10 +35,18 @@ impl WasmRuleModifiers for WasmRule {
     }
 }
 
-#[wasm_bindgen]
+#[wasm_bindgen(js_class = Rule)]
 impl WasmRule {
     pub fn extend(&mut self, rules: Vec<JsValue>) -> Result<WasmRule, JsValue> {
-        self.0 = self.0.extend(Self::_to_rust_for_extend(rules)?);
+        // self.0 = self.0.extend(Self::_to_rust_for_extend(rules)?);
+        self.0 = self.0.extend(
+            rules
+                .into_iter()
+                .map(|rule_js| {
+                    serde_wasm_bindgen::from_value::<WasmRule>(rule_js).and_then(|x| Ok(x.0))
+                })
+                .collect::<Result<Vec<Rule>, serde_wasm_bindgen::Error>>()?,
+        );
         Ok(std::mem::take(self))
     }
 

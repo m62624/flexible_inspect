@@ -5,10 +5,12 @@ use super::*;
 #[derive(Serialize, Deserialize, Default)]
 pub struct WasmRule(Rule);
 
-#[wasm_bindgen]
+#[wasm_bindgen(js_class = Rule)]
 impl WasmRule {
-    #[wasm_bindgen(constructor)]
-    pub fn new(pattern: String, requirement: MatchRequirement) -> Self {
+    pub fn start_build(pattern: String, requirement: MatchRequirement) -> Self {
         Self(Rule::new(pattern, requirement.into()))
+    }
+    pub fn finish_build(&self) -> Result<JsValue, serde_wasm_bindgen::Error> {
+        serde_wasm_bindgen::to_value(&self)
     }
 }

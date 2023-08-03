@@ -7,8 +7,10 @@ pub struct WasmRuleBytes(RuleBytes);
 
 #[wasm_bindgen]
 impl WasmRuleBytes {
-    #[wasm_bindgen(constructor)]
-    pub fn new(pattern: String, requirement: MatchRequirement) -> Self {
+    pub fn start_build(pattern: String, requirement: MatchRequirement) -> Self {
         Self(RuleBytes::new(pattern, requirement.into()))
+    }
+    pub fn finish_build(&self) -> Result<JsValue, serde_wasm_bindgen::Error> {
+        serde_wasm_bindgen::to_value(&self)
     }
 }
