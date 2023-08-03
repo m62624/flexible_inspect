@@ -53,6 +53,7 @@ mod hash_trait {
     }
 }
 
+/// Here we implement a trait for `RegexSet` serialization and deserialization
 #[cfg(any(feature = "serde", feature = "wasm"))]
 mod serde_trait{
     use super::*;
@@ -61,9 +62,9 @@ mod serde_trait{
         where
             S: Serializer,
         {
-            // Получаем вектор шаблонов
+            // Get a vector of patterns
             let patterns = self.regex_set.patterns();
-            // Сериализуем вектор шаблонов
+            // Serialize the vector
             patterns.serialize(serializer)
         }
     }
@@ -73,10 +74,10 @@ mod serde_trait{
         where
             D: Deserializer<'de>,
         {
-            // десериализуем вектор шаблонов
+            // Get a vector of patterns
             let patterns: Vec<String> =
                 Deserialize::deserialize(deserializer)?;
-            // компилируем в `RegexSet`
+            // Serialize the vector
             let regex_set = regex::bytes::RegexSet::new(patterns).unwrap();
             Ok(Self { regex_set })
         }

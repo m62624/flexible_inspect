@@ -38,13 +38,11 @@ impl WasmRuleModifiers for WasmRule {
 #[wasm_bindgen(js_class = Rule)]
 impl WasmRule {
     pub fn extend(&mut self, rules: Vec<JsValue>) -> WasmRule {
-        // self.0 = self.0.extend(Self::_to_rust_for_extend(rules)?);
         self.0 = self.0.extend(
             rules
                 .into_iter()
                 .map(|rule_js| {
-                    serde_wasm_bindgen::from_value::<WasmRule>(rule_js)
-                        .and_then(|x| Ok(x.0))
+                    serde_wasm_bindgen::from_value::<WasmRule>(rule_js).map(|x| x.0)
                         .expect("\nRule loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for `completion`.\n2) You can only use the `Rule` type for the root
                         ")
                 })

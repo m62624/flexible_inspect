@@ -1,6 +1,7 @@
 use super::{rule_str::RegexRaw, traits::RuleBase, *};
 use crate::prelude::Rule;
 
+
 impl GeneralModifiers {
     pub fn new(requirement: MatchRequirement) -> Self {
         Self {

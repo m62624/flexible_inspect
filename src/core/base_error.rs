@@ -2,6 +2,9 @@
 use serde::{Deserialize, Serialize};
 use std::{error::Error, fmt};
 
+// We implement our own error for each cartridge
+
+/// This Error stores data from the `cartridges`, an `error message` with data, and an `error code`
 #[cfg_attr(
     any(feature = "serde", feature = "wasm"),
     derive(Serialize, Deserialize)
@@ -19,10 +22,12 @@ impl PystvalError {
         Self { id, msg }
     }
 
+    /// Returns the error code
     pub fn get_code(&self) -> i64 {
         self.id
     }
 
+    /// Returns the error message
     pub fn get_message(&self) -> &str {
         &self.msg
     }

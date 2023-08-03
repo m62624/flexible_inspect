@@ -10,7 +10,6 @@ use indexmap::IndexSet;
 use std::{fmt::Debug, hash::Hash};
 // =======================================================
 
-
 /// This trait requires implementations of the most basic methods for any `Rule`.
 pub trait RuleBase {
     type TakeRuleType;
@@ -35,7 +34,6 @@ pub trait RuleBase {
 /// That is, `next` + `mode matching` will be common for them.
 /// The main thing is to implement separately `Captures` for `&str` and `&[u8]`
 /// the rest will be the same
-///
 
 pub trait CalculateValueRules<'a, C: PartialEq + Eq + Hash> {
     type RuleType: RuleBase<RuleType = Self::RuleType, RegexSet = Self::RegexSet>
@@ -55,7 +53,6 @@ pub trait RuleModifiers {
     /// ( **by default, all rules must pass every match check** )
     fn extend<R: IntoIterator<Item = Self::RuleType>>(&mut self, nested_rules: R)
         -> Self::RuleType;
-
     /// modifier to set the match counter, condition counter == match
     fn counter_is_equal(&mut self, count: usize) -> Self::RuleType;
     /// modifier to set the match counter, condition counter >= match

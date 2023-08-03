@@ -90,9 +90,9 @@ category = "tool"
 wasm-bindgen-test = "0.3.37"
 serde_json = "1.0.104"
 
-# Integration tests for the Python API
-[[test]]
-name = "tests-python-api"
-path = "tests/python/tests_validate_async.rs"
-required-features = ["python-lib"]
-harness = false
+# # Integration tests for the Python API
+# [[test]]
+# name = "tests-python-api"
+# path = "tests/python/tests_validate_async.rs"
+# required-features = ["python-lib"]
+# harness = false

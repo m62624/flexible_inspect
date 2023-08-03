@@ -12,12 +12,10 @@ impl CartridgeBase<RuleBytes, &[u8]> for Cartridge<RuleBytes> {
         )
     }
 
-    /// Get the `error code`
     fn get_id(&self) -> i64 {
         self.id
     }
 
-    /// Get an `error message` with data
     fn get_message(&self) -> &str {
         &self.message
     }

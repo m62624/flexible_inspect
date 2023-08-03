@@ -1,6 +1,7 @@
 use super::*;
 use crate::core::rules::{traits::RuleBase, Counter};
 
+/// The counter implementation
 impl Counter {
     pub fn counter_status<R: RuleBase, C: PartialEq + Eq + Hash>(
         rule: &R,

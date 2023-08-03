@@ -5,12 +5,16 @@ use super::{traits::RuleBase, *};
 /// All optional modifiers `NextStep` to have a unified type
 #[derive(Debug, PartialEq, Eq)]
 pub enum NextStep {
+    /// Continue to the next `Rule|RuleBytes`
     Go,
+    /// Finish the step
     Finish,
+    /// Error with optional `HashMap` for error filling
     Error(Option<HashMap<String, String>>),
 }
 
 impl NextStep {
+    /// Mechanism with final variant, depending on modifiers we get the result 
     pub fn next_or_finish_or_error<R: RuleBase, C: PartialEq + Eq + Hash>(
         rule: &R,
         captures: &mut CaptureData<C>,
