@@ -6,7 +6,7 @@ use super::*;
 #[derive(Serialize, Deserialize, PartialEq, Eq, Debug)]
 pub struct WasmCartridgeBytes(pub(crate) Cartridge<RuleBytes>);
 
-#[wasm_bindgen(js_class = Cartridge)]
+#[wasm_bindgen(js_class = CartridgeBytes)]
 impl WasmCartridgeBytes {
     pub fn start_build(
         id: i64,
