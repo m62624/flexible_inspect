@@ -16,3 +16,9 @@ impl WasmRuleBytes {
         serde_wasm_bindgen::to_value(&self)
     }
 }
+
+impl From<WasmRuleBytes> for RuleBytes {
+    fn from(wasm_rule: WasmRuleBytes) -> Self {
+        wasm_rule.0
+    }
+}
