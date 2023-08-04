@@ -1,6 +1,6 @@
 mod modifiers;
-
 use super::*;
+
 #[wasm_bindgen(js_name = RuleBytes)]
 #[derive(Serialize, Deserialize, Default, PartialEq, Eq, Debug)]
 pub struct WasmRuleBytes(RuleBytes);
