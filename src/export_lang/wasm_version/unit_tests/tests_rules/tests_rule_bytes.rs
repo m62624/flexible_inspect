@@ -74,7 +74,7 @@ pub mod fn_extend {
         ];
 
         WasmRuleBytes::start_build(r".+".into(), MatchRequirement::MustNotBeFound)
-            .extend(nested_rules);
+            .extend(nested_rules).unwrap();
     }
 }
 
