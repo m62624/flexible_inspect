@@ -33,18 +33,21 @@ pub trait WasmRuleModifiers {
     fn _mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self::WasmRuleType;
     fn _to_rust_for_extend(
         nested_rules: Vec<JsValue>,
-        message_type_rule: &str,
+        message: &str,
+        message_if_empty: &str,
     ) -> Result<Vec<Self::RustRuleType>, JsValue> {
+        if nested_rules.is_empty() {
+            return Err(JsValue::from_str(
+                format!("{message_if_empty}").as_str(),
+            ));
+        }
         nested_rules
-                    .into_iter()
-                    .map(|rule_js| {
-                        serde_wasm_bindgen::from_value::<Self::RustRuleType>(rule_js)
-                            .map(|rule| Ok(rule))
-                            .unwrap_or_else(|_| {
-                                Err(JsValue::from_str(format!("\n`{message_type_rule}` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `{message_type_rule}` type for the root
-                                ",).as_str()))
-                            })
-                    })
-                    .collect::<Result<Vec<Self::RustRuleType>, JsValue>>()
+            .into_iter()
+            .map(|rule_js| {
+                serde_wasm_bindgen::from_value::<Self::RustRuleType>(rule_js)
+                    .map(|rule| Ok(rule))
+                    .unwrap_or_else(|_| Err(JsValue::from_str(format!("{message}").as_str())))
+            })
+            .collect::<Result<Vec<Self::RustRuleType>, JsValue>>()
     }
 }

@@ -15,7 +15,7 @@ impl WasmCartridge {
         Ok(Self(Cartridge::new(
             id,
             message,
-            WasmRule::_to_rust_for_extend(root_rules, "(Cartrdige) Rule")?,
+            WasmRule::_to_rust_for_extend(root_rules, format!("\n` (Cartridge) Rule` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `Rule` (collection format) type for the `Cartridge`").as_str(), "\nYou must specify at least one rule for the `Cartridge` (collection format) [ Rule, Rule, Rule ]")?,
         )))
     }
 

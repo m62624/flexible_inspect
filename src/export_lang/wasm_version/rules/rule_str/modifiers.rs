@@ -40,7 +40,8 @@ impl WasmRule {
     pub fn extend(&mut self, rules: Vec<JsValue>) -> Result<WasmRule, JsValue> {
         self.0 = self
             .0
-            .extend(WasmRule::_to_rust_for_extend(rules, "Rule")?);
+            .extend(WasmRule::_to_rust_for_extend(rules, format!("\n`Rule` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `Rule` (collection format) type for the root `({:#?})`
+            ",serde_wasm_bindgen::to_value(self).unwrap()).as_str(),"\nYou must specify at least one rule for the root rule (collection format) [ Rule, Rule, Rule ]")?);
         Ok(std::mem::take(self))
     }
 
