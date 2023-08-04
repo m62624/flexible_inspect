@@ -76,3 +76,38 @@ pub mod fn_extend {
         WasmRule::start_build(r".+".into(), MatchRequirement::MustNotBeFound).extend(nested_rules);
     }
 }
+
+mod tests_matching_mode {
+    use super::*;
+    use crate::core::rules::ModeMatch;
+
+    #[wasm_bindgen_test]
+    fn tests_matching_mode_t_0() {
+        let rule = WasmRule::start_build(r"ABOBA".into(), MatchRequirement::MustBeFound)
+            .mode_all_rules_for_at_least_one_match();
+        assert_eq!(
+            <WasmRule as Into<Rule>>::into(rule).get_mode_match(),
+            &ModeMatch::AllRulesForAtLeastOneMatch
+        );
+    }
+
+    #[wasm_bindgen_test]
+    fn tests_matching_mode_t_1() {
+        let rule = WasmRule::start_build(r"ABOBA".into(), MatchRequirement::MustBeFound)
+            .mode_at_least_one_rule_for_at_least_one_match();
+        assert_eq!(
+            <WasmRule as Into<Rule>>::into(rule).get_mode_match(),
+            &ModeMatch::AtLeastOneRuleForAtLeastOneMatch
+        );
+    }
+
+    #[wasm_bindgen_test]
+    fn tests_matching_mode_t_2() {
+        let rule = WasmRule::start_build(r"ABOBA".into(), MatchRequirement::MustBeFound)
+            .mode_at_least_one_rule_for_all_matches();
+        assert_eq!(
+            <WasmRule as Into<Rule>>::into(rule).get_mode_match(),
+            &ModeMatch::AtLeastOneRuleForAllMatches
+        );
+    }
+}
