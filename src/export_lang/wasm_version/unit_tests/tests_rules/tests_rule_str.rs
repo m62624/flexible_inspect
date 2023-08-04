@@ -44,3 +44,35 @@ pub mod fn_start_build {
         );
     }
 }
+
+pub mod fn_extend {
+    use super::*;
+
+    #[wasm_bindgen_test]
+    fn fn_extend_t_0() {
+        let nested_rules = vec![
+            serde_wasm_bindgen::to_value(&WasmRule::start_build(
+                r"ABOBA".into(),
+                MatchRequirement::MustBeFound,
+            ))
+            .unwrap(),
+            serde_wasm_bindgen::to_value(&WasmRule::start_build(
+                r"BOB".into(),
+                MatchRequirement::MustBeFound,
+            ))
+            .unwrap(),
+            serde_wasm_bindgen::to_value(&WasmRule::start_build(
+                r"LOCK".into(),
+                MatchRequirement::MustBeFound,
+            ))
+            .unwrap(),
+            serde_wasm_bindgen::to_value(&WasmRule::start_build(
+                r"UNLOCK".into(),
+                MatchRequirement::MustBeFound,
+            ))
+            .unwrap(),
+        ];
+
+        WasmRule::start_build(r".+".into(), MatchRequirement::MustNotBeFound).extend(nested_rules);
+    }
+}
