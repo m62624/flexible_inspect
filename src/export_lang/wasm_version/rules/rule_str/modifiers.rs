@@ -37,18 +37,11 @@ impl WasmRuleModifiers for WasmRule {
 
 #[wasm_bindgen(js_class = Rule)]
 impl WasmRule {
-    pub fn extend(&mut self, rules: Vec<JsValue>) -> WasmRule {
-        self.0 = self.0.extend(
-            rules
-                .into_iter()
-                .map(|rule_js| {
-                    serde_wasm_bindgen::from_value::<WasmRule>(rule_js).map(|x| x.0)
-                        .expect("\nRule loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for `completion`.\n2) You can only use the `Rule` type for the root
-                        ")
-                })
-                .collect::<Vec<Rule>>(),
-        );
-        std::mem::take(self)
+    pub fn extend(&mut self, rules: Vec<JsValue>) -> Result<WasmRule, JsValue> {
+        self.0 = self
+            .0
+            .extend(WasmRule::_to_rust_for_extend(rules, "Rule")?);
+        Ok(std::mem::take(self))
     }
 
     /// modifier to set the match counter, condition counter == match
