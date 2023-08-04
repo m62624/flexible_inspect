@@ -7,7 +7,7 @@ pub struct WasmCartridgeBytes(pub(crate) Cartridge<RuleBytes>);
 #[wasm_bindgen(js_class = CartridgeBytes)]
 impl WasmCartridgeBytes {
     pub fn start_build(
-        id: i64,
+        id: i32,
         message: String,
         root_rules: Vec<JsValue>,
     ) -> Result<WasmCartridgeBytes, JsValue> {
@@ -15,7 +15,7 @@ impl WasmCartridgeBytes {
         Ok(Self(Cartridge::new(
             id,
             message,
-            WasmRuleBytes::_to_rust_for_extend(root_rules, "RuleBytes")?,
+            WasmRuleBytes::_to_rust_for_extend(root_rules, "(CartrdigeBytes) RuleBytes")?,
         )))
     }
 
@@ -45,7 +45,7 @@ impl WasmCartridgeBytes {
     }
 
     /// Get the `error code`
-    pub fn get_id(&self) -> i64 {
+    pub fn get_id(&self) -> i32 {
         self.0.id
     }
 

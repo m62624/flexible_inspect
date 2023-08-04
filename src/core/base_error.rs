@@ -11,19 +11,19 @@ use std::{error::Error, fmt};
 )]
 #[derive(Debug, Clone, PartialEq, Eq)]
 pub struct PystvalError {
-    pub(crate) id: i64,
+    pub(crate) id: i32,
     pub(crate) msg: String,
 }
 
 impl Error for PystvalError {}
 
 impl PystvalError {
-    pub fn new(id: i64, msg: String) -> Self {
+    pub fn new(id: i32, msg: String) -> Self {
         Self { id, msg }
     }
 
     /// Returns the error code
-    pub fn get_code(&self) -> i64 {
+    pub fn get_code(&self) -> i32 {
         self.id
     }
 

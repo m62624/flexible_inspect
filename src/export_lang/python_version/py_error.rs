@@ -9,14 +9,14 @@ use std::fmt;
 pub struct PyPystvalError(PystvalError);
 
 impl PyPystvalError {
-    pub fn new(id: i64, msg: String) -> Self {
+    pub fn new(id: i32, msg: String) -> Self {
         Self(PystvalError::new(id, msg))
     }
 }
 
 #[pymethods]
 impl PyPystvalError {
-    pub fn get_code(&self) -> i64 {
+    pub fn get_code(&self) -> i32 {
         self.0.id
     }
 

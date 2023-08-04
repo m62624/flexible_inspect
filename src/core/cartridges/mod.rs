@@ -19,7 +19,7 @@ where
     /// Run the validation for one `cartridge`
     fn run(&self, data: D) -> NextStep;
     /// Get the `error code`
-    fn get_id(&self) -> i64;
+    fn get_id(&self) -> i32;
     /// Get an `error message` with data
     fn get_message(&self) -> &str;
 }
@@ -38,7 +38,7 @@ where
     T: RuleBase,
 {
     pub(crate) root_rule: T,
-    pub(crate) id: i64,
+    pub(crate) id: i32,
     pub(crate) message: String,
 }
 
@@ -46,7 +46,7 @@ impl<T> Cartridge<T>
 where
     T: RuleBase + RuleModifiers<RuleType = T>,
 {
-    pub fn new<S, I>(id: i64, message: S, rules: I) -> Self
+    pub fn new<S, I>(id: i32, message: S, rules: I) -> Self
     where
         S: Into<String>,
         I: IntoIterator<Item = T>,

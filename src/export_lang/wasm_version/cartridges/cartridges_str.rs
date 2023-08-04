@@ -7,7 +7,7 @@ pub struct WasmCartridge(pub(crate) Cartridge<Rule>);
 #[wasm_bindgen(js_class = Cartridge)]
 impl WasmCartridge {
     pub fn start_build(
-        id: i64,
+        id: i32,
         message: String,
         root_rules: Vec<JsValue>,
     ) -> Result<WasmCartridge, JsValue> {
@@ -15,7 +15,7 @@ impl WasmCartridge {
         Ok(Self(Cartridge::new(
             id,
             message,
-            WasmRule::_to_rust_for_extend(root_rules, "Rule")?,
+            WasmRule::_to_rust_for_extend(root_rules, "(Cartrdige) Rule")?,
         )))
     }
 
@@ -45,11 +45,11 @@ impl WasmCartridge {
     }
 
     /// Get the `error code`
-    pub fn get_id(&self) -> i64 {
+    pub fn get_id(&self) -> i32 {
         self.0.id
     }
 
-    /// Get an `error message` with data
+    /// Get an `error message` with dataя
     pub fn get_message(&self) -> String {
         self.0.message.clone()
     }

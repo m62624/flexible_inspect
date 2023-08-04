@@ -12,7 +12,7 @@ impl CartridgeBase<RuleBytes, Arc<[u8]>> for Cartridge<RuleBytes> {
         )
     }
 
-    fn get_id(&self) -> i64 {
+    fn get_id(&self) -> i32 {
         self.id
     }
 

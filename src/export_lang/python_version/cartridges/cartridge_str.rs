@@ -13,7 +13,7 @@ impl From<PyCartridge> for Cartridge<Rule> {
 #[pymethods]
 impl PyCartridge {
     #[new]
-    pub fn new(py: Python, id: i64, message: String, root_rules: PyObject) -> PyResult<Self> {
+    pub fn new(py: Python, id: i32, message: String, root_rules: PyObject) -> PyResult<Self> {
         Ok(Self(Cartridge::new(
             id,
             message,
@@ -43,7 +43,7 @@ impl PyCartridge {
     }
 
     /// Get the `error code`
-    pub fn get_id(&self) -> i64 {
+    pub fn get_id(&self) -> i32 {
         self.0.id
     }
 

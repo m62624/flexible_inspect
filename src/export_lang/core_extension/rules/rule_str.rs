@@ -11,7 +11,7 @@ impl CartridgeBase<Rule, Arc<str>> for Cartridge<Rule> {
         )
     }
 
-    fn get_id(&self) -> i64 {
+    fn get_id(&self) -> i32 {
         self.id
     }
 
