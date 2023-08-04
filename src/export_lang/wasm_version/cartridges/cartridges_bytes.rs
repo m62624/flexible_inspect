@@ -43,4 +43,14 @@ impl WasmCartridgeBytes {
         self.0 = self.0.mode_at_least_one_rule_for_at_least_one_match();
         std::mem::take(self)
     }
+
+    /// Get the `error code`
+    pub fn get_id(&self) -> i64 {
+        self.0.id
+    }
+
+    /// Get an `error message` with data
+    pub fn get_message(&self) -> String {
+        self.0.message.clone()
+    }
 }
