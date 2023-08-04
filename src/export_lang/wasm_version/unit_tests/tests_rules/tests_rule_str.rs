@@ -79,7 +79,6 @@ pub mod fn_extend {
 
 mod tests_matching_mode {
     use super::*;
-    use crate::core::rules::ModeMatch;
 
     #[wasm_bindgen_test]
     fn tests_matching_mode_t_0() {
