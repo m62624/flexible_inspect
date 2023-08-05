@@ -15,7 +15,7 @@ impl WasmCartridgeBytes {
         Ok(Self(Cartridge::new(
             id,
             message,
-            WasmRuleBytes::_to_rust_for_extend(root_rules, format!("\n` (CartridgeBytes) RuleBytes` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `RuleBytes` (collection format) type for the `CartridgeBytes`").as_str(),"\nYou must specify at least one rule for the `CartridgeBytes` (collection format) [ RuleBytes, RuleBytes, RuleBytes ]")?,
+            _to_rust_for_extend(root_rules, format!("\n` (CartridgeBytes) RuleBytes` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `RuleBytes` (collection format) type for the `CartridgeBytes`").as_str(),"\nYou must specify at least one rule for the `CartridgeBytes` (collection format) [ RuleBytes, RuleBytes, RuleBytes ]")?,
         )))
     }
 

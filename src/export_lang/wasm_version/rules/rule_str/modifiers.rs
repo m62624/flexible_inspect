@@ -3,7 +3,6 @@ use crate::core::rules::traits::RuleModifiers;
 
 impl WasmRuleModifiers for WasmRule {
     type WasmRuleType = WasmRule;
-    type RustRuleType = Rule;
     fn _counter_is_equal(&mut self, count: usize) -> Self::WasmRuleType {
         self.0 = self.0.counter_is_equal(count);
         std::mem::take(self)
@@ -40,7 +39,7 @@ impl WasmRule {
     pub fn extend(&mut self, rules: Vec<JsValue>) -> Result<WasmRule, JsValue> {
         self.0 = self
             .0
-            .extend(WasmRule::_to_rust_for_extend(rules, format!("\n`Rule` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `Rule` (collection format) type for the root `({:#?})`
+            .extend(_to_rust_for_extend(rules, format!("\n`Rule` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `Rule` (collection format) type for the root `({:#?})`
             ",serde_wasm_bindgen::to_value(self).unwrap()).as_str(),"\nYou must specify at least one rule for the root rule (collection format) [ Rule, Rule, Rule ]")?);
         Ok(std::mem::take(self))
     }

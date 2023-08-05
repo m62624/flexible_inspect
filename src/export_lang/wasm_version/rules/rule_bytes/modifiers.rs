@@ -3,7 +3,6 @@ use crate::core::rules::traits::RuleModifiers;
 
 impl WasmRuleModifiers for WasmRuleBytes {
     type WasmRuleType = WasmRuleBytes;
-    type RustRuleType = RuleBytes;
     fn _counter_is_equal(&mut self, count: usize) -> Self::WasmRuleType {
         self.0 = self.0.counter_is_equal(count);
         std::mem::take(self)
@@ -40,7 +39,7 @@ impl WasmRuleBytes {
     pub fn extend(&mut self, rules: Vec<JsValue>) -> Result<WasmRuleBytes, JsValue> {
         self.0 = self
             .0
-            .extend(WasmRuleBytes::_to_rust_for_extend(rules, format!("\n`RuleBytes` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `RuleBytes` (collection format) type for the root `({:#?})`
+            .extend(_to_rust_for_extend(rules, format!("\n`RuleBytes` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `RuleBytes` (collection format) type for the root `({:#?})`
             ",serde_wasm_bindgen::to_value(self).unwrap()).as_str(),format!("\nYou must specify at least one rule for the root rule (collection format) [ RuleBytes, RuleBytes, RuleBytes ]").as_str())?);
         Ok(std::mem::take(self))
     }
