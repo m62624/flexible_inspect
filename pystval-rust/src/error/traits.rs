@@ -1,6 +1,8 @@
+use std::fmt::Debug;
+
 use super::*;
 
-pub trait ValidationError {
+pub trait ValidationError: Send + Sync + Debug {
     fn get_code(&self) -> i32;
     fn get_message(&self) -> &str;
 }

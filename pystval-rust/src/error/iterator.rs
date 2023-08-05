@@ -1,3 +1,4 @@
+use futures::Stream;
 use super::traits::ValidationError;
 
 pub struct ValidationErrorIterator {
@@ -7,6 +8,10 @@ pub struct ValidationErrorIterator {
 impl ValidationErrorIterator {
     pub fn new(collection: Vec<Box<dyn ValidationError>>) -> Self {
         Self { collection }
+    }
+
+    pub async fn async_into_iter(self) -> impl Stream<Item = Box<dyn ValidationError>> {
+        futures::stream::iter(self.collection.into_iter())
     }
 }
 

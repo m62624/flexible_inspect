@@ -1,8 +1,8 @@
-pub mod async_error;
-pub mod sync_error;
+pub mod iterator;
 pub mod traits;
 use self::traits::ValidationError;
 
+#[derive(Debug)]
 pub struct BaseValidationError {
     code: i32,
     message: String,
