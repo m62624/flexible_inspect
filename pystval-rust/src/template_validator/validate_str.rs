@@ -33,10 +33,11 @@ where
         }
     }
 
+    #[allow(clippy::into_iter_on_ref)]
     async fn async_validate(&self, data: &'a str) -> Result<(), ValidationErrorIterator> {
         let error = futures::stream::iter(self.cartridges.as_ref().into_iter())
             .filter_map(|cartridge| async move {
-                if let NextStep::Error(extra_with_value) = cartridge.run(&data) {
+                if let NextStep::Error(extra_with_value) = cartridge.run(data) {
                     Some(Box::new(BaseValidationError::new(
                         cartridge.get_id(),
                         filling_message(cartridge.get_message(), extra_with_value),
