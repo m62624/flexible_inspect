@@ -1,0 +1,26 @@
+[package]
+name = "pystval"
+version = "2.0.0"
+authors = ["Mansur Azatbek <mansur62624@gmail.com>"]
+description = "Library for creating a custom validator"
+edition = "2021"
+rust-version = "1.60"
+
+[lib]
+name = "pystval"
+crate-type = ["cdylib", "rlib"]
+
+# Core library dependencies
+[dependencies]
+serde = { version = "1.0.180", features = ["derive"], optional = true }
+env_logger = "0.10.0"
+log = "0.4.19"
+async-std = { version = "1.12.0", features = ["attributes"] }
+async-trait = "0.1.72"
+lazy_static = "1.4.0"
+fancy-regex = "0.11.0"
+regex = "1.9.1"
+indexmap = "2.0.0"
+
+[features]
+serde = ["dep:serde", "indexmap/serde"]
