@@ -1,5 +1,5 @@
-use futures::Stream;
 use super::traits::ValidationError;
+use futures::Stream;
 
 pub struct ValidationErrorIterator {
     collection: Vec<Box<dyn ValidationError>>,
