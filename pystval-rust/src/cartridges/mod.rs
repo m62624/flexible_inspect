@@ -1,37 +1,20 @@
 // =======================================================
 mod cartridges_bytes;
 mod cartridges_str;
-mod root_mode_matching;
+pub mod traits;
 // =======================================================
 use super::rules::{self, next::NextStep, traits::RuleBase, CaptureData};
 use crate::prelude::*;
-#[cfg(any(feature = "serde", feature = "wasm"))]
+#[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
 use std::{collections::HashSet, fmt::Debug, hash::Hash};
 // =======================================================
 
-/// This trait is required for single access to `Rule cartridges` or `RuleBytes cartridges`
-pub trait CartridgeBase<T, D>
-where
-    T: RuleBase,
-    D: PartialEq + Eq + Hash + Debug,
-{
-    /// Run the validation for one `cartridge`
-    fn run(&self, data: D) -> NextStep;
-    /// Get the `error code`
-    fn get_id(&self) -> i32;
-    /// Get an `error message` with data
-    fn get_message(&self) -> &str;
-}
-
 /// The container structure for `custom rules`, `error message` and `error code`.\
 /// Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.\
-/// ( *Each cartridge can only hold one type at a time, `Rule` or `RuleBytes`* )
+/// ( *Each cartridge can only hold one type at a time, `Rule` or `RuleBytes`* )\
 /// **by default, all rules must pass every match check**
-#[cfg_attr(
-    any(feature = "serde", feature = "wasm"),
-    derive(Serialize, Deserialize)
-)]
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
 pub struct Cartridge<T>
 where

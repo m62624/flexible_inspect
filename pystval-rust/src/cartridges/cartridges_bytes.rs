@@ -1,6 +1,6 @@
-use super::*;
+use super::{traits::*, *};
 
-impl CartridgeBase<RuleBytes, &[u8]> for Cartridge<RuleBytes> {
+impl CartridgeBase<&[u8]> for Cartridge<RuleBytes> {
     fn run(&self, data: &[u8]) -> NextStep {
         rules::runner::run::<RuleBytes, &[u8]>(
             &self.root_rule,
@@ -18,5 +18,26 @@ impl CartridgeBase<RuleBytes, &[u8]> for Cartridge<RuleBytes> {
 
     fn get_message(&self) -> &str {
         &self.message
+    }
+}
+
+impl CartridgeModifiers for Cartridge<RuleBytes> {
+    type CartridgeType = Cartridge<RuleBytes>;
+
+    fn mode_all_rules_for_at_least_one_match(&mut self) -> Self {
+        self.root_rule = self.root_rule.mode_all_rules_for_at_least_one_match();
+        std::mem::take(self)
+    }
+
+    fn mode_at_least_one_rule_for_all_matches(&mut self) -> Self {
+        self.root_rule = self.root_rule.mode_at_least_one_rule_for_all_matches();
+        std::mem::take(self)
+    }
+
+    fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self {
+        self.root_rule = self
+            .root_rule
+            .mode_at_least_one_rule_for_at_least_one_match();
+        std::mem::take(self)
     }
 }
