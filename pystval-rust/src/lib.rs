@@ -40,10 +40,10 @@ use std::sync::Once;
 // =====================================================================
 pub mod prelude {
     pub use crate::cartridges::{traits::CartridgeModifiers, Cartridge};
-    // pub use crate::error::{ValidationError, ValidationErrorIterator};
+    pub use crate::error::traits::ValidationError;
     pub use crate::rules::MatchRequirement;
     pub use crate::rules::{rule_bytes::RuleBytes, rule_str::Rule, traits::RuleModifiers};
-    pub use crate::template_validator::*;
+    pub use crate::template_validator::{TemplateValidator, ValidatorBase};
 }
 // =====================================================================
 /// For one-time initialization to the logger
