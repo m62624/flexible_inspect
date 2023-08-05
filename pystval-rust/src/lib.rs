@@ -37,10 +37,9 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::sync::Once;
 // =====================================================================
 pub mod prelude {
-    pub use crate::cartridges::*;
-    pub use crate::rules::traits::RuleModifiers;
+    pub use crate::cartridges::{traits::CartridgeModifiers, Cartridge};
     pub use crate::rules::MatchRequirement;
-    pub use crate::rules::{rule_bytes::RuleBytes, rule_str::Rule};
+    pub use crate::rules::{rule_bytes::RuleBytes, rule_str::Rule, traits::RuleModifiers};
 }
 // =====================================================================
 /// For one-time initialization to the logger
