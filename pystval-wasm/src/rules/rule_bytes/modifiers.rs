@@ -1,6 +1,6 @@
 use super::*;
 
-#[wasm_bindgen(js_class = "Rule")]
+#[wasm_bindgen(js_class = "RuleBytes")]
 impl WasmRuleBytes {
     pub fn extend(
         &mut self,
