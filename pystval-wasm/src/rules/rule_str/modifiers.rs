@@ -2,9 +2,12 @@ use super::*;
 
 #[wasm_bindgen(js_class = "Rule")]
 impl WasmRule {
-    pub fn extend(&mut self, nested_rules: JsValue) -> Result<WasmRule, serde_wasm_bindgen::Error> {
+    pub fn extend(&mut self, nested_rules: JsValue) -> Result<WasmRule, JsError> {
         self.0 = self.0.extend(
-            serde_wasm_bindgen::from_value::<Vec<WasmRule>>(nested_rules)?
+            serde_wasm_bindgen::from_value::<Vec<WasmRule>>(nested_rules)
+                .map_err(|_| {
+                    JsError::new("A collection of type `Rule` is expected [ Rule, Rule ,Rule ]")
+                })?
                 .into_iter()
                 .map(|rule| rule.into()),
         );
