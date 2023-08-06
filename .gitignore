@@ -1,2 +1,3 @@
 /target
 /pystval-wasm/pkg
+/pystval-python/.env
