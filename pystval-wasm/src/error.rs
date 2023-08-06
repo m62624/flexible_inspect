@@ -30,3 +30,10 @@ impl WasmValidationErrorIterator {
         })
     }
 }
+
+
+impl WasmValidationErrorIterator{
+    pub fn new(collection: Vec<Box<dyn ValidationError + Send>>) -> Self {
+        Self(collection)
+    }
+}
