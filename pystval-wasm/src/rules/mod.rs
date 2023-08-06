@@ -2,7 +2,7 @@ mod rule_bytes;
 mod rule_str;
 use super::*;
 
-#[wasm_bindgen]
+#[wasm_bindgen(js_name = "MatchRequirement")]
 pub enum WasmMatchRequirement {
     MustBeFound = 0,
     MustNotBeFound = 1,
