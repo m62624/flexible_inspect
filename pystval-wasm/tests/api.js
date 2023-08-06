@@ -1,23 +1,24 @@
-const { Rule, RuleBytes, MatchRequirement, Cartridge, CartridgeBytes } = require('../pkg');
+const { Rule, RuleBytes, MatchRequirement, Cartridge, CartridgeBytes, TemplateValidator, TemplateValidatorBytes, ValidationError, ValidationErrorIterator } = require('../pkg');
 
-let rule_root_1 = new Rule("ROOT_1", MatchRequirement.MustBeFound).extend([
-    new Rule("A", MatchRequirement.MustBeFound).finish_build(),
-    new Rule("B", MatchRequirement.MustBeFound).finish_build(),
-    new Rule("C", MatchRequirement.MustBeFound).finish_build(),
-]).counter_less_than(5).mode_all_rules_for_at_least_one_match().finish_build();
+async function main_test() {
+    let base_check_text = new Cartridge(0, "ERROR FROM CARTRIDGE_0", [
+        new Rule(/\d{3}-\d{2}-\d{4}/, MatchRequirement.MustNotBeFound).finish_build(),
+    ]).finish_build();
 
-let rule_root_2 = new Rule("ROOT_2", MatchRequirement.MustBeFound).extend([
-    new Rule("D", MatchRequirement.MustBeFound).finish_build(),
-    new Rule("F", MatchRequirement.MustBeFound).finish_build(),
-    new Rule("E", MatchRequirement.MustBeFound).finish_build(),
-]).counter_less_than(5).mode_all_rules_for_at_least_one_match().finish_build();
+    let external_check_text = new Cartridge(1, "ERROR FROM CARTRIDGE_1", [
+        new Rule(/\./, MatchRequirement.MustNotBeFound).finish_build(),
+    ]).finish_build();
 
+    let validator_text = new TemplateValidator([base_check_text, external_check_text]);
+    const result = validator_text.validate("123 ABC .[sdad]");
+}
 
-let rule_root_1_bytes = new RuleBytes("ROOT_2", MatchRequirement.MustBeFound).extend([
-    new RuleBytes("D", MatchRequirement.MustBeFound).finish_build(),
-    new RuleBytes("F", MatchRequirement.MustBeFound).finish_build(),
-    new RuleBytes("E", MatchRequirement.MustBeFound).finish_build(),
-]).counter_less_than(5).mode_all_rules_for_at_least_one_match().finish_build();
+function xok() {
+    console.log("Всё окей бро");
+}
 
-let cartr = new Cartridge(1, "main_cartridge", [rule_root_1_bytes, rule_root_2]).finish_build()
-console.log(cartr);
+function myCallback(err_code, message_code) {
+    console.log('Received data:', err_code, message_code);
+}
+
+main_test()
