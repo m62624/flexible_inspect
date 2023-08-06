@@ -43,3 +43,16 @@ impl RuleModifiers for WasmRuleBytes {
         std::mem::take(self)
     }
 }
+
+#[wasm_bindgen(js_class = "RuleBytes")]
+impl WasmRuleBytes {
+    fn _extend(
+        &mut self,
+        nested_rules: JsValue,
+    ) -> Result<WasmRuleBytes, serde_wasm_bindgen::Error> {
+        *self = self.extend(serde_wasm_bindgen::from_value::<Vec<WasmRuleBytes>>(
+            nested_rules,
+        )?);
+        Ok(std::mem::take(self))
+    }
+}

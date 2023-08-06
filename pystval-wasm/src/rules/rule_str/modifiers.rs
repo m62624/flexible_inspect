@@ -43,3 +43,17 @@ impl RuleModifiers for WasmRule {
         std::mem::take(self)
     }
 }
+
+#[wasm_bindgen(js_class = "Rule")]
+impl WasmRule {
+    #[wasm_bindgen(js_name = "extend")]
+    pub fn _extend(
+        &mut self,
+        nested_rules: JsValue,
+    ) -> Result<WasmRule, serde_wasm_bindgen::Error> {
+        *self = self.extend(serde_wasm_bindgen::from_value::<Vec<WasmRule>>(
+            nested_rules,
+        )?);
+        Ok(std::mem::take(self))
+    }
+}
