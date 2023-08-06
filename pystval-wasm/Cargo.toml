@@ -6,4 +6,10 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-serde = { version = "1.0.180", features = ["derive"], optional = true }
+serde = { version = "1.0.180", features = ["derive"] }
+pystval = { path = "../pystval-core-rust", features = ["serde"] }
+wasm-bindgen = "0.2.87"
+wasm-bindgen-futures = "0.4.37"
+serde-wasm-bindgen = "0.5.0"
+js-sys = "0.3.64"
+console_error_panic_hook = "0.1.7"

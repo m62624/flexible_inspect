@@ -1,2 +1,2 @@
 [workspace]
-members = ["pystval-rust", "pystval-python", "pystval-wasm"]
+members = ["pystval-core-rust", "pystval-python", "pystval-wasm"]
