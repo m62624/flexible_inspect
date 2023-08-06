@@ -1,5 +1,7 @@
 [package]
 name = "pystval-wasm"
+authors = ["Mansur Azatbek <mansur62624@gmail.com>"]
+description = "Library for creating a custom validator"
 version = "2.0.0"
 edition = "2021"
 
@@ -9,7 +11,10 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 serde = { version = "1.0.180", features = ["derive"] }
-pystval = { path = "../pystval-core-rust", features = ["serde","export_another_langs"] }
+pystval = { path = "../pystval-core-rust", features = [
+    "serde",
+    "export_another_langs",
+] }
 wasm-bindgen = "0.2.87"
 wasm-bindgen-futures = "0.4.37"
 serde-wasm-bindgen = "0.5.0"
