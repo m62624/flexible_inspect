@@ -24,7 +24,7 @@ impl Iterator for &mut ValidationErrorIterator {
     }
 }
 
-impl AsRef<Vec<Box<dyn ValidationError+ Send>>> for ValidationErrorIterator {
+impl AsRef<Vec<Box<dyn ValidationError + Send>>> for ValidationErrorIterator {
     fn as_ref(&self) -> &Vec<Box<dyn ValidationError + Send>> {
         &self.collection
     }
