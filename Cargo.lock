@@ -814,7 +814,7 @@ dependencies = [
 
 [[package]]
 name = "pystval"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "async-std",
  "async-trait",
@@ -830,7 +830,7 @@ dependencies = [
 
 [[package]]
 name = "pystval-python"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "pyo3",
  "pyo3-asyncio",
@@ -838,7 +838,7 @@ dependencies = [
 
 [[package]]
 name = "pystval-wasm"
-version = "2.0.0"
+version = "2.0.1"
 dependencies = [
  "console_error_panic_hook",
  "js-sys",

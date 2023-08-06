@@ -1,9 +1,11 @@
 [package]
 name = "pystval-wasm"
-authors = ["Mansur Azatbek <mansur62624@gmail.com>"]
-description = "Library for creating a custom validator"
-version = "2.0.0"
+authors = { workspace = true }
+description = { workspace = true }
+version = { workspace = true }
 edition = "2021"
+license = { workspace = true }
+repository = { workspace = true }
 
 [lib]
 crate-type = ["cdylib", "rlib"]
