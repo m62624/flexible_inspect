@@ -1,8 +1,26 @@
 [package]
 name = "pystval-python"
+authors = ["Mansur Azatbek <mansur62624@gmail.com>"]
+description = "Library for creating a custom validator"
 version = "2.0.0"
 edition = "2021"
 
+[lib]
+crate-type = ["cdylib", "rlib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+pyo3 = { version = "0.19.1", features = [
+    "abi3",
+    "abi3-py37",
+    "generate-import-lib",
+    "multiple-pymethods",
+] }
+pyo3-asyncio = { version = "0.19", features = [
+    "attributes",
+    "async-std-runtime",
+    "testing",
+] }
+
+[package.metadata.maturin]
+category = "tool"
