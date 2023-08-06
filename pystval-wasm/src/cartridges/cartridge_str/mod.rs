@@ -12,14 +12,14 @@ impl WasmCartridge {
         error_code: i32,
         message: String,
         root_rules: JsValue,
-    ) -> Result<WasmCartridge, JsError> {
+    ) -> Result<WasmCartridge, JsValue> {
         console_error_panic_hook::set_once();
         Ok(Self(Cartridge::new(
             error_code,
             message,
             serde_wasm_bindgen::from_value::<Vec<Rule>>(root_rules)
                 .map_err(|_| {
-                    JsError::new("A collection of type `Rule` is expected [ Rule, Rule ,Rule ]")
+                    JsValue::from_str(" (Cartridge) Rule` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `Rule`  ( [ Rule, Rule, Rule ] ) type for the `Cartridge`")
                 })?
                 .into_iter()
                 .map(|rule| rule.into()),

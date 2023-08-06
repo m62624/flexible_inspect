@@ -2,10 +2,10 @@ use super::*;
 
 #[wasm_bindgen(js_class = "RuleBytes")]
 impl WasmRuleBytes {
-    pub fn extend(&mut self, nested_rules: JsValue) -> Result<WasmRuleBytes, JsError> {
+    pub fn extend(&mut self, nested_rules: JsValue) -> Result<WasmRuleBytes, JsValue> {
         self.0 = self.0.extend(
             serde_wasm_bindgen::from_value::<Vec<WasmRuleBytes>>(nested_rules)
-                .map_err(|_| JsError::new("A collection of type `RuleBytes` is expected [ RuleBytes, RuleBytes ,RuleBytes ]"))?
+                .map_err(|_| JsValue::from_str("`RuleBytes` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `RuleBytes` ( [ RuleBytes, RuleBytes, RuleBytes ] )"))?
                 .into_iter()
                 .map(|rule| rule.into()),
         );
