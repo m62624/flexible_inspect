@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use super::{traits::*, *};
 
 impl CartridgeBase<&[u8]> for Cartridge<RuleBytes> {
@@ -39,5 +41,27 @@ impl CartridgeModifiers for Cartridge<RuleBytes> {
             .root_rule
             .mode_at_least_one_rule_for_at_least_one_match();
         std::mem::take(self)
+    }
+}
+
+// #[cfg(feature = "export_another_langs")]
+impl CartridgeBase<Arc<[u8]>> for Cartridge<RuleBytes> {
+    fn run(&self, data: Arc<[u8]>) -> NextStep {
+        rules::runner::run::<RuleBytes, &[u8]>(
+            &self.root_rule,
+            CaptureData {
+                text_for_capture: HashSet::from([data.as_ref()]),
+                hashmap_for_error: Default::default(),
+                counter_value: Default::default(),
+            },
+        )
+    }
+
+    fn get_id(&self) -> i32 {
+        self.id
+    }
+
+    fn get_message(&self) -> &str {
+        &self.message
     }
 }

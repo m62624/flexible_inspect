@@ -1,3 +1,5 @@
+use std::sync::Arc;
+
 use super::{traits::*, *};
 
 impl CartridgeBase<&str> for Cartridge<Rule> {
@@ -39,5 +41,27 @@ impl CartridgeModifiers for Cartridge<Rule> {
             .root_rule
             .mode_at_least_one_rule_for_at_least_one_match();
         std::mem::take(self)
+    }
+}
+
+// #[cfg(feature = "export_another_langs")]
+impl CartridgeBase<Arc<str>> for Cartridge<Rule> {
+    fn run(&self, data: Arc<str>) -> NextStep {
+        rules::runner::run::<Rule, &str>(
+            &self.root_rule,
+            CaptureData {
+                text_for_capture: HashSet::from([data.as_ref()]),
+                hashmap_for_error: Default::default(),
+                counter_value: Default::default(),
+            },
+        )
+    }
+
+    fn get_id(&self) -> i32 {
+        self.id
+    }
+
+    fn get_message(&self) -> &str {
+        &self.message
     }
 }
