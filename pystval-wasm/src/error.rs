@@ -29,10 +29,45 @@ impl WasmValidationErrorIterator {
             message: error.get_message().to_owned(),
         })
     }
+
+    pub fn for_each(&self, callback: js_sys::Function) -> Result<Vec<JsValue>, JsValue> {
+        self.0.iter().try_fold(Vec::new(), |mut acc, item| {
+            let result = callback.call2(
+                &callback,
+                &JsValue::from(item.get_code()),
+                &JsValue::from(item.get_message()),
+            )?;
+            acc.push(result);
+            Ok(acc)
+        })
+    }
+
+    pub fn if_error(&self, callback: js_sys::Function) -> Result<Vec<JsValue>, JsValue> {
+        if self.0.is_empty() {
+            Ok(Vec::new())
+        } else {
+            self.for_each(callback)
+        }
+    }
+
+    pub fn if_ok(&self, callback: js_sys::Function) -> Result<JsValue, JsValue> {
+        if self.0.is_empty() {
+            Ok(callback.call0(&callback)?)
+        } else {
+            Ok(JsValue::NULL)
+        }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
+    }
+
+    pub fn len(&self) -> usize {
+        self.0.len()
+    }
 }
 
-
-impl WasmValidationErrorIterator{
+impl WasmValidationErrorIterator {
     pub fn new(collection: Vec<Box<dyn ValidationError + Send>>) -> Self {
         Self(collection)
     }
