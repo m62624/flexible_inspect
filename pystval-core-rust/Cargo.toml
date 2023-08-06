@@ -8,7 +8,6 @@ rust-version = "1.60"
 
 [lib]
 name = "pystval"
-crate-type = ["cdylib", "rlib"]
 
 # Core library dependencies
 [dependencies]
