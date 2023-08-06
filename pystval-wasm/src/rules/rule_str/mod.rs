@@ -8,9 +8,9 @@ pub struct WasmRule(Rule);
 #[wasm_bindgen(js_class = "Rule")]
 impl WasmRule {
     #[wasm_bindgen(constructor)]
-    pub fn new(pattern: String, requirement: WasmMatchRequirement) -> Self {
+    pub fn new(pattern: js_sys::RegExp, requirement: WasmMatchRequirement) -> Self {
         console_error_panic_hook::set_once();
-        Self(Rule::new(pattern, requirement.into()))
+        Self(Rule::new(pattern.source(), requirement.into()))
     }
 
     pub fn finish_build(&self) -> Result<JsValue, serde_wasm_bindgen::Error> {
