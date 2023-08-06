@@ -2,7 +2,7 @@
 members = ["pystval-core-rust", "pystval-python", "pystval-wasm"]
 
 [workspace.package]
-version = "2.0.1"
+version = "2.0.0"
 authors = ["Mansur Azatbek <mansur62624@gmail.com>"]
 license = "MIT"
 description = "Library for creating a custom validator"
