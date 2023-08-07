@@ -13,7 +13,6 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 flexible_inspect_rs = { path = "../flexible_inspect_rs", features = [
-    "serde",
     "export_another_langs",
 ] }
 pyo3 = { version = "0.19.1", features = [
@@ -31,3 +30,6 @@ async-std = { version = "1.12.0", features = ["attributes"] }
 
 [package.metadata.maturin]
 category = "tool"
+
+[features]
+extension-module = ["pyo3/extension-module"]
