@@ -1,4 +1,6 @@
 use super::*;
+use pystval::prelude::ValidationError;
+extern crate pystval;
 
 #[pyclass(name = "ValidationError")]
 #[derive(Clone)]
