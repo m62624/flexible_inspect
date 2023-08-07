@@ -2,11 +2,11 @@ use super::*;
 
 #[pymethods]
 impl PyRuleBytes {
-    pub fn extend(&mut self, nested_rules: Vec<PyRuleBytes>) -> PyResult<Self> {
+    pub fn extend(&mut self, nested_rules: Vec<PyRuleBytes>) -> Self {
         self.0 = self
             .0
             .extend(nested_rules.into_iter().map(|rule| rule.into()));
-        todo!()
+        std::mem::take(self)
     }
 
     pub fn counter_is_equal(&mut self, count: usize) -> Self {
