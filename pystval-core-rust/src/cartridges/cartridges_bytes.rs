@@ -44,7 +44,7 @@ impl CartridgeModifiers for Cartridge<RuleBytes> {
     }
 }
 
-// #[cfg(feature = "export_another_langs")]
+#[cfg(feature = "export_another_langs")]
 impl CartridgeBase<Arc<[u8]>> for Cartridge<RuleBytes> {
     fn run(&self, data: Arc<[u8]>) -> NextStep {
         rules::runner::run::<RuleBytes, &[u8]>(

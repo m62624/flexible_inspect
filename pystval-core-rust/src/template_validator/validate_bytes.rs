@@ -59,7 +59,7 @@ where
     }
 }
 
-// #[cfg(feature = "export_another_langs")]
+#[cfg(feature = "export_another_langs")]
 #[async_trait]
 impl<'a, C, IC> ValidatorBase<C, IC, Arc<[u8]>> for TemplateValidator<IC, Arc<[u8]>>
 where

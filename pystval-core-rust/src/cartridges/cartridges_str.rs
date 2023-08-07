@@ -44,7 +44,7 @@ impl CartridgeModifiers for Cartridge<Rule> {
     }
 }
 
-// #[cfg(feature = "export_another_langs")]
+#[cfg(feature = "export_another_langs")]
 impl CartridgeBase<Arc<str>> for Cartridge<Rule> {
     fn run(&self, data: Arc<str>) -> NextStep {
         rules::runner::run::<Rule, &str>(
