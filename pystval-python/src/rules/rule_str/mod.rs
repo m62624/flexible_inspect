@@ -8,8 +8,8 @@ pub struct PyRule(Rule);
 #[pymethods]
 impl PyRule {
     #[new]
-    pub fn new(pattern: String, match_requirement: PyMatchRequeriment) -> Self {
-        PyRule(Rule::new(pattern, match_requirement.into()))
+    pub fn new(pattern: String, requirement: PyMatchRequeriment) -> Self {
+        PyRule(Rule::new(pattern, requirement.into()))
     }
 }
 

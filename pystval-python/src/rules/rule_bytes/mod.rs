@@ -8,8 +8,8 @@ pub struct PyRuleBytes(RuleBytes);
 #[pymethods]
 impl PyRuleBytes {
     #[new]
-    pub fn new(pattern: String, match_requirement: PyMatchRequeriment) -> Self {
-        PyRuleBytes(RuleBytes::new(pattern, match_requirement.into()))
+    pub fn new(pattern: String, requirement: PyMatchRequeriment) -> Self {
+        PyRuleBytes(RuleBytes::new(pattern, requirement.into()))
     }
 }
 
