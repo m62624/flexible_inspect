@@ -62,3 +62,9 @@ impl PyValidationErrorIterator {
         self.0.len()
     }
 }
+
+impl PyValidationErrorIterator {
+    pub fn new(collection: Vec<Box<dyn ValidationError + Send>>) -> Self {
+        Self(collection)
+    }
+}

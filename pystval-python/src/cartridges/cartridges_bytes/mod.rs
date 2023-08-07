@@ -16,3 +16,9 @@ impl PyCartridgeBytes {
         ))
     }
 }
+
+impl From<PyCartridgeBytes> for Cartridge<RuleBytes> {
+    fn from(value: PyCartridgeBytes) -> Self {
+        value.0
+    }
+}

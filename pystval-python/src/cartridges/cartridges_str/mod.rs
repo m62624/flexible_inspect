@@ -16,3 +16,9 @@ impl PyCartridge {
         ))
     }
 }
+
+impl From<PyCartridge> for Cartridge<Rule> {
+    fn from(value: PyCartridge) -> Self {
+        value.0
+    }
+}
