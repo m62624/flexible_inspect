@@ -19,6 +19,8 @@ pub mod prelude {
     pub use crate::rules::{rule_bytes::RuleBytes, rule_str::Rule, traits::RuleModifiers};
     pub use crate::template_validator::{TemplateValidator, ValidatorBase};
 }
+#[cfg(feature = "export_another_langs")]
+pub use error::traits::ValidationErrorExportLang;
 // =====================================================================
 /// For one-time initialization to the logger
 static INIT: Once = Once::new();
