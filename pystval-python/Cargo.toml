@@ -27,6 +27,7 @@ pyo3-asyncio = { version = "0.19", features = [
     "async-std-runtime",
     "testing",
 ] }
+async-std = { version = "1.12.0", features = ["attributes"] }
 
 [package.metadata.maturin]
 category = "tool"

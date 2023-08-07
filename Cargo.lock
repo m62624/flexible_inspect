@@ -832,6 +832,7 @@ dependencies = [
 name = "pystval-python"
 version = "2.0.0"
 dependencies = [
+ "async-std",
  "pyo3",
  "pyo3-asyncio",
  "pystval",
