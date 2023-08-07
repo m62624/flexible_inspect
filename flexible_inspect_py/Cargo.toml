@@ -13,7 +13,7 @@ crate-type = ["cdylib"]
 
 [dependencies]
 flexible_inspect_rs = { path = "../flexible_inspect_rs", features = [
-    "export_another_langs",
+    "export_to_other_languages",
 ] }
 pyo3 = { version = "0.19.1", features = [
     "abi3",

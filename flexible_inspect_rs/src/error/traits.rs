@@ -4,7 +4,7 @@ pub trait ValidationError: Send + Sync + Debug {
     fn get_message(&self) -> &str;
 }
 
-#[cfg(feature = "export_another_langs")]
+#[cfg(feature = "export_to_other_languages")]
 pub trait ValidationErrorExportLang {
     type Callback;
     type ItemError;

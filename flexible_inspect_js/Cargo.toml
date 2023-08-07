@@ -15,7 +15,7 @@ crate-type = ["cdylib", "rlib"]
 serde = { version = "1.0.180", features = ["derive"] }
 flexible_inspect_rs = { path = "../flexible_inspect_rs", features = [
     "serde",
-    "export_another_langs",
+    "export_to_other_languages",
 ] }
 wasm-bindgen = "0.2.87"
 wasm-bindgen-futures = "0.4.37"

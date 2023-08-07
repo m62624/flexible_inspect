@@ -24,7 +24,7 @@ regex = "1.9.1"
 indexmap = "2.0.0"
 [features]
 serde = ["dep:serde", "indexmap/serde"]
-export_another_langs = []
+export_to_other_languages = []
 
 
 [dev-dependencies]
