@@ -4,8 +4,8 @@ The project aims to create a versatile and flexible tool for validating data in 
 """
 
 import enum
-from typing import Optional, Type, List, Any, TypeVar, Union
 from collections.abc import Iterator
+from typing import Optional, Type, List, Any, TypeVar, Union
 
 
 # ========================================================
@@ -238,7 +238,7 @@ class TemplateValidator:
     def __init__(self, rules: List[Cartridge]) -> None:
         ...
 
-    async def async_validate(self, text: str) -> None | List[ValidationErrorIterator]:
+    async def async_validate(self, text: str) -> ValidationErrorIterator:
         """
         Parameters
         ----------
@@ -252,7 +252,7 @@ class TemplateValidator:
         """
         ...
 
-    def validate(self, text: str) -> None | List[ValidationErrorIterator]:
+    def validate(self, text: str) -> ValidationErrorIterator:
         """
         Parameters
         ----------
@@ -277,7 +277,7 @@ class TemplateValidatorBytes:
     def __init__(self, rules: List[CartridgeBytes]) -> None:
         ...
 
-    async def async_validate(self, text: bytes) -> None | Iterator():
+    async def async_validate(self, text: bytes) -> ValidationErrorIterator:
         """
         Parameters
         ----------
@@ -291,7 +291,7 @@ class TemplateValidatorBytes:
         """
         ...
 
-    def validate(self, text: bytes) -> None | Iterator(ValidationError):
+    def validate(self, text: bytes) -> ValidationErrorIterator:
         """
         Parameters
         ----------
@@ -306,6 +306,7 @@ class TemplateValidatorBytes:
         ...
         ...
 # ==========================================================
+
 
 class ValidationError:
     pass
@@ -329,10 +330,8 @@ class ValidationError:
         ...
 
 
-T =  TypeVar('T', bound=ValidationError)
-
-class ValidationErrorIterator(Iterator[T]):
-    def next(self) -> Optional[T]:
+class ValidationErrorIterator:
+    def next(self) -> Optional[ValidationError]:
         ...
 
     def for_each(self, callback: Any) -> List[Union[Exception, Any]]:
