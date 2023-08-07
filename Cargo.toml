@@ -1,5 +1,5 @@
 [workspace]
-members = ["pystval-core-rust", "pystval-python", "pystval-wasm"]
+members = ["flexible_inspect_rs", "flexible_inspect_py", "flexible_inspect_js"]
 
 [workspace.package]
 version = "2.0.0"

@@ -1,8 +1,6 @@
 pub mod rule_bytes;
 pub mod rule_str;
 use super::*;
-extern crate pystval;
-use pystval::prelude::*;
 
 #[pyclass(name = "MatchRequirement")]
 #[derive(Clone)]

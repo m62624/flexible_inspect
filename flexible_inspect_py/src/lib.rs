@@ -8,10 +8,10 @@ use rules::PyMatchRequeriment;
 use rules::{rule_bytes::PyRuleBytes, rule_str::PyRule};
 use template_validator::validate_bytes::PyTemplateValidatorBytes;
 use template_validator::validate_str::PyTemplateValidator;
-
+use flexible_inspect_rs::prelude::*;
 #[cfg(not(tarpaulin_include))]
 #[pymodule]
-pub fn pystval(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
+pub fn flexible_inspect_py(_py: Python<'_>, py_module: &PyModule) -> PyResult<()> {
     py_module.add_class::<PyMatchRequeriment>()?;
     py_module.add_class::<PyRule>()?;
     py_module.add_class::<PyRuleBytes>()?;

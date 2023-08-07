@@ -1,5 +1,5 @@
 [package]
-name = "pystval-wasm"
+name = "flexible-inspect-js"
 authors = { workspace = true }
 description = { workspace = true }
 version = { workspace = true }
@@ -13,7 +13,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 serde = { version = "1.0.180", features = ["derive"] }
-pystval = { path = "../pystval-core-rust", features = [
+flexible_inspect_rs = { path = "../flexible_inspect_rs", features = [
     "serde",
     "export_another_langs",
 ] }
