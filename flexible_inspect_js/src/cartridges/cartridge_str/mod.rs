@@ -22,7 +22,6 @@ impl WasmCartridge {
                     JsValue::from_str(" (Cartridge) Rule` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `Rule`  ( [ Rule, Rule, Rule ] ) type for the `Cartridge`")
                 })?
                 .into_iter()
-                .map(|rule| rule.into()),
         )))
     }
 

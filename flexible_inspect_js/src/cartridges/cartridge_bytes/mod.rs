@@ -18,7 +18,7 @@ impl WasmCartridgeBytes {
             Cartridge::new(error_code, message, serde_wasm_bindgen::from_value::<Vec<RuleBytes>>(root_rules)
         .map_err(|_| JsValue::from_str(" (CartridgeBytes) RuleBytes` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `RuleBytes` ( [ RuleBytes, RuleBytes, RuleBytes ] ) type for the `CartridgeBytes`"))?
         .into_iter()
-        .map(|rule| rule.into())))
+        ))
     )
     }
 

@@ -2,6 +2,7 @@ use super::*;
 use crate::error::PyValidationErrorIterator;
 use std::sync::Arc;
 
+#[allow(clippy::type_complexity)]
 #[pyclass(name = "TemplateValidatorBytes")]
 pub struct PyTemplateValidatorBytes(Arc<TemplateValidator<Vec<Cartridge<RuleBytes>>, Arc<[u8]>>>);
 
