@@ -6,4 +6,4 @@ version = "2.0.0"
 authors = ["Mansur Azatbek <mansur62624@gmail.com>"]
 license = "MIT"
 description = "Library for creating a custom validator"
-repository = "https://github.com/m62624/pystval"
+repository = "https://github.com/m62624/flexible_inspect"
