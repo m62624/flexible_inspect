@@ -7,6 +7,8 @@ mod error;
 mod message;
 mod rules;
 mod template_validator;
+#[cfg(test)]
+mod unit_tests;
 // =====================================================================
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
