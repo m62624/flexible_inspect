@@ -20,6 +20,7 @@ pub mod prelude {
     pub use crate::rules::MatchRequirement;
     pub use crate::rules::{rule_bytes::RuleBytes, rule_str::Rule, traits::RuleModifiers};
     pub use crate::template_validator::{TemplateValidator, ValidatorBase};
+    pub use futures::StreamExt;
 }
 
 // =====================================================================
