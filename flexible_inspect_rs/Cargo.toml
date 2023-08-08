@@ -3,8 +3,7 @@ name = "flexible_inspect_rs"
 version = { workspace = true }
 authors = { workspace = true }
 description = { workspace = true }
-edition = "2021"
-rust-version = "1.60"
+edition = { workspace = true }
 license = { workspace = true }
 repository = { workspace = true }
 

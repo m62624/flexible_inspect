@@ -2,6 +2,7 @@
 members = ["flexible_inspect_rs", "flexible_inspect_py", "flexible_inspect_js"]
 
 [workspace.package]
+edition = "2021"
 version = "2.0.0"
 authors = ["Mansur Azatbek <mansur62624@gmail.com>"]
 license = "MIT"
