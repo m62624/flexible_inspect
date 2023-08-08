@@ -1,4 +1,4 @@
-const { Rule, RuleBytes, MatchRequirement, Cartridge, CartridgeBytes, TemplateValidator, TemplateValidatorBytes, ValidationError, ValidationErrorIterator } = require('../pkg');
+const { Rule, RuleBytes, MatchRequirement, Cartridge, CartridgeBytes, TemplateValidator, TemplateValidatorBytes } = require('../pkg');
 
 async function main_test() {
     let base_check_text = new Cartridge(0, "ERROR FROM CARTRIDGE_0", [
@@ -11,14 +11,20 @@ async function main_test() {
 
     let validator_text = new TemplateValidator([base_check_text, external_check_text]);
     const result = validator_text.validate("123 ABC .[sdad]");
+    result.for_each_2(myCallback_2, ['A', 'B', 'C'])
 }
 
 function xok() {
     console.log("Всё окей бро");
 }
-
 function myCallback(err_code, message_code) {
+
     console.log('Received data:', err_code, message_code);
 }
 
+function myCallback_2(err_code, message_code, array) {
+    array.forEach((element, index) => {
+        console.log(`Element at index ${index}:`, element);
+    });
+}
 main_test()
