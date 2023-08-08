@@ -193,7 +193,7 @@ mod core_rule_tests {
                 NextStep::next_or_finish_or_error(&rule, &mut captures),
                 NextStep::Error(Some(HashMap::from([(
                     DEFAULT_CAPTURE.into(),
-                    "[49,50,51,52,49,50]".into()
+                    "[49, 50, 51, 52, 49, 50]".into()
                 )])))
             );
         }
