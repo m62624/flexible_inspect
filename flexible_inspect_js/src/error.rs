@@ -30,23 +30,65 @@ impl WasmValidationErrorIterator {
         })
     }
 
-    pub fn for_each(&self, callback: js_sys::Function) -> Result<Vec<JsValue>, JsValue> {
-        self.0.iter().try_fold(Vec::new(), |mut acc, item| {
-            let result = callback.call2(
-                &callback,
-                &JsValue::from(item.get_code()),
-                &JsValue::from(item.get_message()),
-            )?;
-            acc.push(result);
+    pub fn for_each_0(&self, callback: js_sys::Function) -> Result<Vec<JsValue>, JsValue> {
+        self.0.iter().try_fold(Vec::new(), |mut acc, _| {
+            acc.push(callback.call0(&callback)?);
             Ok(acc)
         })
     }
 
-    pub fn if_error(&self, callback: js_sys::Function) -> Result<Vec<JsValue>, JsValue> {
+    pub fn for_each_1(&self, callback: js_sys::Function) -> Result<Vec<JsValue>, JsValue> {
+        self.0.iter().try_fold(Vec::new(), |mut acc, item| {
+            acc.push(callback.call2(
+                &callback,
+                &JsValue::from(item.get_code()),
+                &JsValue::from(item.get_message()),
+            )?);
+            Ok(acc)
+        })
+    }
+
+    pub fn for_each_2(
+        &self,
+        callback: js_sys::Function,
+        params: js_sys::Array,
+    ) -> Result<Vec<JsValue>, JsValue> {
+        self.0.iter().try_fold(Vec::new(), |mut acc, item| {
+            acc.push(callback.call3(
+                &callback,
+                &JsValue::from(item.get_code()),
+                &JsValue::from(item.get_message()),
+                &params,
+            )?);
+            Ok(acc)
+        })
+    }
+
+    pub fn if_error_0(&self, callback: js_sys::Function) -> Result<Vec<JsValue>, JsValue> {
         if self.0.is_empty() {
             Ok(Vec::new())
         } else {
-            self.for_each(callback)
+            self.for_each_0(callback)
+        }
+    }
+
+    pub fn if_error_1(&self, callback: js_sys::Function) -> Result<Vec<JsValue>, JsValue> {
+        if self.0.is_empty() {
+            Ok(Vec::new())
+        } else {
+            self.for_each_1(callback)
+        }
+    }
+
+    pub fn if_error_2(
+        &self,
+        callback: js_sys::Function,
+        params: js_sys::Array,
+    ) -> Result<Vec<JsValue>, JsValue> {
+        if self.0.is_empty() {
+            Ok(Vec::new())
+        } else {
+            self.for_each_2(callback, params)
         }
     }
 
