@@ -16,7 +16,7 @@ impl ValidationErrorIterator {
     }
 }
 
-impl Iterator for &mut ValidationErrorIterator {
+impl Iterator for ValidationErrorIterator {
     type Item = Box<dyn ValidationError + Send>;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -27,14 +27,5 @@ impl Iterator for &mut ValidationErrorIterator {
 impl AsRef<Vec<Box<dyn ValidationError + Send>>> for ValidationErrorIterator {
     fn as_ref(&self) -> &Vec<Box<dyn ValidationError + Send>> {
         &self.collection
-    }
-}
-
-impl IntoIterator for ValidationErrorIterator {
-    type Item = Box<dyn ValidationError + Send>;
-    type IntoIter = std::vec::IntoIter<Self::Item>;
-
-    fn into_iter(self) -> Self::IntoIter {
-        self.collection.into_iter()
     }
 }
