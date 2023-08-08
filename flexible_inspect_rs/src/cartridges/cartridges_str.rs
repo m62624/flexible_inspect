@@ -1,5 +1,3 @@
-use std::sync::Arc;
-
 use super::{traits::*, *};
 
 impl CartridgeBase<&str> for Cartridge<Rule> {

@@ -7,6 +7,8 @@ use super::rules::{self, next::NextStep, traits::RuleBase, CaptureData};
 use crate::prelude::*;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Serialize};
+#[cfg(feature = "export_to_other_languages")]
+use std::sync::Arc;
 use std::{collections::HashSet, fmt::Debug, hash::Hash};
 // =======================================================
 

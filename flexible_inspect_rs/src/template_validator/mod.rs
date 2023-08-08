@@ -6,6 +6,8 @@ use crate::error::iterator::ValidationErrorIterator;
 // =======================================================
 #[cfg(feature = "serde")]
 use super::{Deserialize, Serialize};
+#[cfg(feature = "export_to_other_languages")]
+use std::sync::Arc;
 use crate::rules::next::NextStep;
 use async_trait::async_trait;
 use std::fmt::Debug;
