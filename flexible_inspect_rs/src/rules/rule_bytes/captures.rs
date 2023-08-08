@@ -1,6 +1,6 @@
-use crate::rules::{traits::RuleBase, CaptureData};
-use crate::rules::DEFAULT_CAPTURE;
 use crate::prelude::RuleBytes;
+use crate::rules::DEFAULT_CAPTURE;
+use crate::rules::{traits::RuleBase, CaptureData};
 use log::info;
 use std::collections::{HashMap, HashSet};
 
@@ -16,7 +16,7 @@ pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<&'a
         if let Some(value) = capture.get(0) {
             hashmap_for_error
                 .entry(DEFAULT_CAPTURE.into())
-                .or_insert_with(|| bytes_to_byte_string(value.as_bytes()));
+                .or_insert_with(|| format!("{:?}", value.as_bytes()));
             text_for_capture.insert(value.as_bytes());
             // there can be several groups in one `regex`, but all of them
             // they are needed to get the main match, so
@@ -31,7 +31,7 @@ pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<&'a
                 if let Some(value) = capture.name(name) {
                     hashmap_for_error
                         .entry(name.into())
-                        .or_insert_with(|| bytes_to_byte_string(value.as_bytes()));
+                        .or_insert_with(|| format!("{:?}", value.as_bytes()));
                 }
             }
         })
@@ -51,9 +51,4 @@ pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<&'a
         hashmap_for_error,
         counter_value,
     }
-}
-
-fn bytes_to_byte_string(bytes: &[u8]) -> String {
-    let byte_string: Vec<String> = bytes.iter().map(|byte| byte.to_string()).collect();
-    format!("[{}]", byte_string.join(","))
 }
