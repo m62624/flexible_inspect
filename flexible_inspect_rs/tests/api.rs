@@ -1,4 +1,5 @@
 use flexible_inspect_rs::prelude::*;
+
 #[async_std::test]
 async fn async_validate_t_0() {
     let cartridge_1 = Cartridge::new(
@@ -13,6 +14,7 @@ async fn async_validate_t_0() {
     );
 
     let validator = TemplateValidator::new([cartridge_1, cartridge_2]);
+
 
     assert!(validator.async_validate("1234").await.is_ok());
 }
