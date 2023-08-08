@@ -238,7 +238,7 @@ class TemplateValidator:
     def __init__(self, rules: List[Cartridge]) -> None:
         ...
 
-    async def async_validate(self, text: str) -> ValidationErrorIterator:
+    async def async_validate(self, text: str) -> Iterator[ValidationError]:
         """
         Parameters
         ----------
@@ -252,7 +252,7 @@ class TemplateValidator:
         """
         ...
 
-    def validate(self, text: str) -> ValidationErrorIterator:
+    def validate(self, text: str) -> Iterator[ValidationError]:
         """
         Parameters
         ----------
@@ -277,7 +277,7 @@ class TemplateValidatorBytes:
     def __init__(self, rules: List[CartridgeBytes]) -> None:
         ...
 
-    async def async_validate(self, text: bytes) -> ValidationErrorIterator:
+    async def async_validate(self, text: bytes) -> Iterator[ValidationError]:
         """
         Parameters
         ----------
@@ -291,7 +291,7 @@ class TemplateValidatorBytes:
         """
         ...
 
-    def validate(self, text: bytes) -> ValidationErrorIterator:
+    def validate(self, text: bytes) -> Iterator[ValidationError]:
         """
         Parameters
         ----------
@@ -325,26 +325,6 @@ class ValidationError:
         Returns
         -------
         `str`
-            Error message
+            Error message with data
         """
-        ...
-
-
-class ValidationErrorIterator:
-    def next(self) -> Optional[ValidationError]:
-        ...
-
-    def for_each(self, callback: Any) -> List[Union[Exception, Any]]:
-        ...
-
-    def if_error(self, callback: Any) -> List[Union[Exception, Any]]:
-        ...
-
-    def if_ok(self, callback: Any) -> Union[Exception, Any]:
-        ...
-
-    def is_empty(self) -> bool:
-        ...
-
-    def len(self) -> int:
         ...
