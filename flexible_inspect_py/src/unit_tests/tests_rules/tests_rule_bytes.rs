@@ -9,11 +9,14 @@ fn test_new() {
 
 #[test]
 fn test_new_t_1() {
-    let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound).into();
+    let rule: RuleBytes =
+        PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound).into();
 
-    assert_eq!(rule, RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound));
+    assert_eq!(
+        rule,
+        RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound)
+    );
 }
-
 
 #[test]
 fn test_extend() {
@@ -36,6 +39,42 @@ fn test_extend() {
 }
 
 #[test]
+fn test_mode_counter_t_0() {
+    let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
+        .counter_is_equal(1)
+        .into();
+
+    assert_eq!(
+        rule,
+        RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound).counter_is_equal(1)
+    );
+}
+
+#[test]
+fn test_mode_counter_t_1() {
+    let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
+        .counter_less_than(1)
+        .into();
+
+    assert_eq!(
+        rule,
+        RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound).counter_less_than(1)
+    );
+}
+
+#[test]
+fn test_mode_counter_t_2() {
+    let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
+        .counter_more_than(1)
+        .into();
+
+    assert_eq!(
+        rule,
+        RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound).counter_more_than(1)
+    );
+}
+
+#[test]
 fn test_mode_match_t_0() {
     let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
         .mode_all_rules_for_at_least_one_match()
@@ -43,7 +82,8 @@ fn test_mode_match_t_0() {
 
     assert_eq!(
         rule,
-        RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound).mode_all_rules_for_at_least_one_match()
+        RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound)
+            .mode_all_rules_for_at_least_one_match()
     );
 }
 
@@ -72,5 +112,3 @@ fn test_mode_match_t_2() {
             .mode_at_least_one_rule_for_at_least_one_match()
     );
 }
-
-

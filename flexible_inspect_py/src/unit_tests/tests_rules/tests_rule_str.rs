@@ -35,6 +35,42 @@ fn test_extend_t_0() {
 }
 
 #[test]
+fn test_mode_counter_t_0() {
+    let rule: Rule = PyRule::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
+        .counter_is_equal(1)
+        .into();
+
+    assert_eq!(
+        rule,
+        Rule::new(r"\w+", MatchRequirement::MustNotBeFound).counter_is_equal(1)
+    );
+}
+
+#[test]
+fn test_mode_counter_t_1() {
+    let rule: Rule = PyRule::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
+        .counter_less_than(1)
+        .into();
+
+    assert_eq!(
+        rule,
+        Rule::new(r"\w+", MatchRequirement::MustNotBeFound).counter_less_than(1)
+    );
+}
+
+#[test]
+fn test_mode_counter_t_2() {
+    let rule: Rule = PyRule::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
+        .counter_more_than(1)
+        .into();
+
+    assert_eq!(
+        rule,
+        Rule::new(r"\w+", MatchRequirement::MustNotBeFound).counter_more_than(1)
+    );
+}
+
+#[test]
 fn test_mode_match_t_0() {
     let rule: Rule = PyRule::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
         .mode_all_rules_for_at_least_one_match()
