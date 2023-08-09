@@ -48,7 +48,6 @@ where
             })
             .collect::<Vec<_>>()
             .await;
-
         if error.is_empty() {
             Ok(())
         } else {
