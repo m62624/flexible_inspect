@@ -2,6 +2,8 @@ mod cartridges;
 mod error;
 mod rules;
 mod template_validator;
+#[cfg(test)]
+mod unit_tests;
 use cartridges::{cartridges_bytes::PyCartridgeBytes, cartridges_str::PyCartridge};
 use flexible_inspect_rs::prelude::*;
 use pyo3::prelude::*;
