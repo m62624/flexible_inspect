@@ -65,3 +65,53 @@ fn fn_counter_status_t_5() {
         NextStep::Error(Some(HashMap::from([(DEFAULT_CAPTURE.into(), "a".into())])))
     );
 }
+
+/// true,true, MustBeFound, counter_more_than = false
+#[test]
+fn fn_counter_status_t_6() {
+    let rule = Rule::new(r"\w", MatchRequirement::MustBeFound)
+        .counter_more_than(4)
+        .extend([Rule::new(r"\w", MatchRequirement::MustBeFound)]);
+    let mut captures = Rule::find_captures(&rule, &"a b c");
+    assert_eq!(
+        NextStep::next_or_finish_or_error(&rule, &mut captures),
+        NextStep::Error(Some(HashMap::from([(DEFAULT_CAPTURE.into(), "a".into())])))
+    );
+}
+
+/// true,true, MustBeFound, counter_more_than = false
+#[test]
+fn fn_counter_status_t_7() {
+    let rule = Rule::new(r"\w", MatchRequirement::MustNotBeFound)
+        .counter_more_than(4)
+        .extend([Rule::new(r"\w", MatchRequirement::MustBeFound)]);
+    let mut captures = Rule::find_captures(&rule, &"a b c");
+    assert_eq!(
+        NextStep::next_or_finish_or_error(&rule, &mut captures),
+        NextStep::Error(Some(HashMap::from([(DEFAULT_CAPTURE.into(), "a".into())])))
+    );
+}
+
+/// false,true, MustBeFound, counter_more_than = false
+#[test]
+fn fn_counter_status_t_8() {
+    let rule = Rule::new(r"\w", MatchRequirement::MustNotBeFound)
+        .counter_more_than(4)
+        .extend([Rule::new(r"\w", MatchRequirement::MustBeFound)]);
+    let mut captures = Rule::find_captures(&rule, &"");
+    assert_eq!(
+        NextStep::next_or_finish_or_error(&rule, &mut captures),
+        NextStep::Error(Some(HashMap::default()))
+    );
+}
+
+/// false,false, MustBeFound, counter_more_than = false
+#[test]
+fn fn_counter_status_t_9() {
+    let rule = Rule::new(r"\w", MatchRequirement::MustNotBeFound).counter_more_than(4);
+    let mut captures = Rule::find_captures(&rule, &"");
+    assert_eq!(
+        NextStep::next_or_finish_or_error(&rule, &mut captures),
+        NextStep::Error(Some(HashMap::default()))
+    );
+}
