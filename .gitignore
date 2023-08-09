@@ -3,3 +3,4 @@
 /**/.env
 /.vscode
 /**/coverage
+/**/build_rs_cov.profraw
