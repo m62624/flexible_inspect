@@ -1,16 +1,16 @@
-mod cartridges;
-mod error;
-mod rules;
-mod template_validator;
+pub mod cartridges;
+pub mod error;
+pub mod rules;
+pub mod template_validator;
 #[cfg(test)]
 mod unit_tests;
-use cartridges::{cartridges_bytes::PyCartridgeBytes, cartridges_str::PyCartridge};
+pub use cartridges::{cartridges_bytes::PyCartridgeBytes, cartridges_str::PyCartridge};
 use flexible_inspect_rs::prelude::*;
 use pyo3::prelude::*;
-use rules::PyMatchRequeriment;
-use rules::{rule_bytes::PyRuleBytes, rule_str::PyRule};
-use template_validator::validate_bytes::PyTemplateValidatorBytes;
-use template_validator::validate_str::PyTemplateValidator;
+pub use rules::PyMatchRequeriment;
+pub use rules::{rule_bytes::PyRuleBytes, rule_str::PyRule};
+pub use template_validator::validate_bytes::PyTemplateValidatorBytes;
+pub use template_validator::validate_str::PyTemplateValidator;
 
 #[cfg(not(tarpaulin_include))]
 #[pymodule]
