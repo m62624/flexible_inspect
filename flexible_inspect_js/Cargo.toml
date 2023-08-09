@@ -1,5 +1,5 @@
 [package]
-name = "flexible-inspect-js"
+name = "flexible_inspect_js"
 authors = { workspace = true }
 description = { workspace = true }
 version = { workspace = true }

@@ -357,7 +357,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "flexible-inspect-js"
+name = "flexible_inspect_js"
 version = "2.0.0"
 dependencies = [
  "console_error_panic_hook",
@@ -370,7 +370,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "flexible-inspect-py"
+name = "flexible_inspect_py"
 version = "2.0.0"
 dependencies = [
  "async-std",
