@@ -1,9 +1,13 @@
 use super::*;
+#[cfg(feature = "log_rust")]
 use crate::init_logger;
 
 impl RuleBytes {
     pub fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
-        init_logger();
+        #[cfg(feature = "log_rust")]
+        {
+            init_logger();
+        }
         Self(Some(TakeRuleBytesForExtend::new(
             pattern.into(),
             requirement,

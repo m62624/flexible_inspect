@@ -25,10 +25,12 @@ pub mod prelude {
 
 // =====================================================================
 /// For one-time initialization to the logger
+#[cfg(feature = "log_rust")]
 static INIT: Once = Once::new();
 // =====================================================================
 /// Initialization of the logger
 #[cfg(not(tarpaulin_include))]
+#[cfg(feature = "log_rust")]
 fn init_logger() {
     // env_logger is called only once
     INIT.call_once(|| {
@@ -36,6 +38,5 @@ fn init_logger() {
             env_logger::Env::new().filter_or("FLEX_VALIDATOR_LOG", "OFF"),
         )
         .init();
-        // env_logger::Builder::from_env(env_logger::Env::new().filter("FLEX_VALIDATOR_LOG").default_filter_or("OFF")).init();
     });
 }
