@@ -10,8 +10,11 @@ mod template_validator;
 #[cfg(test)]
 mod unit_tests;
 // =====================================================================
+use colored::*;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+use std::io::Write;
+#[cfg(feature = "log_rust")]
 use std::sync::Once;
 // =====================================================================
 pub mod prelude {
@@ -33,10 +36,29 @@ static INIT: Once = Once::new();
 #[cfg(feature = "log_rust")]
 fn init_logger() {
     // env_logger is called only once
+
+    use chrono::Local;
     INIT.call_once(|| {
         env_logger::Builder::from_env(
             env_logger::Env::new().filter_or("FLEX_VALIDATOR_LOG", "OFF"),
         )
+        .format(|buf, record| {
+            let timestamp = Local::now().format("%Y-%m-%d %H:%M:%S");
+            writeln!(
+                buf,
+                "[{} {} {}] {}",
+                timestamp.to_string().bright_cyan(),
+                match record.level() {
+                    log::Level::Error => format!("ERROR").red(),
+                    log::Level::Warn => format!("WARN").yellow(),
+                    log::Level::Info => format!("INFO").blue(),
+                    log::Level::Debug => format!("DEBUG").purple(),
+                    log::Level::Trace => format!("TRACE").green(),
+                },
+                record.target().black(),
+                record.args()
+            )
+        })
         .init();
     });
 }
