@@ -8,13 +8,12 @@ license = { workspace = true }
 repository = { workspace = true }
 
 [lib]
-crate-type = ["cdylib","rlib"]
+crate-type = ["cdylib", "rlib"]
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
 flexible_inspect_rs = { path = "../flexible_inspect_rs", features = [
     "export_to_other_languages",
-    "log_rust"
 ] }
 pyo3 = { version = "0.19.1", features = [
     "abi3",

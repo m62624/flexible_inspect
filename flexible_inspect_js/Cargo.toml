@@ -13,7 +13,7 @@ crate-type = ["cdylib", "rlib"]
 
 [dependencies]
 serde = { version = "1.0.180", features = ["derive"] }
-flexible_inspect_rs = { path = "../flexible_inspect_rs", features = [
+flexible_inspect_rs = { path = "../flexible_inspect_rs", default-features = false, features = [
     "serde",
     "export_to_other_languages",
 ] }
