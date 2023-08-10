@@ -47,16 +47,16 @@ fn init_logger() {
             writeln!(
                 buf,
                 "[{} {} {}] {}",
-                timestamp.to_string().bright_cyan(),
+                timestamp,
                 match record.level() {
                     log::Level::Error => format!("ERROR").red(),
                     log::Level::Warn => format!("WARN").yellow(),
                     log::Level::Info => format!("INFO").blue(),
-                    log::Level::Debug => format!("DEBUG").purple(),
-                    log::Level::Trace => format!("TRACE").green(),
+                    log::Level::Debug => format!("DEBUG").green(),
+                    log::Level::Trace => format!("TRACE").purple(),
                 },
                 record.target().black(),
-                record.args()
+                record.args().to_string().bright_cyan()
             )
         })
         .init();
