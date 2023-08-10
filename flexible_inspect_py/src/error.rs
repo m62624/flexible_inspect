@@ -19,7 +19,7 @@ impl PyBaseValidationError {
 }
 
 #[pyclass(name = "ValidationErrorIterator")]
-pub struct PyValidationErrorIterator(Vec<Box<dyn ValidationError + Send>>);
+pub struct PyValidationErrorIterator(pub(crate) Vec<Box<dyn ValidationError + Send>>);
 
 #[pymethods]
 impl PyValidationErrorIterator {
