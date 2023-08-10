@@ -18,11 +18,11 @@ impl PyTemplateValidator {
         )))
     }
 
-    pub fn validate(&self, data: String) -> PyValidationErrorIterator {
+    pub fn validate(&self, data: String) -> Option<PyValidationErrorIterator> {
         if let Err(value) = self.0.validate(data.into()) {
-            return PyValidationErrorIterator::new(value.into_iter().collect());
+            return Some(PyValidationErrorIterator::new(value.into_iter().collect()));
         }
-        PyValidationErrorIterator::new(vec![])
+        None
     }
 
     #[cfg(not(tarpaulin_include))]
@@ -31,9 +31,11 @@ impl PyTemplateValidator {
         let safety_data = Arc::from(data);
         pyo3_asyncio::async_std::future_into_py(py, async move {
             if let Err(value) = safety_self.async_validate(safety_data).await {
-                return Ok(PyValidationErrorIterator::new(value.into_iter().collect()));
+                return Ok(Some(PyValidationErrorIterator::new(
+                    value.into_iter().collect(),
+                )));
             }
-            Ok(PyValidationErrorIterator::new(vec![]))
+            Ok(None)
         })
     }
 }

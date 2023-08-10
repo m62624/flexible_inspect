@@ -238,7 +238,7 @@ class TemplateValidator:
     def __init__(self, rules: List[Cartridge]) -> None:
         ...
 
-    async def async_validate(self, text: str) -> Iterator[ValidationError]:
+    async def async_validate(self, text: str) -> Optional[Iterator[ValidationError]]:
         """
         Parameters
         ----------
@@ -252,7 +252,7 @@ class TemplateValidator:
         """
         ...
 
-    def validate(self, text: str) -> Iterator[ValidationError]:
+    def validate(self, text: str) -> Optional[Iterator[ValidationError]]:
         """
         Parameters
         ----------
@@ -277,7 +277,7 @@ class TemplateValidatorBytes:
     def __init__(self, rules: List[CartridgeBytes]) -> None:
         ...
 
-    async def async_validate(self, text: bytes) -> Iterator[ValidationError]:
+    async def async_validate(self, text: bytes) -> Optional[Iterator[ValidationError]]:
         """
         Parameters
         ----------
@@ -291,7 +291,7 @@ class TemplateValidatorBytes:
         """
         ...
 
-    def validate(self, text: bytes) -> Iterator[ValidationError]:
+    def validate(self, text: bytes) -> Optional[Iterator[ValidationError]]:
         """
         Parameters
         ----------

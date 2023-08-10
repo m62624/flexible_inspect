@@ -34,45 +34,25 @@ impl PyValidationErrorIterator {
         })
     }
 
-    // pub fn for_each(&self, py: Python, callback: PyObject) -> PyResult<Vec<PyObject>> {
-    //     self.0.iter().try_fold(Vec::new(), |mut acc, item| {
-    //         let result = callback.call1(py, (item.get_code(), item.get_message()))?;
-    //         acc.push(result);
-    //         Ok(acc)
-    //     })
-    // }
+    pub fn __len__(slf: PyRef<'_, Self>) -> usize {
+        slf.0.len()
+    }
 
-    // pub fn for_each_with_reserved_params(&self, py: Python, callback: PyObject) -> PyResult<Vec<PyObject>> {
-    //     self.0.iter().try_fold(Vec::new(), |mut acc, item| {
-    //         let result = callback.call1(py, (item.get_code(), item.get_message()))?;
-    //         acc.push(result);
-    //         Ok(acc)
-    //     })
-    // }
+    /// Returns `True` if the error code is in the collection.
+    pub fn __contains__(slf: PyRef<'_, Self>, code: i32) -> bool {
+        slf.0.iter().any(|error| error.get_code() == code)
+    }
 
-    // pub fn if_error_with_reserved_params(&self, py: Python, callback: PyObject) -> PyResult<Vec<PyObject>> {
-    //     if self.0.is_empty() {
-    //         Ok(Vec::new())
-    //     } else {
-    //         self.for_each_with_reserved_params(py, callback)
-    //     }
-    // }
+    fn __aiter__(slf: PyRef<'_, Self>) -> PyResult<Py<PyValidationErrorIterator>> {
+        Ok(slf.into())
+    }
 
-    // pub fn if_ok(&self, py: Python, callback: PyObject) -> PyResult<PyObject> {
-    //     if self.0.is_empty() {
-    //         Ok(callback.call0(py)?)
-    //     } else {
-    //         Ok(py.None())
-    //     }
-    // }
-
-    // pub fn is_empty(&self) -> bool {
-    //     self.0.is_empty()
-    // }
-
-    // pub fn len(&self) -> usize {
-    //     self.0.len()
-    // }
+    fn __anext__(mut slf: PyRefMut<'_, Self>) -> PyResult<Option<PyBaseValidationError>> {
+        Ok(slf.0.pop().map(|error| PyBaseValidationError {
+            code: error.get_code(),
+            message: error.get_message().to_owned(),
+        }))
+    }
 }
 
 impl PyValidationErrorIterator {
