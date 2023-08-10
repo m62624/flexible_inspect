@@ -32,6 +32,10 @@ static INIT: Once = Once::new();
 fn init_logger() {
     // env_logger is called only once
     INIT.call_once(|| {
-        env_logger::Builder::from_env(env_logger::Env::default().default_filter_or("OFF")).init();
+        env_logger::Builder::from_env(
+            env_logger::Env::new().filter_or("FLEX_VALIDATOR_LOG", "OFF"),
+        )
+        .init();
+        // env_logger::Builder::from_env(env_logger::Env::new().filter("FLEX_VALIDATOR_LOG").default_filter_or("OFF")).init();
     });
 }
