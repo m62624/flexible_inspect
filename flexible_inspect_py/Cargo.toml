@@ -33,8 +33,3 @@ category = "tool"
 
 [features]
 extension-module = ["pyo3/extension-module"]
-
-# [[test]]
-# name = "test_validate"
-# path = "tests/tests_validate.rs"
-# harness = false
