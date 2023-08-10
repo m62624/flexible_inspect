@@ -64,46 +64,6 @@ impl WasmValidationErrorIterator {
         })
     }
 
-    pub fn if_error_0(&self, callback: js_sys::Function) -> Result<Vec<JsValue>, JsValue> {
-        if self.0.is_empty() {
-            Ok(Vec::new())
-        } else {
-            self.for_each_0(callback)
-        }
-    }
-
-    pub fn if_error_1(&self, callback: js_sys::Function) -> Result<Vec<JsValue>, JsValue> {
-        if self.0.is_empty() {
-            Ok(Vec::new())
-        } else {
-            self.for_each_1(callback)
-        }
-    }
-
-    pub fn if_error_2(
-        &self,
-        callback: js_sys::Function,
-        params: js_sys::Array,
-    ) -> Result<Vec<JsValue>, JsValue> {
-        if self.0.is_empty() {
-            Ok(Vec::new())
-        } else {
-            self.for_each_2(callback, params)
-        }
-    }
-
-    pub fn if_ok(&self, callback: js_sys::Function) -> Result<JsValue, JsValue> {
-        if self.0.is_empty() {
-            Ok(callback.call0(&callback)?)
-        } else {
-            Ok(JsValue::NULL)
-        }
-    }
-
-    pub fn is_empty(&self) -> bool {
-        self.0.is_empty()
-    }
-
     pub fn len(&self) -> usize {
         self.0.len()
     }

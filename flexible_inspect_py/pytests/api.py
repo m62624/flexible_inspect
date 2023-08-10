@@ -1,13 +1,23 @@
-from flexible_inspect_py import Cartridge, CartridgeBytes, MatchRequirement, TemplateValidator, TemplateValidatorBytes, Rule, RuleBytes
+import unittest
+import asyncio
+from flexible_inspect_py import Cartridge, MatchRequirement, TemplateValidator, Rule
 
-error_404 = Cartridge(404, "Not Found", [Rule(
+cartrdige_0 = Cartridge(0, "Not Found", [Rule(
     r"/.+/.+/file.txt", MatchRequirement.MustBeFound)])
-
-error_panic_system = Cartridge(500, "Internal Error {G}", [Rule(
+cartridge_1 = Cartridge(1, "Internal Error {G}", [Rule(
     r"(?P<G>^(?!.*secret_info).*$)", MatchRequirement.MustNotBeFound)])
+validator_system = TemplateValidator([cartrdige_0, cartridge_1])
 
-valdiator_system = TemplateValidator([error_404, error_panic_system])
-iterator_rust = valdiator_system.validate("10------10")
 
-for error in iterator_rust:
-    print(error.get_code(), error.get_message())
+async def init():
+    result = await validator_system.async_validate("10------10")
+    if result is not None:
+        for i in result:
+            print(i.get_message())
+
+
+# =============================================
+loop = asyncio.get_event_loop()
+task = loop.create_task(init())
+loop.run_until_complete(task)
+# ============================================

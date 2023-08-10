@@ -1,6 +1,5 @@
-use crate::error::WasmValidationErrorIterator;
-
 use super::*;
+use crate::error::WasmValidationErrorIterator;
 use std::sync::Arc;
 
 #[wasm_bindgen(js_name = "TemplateValidatorBytes")]
@@ -17,17 +16,21 @@ impl WasmTemplateValidatorBytes {
         })?)))
     }
 
-    pub fn validate(&self, data: &[u8]) -> WasmValidationErrorIterator {
+    pub fn validate(&self, data: &[u8]) -> Option<WasmValidationErrorIterator> {
         if let Err(value) = self.0.validate(data.into()) {
-            return WasmValidationErrorIterator::new(value.into_iter().collect());
+            return Some(WasmValidationErrorIterator::new(
+                value.into_iter().collect(),
+            ));
         }
-        WasmValidationErrorIterator::new(vec![])
+        None
     }
 
-    pub async fn async_validate(&self, data: &[u8]) -> WasmValidationErrorIterator {
+    pub async fn async_validate(&self, data: &[u8]) -> Option<WasmValidationErrorIterator> {
         if let Err(value) = self.0.async_validate(data.into()).await {
-            return WasmValidationErrorIterator::new(value.into_iter().collect());
+            return Some(WasmValidationErrorIterator::new(
+                value.into_iter().collect(),
+            ));
         }
-        WasmValidationErrorIterator::new(vec![])
+        None
     }
 }

@@ -11,7 +11,8 @@ async function main_test() {
 
     let validator_text = new TemplateValidator([base_check_text, external_check_text]);
     const result = validator_text.validate("123 ABC .[sdad]");
-    result.for_each_2(myCallback_2, ['A', 'B', 'C'])
+    
+    // result.for_each_2(myCallback_2, ['A', 'B', 'C'])
 }
 
 function xok() {

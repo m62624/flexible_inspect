@@ -17,19 +17,21 @@ impl WasmTemplateValidator {
         })?)))
     }
 
-    pub fn validate(&self, data: String) -> WasmValidationErrorIterator {
+    pub fn validate(&self, data: String) -> Option<WasmValidationErrorIterator> {
         if let Err(value) = self.0.validate(data.into()) {
-            return WasmValidationErrorIterator::new(
+            return Some(WasmValidationErrorIterator::new(
                 value.into_iter().collect(),
-            )
+            ));
         }
-        WasmValidationErrorIterator::new(vec![])
+        None
     }
 
-    pub async fn async_validate(&self, data: String) -> WasmValidationErrorIterator {
+    pub async fn async_validate(&self, data: String) -> Option<WasmValidationErrorIterator> {
         if let Err(value) = self.0.async_validate(data.into()).await {
-            return WasmValidationErrorIterator::new(value.into_iter().collect());
+            return Some(WasmValidationErrorIterator::new(
+                value.into_iter().collect(),
+            ));
         }
-        WasmValidationErrorIterator::new(vec![])
+        None
     }
 }
