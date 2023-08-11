@@ -16,6 +16,7 @@ use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::io::Write;
 #[cfg(feature = "log_rust")]
 use std::sync::Once;
+use chrono::Local;
 // =====================================================================
 pub mod prelude {
     pub use crate::cartridges::{traits::CartridgeModifiers, Cartridge};
@@ -36,8 +37,6 @@ static INIT: Once = Once::new();
 #[cfg(feature = "log_rust")]
 fn init_logger() {
     // env_logger is called only once
-
-    use chrono::Local;
     INIT.call_once(|| {
         env_logger::Builder::from_env(
             env_logger::Env::new().filter_or("FLEX_VALIDATOR_LOG", "OFF"),
@@ -55,7 +54,7 @@ fn init_logger() {
                     log::Level::Debug => format!("DEBUG").green(),
                     log::Level::Trace => format!("TRACE").purple(),
                 },
-                record.target().black(),
+                record.target().bright_black(),
                 record.args().to_string().bright_cyan()
             )
         })

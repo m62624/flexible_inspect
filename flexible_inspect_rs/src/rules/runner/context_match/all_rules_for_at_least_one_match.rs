@@ -47,7 +47,7 @@ where
                         for index in R::get_selected_rules(simple_rules.1, data) {
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
-                            trace!(
+                            debug!(
                                 "found `({}, {:#?})` rule from `RegexSet` for `{:#?}` data",
                                 rule_from_regexset.get_str(),
                                 rule_from_regexset.get_requirement(),
@@ -59,7 +59,7 @@ where
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
                                 // ============================= LOG =============================
-                                trace!(
+                                debug!(
                                     "the rule `{}` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )",
                                     rule_from_regexset.get_str(),
                                     data
@@ -89,7 +89,7 @@ where
                     if let Some(cmpl_rules) = frame.0.get_complex_rules() {
                         for cmplx_rule in cmpl_rules {
                             // ============================= LOG =============================
-                            trace!(
+                            debug!(
                                 "the rule `({}, {:#?})` from `complex_rules`",
                                 cmplx_rule.get_str(),
                                 cmplx_rule.get_requirement()

@@ -40,7 +40,7 @@ fn setup_logger(level: LevelFilter) -> Result<(), fern::InitError> {
 /// Initialization of the logger
 /// # Arguments
 /// * `log_level` - log level
-/// lEVELS: OFF, ERROR, INFO, DEBUG, TRACE
+/// LEVELS: OFF, ERROR, INFO, DEBUG, TRACE
 #[cfg(not(tarpaulin_include))]
 #[wasm_bindgen]
 pub fn init_logger(log_level: String) {

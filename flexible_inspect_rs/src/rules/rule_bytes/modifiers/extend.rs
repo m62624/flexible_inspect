@@ -1,3 +1,5 @@
+use log::debug;
+
 use super::*;
 use crate::rules::traits::RuleBase;
 
@@ -12,5 +14,10 @@ pub fn extend<R: IntoIterator<Item = RuleBytes>>(
     } else {
         None
     };
+    debug!(
+        "the `extend` modifier is applied to rule ({}, {:#?})",
+        rule.get_str(),
+        rule.get_requirement()
+    );
     std::mem::take(rule)
 }

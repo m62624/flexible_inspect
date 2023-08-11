@@ -49,7 +49,7 @@ where
                         for index in R::get_selected_rules(simple_rules.1, data) {
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
-                            trace!(
+                            debug!(
                                 "found `({}, {:#?})` rule from `RegexSet` for `{:#?}` data",
                                 rule_from_regexset.get_str(),
                                 rule_from_regexset.get_requirement(),
@@ -85,7 +85,7 @@ where
                             *counter_of_each_rule.entry(index).or_insert(0) += 1;
                             if counter_of_each_rule[&index] == frame.1.text_for_capture.len() {
                                 // ============================= LOG =============================
-                                trace!(
+                                debug!(
                                     "the ({}, {:#?}) rule worked successfully for all matches (`RegexSet`)",
                                     rule_from_regexset.get_str(),
                                     rule_from_regexset.get_requirement(),
@@ -138,7 +138,7 @@ where
                     for data in &frame.1.text_for_capture {
                         for cmplx_rule in complex_rules {
                             // ============================= LOG =============================
-                            trace!(
+                            debug!(
                                 "the rule `({}, {:#?})` from `complex_rules`",
                                 cmplx_rule.get_str(),
                                 cmplx_rule.get_requirement()
@@ -201,7 +201,7 @@ where
     C: PartialEq + Eq + Hash + Debug,
 {
     // ============================= LOG =============================
-    trace!(
+    debug!(
         "the rule `({}, {:#?})` is not in `RegexSet` for data `{:#?}`",
         rule.get_str(),
         rule.get_requirement(),

@@ -44,7 +44,7 @@ where
                         'skip_this_rule: for index in R::get_selected_rules(simple_rules.1, data) {
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
-                            trace!(
+                            debug!(
                                 "found `({}, {:#?})` rule from `RegexSet` for `{:#?}` data",
                                 rule_from_regexset.get_str(),
                                 rule_from_regexset.get_requirement(),
@@ -56,7 +56,7 @@ where
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
                                 // ============================= LOG =============================
-                                trace!("the rule `{}` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )", rule_from_regexset.get_str(), data );
+                                debug!("the rule `{}` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )", rule_from_regexset.get_str(), data );
                                 // ===============================================================
 
                                 err_value = error;
@@ -64,7 +64,7 @@ where
                             }
 
                             // ============================= LOG =============================
-                            trace!(
+                            debug!(
                                 "found one rule `({}, {:#?})` for on match `{:#?}`",
                                 rule_from_regexset.get_str(),
                                 rule_from_regexset.get_requirement(),
@@ -80,7 +80,7 @@ where
                         'not_in_regexset: for rule in simple_rules.0 {
                             if !selected_rules.contains(rule) {
                                 // ============================= LOG =============================
-                                trace!(
+                                debug!(
                                     "the rule `({}, {:#?})` is not in `RegexSet`",
                                     rule.get_str(),
                                     rule.get_requirement(),
@@ -113,7 +113,7 @@ where
                         if !found_rule {
                             'skip_this_cmplx_rule: for rule in cmplx_rules {
                                 // ============================= LOG =============================
-                                trace!(
+                                debug!(
                                     "the rule `({}, {:#?})` from `complex_rules`",
                                     rule.get_str(),
                                     rule.get_requirement()
