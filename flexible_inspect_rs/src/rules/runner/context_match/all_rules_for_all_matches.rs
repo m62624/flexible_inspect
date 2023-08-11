@@ -62,8 +62,9 @@ where
                             {
                                 // ============================= LOG =============================
                                 error!(
-                                    "the rule `{}` failed condition for data `{:#?}`",
+                                    "the rule `({}, {:#?})` failed condition for data `{:#?}`",
                                     rule_from_regexset.get_str(),
+                                    rule_from_regexset.get_requirement(),
                                     data
                                 );
                                 // ===============================================================
@@ -86,7 +87,7 @@ where
                             if counter_of_each_rule[&index] == frame.1.text_for_capture.len() {
                                 // ============================= LOG =============================
                                 debug!(
-                                    "the ({}, {:#?}) rule worked successfully for all matches (`RegexSet`)",
+                                    "the `({}, {:#?})` rule worked successfully for all matches (`RegexSet`)",
                                     rule_from_regexset.get_str(),
                                     rule_from_regexset.get_requirement(),
                                 );
@@ -150,8 +151,9 @@ where
                             {
                                 // ============================= LOG =============================
                                 error!(
-                                    "the rule `{}` failed condition for data `{:#?}`",
+                                    "the rule `({}, {:#?})` failed condition for data `{:#?}`",
                                     cmplx_rule.get_str(),
+                                    cmplx_rule.get_requirement(),
                                     data
                                 );
                                 // ===============================================================
@@ -174,7 +176,7 @@ where
             NextStep::Error(err) => {
                 // ================= (LOG) =================
                 error!(
-                    "the rule (`{}`, `{:#?}`) didn't work",
+                    "the rule `({}, {:#?})` didn't work",
                     &frame.0.get_str(),
                     &frame.0.get_requirement(),
                 );
