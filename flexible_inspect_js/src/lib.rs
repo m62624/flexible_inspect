@@ -12,6 +12,14 @@ use wasm_bindgen::prelude::*;
 static INIT: Once = Once::new();
 // =====================================================================
 
+#[wasm_bindgen]
+pub enum LogLevel {
+    ERROR,
+    INFO,
+    DEBUG,
+    TRACE,
+}
+
 #[cfg(not(tarpaulin_include))]
 fn setup_logger(level: LevelFilter) -> Result<(), fern::InitError> {
     fern::Dispatch::new()
@@ -38,29 +46,18 @@ fn setup_logger(level: LevelFilter) -> Result<(), fern::InitError> {
 }
 
 /// Initialization of the logger
-/// # Arguments
-/// * `log_level` - log level
-/// LEVELS: OFF, ERROR, INFO, DEBUG, TRACE
 #[cfg(not(tarpaulin_include))]
 #[wasm_bindgen]
-pub fn init_logger(log_level: String) {
+pub fn init_logger(log_level: LogLevel) {
     // env_logger is called only once
     INIT.call_once(|| {
-        let log_level = log_level.to_uppercase();
-        let logger = if log_level == "TRACE" {
-            setup_logger(LevelFilter::Trace)
-        } else if log_level == "DEBUG" {
-            setup_logger(LevelFilter::Debug)
-        } else if log_level == "INFO" {
-            setup_logger(LevelFilter::Info)
-        } else if log_level == "WARN" {
-            setup_logger(LevelFilter::Warn)
-        } else if log_level == "ERROR" {
-            setup_logger(LevelFilter::Error)
-        } else {
-            setup_logger(LevelFilter::Off)
+        let log_level = match log_level {
+            LogLevel::ERROR => LevelFilter::Error,
+            LogLevel::INFO => LevelFilter::Info,
+            LogLevel::DEBUG => LevelFilter::Debug,
+            LogLevel::TRACE => LevelFilter::Trace,
         };
-        logger.unwrap_or_else(|_| {
+        setup_logger(log_level).unwrap_or_else(|_| {
             console_error_panic_hook::set_once();
             panic!("Error initializing logger");
         });

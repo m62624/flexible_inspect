@@ -14,7 +14,7 @@ where
     let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
     while let Some(mut frame) = stack.pop_front() {
         // ============================= LOG =============================
-        debug!(
+        trace!(
             "\ncheck the state of the rule `({}, {:#?})` \nfrom the local stack `({}, {:#?})`",
             frame.0.get_str(),
             frame.0.get_requirement(),
