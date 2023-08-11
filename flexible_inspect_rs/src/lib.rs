@@ -10,11 +10,14 @@ mod template_validator;
 #[cfg(test)]
 mod unit_tests;
 // =====================================================================
-use chrono::Local;
-use colored::*;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
+#[cfg(feature = "log_rust")]
+use chrono::Local;
+#[cfg(feature = "log_rust")]
 use std::io::Write;
+#[cfg(feature = "log_rust")]
+use colored::*;
 #[cfg(feature = "log_rust")]
 use std::sync::Once;
 // =====================================================================
