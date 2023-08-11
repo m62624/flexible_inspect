@@ -21,7 +21,9 @@ impl TakeRuleBytesForExtend {
             str_bytes: if regex::bytes::Regex::new(&pattern).is_ok() {
                 pattern.into_boxed_str()
             } else {
-                panic!("`{}` regular expression is incorrect", pattern);
+                let err_msg = format!("`{}` regular expression is incorrect", pattern);
+                error!("{}", err_msg);
+                panic!("{}", err_msg);
             },
             subrules_bytes: None,
             general_modifiers: GeneralModifiers::new(requirement),

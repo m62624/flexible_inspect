@@ -28,7 +28,9 @@ impl RegexRaw {
         } else if fancy_regex::Regex::new(&pattern).is_ok() {
             RegexRaw::FancyRegex(pattern.into_boxed_str())
         } else {
-            panic!("`{}` regular expression is incorrect", pattern)
+            let err_msg = format!("`{}` regular expression is incorrect", pattern);
+            error!("{}", err_msg);
+            panic!("{}", err_msg);
         }
     }
 }

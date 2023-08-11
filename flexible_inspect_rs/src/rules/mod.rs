@@ -9,6 +9,7 @@ pub mod traits;
 use super::*;
 use crate::prelude::Rule;
 use indexmap::IndexSet;
+use log::error;
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
 // =======================================================
