@@ -1,3 +1,5 @@
+use log::error;
+
 use super::*;
 use crate::rules::{traits::RuleBase, Counter};
 
@@ -13,18 +15,33 @@ impl Counter {
                     if captures.counter_value == value {
                         return NextStep::Finish;
                     }
+                    error!(
+                        "the counter value ({:?}) is not equal to the required value ({})",
+                        rule.get_counter(),
+                        value
+                    );
                     return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
                 }
                 Counter::MoreThan(value) => {
                     if captures.counter_value >= value {
                         return NextStep::Finish;
                     }
+                    error!(
+                        "the counter value ({:?}) is not equal to the required value ({})",
+                        rule.get_counter(),
+                        value
+                    );
                     return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
                 }
                 Counter::LessThan(value) => {
                     if captures.counter_value <= value {
                         return NextStep::Finish;
                     }
+                    error!(
+                        "the counter value ({:?}) is not equal to the required value ({})",
+                        rule.get_counter(),
+                        value
+                    );
                     return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
                 }
             }
