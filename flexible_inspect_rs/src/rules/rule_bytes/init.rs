@@ -1,6 +1,7 @@
 use super::*;
 #[cfg(feature = "log_rust")]
 use crate::init_logger;
+use log::trace;
 
 impl RuleBytes {
     pub fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
@@ -19,6 +20,7 @@ impl TakeRuleBytesForExtend {
     pub fn new(pattern: String, requirement: MatchRequirement) -> Self {
         Self {
             str_bytes: if regex::bytes::Regex::new(&pattern).is_ok() {
+                trace!("'{}' - regex category for byte validation is set", pattern);
                 pattern.into_boxed_str()
             } else {
                 let err_msg = format!("`{}` regular expression is incorrect", pattern);

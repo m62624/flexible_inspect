@@ -1,6 +1,7 @@
 use super::*;
 #[cfg(feature = "log_rust")]
 use crate::init_logger;
+use log::trace;
 
 impl Rule {
     pub fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
@@ -24,8 +25,10 @@ impl TakeRuleForExtend {
 impl RegexRaw {
     fn new(pattern: String) -> Self {
         if regex::Regex::new(&pattern).is_ok() {
+            trace!("`{}` - `Default Regex` category is set\n* Lookahead and Lookbehind references - FALSE\n* Rust RegexSet - TRUE",pattern);
             RegexRaw::DefaultRegex(pattern.into_boxed_str())
         } else if fancy_regex::Regex::new(&pattern).is_ok() {
+            trace!("`{}` - `Fancy Regex` category is set\n* Lookahead and Lookbehind references - TRUE\n* Rust RegexSet - FALSE",pattern);
             RegexRaw::FancyRegex(pattern.into_boxed_str())
         } else {
             let err_msg = format!("`{}` regular expression is incorrect", pattern);
