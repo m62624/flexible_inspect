@@ -10,13 +10,13 @@ mod template_validator;
 #[cfg(test)]
 mod unit_tests;
 // =====================================================================
+use chrono::Local;
 use colored::*;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 use std::io::Write;
 #[cfg(feature = "log_rust")]
 use std::sync::Once;
-use chrono::Local;
 // =====================================================================
 pub mod prelude {
     pub use crate::cartridges::{traits::CartridgeModifiers, Cartridge};
@@ -48,11 +48,11 @@ fn init_logger() {
                 "[{} {} {}] {}",
                 timestamp,
                 match record.level() {
-                    log::Level::Error => format!("ERROR").red(),
-                    log::Level::Warn => format!("WARN").yellow(),
-                    log::Level::Info => format!("INFO").blue(),
-                    log::Level::Debug => format!("DEBUG").green(),
-                    log::Level::Trace => format!("TRACE").purple(),
+                    log::Level::Error => "ERROR".to_string().red(),
+                    log::Level::Warn => "WARN".to_string().yellow(),
+                    log::Level::Info => "INFO".to_string().blue(),
+                    log::Level::Debug => "DEBUG".to_string().green(),
+                    log::Level::Trace => "TRACE".to_string().purple(),
                 },
                 record.target().bright_black(),
                 record.args().to_string().bright_cyan()

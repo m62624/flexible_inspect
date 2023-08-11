@@ -25,15 +25,15 @@ fn setup_logger(level: LevelFilter) -> Result<(), fern::InitError> {
     fern::Dispatch::new()
         .format(move |out, message, record| {
             let level_colored = match record.level() {
-                log::Level::Error => format!("ERROR"),
-                log::Level::Warn => format!("WARN"),
-                log::Level::Info => format!("INFO"),
-                log::Level::Debug => format!("DEBUG"),
-                log::Level::Trace => format!("TRACE"),
+                log::Level::Error => "ERROR".to_string(),
+                log::Level::Warn => "WARN".to_string(),
+                log::Level::Info => "INFO".to_string(),
+                log::Level::Debug => "DEBUG".to_string(),
+                log::Level::Trace => "TRACE".to_string(),
             };
             out.finish(format_args!(
                 "[{} {} {}] {}",
-                Local::now().format("%Y-%m-%d %H:%M:%S").to_string(),
+                Local::now().format("%Y-%m-%d %H:%M:%S"),
                 level_colored,
                 record.target(),
                 message
