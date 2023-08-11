@@ -16,7 +16,7 @@ where
     while let Some(mut frame) = stack.pop_front() {
         // ============================= LOG =============================
         trace!(
-            "\ncheck the state of the rule `({}, {:#?})` \nfrom the local stack `({}, {:#?})`",
+            "check the state of the rule `({}, {:#?})` \nfrom the local stack `({}, {:#?})`",
             frame.0.get_str(),
             frame.0.get_requirement(),
             rule_ref.get_str(),

@@ -17,5 +17,5 @@ async function main_test() {
     }
 }
 
-init_logger(LogLevel.INFO);
+init_logger(LogLevel.DEBUG);
 main_test();

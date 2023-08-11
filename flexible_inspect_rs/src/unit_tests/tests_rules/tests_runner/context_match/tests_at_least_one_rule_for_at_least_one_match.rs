@@ -107,3 +107,18 @@ fn fn_runner_t_5() {
         NextStep::Error(None)
     );
 }
+
+#[test]
+fn fn_runner_t_6() {
+    let text = "[ [A] ]";
+    let rule: Rule = Rule::new(r".+", MatchRequirement::MustBeFound).extend([Rule::new(
+        r"\[[^\[\]]+\]",
+        MatchRequirement::MustBeFound,
+    )
+    .extend([Rule::new(r"x", MatchRequirement::MustBeFound)])
+    .mode_at_least_one_rule_for_at_least_one_match()]);
+    assert_eq!(
+        rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
+        NextStep::Error(None)
+    );
+}
