@@ -48,7 +48,7 @@ fn init_logger() {
             let timestamp = Local::now().format("%Y-%m-%d %H:%M:%S");
             writeln!(
                 buf,
-                "[{} {} {}] {}",
+                "[{} {} {}]↴\n{}",
                 timestamp,
                 match record.level() {
                     log::Level::Error => "ERROR".to_string().red(),

@@ -32,7 +32,7 @@ fn setup_logger(level: LevelFilter) -> Result<(), fern::InitError> {
                 log::Level::Trace => "TRACE".to_string(),
             };
             out.finish(format_args!(
-                "[{} {} {}] {}",
+                "[{} {} {}]↴\n{}",
                 Local::now().format("%Y-%m-%d %H:%M:%S"),
                 level_colored,
                 record.target(),
