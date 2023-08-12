@@ -1,3 +1,3 @@
-mod cartridge_bytes;
-mod cartridge_str;
+pub mod cartridge_bytes;
+pub mod cartridge_str;
 use super::*;

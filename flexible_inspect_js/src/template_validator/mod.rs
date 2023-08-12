@@ -1,3 +1,3 @@
-mod validate_bytes;
-mod validate_str;
+pub mod validate_bytes;
+pub mod validate_str;
 use super::*;
