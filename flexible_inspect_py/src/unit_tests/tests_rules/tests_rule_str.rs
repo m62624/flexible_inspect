@@ -85,12 +85,12 @@ fn test_mode_match_t_0() {
 #[test]
 fn test_mode_match_t_1() {
     let rule: Rule = PyRule::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
-        .any_r_for_any_m()
+        .any_r_for_all_m()
         .into();
 
     assert_eq!(
         rule,
-        Rule::new(r"\w+", MatchRequirement::MustNotBeFound).any_r_for_any_m()
+        Rule::new(r"\w+", MatchRequirement::MustNotBeFound).any_r_for_all_m()
     );
 }
 

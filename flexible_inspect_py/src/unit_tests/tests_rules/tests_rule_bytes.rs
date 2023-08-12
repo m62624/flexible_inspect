@@ -19,7 +19,7 @@ fn test_new_t_1() {
 }
 
 #[test]
-fn test_extend() {
+fn test_extend_t_0() {
     let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
         .extend(vec![
             PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound).into(),
