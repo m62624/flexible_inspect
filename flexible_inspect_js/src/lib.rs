@@ -33,17 +33,10 @@ pub enum LogLevel {
 fn setup_logger(level: LevelFilter) -> Result<(), fern::InitError> {
     fern::Dispatch::new()
         .format(move |out, message, record| {
-            let level_colored = match record.level() {
-                log::Level::Error => "ERROR",
-                log::Level::Warn => "WARN",
-                log::Level::Info => "INFO",
-                log::Level::Debug => "DEBUG",
-                log::Level::Trace => "TRACE",
-            };
             out.finish(format_args!(
-                "[{} {} {}]↴\n{}",
+                "[{} {} {}]↴\n{}\n",
                 Local::now().format("%Y-%m-%d %H:%M:%S"),
-                level_colored,
+                record.level(),
                 record.target(),
                 message
             ))
