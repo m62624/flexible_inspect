@@ -23,10 +23,24 @@ regex = "1.9.1"
 indexmap = "2.0.0"
 chrono = "0.4.26"
 colored = "2.0.4"
+
+# 
 [features]
-default = ["log_rust"]
+# Support for validator serializations and desyarilizations, includes
+# + Rule/RuleBytes
+# + Cartridge
+# + TemplateValidator
+# (Off by default)
 serde = ["dep:serde", "indexmap/serde"]
+# Option to add support for `Arc<str>` and `Arc<[u8]>` types to the validator, 
+# necessary for safe export to other programming languages
+# (For use in Rust, this option is useless. Off by default)
 export_to_other_languages = []
+# Inherit logging support from Rust, does not disable logging completely, 
+# just allows you to replace the logging constructor 
+# (On by default)
+# (data format, output to a specific channel, etc.) in other programming languages
+default = ["log_rust"]
 log_rust = []
 
 
