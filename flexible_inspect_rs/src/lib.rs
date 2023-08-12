@@ -48,11 +48,11 @@ pub mod logs {
                     "[{} {} {}]↴\n{}",
                     Local::now().format("%Y-%m-%d %H:%M:%S"),
                     match record.level() {
-                        log::Level::Error => "ERROR".to_string().red(),
-                        log::Level::Warn => "WARN".to_string().yellow(),
-                        log::Level::Info => "INFO".to_string().blue(),
-                        log::Level::Debug => "DEBUG".to_string().green(),
-                        log::Level::Trace => "TRACE".to_string().purple(),
+                        log::Level::Error => "ERROR".red(),
+                        log::Level::Warn => "WARN".yellow(),
+                        log::Level::Info => "INFO".blue(),
+                        log::Level::Debug => "DEBUG".green(),
+                        log::Level::Trace => "TRACE".purple(),
                     },
                     record.target().bright_black(),
                     record.args().to_string().bright_cyan()

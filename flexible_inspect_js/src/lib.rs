@@ -34,11 +34,11 @@ fn setup_logger(level: LevelFilter) -> Result<(), fern::InitError> {
     fern::Dispatch::new()
         .format(move |out, message, record| {
             let level_colored = match record.level() {
-                log::Level::Error => "ERROR".to_string(),
-                log::Level::Warn => "WARN".to_string(),
-                log::Level::Info => "INFO".to_string(),
-                log::Level::Debug => "DEBUG".to_string(),
-                log::Level::Trace => "TRACE".to_string(),
+                log::Level::Error => "ERROR",
+                log::Level::Warn => "WARN",
+                log::Level::Info => "INFO",
+                log::Level::Debug => "DEBUG",
+                log::Level::Trace => "TRACE",
             };
             out.finish(format_args!(
                 "[{} {} {}]↴\n{}",
