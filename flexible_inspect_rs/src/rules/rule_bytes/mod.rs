@@ -8,9 +8,12 @@ mod utils;
 // =======================================================
 use super::*;
 
-/// The structure for checking bytes with regular expressions
-
+/// A rule is the minimum unit of logic in a validator.
+/// The rule supports two regular expression crates:
+/// [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
+/// Determines which type is used based on the syntax (for example, if *Lookahead* and *Lookbehind* references are used, this automatically defines as [**FancyRegex**](https://crates.io/crates/fancy-regex)).
 /*
+The structure for checking bytes with regular expressions
 Stores all values in the `Option`, so that if we change the modifiers we can return this structure again without `cloning`.
 If we just implemented the method with `&mut self`,
 we would change the internal values of the modifiers, but we would not return the structure itself.

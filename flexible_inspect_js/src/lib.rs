@@ -1,3 +1,6 @@
+//! The Data validator is a universal tool for checking the correctness of data in string and byte formats. It allows you to determine whether the data conforms to certain rules and provides the ability to find errors and inconsistencies.\
+//! The project aims to create a versatile and flexible tool for validating data in different formats, ensuring accuracy, reliability and usability.
+
 mod cartridges;
 mod error;
 mod rules;

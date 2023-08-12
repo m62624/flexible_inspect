@@ -1,7 +1,10 @@
-pub mod cartridges;
-pub mod error;
-pub mod rules;
-pub mod template_validator;
+//! The Data validator is a universal tool for checking the correctness of data in string and byte formats. It allows you to determine whether the data conforms to certain rules and provides the ability to find errors and inconsistencies.\
+//! The project aims to create a versatile and flexible tool for validating data in different formats, ensuring accuracy, reliability and usability.
+
+mod cartridges;
+mod error;
+mod rules;
+mod template_validator;
 #[cfg(test)]
 mod unit_tests;
 pub use cartridges::{cartridges_bytes::PyCartridgeBytes, cartridges_str::PyCartridge};
