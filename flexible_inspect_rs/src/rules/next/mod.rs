@@ -14,7 +14,7 @@ pub enum NextStep {
 }
 
 impl NextStep {
-    /// Mechanism with final variant, depending on modifiers we get the result 
+    /// Mechanism with final variant, depending on modifiers we get the result
     pub fn next_or_finish_or_error<R: RuleBase, C: PartialEq + Eq + Hash>(
         rule: &R,
         captures: &mut CaptureData<C>,

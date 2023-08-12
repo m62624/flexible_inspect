@@ -23,6 +23,7 @@ pub struct WasmValidationErrorIterator(Vec<ValidationError>);
 
 #[wasm_bindgen(js_class = "ValidationErrorIterator")]
 impl WasmValidationErrorIterator {
+    #[allow(clippy::should_implement_trait)]
     pub fn next(&mut self) -> Option<WasmBaseValidationError> {
         self.0.pop().map(|error| WasmBaseValidationError {
             code: error.get_code(),
@@ -66,6 +67,10 @@ impl WasmValidationErrorIterator {
 
     pub fn len(&self) -> usize {
         self.0.len()
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.0.is_empty()
     }
 }
 
