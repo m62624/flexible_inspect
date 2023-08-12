@@ -38,8 +38,8 @@ serde = ["dep:serde", "indexmap/serde"]
 export_to_other_languages = []
 # Inherit logging support from Rust, does not disable logging completely, 
 # just allows you to replace the logging constructor 
-# (On by default)
 # (data format, output to a specific channel, etc.) in other programming languages
+# (On by default)
 default = ["log_rust"]
 log_rust = []
 
