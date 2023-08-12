@@ -19,7 +19,7 @@ impl WasmBaseValidationError {
 }
 
 #[wasm_bindgen(js_name = "ValidationErrorIterator")]
-pub struct WasmValidationErrorIterator(Vec<Box<dyn ValidationError + Send>>);
+pub struct WasmValidationErrorIterator(Vec<ValidationError>);
 
 #[wasm_bindgen(js_class = "ValidationErrorIterator")]
 impl WasmValidationErrorIterator {
@@ -70,7 +70,7 @@ impl WasmValidationErrorIterator {
 }
 
 impl WasmValidationErrorIterator {
-    pub fn new(collection: Vec<Box<dyn ValidationError + Send>>) -> Self {
+    pub fn new(collection: Vec<ValidationError>) -> Self {
         Self(collection)
     }
 }

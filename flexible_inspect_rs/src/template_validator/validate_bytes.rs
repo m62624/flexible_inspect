@@ -1,5 +1,5 @@
 use super::*;
-use crate::error::{traits::ValidationError, BaseValidationError};
+use crate::error::ValidationError;
 use crate::message::filling_message;
 use futures::StreamExt;
 
@@ -16,32 +16,32 @@ where
         }
     }
 
-    fn validate(&self, data: &'a [u8]) -> Result<(), ValidationErrorIterator> {
+    fn validate(&self, data: &'a [u8]) -> Result<(), Vec<ValidationError>> {
         let mut error = Vec::new();
         for cartridge in self.cartridges.as_ref().iter() {
             if let NextStep::Error(extra_with_value) = cartridge.run(data) {
-                error.push(Box::new(BaseValidationError::new(
+                error.push(ValidationError::new(
                     cartridge.get_id(),
                     filling_message(cartridge.get_message(), extra_with_value),
-                )) as Box<dyn ValidationError + Send>);
+                ))
             }
         }
         if error.is_empty() {
             Ok(())
         } else {
-            Err(ValidationErrorIterator::new(error))
+            Err(error)
         }
     }
 
     #[allow(clippy::into_iter_on_ref)]
-    async fn async_validate(&self, data: &'a [u8]) -> Result<(), ValidationErrorIterator> {
+    async fn async_validate(&self, data: &'a [u8]) -> Result<(), Vec<ValidationError>> {
         let error = futures::stream::iter(self.cartridges.as_ref().into_iter())
             .filter_map(|cartridge| async move {
                 if let NextStep::Error(extra_with_value) = cartridge.run(data) {
-                    Some(Box::new(BaseValidationError::new(
+                    Some(ValidationError::new(
                         cartridge.get_id(),
                         filling_message(cartridge.get_message(), extra_with_value),
-                    )) as Box<dyn ValidationError + Send>)
+                    ))
                 } else {
                     None
                 }
@@ -52,7 +52,7 @@ where
         if error.is_empty() {
             Ok(())
         } else {
-            Err(ValidationErrorIterator::new(error))
+            Err(error)
         }
     }
 }
@@ -71,35 +71,34 @@ where
         }
     }
 
-    fn validate(&self, data: Arc<[u8]>) -> Result<(), ValidationErrorIterator> {
+    fn validate(&self, data: Arc<[u8]>) -> Result<(), Vec<ValidationError>> {
         let mut error = Vec::new();
         for cartridge in self.cartridges.as_ref().iter() {
             if let NextStep::Error(extra_with_value) = cartridge.run(Arc::clone(&data)) {
-                error.push(Box::new(BaseValidationError::new(
+                error.push(ValidationError::new(
                     cartridge.get_id(),
                     filling_message(cartridge.get_message(), extra_with_value),
-                )) as Box<dyn ValidationError + Send>);
+                ))
             }
         }
         if error.is_empty() {
             Ok(())
         } else {
-            Err(ValidationErrorIterator::new(error))
+            Err(error)
         }
     }
 
     #[allow(clippy::into_iter_on_ref)]
-    async fn async_validate(&self, data: Arc<[u8]>) -> Result<(), ValidationErrorIterator> {
+    async fn async_validate(&self, data: Arc<[u8]>) -> Result<(), Vec<ValidationError>> {
         let error = futures::stream::iter(self.cartridges.as_ref().into_iter())
             .filter_map(|cartridge| {
                 let data_clone = Arc::clone(&data);
                 async move {
                     if let NextStep::Error(extra_with_value) = cartridge.run(data_clone) {
-                        Some(Box::new(BaseValidationError::new(
+                        Some(ValidationError::new(
                             cartridge.get_id(),
                             filling_message(cartridge.get_message(), extra_with_value),
                         ))
-                            as Box<dyn ValidationError + Send>)
                     } else {
                         None
                     }
@@ -111,7 +110,7 @@ where
         if error.is_empty() {
             Ok(())
         } else {
-            Err(ValidationErrorIterator::new(error))
+            Err(error)
         }
     }
 }

@@ -19,7 +19,7 @@ impl PyBaseValidationError {
 }
 
 #[pyclass(name = "ValidationErrorIterator")]
-pub struct PyValidationErrorIterator(pub(crate) Vec<Box<dyn ValidationError + Send>>);
+pub struct PyValidationErrorIterator(pub(crate) Vec<ValidationError>);
 
 #[pymethods]
 impl PyValidationErrorIterator {
@@ -38,11 +38,6 @@ impl PyValidationErrorIterator {
         slf.0.len()
     }
 
-    /// Returns `True` if the error code is in the collection.
-    pub fn __contains__(slf: PyRef<'_, Self>, code: i32) -> bool {
-        slf.0.iter().any(|error| error.get_code() == code)
-    }
-
     fn __aiter__(slf: PyRef<'_, Self>) -> PyResult<Py<PyValidationErrorIterator>> {
         Ok(slf.into())
     }
@@ -56,7 +51,7 @@ impl PyValidationErrorIterator {
 }
 
 impl PyValidationErrorIterator {
-    pub fn new(collection: Vec<Box<dyn ValidationError + Send>>) -> Self {
+    pub fn new(collection: Vec<ValidationError>) -> Self {
         Self(collection)
     }
 }

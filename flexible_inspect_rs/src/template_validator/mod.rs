@@ -2,17 +2,17 @@
 mod validate_bytes;
 mod validate_str;
 use crate::cartridges::traits::CartridgeBase;
-use crate::error::iterator::ValidationErrorIterator;
+use crate::error::ValidationError;
 // =======================================================
 #[cfg(feature = "serde")]
 use super::{Deserialize, Serialize};
-#[cfg(feature = "export_to_other_languages")]
-use std::sync::Arc;
 use crate::rules::next::NextStep;
 use async_trait::async_trait;
 use std::fmt::Debug;
 use std::hash::Hash;
 use std::marker::PhantomData;
+#[cfg(feature = "export_to_other_languages")]
+use std::sync::Arc;
 
 /// Use trait for `overloading` methods of `&str` and `&[u8]` types
 #[async_trait]
@@ -23,8 +23,8 @@ where
     D: PartialEq + Eq + Hash + Debug,
 {
     fn new(cartridges: IC) -> Self;
-    fn validate(&self, data: D) -> Result<(), ValidationErrorIterator>;
-    async fn async_validate(&self, data: D) -> Result<(), ValidationErrorIterator>;
+    fn validate(&self, data: D) -> Result<(), Vec<ValidationError>>;
+    async fn async_validate(&self, data: D) -> Result<(), Vec<ValidationError>>;
 }
 
 /// The structure for creating unique validators, load different `cartridges` to validate data.
