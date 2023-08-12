@@ -1,6 +1,6 @@
 use super::*;
 #[cfg(feature = "log_rust")]
-use crate::init_logger;
+use crate::logs::init_logger;
 use log::trace;
 
 impl Rule {
