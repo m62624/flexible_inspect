@@ -12,9 +12,10 @@ use std::sync::Arc;
 use std::{collections::HashSet, fmt::Debug, hash::Hash};
 // =======================================================
 
-/// The container structure for `custom rules`, `error message` and `error code`.\
-/// Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.\
-/// ( *Each cartridge can only hold one type at a time, `Rule` or `RuleBytes`* )\
+/// The cartridge is the container of the rules.\
+/// **Notes:**
+/// * Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.
+/// * *Each cartridge can only hold one type at a time, `Rule` or `RuleBytes`*\
 /// **by default, all rules must pass every match check**
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]

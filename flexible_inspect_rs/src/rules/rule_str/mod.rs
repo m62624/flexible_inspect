@@ -13,7 +13,7 @@ use super::*;
 /// [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
 /// Determines which type is used based on the syntax (for example, if *Lookahead* and *Lookbehind* references are used, this automatically defines as [**FancyRegex**](https://crates.io/crates/fancy-regex)).
 /// 
-/// **Recommendations**:\
+/// **Notes**:
 /// * Remember any modifier takes the contents of the `Rule` body 
 /// and returns a new one with a changed parameter (only `None` from the original Rule remains), 
 /// so specify the modifier in the same place where you initialize `Rule`.
@@ -22,7 +22,7 @@ use super::*;
 /// But this is just a recommendation. If you need to use references, of course you can specify them. 
 /// Then these rules will not be included in [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html), 
 /// and if there are rules in [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html) they will be the first in the queue to be checked, and those that use [**FancyRegex**](https://crates.io/crates/fancy-regex) features will be at the end of the queue
-/// * Basically use `Rule` instead of `RuleBytes` when working with text (not necessarily just text, it also includes `html` structures, code fragments from other languages, etc.) Since it has support for [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
+/// * Basically use `Rule` instead of `RuleBytes` when working with text (not necessarily just text, it also includes `html` structures, code fragments from other languages, etc.) since it has support for [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
 
 /*
 The structure for checking strings with regular expressions.
