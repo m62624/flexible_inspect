@@ -13,8 +13,8 @@ use log::error;
 use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
 // =======================================================
-/// This is error message when `Rule` is empty
-const ERR_OPTION: &str = " The body of `Rule` is missing, maybe you used modifiers, they borrow `Rule`, modifiers modify it and return the already modified version";
+/// This is error message when `Rule|RuleBytes` is empty
+const ERR_OPTION: &str = " The body of `Rule` is missing, maybe you used modifiers, they borrow `Rule`, modifiers modify it and return the already modified version (specify the modifier in the same place where you initialize `Rule|RuleBytes`).";
 /// This is reserved standard value for error filling
 pub const DEFAULT_CAPTURE: &str = "main_capture";
 // =======================================================
