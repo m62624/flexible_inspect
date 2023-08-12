@@ -24,20 +24,10 @@ impl CartridgeBase<&str> for Cartridge<Rule> {
 impl CartridgeModifiers for Cartridge<Rule> {
     type CartridgeType = Cartridge<Rule>;
 
-    fn mode_all_rules_for_at_least_one_match(&mut self) -> Self {
-        self.root_rule = self.root_rule.mode_all_rules_for_at_least_one_match();
-        std::mem::take(self)
-    }
-
-    fn mode_at_least_one_rule_for_all_matches(&mut self) -> Self {
-        self.root_rule = self.root_rule.mode_at_least_one_rule_for_all_matches();
-        std::mem::take(self)
-    }
-
-    fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self {
+    fn any_r_for_any_m(&mut self) -> Self {
         self.root_rule = self
             .root_rule
-            .mode_at_least_one_rule_for_at_least_one_match();
+            .any_r_for_any_m();
         std::mem::take(self)
     }
 }

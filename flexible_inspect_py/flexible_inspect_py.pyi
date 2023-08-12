@@ -68,21 +68,21 @@ class Rule:
         """
     ...
 
-    def mode_all_rules_for_at_least_one_match(self) -> Rule:
+    def all_r_for_any_m(self) -> Rule:
         """
     modifier to change the rule matching mode,
     `all rules` must pass the test for at least `one match`
         """
     ...
 
-    def mode_at_least_one_rule_for_all_matches(self) -> Rule:
+    def any_r_for_all_m(self) -> Rule:
         """
     modifier to change the rule matching mode,
     at least `one rule` must pass the test for `all matches`
         """
     ...
 
-    def mode_at_least_one_rule_for_at_least_one_match(self) -> Rule:
+    def any_r_for_any_m(self) -> Rule:
         """
     modifier to change the rule matching mode,
     at least `one rule` must pass the test for at least `one match`
@@ -135,21 +135,21 @@ class RuleBytes:
         """
     ...
 
-    def mode_all_rules_for_at_least_one_match(self) -> RuleBytes:
+    def all_r_for_any_m(self) -> RuleBytes:
         """
     modifier to change the rule matching mode,
     `all rules` must pass the test for at least `one match`
         """
     ...
 
-    def mode_at_least_one_rule_for_all_matches(self) -> RuleBytes:
+    def any_r_for_all_m(self) -> RuleBytes:
         """
     modifier to change the rule matching mode,
     at least `one rule` must pass the test for `all matches`
         """
     ...
 
-    def mode_at_least_one_rule_for_at_least_one_match(self) -> RuleBytes:
+    def any_r_for_any_m(self) -> RuleBytes:
         """
     modifier to change the rule matching mode,
     at least `one rule` must pass the test for at least `one match`
@@ -170,21 +170,7 @@ class Cartridge:
     def __init__(self, id: int, message: str, root_rules: List[Rule]) -> None:
         ...
 
-    def mode_all_rules_for_at_least_one_match(self) -> Cartridge:
-        """
-    modifier to change the rule matching mode,
-    `all rules` must pass the test for at least `one match`
-        """
-        ...
-
-    def mode_at_least_one_rule_for_all_matches(self) -> Cartridge:
-        """
-    modifier to change the rule matching mode,
-    at least `one rule` must pass the test for `all matches`
-        """
-        ...
-
-    def mode_at_least_one_rule_for_at_least_one_match(self) -> Cartridge:
+    def any_r_for_any_m(self) -> Cartridge:
         """
     modifier to change the rule matching mode,
     at least `one rule` must pass the test for at least `one match`
@@ -206,21 +192,7 @@ class CartridgeBytes:
     def __init__(self, id: int, message: str, root_rules: List[RuleBytes]) -> None:
         ...
 
-    def mode_all_rules_for_at_least_one_match(self) -> CartridgeBytes:
-        """
-    modifier to change the rule matching mode,
-    `all rules` must pass the test for at least `one match`
-        """
-        ...
-
-    def mode_at_least_one_rule_for_all_matches(self) -> CartridgeBytes:
-        """
-    modifier to change the rule matching mode,
-    at least `one rule` must pass the test for `all matches`
-        """
-        ...
-
-    def mode_at_least_one_rule_for_at_least_one_match(self) -> CartridgeBytes:
+    def any_r_for_any_m(self) -> CartridgeBytes:
         """
     modifier to change the rule matching mode,
     at least `one rule` must pass the test for at least `one match`

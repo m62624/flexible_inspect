@@ -24,18 +24,18 @@ impl PyRuleBytes {
         std::mem::take(self)
     }
 
-    pub fn mode_all_rules_for_at_least_one_match(&mut self) -> Self {
-        self.0 = self.0.mode_all_rules_for_at_least_one_match();
+    pub fn all_r_for_any_m(&mut self) -> Self {
+        self.0 = self.0.all_r_for_any_m();
         std::mem::take(self)
     }
 
-    pub fn mode_at_least_one_rule_for_all_matches(&mut self) -> Self {
-        self.0 = self.0.mode_at_least_one_rule_for_all_matches();
+    pub fn any_r_for_all_m(&mut self) -> Self {
+        self.0 = self.0.any_r_for_all_m();
         std::mem::take(self)
     }
 
-    pub fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self {
-        self.0 = self.0.mode_at_least_one_rule_for_at_least_one_match();
+    pub fn any_r_for_any_m(&mut self) -> Self {
+        self.0 = self.0.any_r_for_any_m();
         std::mem::take(self)
     }
 }

@@ -73,37 +73,35 @@ fn test_mode_counter_t_2() {
 #[test]
 fn test_mode_match_t_0() {
     let rule: Rule = PyRule::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
-        .mode_all_rules_for_at_least_one_match()
+        .all_r_for_any_m()
         .into();
 
     assert_eq!(
         rule,
-        Rule::new(r"\w+", MatchRequirement::MustNotBeFound).mode_all_rules_for_at_least_one_match()
+        Rule::new(r"\w+", MatchRequirement::MustNotBeFound).all_r_for_any_m()
     );
 }
 
 #[test]
 fn test_mode_match_t_1() {
     let rule: Rule = PyRule::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
-        .mode_at_least_one_rule_for_all_matches()
+        .any_r_for_any_m()
         .into();
 
     assert_eq!(
         rule,
-        Rule::new(r"\w+", MatchRequirement::MustNotBeFound)
-            .mode_at_least_one_rule_for_all_matches()
+        Rule::new(r"\w+", MatchRequirement::MustNotBeFound).any_r_for_any_m()
     );
 }
 
 #[test]
 fn test_mode_match_t_2() {
     let rule: Rule = PyRule::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
-        .mode_at_least_one_rule_for_at_least_one_match()
+        .any_r_for_any_m()
         .into();
 
     assert_eq!(
         rule,
-        Rule::new(r"\w+", MatchRequirement::MustNotBeFound)
-            .mode_at_least_one_rule_for_at_least_one_match()
+        Rule::new(r"\w+", MatchRequirement::MustNotBeFound).any_r_for_any_m()
     );
 }

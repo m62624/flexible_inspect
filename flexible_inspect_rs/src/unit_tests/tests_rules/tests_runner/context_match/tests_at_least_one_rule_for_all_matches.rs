@@ -12,7 +12,7 @@ fn fn_runner_t_0() {
         Rule::new(r"B", MatchRequirement::MustBeFound),
         Rule::new(r"C", MatchRequirement::MustBeFound),
     ])
-    .mode_at_least_one_rule_for_all_matches()]);
+    .any_r_for_all_m()]);
     assert_eq!(
         rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Finish
@@ -31,7 +31,7 @@ fn fn_runner_t_1() {
         Rule::new(r"B", MatchRequirement::MustBeFound),
         Rule::new(r"C", MatchRequirement::MustBeFound),
     ])
-    .mode_at_least_one_rule_for_all_matches()]);
+    .any_r_for_all_m()]);
     assert_eq!(
         rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Error(None)
@@ -49,7 +49,7 @@ fn fn_runner_t_2() {
         Rule::new(r"B", MatchRequirement::MustBeFound),
         Rule::new(r"\d(?=\d+)", MatchRequirement::MustBeFound),
     ])
-    .mode_at_least_one_rule_for_all_matches()]);
+    .any_r_for_all_m()]);
     assert_eq!(
         rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Finish
@@ -67,7 +67,7 @@ fn fn_runner_t_3() {
         Rule::new(r"B", MatchRequirement::MustBeFound),
         Rule::new(r"\d(?=C)", MatchRequirement::MustBeFound),
     ])
-    .mode_at_least_one_rule_for_all_matches()]);
+    .any_r_for_all_m()]);
     assert_eq!(
         rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Error(None)
@@ -86,7 +86,7 @@ fn fn_runner_t_4() {
         Rule::new(r"B", MatchRequirement::MustBeFound),
         Rule::new(r"C", MatchRequirement::MustBeFound),
     ])
-    .mode_at_least_one_rule_for_all_matches()]);
+    .any_r_for_all_m()]);
     assert_eq!(
         rules::runner::run::<Rule, &str>(&rule, Rule::find_captures(&rule, &text)),
         NextStep::Finish

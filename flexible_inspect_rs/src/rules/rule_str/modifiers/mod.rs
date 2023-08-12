@@ -47,7 +47,7 @@ impl RuleModifiers for Rule {
         std::mem::take(self)
     }
 
-    fn mode_all_rules_for_at_least_one_match(&mut self) -> Self::RuleType {
+    fn all_r_for_any_m(&mut self) -> Self::RuleType {
         self.content_mut_unchecked().general_modifiers.mod_match =
             ModeMatch::AllRulesForAtLeastOneMatch;
         debug!(
@@ -58,7 +58,7 @@ impl RuleModifiers for Rule {
         std::mem::take(self)
     }
 
-    fn mode_at_least_one_rule_for_all_matches(&mut self) -> Self::RuleType {
+    fn any_r_for_all_m(&mut self) -> Self::RuleType {
         self.content_mut_unchecked().general_modifiers.mod_match =
             ModeMatch::AtLeastOneRuleForAllMatches;
         debug!(
@@ -69,7 +69,7 @@ impl RuleModifiers for Rule {
         std::mem::take(self)
     }
 
-    fn mode_at_least_one_rule_for_at_least_one_match(&mut self) -> Self::RuleType {
+    fn any_r_for_any_m(&mut self) -> Self::RuleType {
         self.content_mut_unchecked().general_modifiers.mod_match =
             ModeMatch::AtLeastOneRuleForAtLeastOneMatch;
         debug!(

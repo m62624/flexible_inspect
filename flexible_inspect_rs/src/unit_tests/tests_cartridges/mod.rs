@@ -13,7 +13,7 @@ fn test_mode_t_0() {
             .content_unchecked()
             .general_modifiers
             .mod_match,
-        ModeMatch::AllRulesForAllMatches
+        ModeMatch::AllRulesForAtLeastOneMatch
     );
 }
 
@@ -24,43 +24,7 @@ fn test_mode_t_1() {
         "NOT FOUND",
         [Rule::new(r".+", MatchRequirement::MustBeFound)],
     )
-    .mode_all_rules_for_at_least_one_match();
-    assert_eq!(
-        cartridge
-            .root_rule
-            .content_unchecked()
-            .general_modifiers
-            .mod_match,
-        ModeMatch::AllRulesForAtLeastOneMatch
-    );
-}
-
-#[test]
-fn test_mode_t_2() {
-    let cartridge = Cartridge::new(
-        404,
-        "NOT FOUND",
-        [Rule::new(r".+", MatchRequirement::MustBeFound)],
-    )
-    .mode_at_least_one_rule_for_all_matches();
-    assert_eq!(
-        cartridge
-            .root_rule
-            .content_unchecked()
-            .general_modifiers
-            .mod_match,
-        ModeMatch::AtLeastOneRuleForAllMatches
-    );
-}
-
-#[test]
-fn test_mode_t_3() {
-    let cartridge = Cartridge::new(
-        404,
-        "NOT FOUND",
-        [Rule::new(r".+", MatchRequirement::MustBeFound)],
-    )
-    .mode_at_least_one_rule_for_at_least_one_match();
+    .any_r_for_any_m();
     assert_eq!(
         cartridge
             .root_rule
@@ -72,30 +36,12 @@ fn test_mode_t_3() {
 }
 
 #[test]
-fn test_mode_t_4() {
+fn test_mode_t_2() {
     let cartridge = Cartridge::new(
         404,
         "NOT FOUND",
         [RuleBytes::new(r".+", MatchRequirement::MustBeFound)],
     );
-    assert_eq!(
-        cartridge
-            .root_rule
-            .content_unchecked()
-            .general_modifiers
-            .mod_match,
-        ModeMatch::AllRulesForAllMatches
-    );
-}
-
-#[test]
-fn test_mode_t_5() {
-    let cartridge = Cartridge::new(
-        404,
-        "NOT FOUND",
-        [RuleBytes::new(r".+", MatchRequirement::MustBeFound)],
-    )
-    .mode_all_rules_for_at_least_one_match();
     assert_eq!(
         cartridge
             .root_rule
@@ -107,31 +53,13 @@ fn test_mode_t_5() {
 }
 
 #[test]
-fn test_mode_t_6() {
+fn test_mode_t_5() {
     let cartridge = Cartridge::new(
         404,
         "NOT FOUND",
         [RuleBytes::new(r".+", MatchRequirement::MustBeFound)],
     )
-    .mode_at_least_one_rule_for_all_matches();
-    assert_eq!(
-        cartridge
-            .root_rule
-            .content_unchecked()
-            .general_modifiers
-            .mod_match,
-        ModeMatch::AtLeastOneRuleForAllMatches
-    );
-}
-
-#[test]
-fn test_mode_t_7() {
-    let cartridge = Cartridge::new(
-        404,
-        "NOT FOUND",
-        [RuleBytes::new(r".+", MatchRequirement::MustBeFound)],
-    )
-    .mode_at_least_one_rule_for_at_least_one_match();
+    .any_r_for_any_m();
     assert_eq!(
         cartridge
             .root_rule
