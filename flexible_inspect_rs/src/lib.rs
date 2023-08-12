@@ -45,11 +45,10 @@ fn init_logger() {
             env_logger::Env::new().filter_or("FLEX_VALIDATOR_LOG", "OFF"),
         )
         .format(|buf, record| {
-            let timestamp = Local::now().format("%Y-%m-%d %H:%M:%S");
             writeln!(
                 buf,
                 "[{} {} {}]↴\n{}",
-                timestamp,
+                Local::now().format("%Y-%m-%d %H:%M:%S"),
                 match record.level() {
                     log::Level::Error => "ERROR".to_string().red(),
                     log::Level::Warn => "WARN".to_string().yellow(),
