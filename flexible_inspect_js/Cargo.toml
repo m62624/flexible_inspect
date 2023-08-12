@@ -26,3 +26,6 @@ console_log = { version = "1.0.0", features = ["color"] }
 log = "0.4.19"
 fern = "0.6.2"
 chrono = "0.4.26"
+
+[dev-dependencies]
+wasm-bindgen-test = "0.3.37"
