@@ -6,7 +6,6 @@ use crate::rules::traits::{RuleBase, RuleModifiers};
 
 impl RuleModifiers for RuleBytes {
     type RuleType = RuleBytes;
-    /// a method for extending the rule with nested rules
     fn extend<R: IntoIterator<Item = Self::RuleType>>(
         &mut self,
         nested_rules: R,

@@ -53,11 +53,11 @@ pub trait RuleModifiers {
     /// ( **by default, all rules must pass every match check** )
     fn extend<R: IntoIterator<Item = Self::RuleType>>(&mut self, nested_rules: R)
         -> Self::RuleType;
-    /// modifier to set the match counter, condition counter == match
+    /// modifier to set the match counter, condition `counter == match`
     fn counter_is_equal(&mut self, count: usize) -> Self::RuleType;
-    /// modifier to set the match counter, condition counter >= match
+    /// modifier to set the match counter, condition `counter >= match`
     fn counter_more_than(&mut self, count: usize) -> Self::RuleType;
-    /// modifier to set the match counter, condition counter <= match
+    /// modifier to set the match counter, condition `counter <= match`
     fn counter_less_than(&mut self, count: usize) -> Self::RuleType;
     /// modifier to change the rule matching mode,
     /// `all rules` must pass the test for at least `one match`
