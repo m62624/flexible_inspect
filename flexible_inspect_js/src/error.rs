@@ -19,7 +19,7 @@ impl WasmBaseValidationError {
 }
 
 #[wasm_bindgen(js_name = "ValidationErrorIterator")]
-pub struct WasmValidationErrorIterator(Vec<ValidationError>);
+pub struct WasmValidationErrorIterator(pub(crate) Vec<ValidationError>);
 
 #[wasm_bindgen(js_class = "ValidationErrorIterator")]
 impl WasmValidationErrorIterator {
