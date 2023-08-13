@@ -69,7 +69,7 @@ where
     ///     // Specify the same names to complete the message (INCORRECT_DATA)
     ///     "Incorrect command found `{INCORRECT_DATA}`",
     ///     [
-    ///         // Check script, commands starting with `sudo` should not be found 
+    ///         // Check script, commands starting with `sudo` should not be found
     ///         Rule::new(
     ///             // Specify the same names to complete the message (INCORRECT_DATA)
     ///             r"(?P<INCORRECT_DATA>sudo .+[^\n\s\.]?)",
@@ -117,7 +117,7 @@ where
     ///     "Incorrect command found `{main_capture}`",
     ///     [
     ///         Rule::new(
-    ///             // Check script, commands starting with `sudo` should not be found 
+    ///             // Check script, commands starting with `sudo` should not be found
     ///             r"sudo .+[^\n\s\.]?",
     ///             // Specify the MustNotBeFound modifier
     ///             MatchRequirement::MustNotBeFound,
@@ -135,7 +135,7 @@ where
     {
         Self {
             root_rule: T::_new("SYSTEM_ROOT_RULE", MatchRequirement::MustBeFound)
-                // .all_r_for_any_m()
+                .all_r_for_any_m()
                 .extend(rules),
             id,
             message: message.into(),
