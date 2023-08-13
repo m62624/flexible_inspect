@@ -60,13 +60,56 @@ pub trait RuleModifiers {
     fn counter_more_than(&mut self, count: usize) -> Self::RuleType;
     /// modifier to set the match counter, condition `counter <= match`
     fn counter_less_than(&mut self, count: usize) -> Self::RuleType;
-    /// modifier to change the rule matching mode,
-    /// `all rules` must pass the test for at least `one match`
+    /// modifier to change the rule matching mode.
+    ///
+    /// In this mode, all the sub-adjustments should work for at least one match.
+    /// If at least one sub-rule does not work on one of the matches, an error will be returned.
+    /// ```bash
+    /// #=======================================
+    /// text = "txt [123] txt [456] txt [789]"
+    /// #=======================================
+    /// CustomError
+    /// |
+    /// |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+    ///     |   [123], [456], [789]
+    ///     |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
+    ///     |                                      |
+    ///     |___ Subrule "\[\d+\]" (MustBeFound) __|
+    ///     |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- ERROR
+    /// ```
     fn all_r_for_any_m(&mut self) -> Self::RuleType;
-    /// modifier to change the rule matching mode,
-    /// at least `one rule` must pass the test for `all matches`
+    /// modifier to change the rule matching mode.
+    /// 
+    /// In this mode, at least one sub-rule should work for every match. If no sub-rule works on one of the matches, an error will be returned.
+    /// ```bash
+    /// #=======================================
+    /// text = "txt [123] txt [456] txt [789]"
+    /// #=======================================
+    /// CustomError
+    /// |
+    /// |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+    ///     |   [123], [456], [789]
+    ///     |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE -- [456] -- TRUE -- [789] -- TRUE
+    ///     |                                      |               |                 |
+    ///     |___ Subrule "\[\d+\]" (MustBeFound) __|_______________|_________________|
+    ///     |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched)
+    /// ```
     fn any_r_for_all_m(&mut self) -> Self::RuleType;
-    /// modifier to change the rule matching mode,
-    /// at least `one rule` must pass the test for at least `one match`
+    /// modifier to change the rule matching mode.
+    /// 
+    /// In this mode, at least one sub-rule should work for at least one match. If no sub-rule works on one of the matches, an error will be returned.
+    /// ```bash
+    /// #=======================================
+    /// text = "txt [123] txt [456] txt [789]"
+    /// #=======================================
+    /// CustomError
+    /// |
+    /// |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+    ///     |   [123], [456], [789]
+    ///     |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
+    ///     |                                      |
+    ///     |___ Subrule "\[\d+\]" (MustBeFound) __|
+    ///     |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
+    /// ```
     fn any_r_for_any_m(&mut self) -> Self::RuleType;
 }
