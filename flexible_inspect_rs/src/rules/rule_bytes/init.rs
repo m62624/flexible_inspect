@@ -6,12 +6,13 @@ use log::trace;
 impl RuleBytes {
     /// Constructor for creating `RuleBytes`
     /// 
-    /// **Notes**:
+    /// **Notes**:\
     /// Please stick to *raw string literals* when creating regular expressions, without it your regular expression may behave differently
     /// # Example:
     /// > * **`r`**`"d{3}."` - is the correct conversion to a regular expression
     /// > * `"d{3}."` - possible incorrect behavior
     /// ```rust
+    /// # use flexible_inspect_rs::prelude::*;
     /// let rule1 = RuleBytes::new(r"\d+", MatchRequirement::MustBeFound);
     /// let rule2 = RuleBytes::new(r"\s+", MatchRequirement::MustNotBeFound);
     /// ```
