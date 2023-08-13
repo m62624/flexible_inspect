@@ -39,9 +39,9 @@ pub mod prelude {
 }
 
 /// # Logs
-/// Includes color-coded logging support
+/// Includes color-coded logging support (**do not need to be declared in the code**)
 ///
-/// **Recommendations:**\
+/// **Recommendations:** \
 /// Use logging to find out what regular expression is caught,
 /// whether matches should be found or not, what mode the cartridges are running in, etc.\
 /// To enable logging support it is necessary to specify the `FLEX_VALIDATOR_LOG` environment variable before running the file
@@ -58,9 +58,9 @@ pub mod prelude {
 /// ```bash
 /// FLEX_VALIDATOR_LOG=INFO cargo run
 /// ```
-#[cfg(feature = "log_rust")]
 
-mod logs {
+#[cfg(feature = "log_rust")]
+pub mod logs {
     use chrono::Local;
     use colored::*;
     use std::io::Write;
@@ -72,7 +72,7 @@ mod logs {
     // =====================================================================
     /// Initialization of the logger
     #[cfg(not(tarpaulin_include))]
-    pub fn init_logger() {
+    pub(crate) fn init_logger() {
         // env_logger is called only once
         INIT.call_once(|| {
             env_logger::Builder::from_env(
