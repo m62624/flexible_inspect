@@ -11,6 +11,7 @@ where
     R: CalculateValueRules<'a, C> + Debug,
     C: PartialEq + Eq + Hash + Debug,
 {
+    let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
     while let Some(mut frame) = stack.pop_front() {
         // ============================= LOG =============================
         trace!(
@@ -52,29 +53,38 @@ where
                             );
                             // ===============================================================
                             let mut captures = R::find_captures(rule_from_regexset, data);
-                            if let NextStep::Error(error) =
-                                NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
-                            {
-                                // ============================= LOG =============================
-                                debug!("the rule `{}` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )", rule_from_regexset.get_str(), data );
-                                // ===============================================================
+                            match NextStep::next_or_finish_or_error(
+                                rule_from_regexset,
+                                &mut captures,
+                            ) {
+                                NextStep::Go => {
+                                    found_rule = true;
+                                    temp_stack.push_back((rule_from_regexset, captures));
+                                }
+                                NextStep::Finish => {
+                                    // ============================= LOG =============================
+                                    debug!(
+                                        "found one rule `({}, {:#?})` for on match `{:#?}`",
+                                        rule_from_regexset.get_str(),
+                                        rule_from_regexset.get_requirement(),
+                                        data
+                                    );
+                                    // ===============================================================
+                                    found_rule = true;
+                                    selected_rules.insert(rule_from_regexset);
+                                    stack.push_back((rule_from_regexset, captures));
+                                    temp_stack.clear();
+                                    break 'skip_data;
+                                }
+                                NextStep::Error(error) => {
+                                    // ============================= LOG =============================
+                                    debug!("the rule `{}` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )", rule_from_regexset.get_str(), data );
+                                    // ===============================================================
 
-                                err_value = error;
-                                continue 'skip_this_rule;
+                                    err_value = error;
+                                    continue 'skip_this_rule;
+                                }
                             }
-
-                            // ============================= LOG =============================
-                            debug!(
-                                "found one rule `({}, {:#?})` for on match `{:#?}`",
-                                rule_from_regexset.get_str(),
-                                rule_from_regexset.get_requirement(),
-                                data
-                            );
-                            // ===============================================================
-                            found_rule = true;
-                            selected_rules.insert(rule_from_regexset);
-                            stack.push_back((rule_from_regexset, captures));
-                            break 'skip_data;
                         }
                         // The second step, in this stage we go through those rules and matches that are not in `RegexSet`.
                         'not_in_regexset: for rule in simple_rules.0 {
@@ -87,24 +97,31 @@ where
                                 );
                                 // ===============================================================
                                 let mut captures = R::find_captures(rule, data);
-                                if let NextStep::Error(err) =
-                                    NextStep::next_or_finish_or_error(rule, &mut captures)
-                                {
-                                    err_value = err;
-                                    continue 'not_in_regexset;
-                                }
+                                match NextStep::next_or_finish_or_error(rule, &mut captures) {
+                                    NextStep::Go => {
+                                        found_rule = true;
+                                        temp_stack.push_back((rule, captures));
+                                    }
+                                    NextStep::Finish => {
+                                        // ============================= LOG =============================
+                                        info!(
+                                            "found one rule `({}, {:#?})` for match `{:#?}`",
+                                            rule.get_str(),
+                                            rule.get_requirement(),
+                                            data
+                                        );
+                                        // ===============================================================
 
-                                // ============================= LOG =============================
-                                info!(
-                                    "found one rule `({}, {:#?})` for match `{:#?}`",
-                                    rule.get_str(),
-                                    rule.get_requirement(),
-                                    data
-                                );
-                                // ===============================================================
-                                found_rule = true;
-                                stack.push_back((rule, captures));
-                                break 'skip_data;
+                                        found_rule = true;
+                                        stack.push_back((rule, captures));
+                                        temp_stack.clear();
+                                        break 'skip_data;
+                                    }
+                                    NextStep::Error(error) => {
+                                        err_value = error;
+                                        continue 'not_in_regexset;
+                                    }
+                                }
                             }
                         }
                     }
@@ -120,23 +137,30 @@ where
                                 );
                                 // ===============================================================
                                 let mut captures = R::find_captures(rule, data);
-                                if let NextStep::Error(err) =
-                                    NextStep::next_or_finish_or_error(rule, &mut captures)
-                                {
-                                    err_value = err;
-                                    continue 'skip_this_cmplx_rule;
+                                match NextStep::next_or_finish_or_error(rule, &mut captures) {
+                                    NextStep::Go => {
+                                        found_rule = true;
+                                        temp_stack.push_back((rule, captures));
+                                    }
+                                    NextStep::Finish => {
+                                        // ============================= LOG =============================
+                                        info!(
+                                            "found one rule `({}, {:#?})` for match `{:#?}`",
+                                            rule.get_str(),
+                                            rule.get_requirement(),
+                                            data
+                                        );
+                                        // ===============================================================
+                                        found_rule = true;
+                                        stack.push_back((rule, captures));
+                                        temp_stack.clear();
+                                        break 'skip_data;
+                                    }
+                                    NextStep::Error(error) => {
+                                        err_value = error;
+                                        continue 'skip_this_cmplx_rule;
+                                    }
                                 }
-                                // ============================= LOG =============================
-                                info!(
-                                    "found one rule `({}, {:#?})` for match `{:#?}`",
-                                    rule.get_str(),
-                                    rule.get_requirement(),
-                                    data
-                                );
-                                // ===============================================================
-                                found_rule = true;
-                                stack.push_back((rule, captures));
-                                break 'skip_data;
                             }
                         }
                     }
@@ -146,6 +170,8 @@ where
                     error!("no rules were found for any of the matches");
                     // =========================================
                     return NextStep::Error(err_value);
+                }else{
+                    stack.extend(temp_stack.drain(..));
                 }
             }
             NextStep::Finish => {
