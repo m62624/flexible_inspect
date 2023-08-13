@@ -2,8 +2,6 @@ use super::*;
 
 /// in this mode, at least one rule must be passed for at least on match
 pub fn at_least_one_rule_for_at_least_one_match<'a, R, C>(
-    // this parameter is required for logs
-    rule_ref: &R::RuleType,
     // get a unique stack of one root cmplx_rule, necessary to bypass the recursion constraint
     stack: &mut VecDeque<(&'a R::RuleType, CaptureData<C>)>,
 ) -> NextStep
@@ -13,13 +11,16 @@ where
 {
     let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
     while let Some(mut frame) = stack.pop_front() {
+        trace!(
+            "deleted rule from unique stack: ({:?}, {:#?})",
+            frame.0.get_str(),
+            frame.0.get_requirement()
+        );
         // ============================= LOG =============================
         trace!(
-            "check the state of the rule `({}, {:#?})` \nfrom the local stack `({}, {:#?})`",
+            "check the state of the rule `({}, {:#?})`",
             frame.0.get_str(),
             frame.0.get_requirement(),
-            rule_ref.get_str(),
-            rule_ref.get_requirement()
         );
         // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
@@ -27,8 +28,8 @@ where
                 // ============================= LOG =============================
                 debug!(
                     "success, run subrules from the root rule `({}, {:#?})`",
-                    rule_ref.get_str(),
-                    rule_ref.get_requirement()
+                    frame.0.get_str(),
+                    frame.0.get_requirement()
                 );
                 // ===============================================================
                 // Stores the error, if any
@@ -59,6 +60,7 @@ where
                             ) {
                                 NextStep::Go => {
                                     found_rule = true;
+                                    selected_rules.insert(rule_from_regexset);
                                     temp_stack.push_back((rule_from_regexset, captures));
                                 }
                                 NextStep::Finish => {
@@ -170,8 +172,9 @@ where
                     error!("no rules were found for any of the matches");
                     // =========================================
                     return NextStep::Error(err_value);
-                }else{
+                } else {
                     stack.extend(temp_stack.drain(..));
+                    break;
                 }
             }
             NextStep::Finish => {

@@ -47,21 +47,21 @@ where
         match frame.0.get_mode_match() {
             ModeMatch::AllRulesForAllMatches => {
                 if let NextStep::Error(value) =
-                    context_match::all_rules_for_all_matches::<R, C>(rule, &mut stack)
+                    context_match::all_rules_for_all_matches::<R, C>(&mut stack)
                 {
                     return NextStep::Error(value);
                 }
             }
             ModeMatch::AllRulesForAtLeastOneMatch => {
                 if let NextStep::Error(value) =
-                    context_match::all_rules_for_at_least_one_match::<R, C>(rule, &mut stack)
+                    context_match::all_rules_for_at_least_one_match::<R, C>( &mut stack)
                 {
                     return NextStep::Error(value);
                 }
             }
             ModeMatch::AtLeastOneRuleForAllMatches => {
                 if let NextStep::Error(value) =
-                    context_match::at_least_one_rule_for_all_matches::<R, C>(rule, &mut stack)
+                    context_match::at_least_one_rule_for_all_matches::<R, C>(&mut stack)
                 {
                     return NextStep::Error(value);
                 }
@@ -69,7 +69,7 @@ where
             ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {
                 if let NextStep::Error(value) =
                     context_match::at_least_one_rule_for_at_least_one_match::<R, C>(
-                        rule, &mut stack,
+                         &mut stack,
                     )
                 {
                     return NextStep::Error(value);

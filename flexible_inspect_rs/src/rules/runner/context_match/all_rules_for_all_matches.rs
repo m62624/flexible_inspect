@@ -2,8 +2,6 @@ use super::*;
 
 /// in this mode, a rule must be passed for each match
 pub fn all_rules_for_all_matches<'a, R, C>(
-    // this parameter is required for logs
-    rule_ref: &R::RuleType,
     // get a unique stack of one root rule, necessary to bypass the recursion constraint
     stack: &mut VecDeque<(&'a R::RuleType, CaptureData<C>)>,
 ) -> NextStep
@@ -13,13 +11,16 @@ where
 {
     let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
     while let Some(mut frame) = stack.pop_front() {
+        trace!(
+            "deleted rule from unique stack: ({:?}, {:#?})",
+            frame.0.get_str(),
+            frame.0.get_requirement()
+        );
         // ============================= LOG =============================
         trace!(
-            "check the state of the rule `({}, {:#?})` \nfrom the local stack `({}, {:#?})`",
+            "check the state of the rule `({}, {:#?})`",
             frame.0.get_str(),
             frame.0.get_requirement(),
-            rule_ref.get_str(),
-            rule_ref.get_requirement()
         );
         // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
@@ -27,8 +28,8 @@ where
                 // ============================= LOG =============================
                 debug!(
                     "success, run subrules from the root rule `({}, {:#?})`",
-                    rule_ref.get_str(),
-                    rule_ref.get_requirement()
+                    frame.0.get_str(),
+                    frame.0.get_requirement()
                 );
                 // ===============================================================
 

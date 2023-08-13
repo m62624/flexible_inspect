@@ -135,7 +135,7 @@ where
     {
         Self {
             root_rule: T::_new("SYSTEM_ROOT_RULE", MatchRequirement::MustBeFound)
-                .all_r_for_any_m()
+                // .all_r_for_any_m()
                 .extend(rules),
             id,
             message: message.into(),

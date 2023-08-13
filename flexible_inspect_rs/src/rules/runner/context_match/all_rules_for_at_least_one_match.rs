@@ -2,8 +2,6 @@ use super::*;
 
 /// in this mode all rules must be passed for at least one match
 pub fn all_rules_for_at_least_one_match<'a, R, C>(
-    // this parameter is required for logs
-    rule_ref: &R::RuleType,
     // get a unique stack of one root cmplx_rule, necessary to bypass the recursion constraint
     stack: &mut VecDeque<(&'a R::RuleType, CaptureData<C>)>,
 ) -> NextStep
@@ -14,13 +12,17 @@ where
     let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
 
     while let Some(mut frame) = stack.pop_front() {
+        trace!(
+            "deleted rule from unique stack: ({:?}, {:#?})",
+            frame.0.get_str(),
+            frame.0.get_requirement()
+        );
         // ============================= LOG =============================
         trace!(
-            "check the state of the rule `({}, {:#?})` \nfrom the local stack `({}, {:#?})`",
+            "check the state of the rule `({}, {:#?})`",
             frame.0.get_str(),
             frame.0.get_requirement(),
-            rule_ref.get_str(),
-            rule_ref.get_requirement()
+
         );
         // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
@@ -28,8 +30,8 @@ where
                 // ============================= LOG =============================
                 debug!(
                     "success, run subrules from the root rule `({}, {:#?})`",
-                    rule_ref.get_str(),
-                    rule_ref.get_requirement()
+                    frame.0.get_str(),
+                    frame.0.get_requirement()
                 );
                 // ===============================================================
                 // Stores the error, if any
@@ -113,6 +115,7 @@ where
                 if rule_matched_for_any_text {
                     // Финальный этап, мы загружаем всё в`stack` для дальнейшей обработки
                     stack.extend(temp_stack.drain(..));
+                    break;
                 } else {
                     // ================= (LOG) =================
                     error!("all of the rules do not match any data");
