@@ -116,11 +116,13 @@ where
     ///     1,
     ///     // Specify a reserved variable in messages
     ///     "Incorrect command found `{main_capture}`",
-    ///     [Rule::new(
-    ///         r"sudo rm -rf /?",
-    ///         // Specify the MustNotBeFound modifier
-    ///         MatchRequirement::MustNotBeFound,
-    ///     )],
+    ///     [
+    ///         Rule::new(
+    ///             r"sudo rm -rf /?",
+    ///             // Specify the MustNotBeFound modifier
+    ///             MatchRequirement::MustNotBeFound,
+    ///         )
+    ///     ],
     /// );
     /// ```
     ///
