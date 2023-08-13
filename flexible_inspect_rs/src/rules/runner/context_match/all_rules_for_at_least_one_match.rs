@@ -11,18 +11,17 @@ where
 {
     let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
 
-    while let Some(mut frame) = stack.pop_front() {
+    if let Some(mut frame) = stack.pop_front() {
         trace!(
-            "deleted rule from unique stack: ({:?}, {:#?})",
-            frame.0.get_str(),
-            frame.0.get_requirement()
+            "deleted rule from unique stack: ({}, {})",
+            frame.0.get_str().yellow(),
+            format!("{:#?}", frame.0.get_requirement()).yellow()
         );
         // ============================= LOG =============================
         trace!(
-            "check the state of the rule `({}, {:#?})`",
-            frame.0.get_str(),
-            frame.0.get_requirement(),
-
+            "check the state of the rule `({}, {})`",
+            frame.0.get_str().yellow(),
+            format!("{:#?}", frame.0.get_requirement()).yellow()
         );
         // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
@@ -115,7 +114,6 @@ where
                 if rule_matched_for_any_text {
                     // Финальный этап, мы загружаем всё в`stack` для дальнейшей обработки
                     stack.extend(temp_stack.drain(..));
-                    break;
                 } else {
                     // ================= (LOG) =================
                     error!("all of the rules do not match any data");

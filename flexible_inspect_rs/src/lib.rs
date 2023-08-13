@@ -88,11 +88,11 @@ pub mod logs {
                         log::Level::Error => "ERROR".red(),
                         log::Level::Warn => "WARN".yellow(),
                         log::Level::Info => "INFO".blue(),
-                        log::Level::Debug => "DEBUG".green(),
+                        log::Level::Debug => "DEBUG".cyan(),
                         log::Level::Trace => "TRACE".purple(),
                     },
                     record.target().bright_black(),
-                    record.args().to_string().bright_cyan()
+                    record.args().to_string().bright_green()
                 )
             })
             .init();

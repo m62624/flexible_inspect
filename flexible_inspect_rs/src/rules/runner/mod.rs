@@ -1,8 +1,8 @@
 mod context_match;
-
 use super::*;
 use crate::rules::next::NextStep;
 use crate::rules::traits::{CalculateValueRules, RuleBase};
+use colored::*;
 use log::debug;
 use std::{collections::VecDeque, fmt::Debug};
 
@@ -34,15 +34,20 @@ where
     C: PartialEq + Eq + Hash + Debug,
 {
     // ============================= LOG =============================
-    debug!("running the root rule `{}`", rule.get_str());
+    debug!(
+        "running the root rule `({}, {})`",
+        rule.get_str().yellow(),
+        format!("{:#?}", rule.get_requirement()).yellow()
+    );
     // ===============================================================
 
     let mut stack = VecDeque::from([(rule, data)]);
     while let Some(frame) = stack.front() {
         debug!(
-            "the stack is {:?} from ({})",
-            frame.0.get_mode_match(),
+            "going through the `({:?}, {:#?})` rule stack with `{:#?}` mode",
             frame.0.get_str(),
+            frame.0.get_requirement(),
+            frame.0.get_mode_match(),
         );
         match frame.0.get_mode_match() {
             ModeMatch::AllRulesForAllMatches => {
@@ -54,7 +59,7 @@ where
             }
             ModeMatch::AllRulesForAtLeastOneMatch => {
                 if let NextStep::Error(value) =
-                    context_match::all_rules_for_at_least_one_match::<R, C>( &mut stack)
+                    context_match::all_rules_for_at_least_one_match::<R, C>(&mut stack)
                 {
                     return NextStep::Error(value);
                 }
@@ -68,9 +73,7 @@ where
             }
             ModeMatch::AtLeastOneRuleForAtLeastOneMatch => {
                 if let NextStep::Error(value) =
-                    context_match::at_least_one_rule_for_at_least_one_match::<R, C>(
-                         &mut stack,
-                    )
+                    context_match::at_least_one_rule_for_at_least_one_match::<R, C>(&mut stack)
                 {
                     return NextStep::Error(value);
                 }

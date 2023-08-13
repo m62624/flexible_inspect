@@ -4,6 +4,7 @@ mod all_rules_for_at_least_one_match;
 mod at_least_one_rule_for_all_matches;
 mod at_least_one_rule_for_at_least_one_match;
 // =======================================================
+use super::*;
 use crate::rules::traits::RuleBase;
 use crate::rules::{next::NextStep, traits::CalculateValueRules, CaptureData};
 pub use all_rules_for_all_matches::all_rules_for_all_matches;

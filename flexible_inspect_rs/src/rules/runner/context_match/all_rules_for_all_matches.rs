@@ -10,17 +10,17 @@ where
     C: PartialEq + Eq + Hash + Debug,
 {
     let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
-    while let Some(mut frame) = stack.pop_front() {
+    if let Some(mut frame) = stack.pop_front() {
         trace!(
-            "deleted rule from unique stack: ({:?}, {:#?})",
-            frame.0.get_str(),
-            frame.0.get_requirement()
+            "deleted rule from unique stack: ({}, {})",
+            frame.0.get_str().yellow(),
+            format!("{:#?}", frame.0.get_requirement()).yellow()
         );
         // ============================= LOG =============================
         trace!(
-            "check the state of the rule `({}, {:#?})`",
-            frame.0.get_str(),
-            frame.0.get_requirement(),
+            "check the state of the rule `({}, {})`",
+            frame.0.get_str().yellow(),
+            format!("{:#?}", frame.0.get_requirement()).yellow()
         );
         // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
