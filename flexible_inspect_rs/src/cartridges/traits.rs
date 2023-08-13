@@ -13,7 +13,9 @@ where
     fn get_message(&self) -> &str;
 }
 
+/// This trait requires implementations of the most basic methods for any `Cartridge`.
 pub trait CartridgeModifiers {
+    /// The type of the cartridge that will be returned after applying the modifier
     type CartridgeType;
 
     /// modifier to change the rule matching mode,

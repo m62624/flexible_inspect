@@ -47,6 +47,7 @@ pub trait CalculateValueRules<'a, C: PartialEq + Eq + Hash> {
 
 /// This trait requires modifier implementations for any `Rules`
 pub trait RuleModifiers {
+    /// The type of the rule that will be returned after applying the modifier
     type RuleType;
 
     /// modifier for extending the rule with nested rules
