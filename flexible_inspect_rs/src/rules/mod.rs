@@ -14,7 +14,21 @@ use std::collections::{HashMap, HashSet};
 use std::hash::Hash;
 // =======================================================
 /// This is error message when `Rule|RuleBytes` is empty
-const ERR_OPTION: &str = " The body of `Rule` is missing, maybe you used modifiers, they borrow `Rule`, modifiers modify it and return the already modified version (specify the modifier in the same place where you initialize `Rule|RuleBytes`).";
+const ERR_OPTION: &str = r###"
+The body of `Rule` is missing (inside Rule is the value None), you may have used modifiers separately from initializations, they take the value (ownership) of `Rule` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `Rule|RuleBytes`).
+:: EXAMPLE
+Incorrect use of modifiers
+========
+let mut rule = Rule::new(r"\d+", MatchRequirement::MustNotBeFound);
+rule.extend([...]);
+rule.any_r_for_all_m();
+========
+
+Correct use of modifiers
+========
+let rule = Rule::new(r"\d+", MatchRequirement::MustNotBeFound).extend([...]).any_r_for_all_m();
+========
+"###;
 /// This is reserved standard value for error filling
 pub const DEFAULT_CAPTURE: &str = "main_capture";
 // =======================================================
