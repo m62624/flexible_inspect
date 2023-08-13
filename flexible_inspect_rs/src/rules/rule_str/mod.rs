@@ -12,11 +12,11 @@ use super::*;
 /// The rule supports two regular expression crates:
 /// [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
 /// Determines which type is used based on the syntax (for example, if *Lookahead* and *Lookbehind* references are used, this automatically defines as [**FancyRegex**](https://crates.io/crates/fancy-regex)).
-/// 
-/// The most important feature is that the rule is recursive (don't worry, recursion is not used here). 
-/// Each rule can have nested rules, and these nested rules can have their own nested rules, and so on. 
+///
+/// The most important feature is that the rule is recursive (don't worry, recursion is not used here).
+/// Each rule can have nested rules, and these nested rules can have their own nested rules, and so on.
 /// Thus, when the root rule is triggered, all the results obtained are passed to the nested rules, so you can build complex structural rules to suit any taste
-/// 
+///
 /// **Notes**:
 /// * Remember any modifier takes the contents of the `Rule` body
 /// and returns a new one with a changed parameter (only `None` from the original Rule remains),
@@ -27,6 +27,8 @@ use super::*;
 /// Then these rules will not be included in [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html),
 /// and if there are rules in [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html) they will be the first in the queue to be checked, and those that use [**FancyRegex**](https://crates.io/crates/fancy-regex) features will be at the end of the queue
 /// * Basically use `Rule` instead of [`RuleBytes`](crate::prelude::RuleBytes) when working with text (not necessarily just text, it also includes `html` structures, code fragments from other languages, etc.) since it has support for [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
+/// * How is recursive structure checking performed without recursion?
+/// Each root rule creates one shared hidden stack at validation time ([VecDecue](https://doc.rust-lang.org/std/collections/struct.VecDeque.html)), regardless of large nesting, the queue traverses its own stack without recursion
 
 /*
 The structure for checking strings with regular expressions.

@@ -69,11 +69,10 @@ where
     ///     // Specify the same names to complete the message (INCORRECT_DATA)
     ///     "Incorrect command found `{INCORRECT_DATA}`",
     ///     [
-    ///         // Check the bash file for a dangerous command by deleting
-    ///         // the root directory of the system
+    ///         // Check script, commands starting with `sudo` should not be found 
     ///         Rule::new(
     ///             // Specify the same names to complete the message (INCORRECT_DATA)
-    ///             r"(?P<INCORRECT_DATA>sudo rm -rf /?)",
+    ///             r"(?P<INCORRECT_DATA>sudo .+[^\n\s\.]?)",
     ///             // Specify the MustNotBeFound modifier
     ///             MatchRequirement::MustNotBeFound,
     ///         )
@@ -105,7 +104,7 @@ where
     /// ```
     ///
     /// ## Output:
-    /// > **1 - Incorrect command found `sudo rm -rf /`**
+    /// > **1 - Incorrect command found `sudo rm -rf /'."`**
     ///
     /// * Fill in messages have a reserved variable to fill in `main_capture`, just specify this message in the cartridge messages and you don't have to specify a group in the rule
     ///
@@ -118,7 +117,8 @@ where
     ///     "Incorrect command found `{main_capture}`",
     ///     [
     ///         Rule::new(
-    ///             r"sudo rm -rf /?",
+    ///             // Check script, commands starting with `sudo` should not be found 
+    ///             r"sudo .+[^\n\s\.]?",
     ///             // Specify the MustNotBeFound modifier
     ///             MatchRequirement::MustNotBeFound,
     ///         )
@@ -127,7 +127,7 @@ where
     /// ```
     ///
     /// ## Output:
-    /// > **1 - Incorrect command found `sudo rm -rf /`**
+    /// > **1 - Incorrect command found `sudo rm -rf /'."`**
     pub fn new<S, I>(id: i32, message: S, rules: I) -> Self
     where
         S: Into<String>,
