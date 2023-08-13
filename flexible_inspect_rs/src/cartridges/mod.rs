@@ -9,7 +9,7 @@ use crate::prelude::*;
 use serde::{Deserialize, Serialize};
 #[cfg(feature = "export_to_other_languages")]
 use std::sync::Arc;
-use std::{collections::HashSet, fmt::Debug, hash::Hash};
+use std::{fmt::Debug, hash::Hash};
 // =======================================================
 
 /// The cartridge is the container of the rules.

@@ -3,7 +3,6 @@ mod tests_extend;
 use crate::prelude::*;
 use crate::rules::traits::CalculateValueRules;
 use crate::rules::DEFAULT_CAPTURE;
-use std::collections::HashSet;
 
 /// Проверка конструктора на корректное регулярное выражение Default Regex
 #[test]

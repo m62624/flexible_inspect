@@ -1,4 +1,5 @@
-use std::collections::{HashMap, HashSet};
+use indexmap::IndexSet;
+use std::collections::HashMap;
 
 use crate::{
     prelude::*,
@@ -11,7 +12,7 @@ fn test_next_runner_t_0() {
     let rule = Rule::new(r".+", MatchRequirement::MustBeFound)
         .extend([Rule::new(r"x", MatchRequirement::MustBeFound)]);
     let mut capture: CaptureData<String> = CaptureData {
-        text_for_capture: HashSet::from([String::from("x")]),
+        text_for_capture: IndexSet::from([String::from("x")]),
         hashmap_for_error: Default::default(),
         counter_value: Default::default(),
     };
@@ -26,7 +27,7 @@ fn test_next_runner_t_0() {
 fn test_next_runner_t_1() {
     let rule = Rule::new(r".+", MatchRequirement::MustBeFound);
     let mut capture: CaptureData<String> = CaptureData {
-        text_for_capture: HashSet::from([String::from("x")]),
+        text_for_capture: IndexSet::from([String::from("x")]),
         hashmap_for_error: Default::default(),
         counter_value: Default::default(),
     };
@@ -42,7 +43,7 @@ fn test_next_runner_t_2() {
     let rule = Rule::new(r".+", MatchRequirement::MustBeFound)
         .extend([Rule::new(r"x", MatchRequirement::MustBeFound)]);
     let mut capture: CaptureData<String> = CaptureData {
-        text_for_capture: HashSet::new(),
+        text_for_capture: IndexSet::new(),
         hashmap_for_error: Default::default(),
         counter_value: Default::default(),
     };
@@ -57,7 +58,7 @@ fn test_next_runner_t_2() {
 fn test_next_runner_t_3() {
     let rule = Rule::new(r".+", MatchRequirement::MustBeFound);
     let mut capture: CaptureData<String> = CaptureData {
-        text_for_capture: HashSet::new(),
+        text_for_capture: IndexSet::new(),
         hashmap_for_error: Default::default(),
         counter_value: Default::default(),
     };
@@ -73,7 +74,7 @@ fn test_next_runner_t_4() {
     let rule = Rule::new(r".+", MatchRequirement::MustNotBeFound)
         .extend([Rule::new(r"x", MatchRequirement::MustNotBeFound)]);
     let mut capture: CaptureData<String> = CaptureData {
-        text_for_capture: HashSet::from([String::from("x")]),
+        text_for_capture: IndexSet::from([String::from("x")]),
         hashmap_for_error: Default::default(),
         counter_value: Default::default(),
     };
@@ -88,7 +89,7 @@ fn test_next_runner_t_4() {
 fn test_next_runner_t_5() {
     let rule = Rule::new(r".+", MatchRequirement::MustNotBeFound);
     let mut capture: CaptureData<String> = CaptureData {
-        text_for_capture: HashSet::from([String::from("x")]),
+        text_for_capture: IndexSet::from([String::from("x")]),
         hashmap_for_error: HashMap::from([(String::from("x"), String::from("Y"))]),
         counter_value: Default::default(),
     };
@@ -104,12 +105,10 @@ fn test_next_runner_t_5() {
 /// false, true - MustNotBeFound
 #[test]
 fn test_next_runner_t_6() {
-    let rule = Rule::new(r".+", MatchRequirement::MustNotBeFound).extend([Rule::new(
-        r"x",
-        MatchRequirement::MustNotBeFound,
-    )]);
+    let rule = Rule::new(r".+", MatchRequirement::MustNotBeFound)
+        .extend([Rule::new(r"x", MatchRequirement::MustNotBeFound)]);
     let mut capture: CaptureData<String> = CaptureData {
-        text_for_capture: HashSet::new(),
+        text_for_capture: IndexSet::new(),
         hashmap_for_error: HashMap::from([(String::from("x"), String::from("Y"))]),
         counter_value: Default::default(),
     };
@@ -119,13 +118,12 @@ fn test_next_runner_t_6() {
     );
 }
 
-
 /// false, false - MustNotBeFound
 #[test]
 fn test_next_runner_t_7() {
     let rule = Rule::new(r".+", MatchRequirement::MustNotBeFound);
     let mut capture: CaptureData<String> = CaptureData {
-        text_for_capture: HashSet::new(),
+        text_for_capture: IndexSet::new(),
         hashmap_for_error: HashMap::from([(String::from("x"), String::from("Y"))]),
         counter_value: Default::default(),
     };
