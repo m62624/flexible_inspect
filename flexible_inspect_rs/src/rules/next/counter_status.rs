@@ -16,9 +16,9 @@ impl Counter {
                         return NextStep::Finish;
                     }
                     error!(
-                        "the counter value ({:?}) is not equal to the required value ({})",
+                        "the counter value `{}` is not equal to the required value `({:?})`",
+                        captures.counter_value,
                         rule.get_counter(),
-                        value
                     );
                     return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
                 }
@@ -27,9 +27,9 @@ impl Counter {
                         return NextStep::Finish;
                     }
                     error!(
-                        "the counter value ({:?}) is not equal to the required value ({})",
+                        "the counter value `{}` is not equal to the required value `({:?})`",
+                        captures.counter_value,
                         rule.get_counter(),
-                        value
                     );
                     return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
                 }
@@ -38,9 +38,9 @@ impl Counter {
                         return NextStep::Finish;
                     }
                     error!(
-                        "the counter value ({:?}) is not equal to the required value ({})",
+                        "the counter value `{}` is not equal to the required value `({:?})`",
+                        captures.counter_value,
                         rule.get_counter(),
-                        value
                     );
                     return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
                 }
