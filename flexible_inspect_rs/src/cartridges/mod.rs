@@ -57,7 +57,9 @@ where
     /// );
     /// ```
     /// **Notes**:
-    /// * Each cartridge supports filling the message with unwanted data, when specifying a message, you can specify a variable in the message in the format : **`{variable}`**. After specifying an identical group name in any rule along with the `*MustNotBeFound*` modifier
+    /// * Each cartridge supports filling the message with unwanted data, when specifying a message,
+    /// you can specify a variable in the message in the format : **`{variable}`**.
+    /// After specifying an identical group name in any rule along with the *`MustNotBeFound`* modifier
     ///
     /// ## Example:
     /// ```rust
@@ -121,7 +123,7 @@ where
     ///     )],
     /// );
     /// ```
-    /// 
+    ///
     /// ## Output:
     /// > **1 - Incorrect command found `sudo rm -rf /`**
     pub fn new<S, I>(id: i32, message: S, rules: I) -> Self
