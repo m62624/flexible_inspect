@@ -27,6 +27,7 @@ mod template_validator;
 #[cfg(test)]
 mod unit_tests;
 // =====================================================================
+use colored::*;
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
 // =====================================================================
@@ -62,11 +63,10 @@ pub mod prelude {
 
 #[cfg(feature = "log_rust")]
 pub mod logs {
+    use super::*;
     use chrono::Local;
-    pub use colored::*;
     use std::io::Write;
     use std::sync::Once;
-
     // =====================================================================
     /// For one-time initialization to the logger
     static INIT: Once = Once::new();
