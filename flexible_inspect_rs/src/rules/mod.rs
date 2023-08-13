@@ -10,8 +10,7 @@ use super::*;
 use crate::prelude::Rule;
 use indexmap::IndexSet;
 use log::error;
-use logs::*;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 use std::hash::Hash;
 // =======================================================
 /// This is error message when `Rule|RuleBytes` is empty
@@ -77,7 +76,7 @@ pub enum Counter {
 /// A structure that stores all the data for processing the capture
 #[derive(Debug)]
 pub struct CaptureData<T: PartialEq + Eq + Hash> {
-    pub text_for_capture: HashSet<T>,
+    pub text_for_capture: IndexSet<T>,
     pub hashmap_for_error: HashMap<String, String>,
     pub counter_value: usize,
 }

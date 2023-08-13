@@ -1,3 +1,5 @@
+use indexmap::IndexSet;
+
 use super::{traits::*, *};
 
 impl CartridgeBase<&[u8]> for Cartridge<RuleBytes> {
@@ -5,7 +7,7 @@ impl CartridgeBase<&[u8]> for Cartridge<RuleBytes> {
         rules::runner::run::<RuleBytes, &[u8]>(
             &self.root_rule,
             CaptureData {
-                text_for_capture: HashSet::from([data]),
+                text_for_capture: IndexSet::from([data]),
                 hashmap_for_error: Default::default(),
                 counter_value: Default::default(),
             },
@@ -36,7 +38,7 @@ impl CartridgeBase<Arc<[u8]>> for Cartridge<RuleBytes> {
         rules::runner::run::<RuleBytes, &[u8]>(
             &self.root_rule,
             CaptureData {
-                text_for_capture: HashSet::from([data.as_ref()]),
+                text_for_capture: IndexSet::from([data.as_ref()]),
                 hashmap_for_error: Default::default(),
                 counter_value: Default::default(),
             },

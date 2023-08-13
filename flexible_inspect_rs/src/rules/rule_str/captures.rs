@@ -2,12 +2,13 @@ use super::RegexRaw;
 use crate::prelude::Rule;
 use crate::rules::DEFAULT_CAPTURE;
 use crate::rules::{traits::RuleBase, CaptureData};
+use indexmap::IndexSet;
 use log::info;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<&'a str> {
     let mut hashmap_for_error = HashMap::new();
-    let mut text_for_capture: HashSet<&str> = HashSet::new();
+    let mut text_for_capture: IndexSet<&str> = IndexSet::new();
     let mut counter_value: usize = 0;
     // flag to check `Counter`
     let flag_check_counter = rule.content_unchecked().general_modifiers.counter.is_some();

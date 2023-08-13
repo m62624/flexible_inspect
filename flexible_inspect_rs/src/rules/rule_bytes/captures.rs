@@ -1,12 +1,13 @@
 use crate::prelude::RuleBytes;
 use crate::rules::DEFAULT_CAPTURE;
 use crate::rules::{traits::RuleBase, CaptureData};
+use indexmap::IndexSet;
 use log::info;
-use std::collections::{HashMap, HashSet};
+use std::collections::HashMap;
 
 pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<&'a [u8]> {
     let mut hashmap_for_error: HashMap<String, String> = HashMap::new();
-    let mut text_for_capture: HashSet<&[u8]> = HashSet::new();
+    let mut text_for_capture: IndexSet<&[u8]> = IndexSet::new();
     let mut counter_value: usize = 0;
     // flag to check `Counter`
     let flag_check_counter = rule.content_unchecked().general_modifiers.counter.is_some();
