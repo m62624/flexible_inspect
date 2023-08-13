@@ -33,13 +33,14 @@ where
     T: RuleBase + RuleModifiers<RuleType = T>,
 {
     /// Constructor for `Cartridge`, *each cartridge can only hold one type at a time, `Rule` or `RuleBytes`*
+    ///
     /// # Example:
     /// ```rust
     /// # use flexible_inspect_rs::prelude::*;
-    ///      let cartridge = Cartridge::new(
-    ///         0,
-    ///         "Secret key not found",
-    ///     [
+    ///  let cartridge = Cartridge::new(
+    ///         0, // error code
+    ///         "Secret key not found", // error message
+    ///     [   
     ///         Rule::new(
     ///             r"d{3}-::x-al-xy-::\.d{5}[0-7]",
     ///             MatchRequirement::MustBeFound,
@@ -56,9 +57,73 @@ where
     /// );
     /// ```
     /// **Notes**:
-    /// * Each cartridge supports filling a message with unwanted data, when you specify a message, you can specify a variable in the message in the format : **`{variable}`**. After specifying the identical group name in any rule
-    /// # Example:
+    /// * Each cartridge supports filling the message with unwanted data, when specifying a message, you can specify a variable in the message in the format : **`{variable}`**. After specifying an identical group name in any rule along with the `*MustNotBeFound*` modifier
+    ///
+    /// ## Example:
+    /// ```rust
+    /// # use flexible_inspect_rs::prelude::*;
+    /// let cartridge = Cartridge::new(
+    ///     1,
+    ///     // Specify the same names to complete the message (INCORRECT_DATA)
+    ///     "Incorrect command found `{INCORRECT_DATA}`",
+    ///     [
+    ///         // Check the bash file for a dangerous command by deleting
+    ///         // the root directory of the system
+    ///         Rule::new(
+    ///             // Specify the same names to complete the message (INCORRECT_DATA)
+    ///             r"(?P<INCORRECT_DATA>sudo rm -rf /?)",
+    ///             // Specify the MustNotBeFound modifier
+    ///             MatchRequirement::MustNotBeFound,
+    ///         )
+    ///     ],
+    /// );
+    ///
+    /// // Safe example script
+    /// let bash_script = r###"
+    /// #!/bin/bash
+    /// if [ "$1" = "--help" ]; then
+    ///     echo "This is a sample script with --help option."
+    ///     echo "Usage: ./myscript.sh [--help]"
+    ///     echo "If you provide the --help option,
+    ///     it will execute the dangerous command 'sudo rm -rf /'."
+    ///     echo "Use with caution!"
+    /// else
+    ///     echo "Welcome to the safe area!"
+    /// fi
+    /// "###;
+    ///
+    /// // Create a unique validator to check the script
+    /// let validator_for_linux_system = TemplateValidator::new([cartridge]);
+    /// // Checking the result of validations
+    /// if let Err(errors) = validator_for_linux_system.validate(bash_script) {
+    ///     for error in errors {
+    ///         println!("{}", error);
+    ///     }
+    /// }
+    /// ```
+    ///
+    /// ## Output:
+    /// > **1 - Incorrect command found `sudo rm -rf /`**
+    ///
+    /// * Fill in messages have a reserved variable to fill in `main_capture`, just specify this message in the cartridge messages and you don't have to specify a group in the rule
+    ///
+    /// ## Example:
+    /// ```rust
+    /// use flexible_inspect_rs::prelude::*;
+    /// let cartridge = Cartridge::new(
+    ///     1,
+    ///     // Specify a reserved variable in messages
+    ///     "Incorrect command found `{main_capture}`",
+    ///     [Rule::new(
+    ///         r"sudo rm -rf /?",
+    ///         // Specify the MustNotBeFound modifier
+    ///         MatchRequirement::MustNotBeFound,
+    ///     )],
+    /// );
+    /// ```
     /// 
+    /// ## Output:
+    /// > **1 - Incorrect command found `sudo rm -rf /`**
     pub fn new<S, I>(id: i32, message: S, rules: I) -> Self
     where
         S: Into<String>,
