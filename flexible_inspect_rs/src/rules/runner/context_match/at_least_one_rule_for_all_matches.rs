@@ -28,9 +28,9 @@ where
             NextStep::Go => {
                 // ============================= LOG =============================
                 debug!(
-                    "success, run subrules from the root rule `({}, {:#?})`",
-                    frame.0.get_str(),
-                    frame.0.get_requirement()
+                    "success, run subrules from the root rule `({}, {})`",
+                    frame.0.get_str().yellow(),
+                    format!("{:#?}", frame.0.get_requirement()).yellow()
                 );
                 // ===============================================================
                 // Status, whether we found one rule for all matches
@@ -48,9 +48,9 @@ where
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
                             debug!(
-                                "found `({}, {:#?})` rule from `RegexSet` for `{:#?}` data",
+                                "found `({}, {})` rule from `RegexSet` for `{:#?}` data",
                                 rule_from_regexset.get_str(),
-                                rule_from_regexset.get_requirement(),
+                                format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
                                 data
                             );
                             // ===============================================================
@@ -63,8 +63,9 @@ where
                                 ) {
                                     // ============================= LOG =============================
                                     debug!(
-                                    "the rule `{}` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )",
+                                    "the rule `({}, {})` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )",
                                     rule_from_regexset.get_str(),
+                                    format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),    
                                     data
                                 );
                                     // ===============================================================
@@ -74,9 +75,9 @@ where
                                 }
                                 // ============================= LOG =============================
                                 info!(
-                                    "found one rule for all matches: ({}, {:#?})",
+                                    "found one rule for all matches: ({}, {})",
                                     rule_from_regexset.get_str(),
-                                    rule_from_regexset.get_requirement()
+                                    format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
                                 );
                                 // ===============================================================
                                 one_rule_found = true;
@@ -93,9 +94,9 @@ where
                             if !selected_rules.contains(rule) {
                                 // ============================= LOG =============================
                                 debug!(
-                                    "the rule `({}, {:#?})` is not in `RegexSet`",
-                                    rule.get_str(),
-                                    rule.get_requirement(),
+                                    "the rule `({}, {})` is not in `RegexSet`",
+                                    rule.get_str().yellow(),
+                                    format!("{:#?}", rule.get_requirement()).yellow(),
                                 );
                                 // ===============================================================
                                 if let Some(data) = frame.1.text_for_capture.iter().next() {
@@ -110,8 +111,8 @@ where
                                     // ============================= LOG =============================
                                     info!(
                                         "found one rule for all matches: ({}, {:#?})",
-                                        rule.get_str(),
-                                        rule.get_requirement()
+                                        rule.get_str().yellow(),
+                                        format!("{:#?}", rule.get_requirement()).yellow(),
                                     );
                                     // ===============================================================
                                     temp_stack.push_back((rule, captures));
@@ -127,9 +128,9 @@ where
                         'skip_this_cmplx_rule: for rule in cmplx_rules {
                             // ============================= LOG =============================
                             debug!(
-                                "the rule `({}, {:#?})` from `complex_rules`",
-                                rule.get_str(),
-                                rule.get_requirement()
+                                "the rule `({}, {})` from `complex_rules`",
+                                rule.get_str().yellow(),
+                                format!("{:#?}", rule.get_requirement()).yellow(),
                             );
                             // ===============================================================
                             for data in &frame.1.text_for_capture {
@@ -142,9 +143,9 @@ where
                                 }
                                 // ============================= LOG =============================
                                 info!(
-                                    "found one rule for all matches: ({}, {:#?})",
-                                    rule.get_str(),
-                                    rule.get_requirement()
+                                    "found one rule for all matches: ({}, {})",
+                                    rule.get_str().yellow(),
+                                    format!("{:#?}", rule.get_requirement()).yellow(),
                                 );
                                 // ===============================================================
                                 temp_stack.push_back((rule, captures));
@@ -167,9 +168,9 @@ where
             NextStep::Finish => {
                 // ============================= LOG =============================
                 debug!(
-                    "the rule `({}, {:#?})` is finished, the result is `Ok`",
-                    frame.0.get_str(),
-                    frame.0.get_requirement()
+                    "the rule `({}, {})` is finished, the result is `Ok`",
+                    frame.0.get_str().yellow(),
+                    format!("{:#?}", frame.0.get_requirement()).yellow()
                 );
                 // ===============================================================
             }

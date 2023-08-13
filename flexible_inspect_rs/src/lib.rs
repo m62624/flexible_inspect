@@ -63,7 +63,7 @@ pub mod prelude {
 #[cfg(feature = "log_rust")]
 pub mod logs {
     use chrono::Local;
-    use colored::*;
+    pub use colored::*;
     use std::io::Write;
     use std::sync::Once;
 

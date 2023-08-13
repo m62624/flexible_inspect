@@ -28,9 +28,9 @@ where
             NextStep::Go => {
                 // ============================= LOG =============================
                 debug!(
-                    "success, run subrules from the root rule `({}, {:#?})`",
-                    frame.0.get_str(),
-                    frame.0.get_requirement()
+                    "success, run subrules from the root rule `({}, {})`",
+                    frame.0.get_str().yellow(),
+                    format!("{:#?}", frame.0.get_requirement()).yellow()
                 );
                 // ===============================================================
                 // Stores the error, if any
@@ -49,9 +49,9 @@ where
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
                             debug!(
-                                "found `({}, {:#?})` rule from `RegexSet` for `{:#?}` data",
-                                rule_from_regexset.get_str(),
-                                rule_from_regexset.get_requirement(),
+                                "found `({}, {})` rule from `RegexSet` for `{:#?}` data",
+                                rule_from_regexset.get_str().yellow(),
+                                format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
                                 data
                             );
                             // ===============================================================
@@ -61,8 +61,9 @@ where
                             {
                                 // ============================= LOG =============================
                                 debug!(
-                                    "the rule `{}` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )",
-                                    rule_from_regexset.get_str(),
+                                    "the rule `({}, {})` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )",
+                                    rule_from_regexset.get_str().yellow(),
+                                    format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
                                     data
                                 );
                                 // ===============================================================
@@ -91,9 +92,9 @@ where
                         for cmplx_rule in cmpl_rules {
                             // ============================= LOG =============================
                             debug!(
-                                "the rule `({}, {:#?})` from `complex_rules`",
-                                cmplx_rule.get_str(),
-                                cmplx_rule.get_requirement()
+                                "the rule `({}, {})` from `complex_rules`",
+                                cmplx_rule.get_str().yellow(),
+                                format!("{:#?}", cmplx_rule.get_requirement()).yellow(),
                             );
                             // ===============================================================
                             let mut captures = R::find_captures(cmplx_rule, data);
@@ -125,9 +126,9 @@ where
             NextStep::Finish => {
                 // ============================= LOG =============================
                 debug!(
-                    "the rule `({}, {:#?})` is finished, the result is `Ok`",
-                    frame.0.get_str(),
-                    frame.0.get_requirement()
+                    "the rule `({}, {})` is finished, the result is `Ok`",
+                    frame.0.get_str().yellow(),
+                    format!("{:#?}", frame.0.get_requirement()).yellow()
                 );
                 // ===============================================================
             }
