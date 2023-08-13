@@ -14,13 +14,13 @@ use super::*;
 /// Determines which type is used based on the syntax (for example, if *Lookahead* and *Lookbehind* references are used, this automatically defines as [**FancyRegex**](https://crates.io/crates/fancy-regex)).
 /// 
 /// **Notes**:
-/// * Remember any modifier takes the contents of the `Rule` body 
-/// and returns a new one with a changed parameter (only `None` from the original Rule remains), 
+/// * Remember any modifier takes the contents of the `Rule` body
+/// and returns a new one with a changed parameter (only `None` from the original Rule remains),
 /// so specify the modifier in the same place where you initialize `Rule`.
-/// * If you stick with the [**Regex**](https://crates.io/crates/regex) library features, all root and nested rules go into [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html). 
-/// Many expressions can be accommodated in a regular expression without *Lookahead* and *Lookbehind* references. 
-/// But this is just a recommendation. If you need to use references, of course you can specify them. 
-/// Then these rules will not be included in [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html), 
+/// * If you stick with the [**Regex**](https://crates.io/crates/regex) library features, all root and nested rules go into [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html).
+/// Many expressions can be accommodated in a regular expression without *Lookahead* and *Lookbehind* references.
+/// But this is just a recommendation. If you need to use references, of course you can specify them.
+/// Then these rules will not be included in [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html),
 /// and if there are rules in [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html) they will be the first in the queue to be checked, and those that use [**FancyRegex**](https://crates.io/crates/fancy-regex) features will be at the end of the queue
 /// * Basically use `Rule` instead of `RuleBytes` when working with text (not necessarily just text, it also includes `html` structures, code fragments from other languages, etc.) since it has support for [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
 

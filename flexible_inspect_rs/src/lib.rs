@@ -4,17 +4,17 @@
 //! # Implementation
 //! Implementation: Regex a formal language used in computer programs working with text to find and manipulate substrings in text,
 //! based on the use of metacharacters It provides powerful pattern-based text search and manipulation capabilities.
-//! On the other hand, `Flexible_inspect` is a specialized library for data validation.
+//! On the other hand, `flexible_inspect` is a specialized library for data validation.
 //! It's designed specifically for easy and convenient validation of data with varying degrees of nesting
 
 //! # Abstraction Level
 //! Abstraction Level: Regex works at the level of regular expressions, which are sequences of characters that define a pattern.
-//! It has a wide set of functions and operators to define complex patterns for text search and replacement. `Flexible_inspect` , on the other hand, provides a higher level of abstraction for data validation.
+//! It has a wide set of functions and operators to define complex patterns for text search and replacement. `flexible_inspect` , on the other hand, provides a higher level of abstraction for data validation.
 //! It has a simple way for different nesting of regular expressions and also has the ability to change data validation modes
 
 //! # Ease of use
 //! Designed with an emphasis on ease of use. Offers a simple and intuitive `API` that makes it easy to define validation rules and validate data.
-//! With a higher level of abstraction and the use of finite automata, `Flexible_inspect` simplifies the data validation process and reduces the amount of code required.
+//! With a higher level of abstraction and the use of finite automata, `flexible_inspect` simplifies the data validation process and reduces the amount of code required.
 
 // =====================================================================
 mod cartridges;
@@ -27,7 +27,6 @@ mod unit_tests;
 // =====================================================================
 #[cfg(feature = "serde")]
 use serde::{Deserialize, Deserializer, Serialize, Serializer};
-
 // =====================================================================
 /// Everything you need to get started with the validator
 pub mod prelude {
@@ -38,6 +37,7 @@ pub mod prelude {
     pub use crate::template_validator::{TemplateValidator, ValidatorBase};
 }
 
+/// # Logs
 /// Includes color-coded logging support
 ///
 /// **Recommendations:**\
@@ -45,7 +45,7 @@ pub mod prelude {
 /// whether matches should be found or not, what mode the cartridges are running in, etc.\
 /// To enable logging support it is necessary to specify the `FLEX_VALIDATOR_LOG` environment variable before running the file
 /// Levels of logging support:
-/// * `ERROR` - only errors are displayed 
+/// * `ERROR` - only errors are displayed
 /// > Includes all messages that did not pass the rules condition test
 /// * `INFO` - errors and information are displayed
 /// > Includes all messages that did not pass the rules condition test and information about the rules that were caught
@@ -58,7 +58,7 @@ pub mod prelude {
 /// FLEX_VALIDATOR_LOG=INFO cargo run
 /// ```
 #[cfg(feature = "log_rust")]
-pub mod logs {
+mod logs {
     use chrono::Local;
     use colored::*;
     use std::io::Write;

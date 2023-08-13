@@ -8,7 +8,8 @@ mod utils;
 // =======================================================
 use super::*;
 
-/// A rule is the minimum unit of logic in a validator.\
+/// A rule is the minimum unit of logic in a validator.
+/// 
 /// **Notes:**
 /// * Remember any modifier takes the contents of the `RuleBytes` body 
 /// and returns a new one with a changed parameter (only `None` from the original Rule remains), 

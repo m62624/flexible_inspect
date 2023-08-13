@@ -12,7 +12,8 @@ use std::sync::Arc;
 use std::{collections::HashSet, fmt::Debug, hash::Hash};
 // =======================================================
 
-/// The cartridge is the container of the rules.\
+/// The cartridge is the container of the rules.
+/// 
 /// **Notes:**
 /// * Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.
 /// * *Each cartridge can only hold one type at a time, `Rule` or `RuleBytes`*\

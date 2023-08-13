@@ -4,6 +4,17 @@ use crate::logs::init_logger;
 use log::trace;
 
 impl Rule {
+    /// Constructor for creating `Rule`
+    /// 
+    /// **Notes**:
+    /// Please stick to *raw string literals* when creating regular expressions, without it your regular expression may behave differently
+    /// # Example:
+    /// > * **`r`**`"d{3}."` - is the correct conversion to a regular expression
+    /// > * `"d{3}."` - possible incorrect behavior
+    /// ```rust
+    /// let rule1 = Rule::new(r"\d+", MatchRequirement::MustBeFound);
+    /// let rule2 = Rule::new(r"\s+", MatchRequirement::MustNotBeFound);
+    /// ```
     pub fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
         #[cfg(feature = "log_rust")]
         {
