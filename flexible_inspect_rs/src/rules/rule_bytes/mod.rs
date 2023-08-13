@@ -10,6 +10,10 @@ use super::*;
 
 /// A rule is the minimum unit of logic in a validator.
 /// 
+/// The most important feature is that the rule is recursive (don't worry, recursion is not used here). 
+/// Each rule can have nested rules, and these nested rules can have their own nested rules, and so on. 
+/// Thus, when the root rule is triggered, all the results obtained are passed to the nested rules, so you can build complex structural rules to suit any taste
+/// 
 /// **Notes:**
 /// * Remember any modifier takes the contents of the `RuleBytes` body 
 /// and returns a new one with a changed parameter (only `None` from the original Rule remains), 
