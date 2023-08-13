@@ -59,6 +59,7 @@ pub mod prelude {
 /// FLEX_VALIDATOR_LOG=INFO cargo run
 /// ```
 #[cfg(feature = "log_rust")]
+
 mod logs {
     use chrono::Local;
     use colored::*;
