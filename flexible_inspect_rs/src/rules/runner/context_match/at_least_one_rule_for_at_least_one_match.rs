@@ -79,9 +79,9 @@ where
                             if let NextStep::Finish =
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
-                                temp_stack.as_mut().and_then(|temp_stack| {
-                                    Some(temp_stack.push_back((rule_from_regexset, captures)))
-                                });
+                                if let Some(temp_stack) = temp_stack.as_mut() {
+                                    temp_stack.push_back((rule_from_regexset, captures));
+                                }
                             } else {
                                 stack.push_back((rule_from_regexset, captures));
                                 temp_stack = None;
@@ -121,9 +121,9 @@ where
                                 if let NextStep::Finish =
                                     NextStep::next_or_finish_or_error(rule, &mut captures)
                                 {
-                                    temp_stack.as_mut().and_then(|temp_stack| {
-                                        Some(temp_stack.push_back((rule, captures)))
-                                    });
+                                    if let Some(temp_stack) = temp_stack.as_mut() {
+                                        temp_stack.push_back((rule, captures));
+                                    }
                                 } else {
                                     stack.push_back((rule, captures));
                                     temp_stack = None;
@@ -163,9 +163,9 @@ where
                                 if let NextStep::Finish =
                                     NextStep::next_or_finish_or_error(rule, &mut captures)
                                 {
-                                    temp_stack.as_mut().and_then(|temp_stack| {
-                                        Some(temp_stack.push_back((rule, captures)))
-                                    });
+                                    if let Some(temp_stack) = temp_stack.as_mut() {
+                                        temp_stack.push_back((rule, captures));
+                                    }
                                 } else {
                                     stack.push_back((rule, captures));
                                     temp_stack = None;
@@ -176,10 +176,9 @@ where
                     }
                 }
                 if found_rule_flag {
-                    temp_stack.as_mut().and_then(|temp_stack| {
+                    if let Some(temp_stack) = temp_stack.as_mut() {
                         stack.extend(temp_stack.drain(..));
-                        Some(())
-                    });
+                    }
                 } else {
                     // ================= (LOG) =================
                     error!("no rules were found for any of the matches");
