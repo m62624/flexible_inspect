@@ -4,5 +4,5 @@
     </kbd>
 </p>
 
-## Licensegi
-[MIT License](LICENCE).
+## License
+[MIT License](./LICENSE).
