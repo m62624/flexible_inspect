@@ -186,7 +186,7 @@ class RuleBytes:
     """
     A rule is the minimum unit of logic in a validator
     (recommendation to use the string version if possible. More information on `Rule`.)
-    
+
     The most important feature is that the rule is recursive (don't worry, recursion is not used here).
     Each rule can have nested rules, and these nested rules can have their own nested rules, and so on.
     Thus, when the root rule is triggered, all the results obtained are passed to the nested rules, so you can build complex structural rules to suit any taste
@@ -343,8 +343,19 @@ class Cartridge:
 
     def __init__(self, id: int, message: str, root_rules: List[Rule]) -> None:
         r"""
-        Constructor for `Cartridge`
-     # Notes
+
+    Parameters
+    ----------
+    `id` : `int`
+            Error code
+    `message` : `str`
+            Error message
+    `root_rules` : `List[Rule]`
+            The rules to be added
+
+    Constructor for `Cartridge`
+
+    # Notes
      * by default, all rules must pass every match check
      In this mode, to which all additional rules apply (default mode for everyone).
      We check that for each match (text) all the rules will work.
@@ -361,10 +372,10 @@ class Cartridge:
           |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
           |                                      |       |        |
           |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
-    
+
      ```
-     
-     ## Fill in messages
+
+    ## Fill in messages
      * Each cartridge supports filling the message with unwanted data, when specifying a message,
      you can specify a variable in the message in the format : **`{variable}`**.
      After specifying an identical group name in any rule along with the *`MustNotBeFound`* modifier
@@ -407,8 +418,18 @@ class CartridgeBytes:
 
     def __init__(self, id: int, message: str, root_rules: List[RuleBytes]) -> None:
         r"""
-        Constructor for `CartridgeBytes`
-     # Notes
+    Parameters
+    ----------
+    `id` : `int`
+            Error code
+    `message` : `str`
+            Error message
+    `root_rules` : `List[RuleBytes]`
+            The rules to be added
+
+    Constructor for `CartridgeBytes`
+
+    # Notes
      * by default, all rules must pass every match check
      In this mode, to which all additional rules apply (default mode for everyone).
      We check that for each match (text) all the rules will work.
@@ -425,10 +446,10 @@ class CartridgeBytes:
           |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
           |                                      |       |        |
           |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
-    
+
      ```
-     
-     ## Fill in messages
+
+    ## Fill in messages
      * Each cartridge supports filling the message with unwanted data, when specifying a message,
      you can specify a variable in the message in the format : **`{variable}`**.
      After specifying an identical group name in any rule along with the *`MustNotBeFound`* modifier
