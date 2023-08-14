@@ -32,7 +32,7 @@ RUN cargo install cargo-tarpaulin && rustup component add clippy-preview
 
 # Python
 RUN apk add --no-cache python3-dev py3-pip && pip3 install --upgrade pip
-RUN pip3 install ziglang && pip install maturin && pip3 install twine
+RUN pip install maturin[zig] && pip3 install twine
 
 # Delete cache
 RUN rm -rf /var/cache/apk/*
