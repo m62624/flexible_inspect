@@ -2,6 +2,9 @@ use super::*;
 
 #[wasm_bindgen(js_class = "RuleBytes")]
 impl WasmRuleBytes {
+    /// # Arguments:
+    /// * `nested_rules` - \[ `RuleBytes`, `RuleBytes`, `RuleBytes` \] (collection)
+    /// 
     /// modifier for extending the rule with nested rules
     ///
     /// ( **by default, all rules must pass every match check** )\
