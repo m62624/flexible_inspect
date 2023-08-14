@@ -30,7 +30,7 @@ class Rule:
  A rule is the minimum unit of logic in a validator.
  The rule supports two regular expression crates:
  [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
- Determines which type is used based on the syntax (for example, if *Lookahead* and *Lookbehind* references are used, this automatically defines as [**FancyRegex**](https://crates.io/crates/fancy-regex)).
+ Determines which type is used based on the syntax (for example, if Lookahead and Lookbehind references are used, this automatically defines as [**FancyRegex**](https://crates.io/crates/fancy-regex)).
 
  The most important feature is that the rule is recursive (don't worry, recursion is not used here).
  Each rule can have nested rules, and these nested rules can have their own nested rules, and so on.
@@ -184,8 +184,9 @@ class Rule:
 # ========================================================
 class RuleBytes:
     """
-    A rule is the minimum unit of logic in a validator.
-
+    A rule is the minimum unit of logic in a validator
+    (recommendation to use the string version if possible. More information on `Rule`.)
+    
     The most important feature is that the rule is recursive (don't worry, recursion is not used here).
     Each rule can have nested rules, and these nested rules can have their own nested rules, and so on.
     Thus, when the root rule is triggered, all the results obtained are passed to the nested rules, so you can build complex structural rules to suit any taste
@@ -335,6 +336,7 @@ class RuleBytes:
 class Cartridge:
     """
  The cartridge is the container of the rules.
+
  # Notes
  * Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.
     """
@@ -396,7 +398,9 @@ class Cartridge:
 # ========================================================
 class CartridgeBytes:
     """
- The cartridge is the container of the rules.
+ The cartridge is the container of the rules
+ (recommendation to use the string version if possible. More information on `Rule`.)
+
  # Notes
  * Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.
     """
@@ -496,7 +500,8 @@ class TemplateValidator:
 # ========================================================
 class TemplateValidatorBytes:
     """
-    The structure for creating unique validators, load different `cartridges` to validate data.
+    The structure for creating unique validators, load different `cartridges` to validate data
+    (recommendation to use the string version if possible. More information on `Rule`.)
     """
 
     def __init__(self, rules: List[CartridgeBytes]) -> None:
