@@ -1,11 +1,5 @@
 use flexible_inspect_rs::prelude::*;
-
-mod api_rules {
-    use super::*;
-
-    #[async_std::test]
-    async fn check_bash() {
-        let bash_script = r###"
+const BASH_SCRIPT: &str = r###"
 #!/bin/bash 
 
 if [ $# -lt 1 ]; then
@@ -33,28 +27,39 @@ if [[ -n "$4" && "$4" =~ ^[0-9]{8,}$ ]]; then
 fi        
 "###;
 
-        let error_bash_file = Cartridge::new(
-            0,
-            "Scripts with increased access are forbidden : {SUDO_OR_SU}",
-            [
-                Rule::new(r"(?P<SUDO_OR_SU>sudo .+)", MatchRequirement::MustNotBeFound),
-                Rule::new(r"(?P<SUDO_OR_SU>su .+)", MatchRequirement::MustNotBeFound),
-                Rule::new(r".+", MatchRequirement::MustBeFound)
-                    .extend([
-                        Rule::new(".+", MatchRequirement::MustBeFound)
-                            .extend([Rule::new(r"aboba", MatchRequirement::MustBeFound)]),
-                        Rule::new(r"\s", MatchRequirement::MustBeFound),
-                        Rule::new(r"(?P<USERNAME>\for .+\n)", MatchRequirement::MustBeFound),
-                    ])
-                    .any_r_for_all_m(),
-            ],
-        )
-        .any_r_for_any_m();
-        let validator_bash = TemplateValidator::new(vec![error_bash_file]);
-        if let Err(errors) = validator_bash.async_validate(bash_script).await {
-            for error in errors {
-                println!("{}", error);
-            }
-        }
-    }
+#[async_std::test]
+async fn test_validate_0() {
+    let error_bash_file = Cartridge::new(
+        0,
+        "Scripts with increased access are forbidden : {SUDO_OR_SU}",
+        [
+            Rule::new(r"(?P<SUDO_OR_SU>sudo .+)", MatchRequirement::MustNotBeFound),
+            Rule::new(r"(?P<SUDO_OR_SU>su .+)", MatchRequirement::MustNotBeFound),
+            Rule::new(r".+", MatchRequirement::MustBeFound)
+                .extend([
+                    Rule::new(".+", MatchRequirement::MustBeFound)
+                        .extend([Rule::new(r"aboba", MatchRequirement::MustBeFound)]),
+                    Rule::new(r"\s", MatchRequirement::MustBeFound),
+                    Rule::new(r"(?P<USERNAME>\for .+\n)", MatchRequirement::MustBeFound),
+                ])
+                .any_r_for_all_m(),
+        ],
+    )
+    .any_r_for_any_m();
+    let validator_bash = TemplateValidator::new(vec![error_bash_file]);
+    assert!(validator_bash.async_validate(BASH_SCRIPT).await.is_ok());
+}
+
+#[async_std::test]
+async fn test_valdiate_1() {
+    let error_bash_file = Cartridge::new(
+        0,
+        "Scripts with increased access are forbidden : {SUDO_OR_SU}",
+        [
+            Rule::new(r"(?P<SUDO_OR_SU>sudo .+)", MatchRequirement::MustNotBeFound),
+            Rule::new(r"(?P<SUDO_OR_SU>su .+)", MatchRequirement::MustNotBeFound),
+        ],
+    );
+    let validator_bash = TemplateValidator::new(vec![error_bash_file]);
+    assert!(validator_bash.async_validate(BASH_SCRIPT).await.is_err());
 }
