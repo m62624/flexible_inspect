@@ -19,7 +19,7 @@ It's designed specifically for easy and convenient validation of data with varyi
 `Flexible_inspect` provides a higher level of abstraction for data validation.
 It has a simple way for different nesting of regular expressions and also has the ability to change data validation modes
 
-# Flexibility
+## Flexibility
 Rust version customized for validator implementations for other programming languages
 
 ## Ease of use
