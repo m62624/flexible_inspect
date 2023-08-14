@@ -495,10 +495,12 @@ class TemplateValidator:
         `data` : `str`
             Data for verification
 
-        Raises
+        Returns
         ------
         `ValidationErrorIterator`
             This iterator stores an `error code` and a `message`
+        `None`
+            If there are no errors
         """
         ...
 
@@ -509,10 +511,12 @@ class TemplateValidator:
         `data` : `str`
             Data for verification
 
-        Raises
+        Returns
         ------
         `ValidationErrorIterator`
-           This error stores an `error code` and a `message`
+            This iterator stores an `error code` and a `message`
+        `None`
+            If there are no errors
         """
         ...
 # ========================================================
@@ -535,10 +539,12 @@ class TemplateValidatorBytes:
         `data` : `bytes`
             Data for verification
 
-        Raises
+        Returns
         ------
         `ValidationErrorIterator`
-           This error stores an `error code` and a `message`
+            This iterator stores an `error code` and a `message`
+        `None`
+            If there are no errors
         """
         ...
 
@@ -549,10 +555,12 @@ class TemplateValidatorBytes:
         `data` : `bytes`
             Data for verification
 
-        Raises
+        Returns
         ------
         `ValidationErrorIterator`
-           This error stores an `error code` and a `message`
+            This iterator stores an `error code` and a `message`
+        `None`
+            If there are no errors
         """
         ...
         ...
