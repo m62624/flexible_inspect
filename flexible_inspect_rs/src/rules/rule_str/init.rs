@@ -6,9 +6,9 @@ use log::trace;
 impl Rule {
     /// Constructor for creating `Rule`
     ///
-    /// **Notes**:\
+    /// # Notes
     /// * Please stick to *raw string literals* when creating regular expressions, without it your regular expression may behave differently
-    /// # Example:
+    /// ## Example:
     /// > * `r"d{3}."` - is the correct conversion to a regular expression
     /// > * `"d{3}."` - possible incorrect behavior
     /// ```rust

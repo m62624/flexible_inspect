@@ -14,9 +14,8 @@ use std::{fmt::Debug, hash::Hash};
 
 /// The cartridge is the container of the rules.
 ///
-/// **Notes:**
+/// # Notes:
 /// * Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.
-/// **by default, all rules must pass every match check**
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Default, Clone, PartialEq, Eq, Hash)]
 pub struct Cartridge<T>
@@ -34,7 +33,7 @@ where
 {
     /// Constructor for `Cartridge`, *each cartridge can only hold one type at a time, `Rule` or `RuleBytes`*
     ///
-    /// # Example:
+    /// ## Example:
     /// ```rust
     /// # use flexible_inspect_rs::prelude::*;
     ///  let cartridge = Cartridge::new(
@@ -49,19 +48,34 @@ where
     ///             r"d{4}-::x-aG-xx-::\.d{5}[0-1]",
     ///             MatchRequirement::MustNotBeFound,
     ///         ),
-    ///         Rule::new(
-    ///             r"\[KEY - [a-z][a-z][a-z][0-9]\]",
-    ///             MatchRequirement::MustBeFound,
-    ///         ),
     ///     ],
     /// );
     /// ```
-    /// **Notes**:
+    /// # Notes:
+    /// * **by default, all rules must pass every match check**
+    /// In this mode, to which all additional rules apply (default mode for everyone).
+    /// We check that for each match (text) all the rules will work.
+    /// ## Operation scheme of the mode
+    /// ```bash
+    /// #=======================================
+    /// text = "txt [123] txt [456] txt [789]"
+    /// #=======================================
+    /// CustomError
+    /// |
+    /// |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+    ///      |   [123], [456], [789]
+    ///      |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
+    ///      |                                      |       |        |
+    ///      |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
+    ///
+    /// ```
+    /// 
+    /// ## Fill in messages
     /// * Each cartridge supports filling the message with unwanted data, when specifying a message,
     /// you can specify a variable in the message in the format : **`{variable}`**.
     /// After specifying an identical group name in any rule along with the *`MustNotBeFound`* modifier
     ///
-    /// ## Example:
+    /// ### Example:
     /// ```rust
     /// # use flexible_inspect_rs::prelude::*;
     /// let cartridge = Cartridge::new(
@@ -103,7 +117,7 @@ where
     /// }
     /// ```
     ///
-    /// ## Output:
+    /// ### Output:
     /// > **1 - Incorrect command found `sudo rm -rf /'."`**
     ///
     /// * Fill in messages have a reserved variable to fill in `main_capture`, just specify this message in the cartridge messages and you don't have to specify a group in the rule
@@ -126,7 +140,7 @@ where
     /// );
     /// ```
     ///
-    /// ## Output:
+    /// ### Output:
     /// > **1 - Incorrect command found `sudo rm -rf /'."`**
     pub fn new<S, I>(id: i32, message: S, rules: I) -> Self
     where

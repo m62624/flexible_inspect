@@ -17,7 +17,7 @@ use super::*;
 /// Each rule can have nested rules, and these nested rules can have their own nested rules, and so on.
 /// Thus, when the root rule is triggered, all the results obtained are passed to the nested rules, so you can build complex structural rules to suit any taste
 ///
-/// **Notes**:
+/// # Notes
 /// * Remember any modifier takes the contents of the `Rule` body
 /// and returns a new one with a changed parameter (only `None` from the original Rule remains),
 /// so specify the modifier in the same place where you initialize `Rule`.
