@@ -340,8 +340,32 @@ class Cartridge:
     """
 
     def __init__(self, id: int, message: str, root_rules: List[Rule]) -> None:
-        """
-        Constructor for `Cartridge`, each cartridge can only hold one type at a time, `Rule` or `RuleBytes`
+        r"""
+        Constructor for `Cartridge`
+     # Notes
+     * by default, all rules must pass every match check
+     In this mode, to which all additional rules apply (default mode for everyone).
+     We check that for each match (text) all the rules will work.
+     ## Operation scheme of the mode
+
+     ```bash
+     #=======================================
+     text = "txt [123] txt [456] txt [789]"
+     #=======================================
+     CustomError
+     |
+     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+          |   [123], [456], [789]
+          |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
+          |                                      |       |        |
+          |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
+    
+     ```
+     
+     ## Fill in messages
+     * Each cartridge supports filling the message with unwanted data, when specifying a message,
+     you can specify a variable in the message in the format : **`{variable}`**.
+     After specifying an identical group name in any rule along with the *`MustNotBeFound`* modifier
         """
         ...
 
@@ -378,8 +402,32 @@ class CartridgeBytes:
     """
 
     def __init__(self, id: int, message: str, root_rules: List[RuleBytes]) -> None:
-        """
-        Constructor for `Cartridge`, each cartridge can only hold one type at a time, `Rule` or `RuleBytes`
+        r"""
+        Constructor for `CartridgeBytes`
+     # Notes
+     * by default, all rules must pass every match check
+     In this mode, to which all additional rules apply (default mode for everyone).
+     We check that for each match (text) all the rules will work.
+     ## Operation scheme of the mode
+
+     ```bash
+     #=======================================
+     text = "txt [123] txt [456] txt [789]"
+     #=======================================
+     CustomError
+     |
+     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+          |   [123], [456], [789]
+          |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
+          |                                      |       |        |
+          |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
+    
+     ```
+     
+     ## Fill in messages
+     * Each cartridge supports filling the message with unwanted data, when specifying a message,
+     you can specify a variable in the message in the format : **`{variable}`**.
+     After specifying an identical group name in any rule along with the *`MustNotBeFound`* modifier
         """
         ...
 
