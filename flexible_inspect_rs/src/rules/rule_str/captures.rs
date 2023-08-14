@@ -1,4 +1,5 @@
 use super::RegexRaw;
+use super::*;
 use crate::prelude::Rule;
 use crate::rules::DEFAULT_CAPTURE;
 use crate::rules::{traits::RuleBase, CaptureData};
@@ -74,14 +75,22 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<&'a str> 
         }
     }
 
-    // ============================= LOG =============================
-    info!(
-        "the `({}, {:#?})` rule found a match: \n{:#?}",
-        rule.get_str(),
-        rule.get_requirement(),
-        text_for_capture
-    );
-    // ===============================================================
+    if log::log_enabled!(log::Level::Info) {
+        if text_for_capture.is_empty() {
+            info!(
+                "the `({}, {})` rule didn't find a match",
+                rule.get_str().yellow(),
+                format!("{:#?}", rule.get_requirement()).yellow()
+            );
+        } else {
+            info!(
+                "the `({}, {})` rule found a match: \n{:#?}",
+                rule.get_str().yellow(),
+                format!("{:#?}", rule.get_requirement()).yellow(),
+                text_for_capture
+            )
+        }
+    }
 
     CaptureData {
         text_for_capture,
