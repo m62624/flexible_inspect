@@ -51,7 +51,24 @@ pub trait RuleModifiers {
     type RuleType;
 
     /// modifier for extending the rule with nested rules
-    /// ( **by default, all rules must pass every match check** )
+    /// 
+    /// ( **by default, all rules must pass every match check** )\
+    /// In this mode, to which all additional rules apply (default mode for everyone).
+    /// We check that for each match (text) all the rules will work.
+    /// ## Operation scheme of the mode
+    /// ```bash
+    /// #=======================================
+    /// text = "txt [123] txt [456] txt [789]"
+    /// #=======================================
+    /// CustomError
+    /// |
+    /// |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+    ///      |   [123], [456], [789]
+    ///      |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
+    ///      |                                      |       |        |
+    ///      |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
+    ///
+    /// ```
     fn extend<R: IntoIterator<Item = Self::RuleType>>(&mut self, nested_rules: R)
         -> Self::RuleType;
     /// modifier to set the match counter, condition `counter == match`
@@ -79,7 +96,7 @@ pub trait RuleModifiers {
     /// ```
     fn all_r_for_any_m(&mut self) -> Self::RuleType;
     /// modifier to change the rule matching mode.
-    /// 
+    ///
     /// In this mode, at least `one sub-rule` should work for `every match`. If no sub-rule works on one of the matches, an error will be returned.
     /// ```bash
     /// #=======================================
@@ -96,7 +113,7 @@ pub trait RuleModifiers {
     /// ```
     fn any_r_for_all_m(&mut self) -> Self::RuleType;
     /// modifier to change the rule matching mode.
-    /// 
+    ///
     /// In this mode, at least `one sub-rule` should work for at least `one match`. If no sub-rule works on one of the matches, an error will be returned.
     /// ```bash
     /// #=======================================

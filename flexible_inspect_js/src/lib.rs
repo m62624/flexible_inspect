@@ -1,4 +1,4 @@
-//! The Data validator is a universal tool for checking the correctness of data in string and byte formats. It allows you to determine whether the data conforms to certain rules and provides the ability to find errors and inconsistencies.\
+//! The `Flexible_inspect` is a universal tool for checking the correctness of data in string and byte formats. It allows you to determine whether the data conforms to certain rules and provides the ability to find errors and inconsistencies.\
 //! The project aims to create a versatile and flexible tool for validating data in different formats, ensuring accuracy, reliability and usability.
 
 mod cartridges;
@@ -24,11 +24,20 @@ pub use template_validator::{
 static INIT: Once = Once::new();
 // =====================================================================
 
+/// Log levels for logging support
 #[wasm_bindgen]
 pub enum LogLevel {
+    /// * `ERROR` - only errors are displayed
+    /// > Includes all messages that did not pass the rules condition test
     ERROR,
+    /// * `INFO` - errors and information are displayed
+    /// > Includes all messages that did not pass the rules condition test and information about the rules that were caught
     INFO,
+    /// * `DEBUG` - errors, information and debug information are displayed
+    /// > Includes all messages that did not pass the rules condition test, information about the rules that were caught and debug information about debug what modifiers are applied
     DEBUG,
+    /// * `TRACE` - errors, information, debug information and trace information are displayed
+    /// > Includes all messages that did not pass the rules condition test, information about the rules that were caught, debug information about debug what modifiers are applied and trace information about what type of regular expression is used, and whether it is included in the [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html).
     TRACE,
 }
 
@@ -50,7 +59,27 @@ fn setup_logger(level: LevelFilter) -> Result<(), fern::InitError> {
     Ok(())
 }
 
-/// Initialization of the logger
+/// Initialization of the logger (no color support)
+/// # Logs
+/// Includes color-coded logging support (**do not need to be declared in the code**)
+///
+/// **Recommendations:** \
+/// Use logging to find out what regular expression is caught,
+/// whether matches should be found or not, what mode the cartridges are running in, etc.\
+/// To enable logging support it is necessary to specify the `FLEX_VALIDATOR_LOG` environment variable before running the file
+/// Levels of logging support:
+/// * `ERROR` - only errors are displayed
+/// > Includes all messages that did not pass the rules condition test
+/// * `INFO` - errors and information are displayed
+/// > Includes all messages that did not pass the rules condition test and information about the rules that were caught
+/// * `DEBUG` - errors, information and debug information are displayed
+/// > Includes all messages that did not pass the rules condition test, information about the rules that were caught and debug information about debug what modifiers are applied
+/// * `TRACE` - errors, information, debug information and trace information are displayed
+/// > Includes all messages that did not pass the rules condition test, information about the rules that were caught, debug information about debug what modifiers are applied and trace information about what type of regular expression is used, and whether it is included in the [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html).
+/// ## Example:
+/// ```js
+/// init_logger(LogLevel.Debug);
+/// ```
 #[cfg(not(tarpaulin_include))]
 #[wasm_bindgen]
 pub fn init_logger(log_level: LogLevel) {
