@@ -16,8 +16,11 @@ On the other hand, `flexible_inspect` is a specialized library for data validati
 It's designed specifically for easy and convenient validation of data with varying degrees of nesting
 
 ## Abstraction Level
-`flexible_inspect` provides a higher level of abstraction for data validation.
+`Flexible_inspect` provides a higher level of abstraction for data validation.
 It has a simple way for different nesting of regular expressions and also has the ability to change data validation modes
+
+# Flexibility
+Rust version customized for validator implementations for other programming languages
 
 ## Ease of use
 Designed with an emphasis on ease of use. Offers a simple and intuitive `API` that makes it easy to define validation rules and validate data.
