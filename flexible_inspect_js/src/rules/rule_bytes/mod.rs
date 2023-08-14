@@ -28,6 +28,23 @@ impl WasmRuleBytes {
     /// * `pattern` - a regular expression that will be used to search for matches
     /// * `requirement` - the requirement for the match
     /// # Notes
+    /// * **by default, all rules must pass every match check**
+    /// In this mode, to which all additional rules apply (default mode for everyone).
+    /// We check that for each match (text) all the rules will work.
+    /// ## Operation scheme of the mode
+    /// ```bash
+    /// #=======================================
+    /// text = "txt [123] txt [456] txt [789]"
+    /// #=======================================
+    /// CustomError
+    /// |
+    /// |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+    ///      |   [123], [456], [789]
+    ///      |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
+    ///      |                                      |       |        |
+    ///      |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
+    ///
+    /// ```
     /// * To load a `RuleBytes` into a `CartridgeBytes`, always use `finish_build()` at the end, after applying modifiers or initializing the rule to prepare the value for processing in `Rust`
     /// * Remember any modifier takes the contents of the `RuleBytes` body
     /// and returns a new one with a changed parameter (only `None` from the original Rule remains),
