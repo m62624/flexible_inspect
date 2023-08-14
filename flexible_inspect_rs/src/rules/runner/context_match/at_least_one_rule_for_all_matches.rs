@@ -9,7 +9,7 @@ where
     R: CalculateValueRules<'a, C> + Debug,
     C: PartialEq + Eq + Hash + Debug,
 {
-    let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
+    let mut temp_stack = Some(VecDeque::new());
     if let Some(mut frame) = stack.pop_front() {
         trace!(
             "deleted rule from unique stack: ({}, {})",
@@ -82,8 +82,18 @@ where
                                 // ===============================================================
                                 one_rule_found = true;
                                 selected_rules.insert(rule_from_regexset);
-                                temp_stack.push_back((rule_from_regexset, captures));
-                                break 'skip_data;
+                                if let NextStep::Go = NextStep::next_or_finish_or_error(
+                                    rule_from_regexset,
+                                    &mut captures,
+                                ) {
+                                    if let Some(temp_stack) = temp_stack.as_mut() {
+                                        temp_stack.push_back((rule_from_regexset, captures));
+                                    }
+                                } else {
+                                    stack.push_back((rule_from_regexset, captures));
+                                    temp_stack = None;
+                                    break 'skip_data;
+                                }
                             }
                         }
                     }
@@ -115,7 +125,16 @@ where
                                         format!("{:#?}", rule.get_requirement()).yellow(),
                                     );
                                     // ===============================================================
-                                    temp_stack.push_back((rule, captures));
+                                    if let NextStep::Go =
+                                        NextStep::next_or_finish_or_error(rule, &mut captures)
+                                    {
+                                        if let Some(temp_stack) = temp_stack.as_mut() {
+                                            temp_stack.push_back((rule, captures));
+                                        }
+                                    } else {
+                                        stack.push_back((rule, captures));
+                                        temp_stack = None;
+                                    }
                                 }
                                 one_rule_found = true;
                             }
@@ -148,14 +167,25 @@ where
                                     format!("{:#?}", rule.get_requirement()).yellow(),
                                 );
                                 // ===============================================================
-                                temp_stack.push_back((rule, captures));
+                                if let NextStep::Go =
+                                    NextStep::next_or_finish_or_error(rule, &mut captures)
+                                {
+                                    if let Some(temp_stack) = temp_stack.as_mut() {
+                                        temp_stack.push_back((rule, captures));
+                                    }
+                                } else {
+                                    stack.push_back((rule, captures));
+                                    temp_stack = None;
+                                }
                             }
                             one_rule_found = true;
                         }
                     }
                 }
                 if one_rule_found {
-                    stack.extend(temp_stack.drain(..));
+                    if let Some(temp_stack) = temp_stack.as_mut() {
+                        stack.extend(temp_stack.drain(..));
+                    }
                 } else {
                     // ============================= LOG =============================
                     error!("not found one rule for all matches");

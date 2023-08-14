@@ -9,7 +9,7 @@ where
     R: CalculateValueRules<'a, C> + Debug,
     C: PartialEq + Eq + Hash + Debug,
 {
-    let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
+    let mut temp_stack = Some(VecDeque::new());
 
     if let Some(mut frame) = stack.pop_front() {
         trace!(
@@ -71,7 +71,16 @@ where
                                 continue 'skip_data;
                             }
                             selected_rules.insert(rule_from_regexset);
-                            temp_stack.push_back((rule_from_regexset, captures));
+                            if let NextStep::Go =
+                                NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
+                            {
+                                if let Some(temp_stack) = temp_stack.as_mut() {
+                                    temp_stack.push_back((rule_from_regexset, captures));
+                                }
+                            } else {
+                                stack.push_back((rule_from_regexset, captures));
+                                temp_stack = None;
+                            }
                         }
                         // The second step, in this stage we go through those rules and matches that are not in `RegexSet`.
                         for rule in simple_rules.0 {
@@ -83,7 +92,16 @@ where
                                     err_value = error;
                                     continue 'skip_data;
                                 }
-                                temp_stack.push_back((rule, captures));
+                                if let NextStep::Go =
+                                    NextStep::next_or_finish_or_error(rule, &mut captures)
+                                {
+                                    if let Some(temp_stack) = temp_stack.as_mut() {
+                                        temp_stack.push_back((rule, captures));
+                                    }
+                                } else {
+                                    stack.push_back((rule, captures));
+                                    temp_stack = None;
+                                }
                             }
                         }
                     }
@@ -104,7 +122,16 @@ where
                                 err_value = error;
                                 continue 'skip_data;
                             }
-                            temp_stack.push_back((cmplx_rule, captures));
+                            if let NextStep::Go =
+                                NextStep::next_or_finish_or_error(cmplx_rule, &mut captures)
+                            {
+                                if let Some(temp_stack) = temp_stack.as_mut() {
+                                    temp_stack.push_back((cmplx_rule, captures));
+                                }
+                            } else {
+                                stack.push_back((cmplx_rule, captures));
+                                temp_stack = None;
+                            }
                         }
                     }
                     info!("all rules passed successfully for the data `{:#?}` ", data);
@@ -114,7 +141,9 @@ where
                 }
                 if rule_matched_for_any_text {
                     // Финальный этап, мы загружаем всё в`stack` для дальнейшей обработки
-                    stack.extend(temp_stack.drain(..));
+                    if let Some(temp_stack) = temp_stack.as_mut() {
+                        stack.extend(temp_stack.drain(..));
+                    }
                 } else {
                     // ================= (LOG) =================
                     error!("all of the rules do not match any data");
