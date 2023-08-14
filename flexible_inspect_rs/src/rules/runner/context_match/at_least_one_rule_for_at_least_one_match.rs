@@ -60,7 +60,6 @@ where
                                 // ============================= LOG =============================
                                 debug!("the rule `{}` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )", rule_from_regexset.get_str(), data );
                                 // ===============================================================
-
                                 err_value = error;
                                 continue 'skip_this_rule;
                             }
@@ -76,7 +75,7 @@ where
                             found_rule_flag = true;
                             selected_rules.insert(rule_from_regexset);
 
-                            if let NextStep::Finish =
+                            if let NextStep::Go =
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
                                 if let Some(temp_stack) = temp_stack.as_mut() {
@@ -118,7 +117,7 @@ where
                                 found_rule_flag = true;
                                 selected_rules.insert(rule);
 
-                                if let NextStep::Finish =
+                                if let NextStep::Go =
                                     NextStep::next_or_finish_or_error(rule, &mut captures)
                                 {
                                     if let Some(temp_stack) = temp_stack.as_mut() {
@@ -160,7 +159,7 @@ where
                                 // ===============================================================
                                 found_rule_flag = true;
 
-                                if let NextStep::Finish =
+                                if let NextStep::Go =
                                     NextStep::next_or_finish_or_error(rule, &mut captures)
                                 {
                                     if let Some(temp_stack) = temp_stack.as_mut() {
