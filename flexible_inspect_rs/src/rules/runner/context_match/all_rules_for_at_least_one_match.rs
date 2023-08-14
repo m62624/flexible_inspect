@@ -17,13 +17,6 @@ where
             frame.0.get_str().yellow(),
             format!("{:#?}", frame.0.get_requirement()).yellow()
         );
-        // ============================= LOG =============================
-        trace!(
-            "check the state of the rule `({}, {})`",
-            frame.0.get_str().yellow(),
-            format!("{:#?}", frame.0.get_requirement()).yellow()
-        );
-        // ===============================================================
         match NextStep::next_or_finish_or_error(frame.0, &mut frame.1) {
             NextStep::Go => {
                 // ============================= LOG =============================
