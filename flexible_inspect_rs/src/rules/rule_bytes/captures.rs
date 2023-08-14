@@ -42,13 +42,13 @@ pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<&'a
     if log::log_enabled!(log::Level::Info) {
         if text_for_capture.is_empty() {
             info!(
-                "the `({}, {})` rule didn't find a match",
+                "(capture) the rule `({}, {})` didn't find a match",
                 rule.get_str().yellow(),
                 format!("{:#?}", rule.get_requirement()).yellow()
             );
         } else {
             info!(
-                "the rule `({}, {})` found a match: \n{:#?}",
+                " (capture) the rule `({}, {})` found a match: \n{:#?}",
                 rule.get_str().yellow(),
                 format!("{:#?}", rule.get_requirement()).yellow(),
                 text_for_capture
