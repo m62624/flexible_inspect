@@ -68,7 +68,7 @@ pub trait RuleModifiers {
     /// #=======================================
     /// text = "txt [123] txt [456] txt [789]"
     /// #=======================================
-    /// CustomError
+    /// CustomError (Cartridge)
     /// |
     /// |__ Rule "\[[^\[\]]+\]" (MustBeFound)
     ///     |   [123], [456], [789]
@@ -85,7 +85,7 @@ pub trait RuleModifiers {
     /// #=======================================
     /// text = "txt [123] txt [456] txt [789]"
     /// #=======================================
-    /// CustomError
+    /// CustomError (Cartridge)
     /// |
     /// |__ Rule "\[[^\[\]]+\]" (MustBeFound)
     ///     |   [123], [456], [789]
@@ -102,7 +102,7 @@ pub trait RuleModifiers {
     /// #=======================================
     /// text = "txt [123] txt [456] txt [789]"
     /// #=======================================
-    /// CustomError
+    /// CustomError (Cartridge)
     /// |
     /// |__ Rule "\[[^\[\]]+\]" (MustBeFound)
     ///     |   [123], [456], [789]

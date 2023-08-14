@@ -161,13 +161,15 @@ class RuleBytes:
 # ========================================================
 class Cartridge:
     """
-    The container structure for `custom rules`, `error message` and `error code`.\\
-    Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.\\
-    ( Each cartridge can only hold one type at a time, `Rule` or `RuleBytes` )\\
-    by default, all rules must pass every match check
+ The cartridge is the container of the rules.
+ # Notes
+ * Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.
     """
 
     def __init__(self, id: int, message: str, root_rules: List[Rule]) -> None:
+        """
+        Constructor for `Cartridge`, each cartridge can only hold one type at a time, `Rule` or `RuleBytes`
+        """
         ...
 
     def any_r_for_any_m(self) -> Cartridge:
@@ -183,10 +185,9 @@ class Cartridge:
 # ========================================================
 class CartridgeBytes:
     """
-    The container structure for `custom rules`, `error message` and `error code`.\\
-    Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.\\
-    ( Each cartridge can only hold one type at a time, `Rule` or `RuleBytes` )\\
-    by default, all rules must pass every match check
+ The cartridge is the container of the rules.
+ # Notes
+ * Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.
     """
 
     def __init__(self, id: int, message: str, root_rules: List[RuleBytes]) -> None:
