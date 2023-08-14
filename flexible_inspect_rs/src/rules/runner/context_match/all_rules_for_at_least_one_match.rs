@@ -21,7 +21,7 @@ where
             NextStep::Go => {
                 // ============================= LOG =============================
                 debug!(
-                    "success, run subrules from the root rule `({}, {})`",
+                    "run subrules from the root rule `({}, {})`",
                     frame.0.get_str().yellow(),
                     format!("{:#?}", frame.0.get_requirement()).yellow()
                 );
@@ -42,9 +42,11 @@ where
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
                             debug!(
-                                "found `({}, {})` rule from `RegexSet` for `{:#?}` data",
-                                rule_from_regexset.get_str().yellow(),
+                                "found the rule `({}, {})` (root rule `({}, {})`) from the `RegexSet` category\nfor data`{:#?}`",
+                                rule_from_regexset.get_str(),
                                 format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
+                                frame.0.get_str().yellow(),
+                                format!("{:#?}", frame.0.get_requirement()).yellow(),
                                 data
                             );
                             // ===============================================================
@@ -53,10 +55,12 @@ where
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
                                 // ============================= LOG =============================
-                                debug!(
-                                    "the rule `({}, {})` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )",
+                                error!(
+                                    "the rule `({}, {})` (root rule `({}, {})`) failed condition\nfor data `{:#?}`",
                                     rule_from_regexset.get_str().yellow(),
                                     format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
+                                    frame.0.get_str().yellow(),
+                                    format!("{:#?}", frame.0.get_requirement()).yellow(),
                                     data
                                 );
                                 // ===============================================================
@@ -85,10 +89,12 @@ where
                         for cmplx_rule in cmpl_rules {
                             // ============================= LOG =============================
                             debug!(
-                                "the rule `({}, {})` from `complex_rules`",
-                                cmplx_rule.get_str().yellow(),
-                                format!("{:#?}", cmplx_rule.get_requirement()).yellow(),
-                            );
+                                "found the rule `({}, {})` (root rule `({}, {})`) from the `Complex Rule` category\nfor data `{:#?}`",
+                                cmplx_rule.get_str(),format!("{:#?}", 
+                                cmplx_rule.get_requirement()).yellow(),
+                                frame.0.get_str().yellow(),
+                                format!("{:#?}", frame.0.get_requirement()).yellow(),
+                                data);
                             // ===============================================================
                             let mut captures = R::find_captures(cmplx_rule, data);
                             if let NextStep::Error(error) =
@@ -100,7 +106,7 @@ where
                             temp_stack.push_back((cmplx_rule, captures));
                         }
                     }
-                    info!("all rules passed successfully for the data `{:#?}` ", data);
+                    info!("all rules passed successfully\nfor the data `{:#?}` ", data);
                     // Если дошли до конца цикла (в рамках одного элемента), значит все правила сработали
                     rule_matched_for_any_text = true;
                     break;
@@ -110,7 +116,7 @@ where
                     stack.extend(temp_stack.drain(..));
                 } else {
                     // ================= (LOG) =================
-                    error!("all of the rules do not match any data");
+                    error!("all of the rules don't match any data");
 
                     // =========================================
                     return NextStep::Error(err_value);

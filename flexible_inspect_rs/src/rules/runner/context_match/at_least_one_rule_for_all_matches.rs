@@ -21,7 +21,7 @@ where
             NextStep::Go => {
                 // ============================= LOG =============================
                 debug!(
-                    "success, run subrules from the root rule `({}, {})`",
+                    "run subrules from the root rule `({}, {})`",
                     frame.0.get_str().yellow(),
                     format!("{:#?}", frame.0.get_requirement()).yellow()
                 );
@@ -41,9 +41,11 @@ where
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
                             debug!(
-                                "found `({}, {})` rule from `RegexSet` for `{:#?}` data",
+                                "found the rule `({}, {})` (root rule `({}, {})`) from the `RegexSet` category\nfor data`{:#?}`",
                                 rule_from_regexset.get_str(),
                                 format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
+                                frame.0.get_str().yellow(),
+                                format!("{:#?}", frame.0.get_requirement()).yellow(),
                                 data
                             );
                             // ===============================================================
@@ -56,9 +58,11 @@ where
                                 ) {
                                     // ============================= LOG =============================
                                     debug!(
-                                    "the rule `({}, {})` failed condition for data `{:#?}` ( this rule is categorized as `not in RegexSet` )",
+                                    "the rule `({}, {})` (root rule `({}, {})`) failed condition\nfor data (this rule is categorized as `not in RegexSet`) `{:#?}` ",
                                     rule_from_regexset.get_str(),
                                     format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),    
+                                    frame.0.get_str().yellow(),
+                                    format!("{:#?}", frame.0.get_requirement()).yellow(),
                                     data
                                 );
                                     // ===============================================================
@@ -68,9 +72,11 @@ where
                                 }
                                 // ============================= LOG =============================
                                 info!(
-                                    "found one rule for all matches: ({}, {})",
-                                    rule_from_regexset.get_str(),
+                                    "the rule `({}, {})` (root rule `({}, {})`) worked successfully for all matches (`RegexSet`)",
+                                    rule_from_regexset.get_str().yellow(),
                                     format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
+                                    frame.0.get_str().yellow(),
+                                    format!("{:#?}", frame.0.get_requirement()).yellow(),
                                 );
                                 // ===============================================================
                                 one_rule_found = true;
@@ -95,13 +101,6 @@ where
                         // The second step, in this stage we go through those rules and matches that are not in `RegexSet`.
                         'not_in_regexset: for rule in simple_rules.0 {
                             if !selected_rules.contains(rule) {
-                                // ============================= LOG =============================
-                                debug!(
-                                    "the rule `({}, {})` is not in `RegexSet`",
-                                    rule.get_str().yellow(),
-                                    format!("{:#?}", rule.get_requirement()).yellow(),
-                                );
-                                // ===============================================================
                                 if let Some(data) = frame.1.text_for_capture.iter().next() {
                                     let mut captures = R::find_captures(rule, data);
                                     if let NextStep::Error(err) =
@@ -113,9 +112,11 @@ where
 
                                     // ============================= LOG =============================
                                     info!(
-                                        "found one rule for all matches: ({}, {:#?})",
+                                        "found one rule for all matches: ({}, {:#?}) (root rule `({}, {})`) ",
                                         rule.get_str().yellow(),
                                         format!("{:#?}", rule.get_requirement()).yellow(),
+                                        frame.0.get_str().yellow(),
+                                        format!("{:#?}", frame.0.get_requirement()).yellow(),
                                     );
                                     // ===============================================================
                                     if let NextStep::Go =
@@ -138,13 +139,6 @@ where
                 if let Some(cmplx_rules) = frame.0.get_complex_rules() {
                     if !one_rule_found {
                         'skip_this_cmplx_rule: for rule in cmplx_rules {
-                            // ============================= LOG =============================
-                            debug!(
-                                "the rule `({}, {})` from `complex_rules`",
-                                rule.get_str().yellow(),
-                                format!("{:#?}", rule.get_requirement()).yellow(),
-                            );
-                            // ===============================================================
                             for data in &frame.1.text_for_capture {
                                 let mut captures = R::find_captures(rule, data);
                                 if let NextStep::Error(err) =
@@ -155,9 +149,11 @@ where
                                 }
                                 // ============================= LOG =============================
                                 info!(
-                                    "found one rule for all matches: ({}, {})",
+                                    "found one rule for all matches: `({}, {})` (root rule `({}, {})`) from the `Complex Rule` category",
                                     rule.get_str().yellow(),
                                     format!("{:#?}", rule.get_requirement()).yellow(),
+                                    frame.0.get_str().yellow(),
+                                    format!("{:#?}", frame.0.get_requirement()).yellow(),
                                 );
                                 // ===============================================================
                                 if let NextStep::Go =

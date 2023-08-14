@@ -83,15 +83,6 @@ where
                              */
                             *counter_of_each_rule.entry(index).or_insert(0) += 1;
                             if counter_of_each_rule[&index] == frame.1.text_for_capture.len() {
-                                // ============================= LOG =============================
-                                debug!(
-                                    "the rule `({}, {})` (root rule `({}, {})`) worked successfully for all matches (`RegexSet`)",
-                                    rule_from_regexset.get_str().yellow(),
-                                    format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
-                                    frame.0.get_str().yellow(),
-                                    format!("{:#?}", frame.0.get_requirement()).yellow(),
-                                );
-                                // ===============================================================
                                 selected_rules.insert(rule_from_regexset);
                                 temp_stack.push_back((rule_from_regexset, captures));
                             }
