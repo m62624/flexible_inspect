@@ -43,8 +43,8 @@ pub struct GeneralModifiers {
 /// - `MustNotBeFound` - which means, based on this regular expression, we must not get a match
 ///
 /// Behavior of `Rule` | `RuleBytes` under different conditions
-/// 
-/// | **MatchRequirement** | **Match found** | *does this rule have any subrules ?* | Result                                   |
+///
+/// | **MatchRequirement** | **Match found** | *does this rule have any subrules ?* | Result                         |
 /// | ---------------- | ----------- | ---------------------------------- | ---------------------------------------- |
 /// | MustBeFound      | Yes         | Yes                                | Continue processing subrules             |
 /// | MustBeFound      | Yes         | No                                 | Finish processing                        |
