@@ -16,8 +16,7 @@ On the other hand, `flexible_inspect` is a specialized library for data validati
 It's designed specifically for easy and convenient validation of data with varying degrees of nesting
 
 ## Abstraction Level
-Abstraction Level: Regex works at the level of regular expressions, which are sequences of characters that define a pattern.
-It has a wide set of functions and operators to define complex patterns for text search and replacement. `flexible_inspect` , on the other hand, provides a higher level of abstraction for data validation.
+`flexible_inspect` provides a higher level of abstraction for data validation.
 It has a simple way for different nesting of regular expressions and also has the ability to change data validation modes
 
 ## Ease of use
