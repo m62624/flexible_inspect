@@ -18,7 +18,7 @@ pub trait CartridgeModifiers {
     /// The type of the cartridge that will be returned after applying the modifier
     type CartridgeType;
 
-    /// modifier to change the rule matching mode,
+    /// modifier to change the root rule matching mode,
     ///
     /// In this mode, at least one sub-rule should work for at least one match. If no sub-rule works on one of the matches, an error will be returned.
     /// ```bash

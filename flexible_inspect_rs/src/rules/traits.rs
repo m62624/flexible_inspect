@@ -62,7 +62,7 @@ pub trait RuleModifiers {
     fn counter_less_than(&mut self, count: usize) -> Self::RuleType;
     /// modifier to change the rule matching mode.
     ///
-    /// In this mode, all the sub-adjustments should work for at least one match.
+    /// In this mode, `all the sub-rule` should work for at least `one match`.
     /// If at least one sub-rule does not work on one of the matches, an error will be returned.
     /// ```bash
     /// #=======================================
@@ -80,7 +80,7 @@ pub trait RuleModifiers {
     fn all_r_for_any_m(&mut self) -> Self::RuleType;
     /// modifier to change the rule matching mode.
     /// 
-    /// In this mode, at least one sub-rule should work for every match. If no sub-rule works on one of the matches, an error will be returned.
+    /// In this mode, at least `one sub-rule` should work for `every match`. If no sub-rule works on one of the matches, an error will be returned.
     /// ```bash
     /// #=======================================
     /// text = "txt [123] txt [456] txt [789]"
@@ -97,7 +97,7 @@ pub trait RuleModifiers {
     fn any_r_for_all_m(&mut self) -> Self::RuleType;
     /// modifier to change the rule matching mode.
     /// 
-    /// In this mode, at least one sub-rule should work for at least one match. If no sub-rule works on one of the matches, an error will be returned.
+    /// In this mode, at least `one sub-rule` should work for at least `one match`. If no sub-rule works on one of the matches, an error will be returned.
     /// ```bash
     /// #=======================================
     /// text = "txt [123] txt [456] txt [789]"

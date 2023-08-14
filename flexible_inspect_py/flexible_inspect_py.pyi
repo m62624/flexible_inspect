@@ -27,10 +27,56 @@ class MatchRequirement(enum.Enum):
 # ========================================================
 class Rule:
     """
-    The structure for checking strings with regular expressions
+ A rule is the minimum unit of logic in a validator.
+ The rule supports two regular expression crates:
+ [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
+ Determines which type is used based on the syntax (for example, if *Lookahead* and *Lookbehind* references are used, this automatically defines as [**FancyRegex**](https://crates.io/crates/fancy-regex)).
+
+ The most important feature is that the rule is recursive (don't worry, recursion is not used here).
+ Each rule can have nested rules, and these nested rules can have their own nested rules, and so on.
+ Thus, when the root rule is triggered, all the results obtained are passed to the nested rules, so you can build complex structural rules to suit any taste
+
+ # Notes
+ * Remember any modifier takes the contents of the `Rule` body
+ and returns a new one with a changed parameter (only `None` from the original Rule remains),
+ so specify the modifier in the same place where you initialize `Rule`.
+ * If you stick with the [**Regex**](https://crates.io/crates/regex) library features, all root and nested rules go into [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html).
+ Many expressions can be accommodated in a regular expression without *Lookahead* and *Lookbehind* references.
+ But this is just a recommendation. If you need to use references, of course you can specify them.
+ Then these rules will not be included in [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html),
+ and if there are rules in [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html) they will be the first in the queue to be checked, and those that use [**FancyRegex**](https://crates.io/crates/fancy-regex) features will be at the end of the queue
+ * Basically use `Rule` instead of `RuleBytes` when working with text (not necessarily just text, it also includes `html` structures, code fragments from other languages, etc.) since it has support for [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
+ * How is recursive structure checking performed without recursion?
+ Each root rule creates one shared hidden stack at validation time ([VecDecue](https://doc.rust-lang.org/std/collections/struct.VecDeque.html)), regardless of large nesting, the queue traverses its own stack without recursion
+
     """
 
     def __init__(self, pattern: str, requirement: MatchRequirement) -> None:
+        r"""
+ Constructor for creating `Rule`
+
+ # Notes:
+     * Please stick to *raw string literals* when creating regular expressions, without it your regular expression may behave differently\
+         > `r"d{3}."` - is the correct conversion to a regular expression\
+         > `"d{3}."` - possible incorrect behavior
+     * By default, all rules must pass every match check
+     In this mode, to which all additional rules apply (default mode for everyone).
+     We check that for each match (text) all the rules will work.
+     ## Operation scheme of the mode
+
+    ```bash
+     #=======================================
+     text = "txt [123] txt [456] txt [789]"
+     #=======================================
+     CustomError
+     |
+     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+          |   [123], [456], [789]
+          |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
+          |                                      |       |        |
+          |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
+    ```
+        """
         ...
 
     def extend(self, nested_rules: List[Rule]) -> Rule:
@@ -52,40 +98,84 @@ class Rule:
 
     def counter_is_equal(self, count: int) -> Rule:
         """
-    modifier to set the match counter, condition counter == match
+    modifier to set the match counter, condition `counter == match`
         """
     ...
 
     def counter_more_than(self, count: int) -> Rule:
         """
-    modifier to set the match counter, condition counter >= match
+    modifier to set the match counter, condition `counter >= match`
         """
     ...
 
     def counter_less_than(self, count: int) -> Rule:
         """
-    modifier to set the match counter, condition counter <= match
+    modifier to set the match counter, condition `counter <= match`
         """
     ...
 
     def all_r_for_any_m(self) -> Rule:
-        """
-    modifier to change the rule matching mode,
-    `all rules` must pass the test for at least `one match`
-        """
+        r"""
+     modifier to change the rule matching mode.
+
+     In this mode, `all the sub-rules` should work for at least `one match`.
+     If at least one sub-rule does not work on one of the matches, an error will be returned.
+
+     ```bash
+     #=======================================
+     text = "txt [123] txt [456] txt [789]"
+     #=======================================
+     CustomError (Cartridge)
+     |
+     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+         |   [123], [456], [789]
+         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
+         |                                      |
+         |___ Subrule "\[\d+\]" (MustBeFound) __|
+         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- ERROR 
+      ```
+         """
     ...
 
     def any_r_for_all_m(self) -> Rule:
-        """
+        r"""
     modifier to change the rule matching mode,
-    at least `one rule` must pass the test for `all matches`
+
+    In this mode, at least `one sub-rule` should work for `every match`. If no sub-rule works on one of the matches, an error will be returned.
+    ```bash
+     #=======================================
+     text = "txt [123] txt [456] txt [789]"
+     #=======================================
+     CustomError (Cartridge)
+     |
+     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+         |   [123], [456], [789]
+         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE -- [456] -- TRUE -- [789] -- TRUE
+         |                                      |               |                 |
+         |___ Subrule "\[\d+\]" (MustBeFound) __|_______________|_________________|
+         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched)
+    ```
         """
     ...
 
     def any_r_for_any_m(self) -> Rule:
-        """
-    modifier to change the rule matching mode,
-    at least `one rule` must pass the test for at least `one match`
+        r"""
+    modifier to change the rule matching mode
+
+    In this mode, at least `one sub-rule` should work for at least `one match`. If no sub-rule works on one of the matches, an error will be returned.
+    ```bash
+    #=======================================
+    text = "txt [123] txt [456] txt [789]"
+    #=======================================
+    CustomError (Cartridge)
+    |
+    |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+        |   [123], [456], [789]
+        |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
+        |                                      |
+        |___ Subrule "\[\d+\]" (MustBeFound) __|
+        |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
+    ```
         """
     ...
 # ========================================================
@@ -94,10 +184,49 @@ class Rule:
 # ========================================================
 class RuleBytes:
     """
-    The structure for checking bytes with regular expressions
+    A rule is the minimum unit of logic in a validator.
+
+    The most important feature is that the rule is recursive (don't worry, recursion is not used here).
+    Each rule can have nested rules, and these nested rules can have their own nested rules, and so on.
+    Thus, when the root rule is triggered, all the results obtained are passed to the nested rules, so you can build complex structural rules to suit any taste
+
+    # Notes
+    * Remember any modifier takes the contents of the `RuleBytes` body
+    and returns a new one with a changed parameter (only `None` from the original Rule remains),
+    so specify the modifier in the same place where you initialize `RuleBytes`.
+    * Use `&[u8]` when searching for regex matches in haystacks. ([**FancyRegex**](https://crates.io/crates/fancy-regex) capabilities are not available)
+    * Unicode support can be disabled, even if disabling it will result in a match with invalid `UTF-8` bytes. More info at [link](https://docs.rs/regex/latest/regex/bytes/index.html)
+    * How is recursive structure checking performed without recursion?
+    Each root rule creates one shared hidden stack at validation time ([VecDecue](https://doc.rust-lang.org/std/collections/struct.VecDeque.html)), regardless of large nesting, the queue traverses its own stack without recursion
     """
 
     def __init__(self, pattern: str, requirement: MatchRequirement) -> None:
+        r""" 
+    Constructor for creating `RuleBytes`
+    # Notes
+     * Please stick to *raw string literals* when creating regular expressions, without it your regular expression may behave differently
+     ## Example
+        > `r"d{3}."` - is the correct conversion to a regular expression\
+        >  `"d{3}."` - possible incorrect behavior
+     * By default, all rules must pass every match check
+     In this mode, to which all additional rules apply (default mode for everyone).
+     We check that for each match (text) all the rules will work.
+     ## Operation scheme of the mode
+
+     ```bash
+     #=======================================
+     text = "txt [123] txt [456] txt [789]"
+     #=======================================
+     CustomError
+     |
+     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+          |   [123], [456], [789]
+          |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
+          |                                      |       |        |
+          |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
+     ```
+
+        """
         ...
 
     def extend(self, nested_rules: List[RuleBytes]) -> RuleBytes:
@@ -119,40 +248,84 @@ class RuleBytes:
 
     def counter_is_equal(self, count: int) -> RuleBytes:
         """
-    modifier to set the match counter, condition counter == match
+    modifier to set the match counter, condition `counter == match`
         """
     ...
 
     def counter_more_than(self, count: int) -> RuleBytes:
         """
-    modifier to set the match counter, condition counter >= match
+    modifier to set the match counter, condition `counter >= match`
         """
     ...
 
     def counter_less_than(self, count: int) -> RuleBytes:
         """
-    modifier to set the match counter, condition counter <= match
+    modifier to set the match counter, condition `counter <= match`
         """
     ...
 
     def all_r_for_any_m(self) -> RuleBytes:
-        """
-    modifier to change the rule matching mode,
-    `all rules` must pass the test for at least `one match`
-        """
+        r"""
+     modifier to change the rule matching mode.
+
+     In this mode, `all the sub-rules` should work for at least `one match`.
+     If at least one sub-rule does not work on one of the matches, an error will be returned.
+
+     ```bash
+     #=======================================
+     text = "txt [123] txt [456] txt [789]"
+     #=======================================
+     CustomError (Cartridge)
+     |
+     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+         |   [123], [456], [789]
+         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
+         |                                      |
+         |___ Subrule "\[\d+\]" (MustBeFound) __|
+         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- ERROR 
+      ```
+         """
     ...
 
     def any_r_for_all_m(self) -> RuleBytes:
-        """
+        r"""
     modifier to change the rule matching mode,
-    at least `one rule` must pass the test for `all matches`
+
+    In this mode, at least `one sub-rule` should work for `every match`. If no sub-rule works on one of the matches, an error will be returned.
+    ```bash
+     #=======================================
+     text = "txt [123] txt [456] txt [789]"
+     #=======================================
+     CustomError (Cartridge)
+     |
+     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+         |   [123], [456], [789]
+         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE -- [456] -- TRUE -- [789] -- TRUE
+         |                                      |               |                 |
+         |___ Subrule "\[\d+\]" (MustBeFound) __|_______________|_________________|
+         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched)
+    ```
         """
     ...
 
     def any_r_for_any_m(self) -> RuleBytes:
-        """
-    modifier to change the rule matching mode,
-    at least `one rule` must pass the test for at least `one match`
+        r"""
+    modifier to change the rule matching mode
+
+    In this mode, at least `one sub-rule` should work for at least `one match`. If no sub-rule works on one of the matches, an error will be returned.
+    ```bash
+    #=======================================
+    text = "txt [123] txt [456] txt [789]"
+    #=======================================
+    CustomError (Cartridge)
+    |
+    |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+        |   [123], [456], [789]
+        |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
+        |                                      |
+        |___ Subrule "\[\d+\]" (MustBeFound) __|
+        |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
+    ```
         """
     ...
 # ========================================================
@@ -173,9 +346,23 @@ class Cartridge:
         ...
 
     def any_r_for_any_m(self) -> Cartridge:
-        """
-    modifier to change the rule matching mode,
-    at least `one rule` must pass the test for at least `one match`
+        r"""
+     modifier to change the root rule matching mode,
+
+     In this mode, at least one sub-rule should work for at least one match. If no sub-rule works on one of the matches, an error will be returned.
+     ```bash
+     #=======================================
+     text = "txt [123] txt [456] txt [789]"
+     #=======================================
+     CustomError (Cartridge)
+     |
+     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+         |   [123], [456], [789]
+         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
+         |                                      |
+         |___ Subrule "\[\d+\]" (MustBeFound) __|
+         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
+     ```
         """
         ...
 
@@ -191,12 +378,29 @@ class CartridgeBytes:
     """
 
     def __init__(self, id: int, message: str, root_rules: List[RuleBytes]) -> None:
+        """
+        Constructor for `Cartridge`, each cartridge can only hold one type at a time, `Rule` or `RuleBytes`
+        """
         ...
 
     def any_r_for_any_m(self) -> CartridgeBytes:
-        """
-    modifier to change the rule matching mode,
-    at least `one rule` must pass the test for at least `one match`
+        r"""
+     modifier to change the root rule matching mode,
+
+     In this mode, at least one sub-rule should work for at least one match. If no sub-rule works on one of the matches, an error will be returned.
+     ```bash
+     #=======================================
+     text = "txt [123] txt [456] txt [789]"
+     #=======================================
+     CustomError (Cartridge)
+     |
+     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
+         |   [123], [456], [789]
+         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
+         |                                      |
+         |___ Subrule "\[\d+\]" (MustBeFound) __|
+         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
+     ```
         """
         ...
 # ========================================================
