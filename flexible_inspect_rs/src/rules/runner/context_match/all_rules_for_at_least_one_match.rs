@@ -2,7 +2,7 @@ use super::*;
 
 /// in this mode all rules must be passed for at least one match
 pub fn all_rules_for_at_least_one_match<'a, R, C>(
-    // get a unique stack of one root cmplx_rule, necessary to bypass the recursion constraint
+    // get a unique stack of one root, necessary to bypass the recursion constraint
     stack: &mut VecDeque<(&'a R::RuleType, CaptureData<C>)>,
 ) -> NextStep
 where
