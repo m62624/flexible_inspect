@@ -72,7 +72,7 @@ where
                                 }
                                 // ============================= LOG =============================
                                 info!(
-                                    "the rule `({}, {})` (root rule `({}, {})`) worked successfully for all matches (`RegexSet`)",
+                                    "found one rule for all matches: `({}, {})` (root rule `({}, {})`) from the `RegexSet` category",
                                     rule_from_regexset.get_str().yellow(),
                                     format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
                                     frame.0.get_str().yellow(),

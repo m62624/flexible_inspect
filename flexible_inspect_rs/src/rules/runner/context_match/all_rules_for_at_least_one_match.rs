@@ -55,7 +55,7 @@ where
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
                                 // ============================= LOG =============================
-                                error!(
+                                debug!(
                                     "the rule `({}, {})` (root rule `({}, {})`) failed condition\nfor data `{:#?}`",
                                     rule_from_regexset.get_str().yellow(),
                                     format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
