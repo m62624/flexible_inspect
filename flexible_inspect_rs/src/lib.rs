@@ -71,7 +71,7 @@ pub mod logs {
     /// For one-time initialization to the logger
     static INIT: Once = Once::new();
     // =====================================================================
-    /// Initialization of the logger
+    /// Initialization with time zone offset\
     /// offset_time - offset from UTC time ( *to offset the time, initialize earlier than the rules* )
     pub fn init_logger(hour_offset: i32) {
         INIT.call_once(|| {
