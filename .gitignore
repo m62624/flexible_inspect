@@ -4,3 +4,7 @@
 /.vscode
 /**/coverage
 /**/build_rs_cov.profraw
+/**/Linux
+/**/macOS
+/**/Windows
+/**/dist
