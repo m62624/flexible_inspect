@@ -9,6 +9,24 @@ from typing import Optional, Type, List, Any, TypeVar, Union
 
 
 # ========================================================
+
+def init_logger(hour_offset: int):
+    """
+    Initialization with time zone offset. 
+    Function does not have to declare the logging work. 
+    It is necessary for logging time offset.
+    To run logging, specify an environment variable with the desired logging level
+    ```bash
+    FLEX_VALIDATOR_LOG=DEBUG "command to run the code"
+    ```
+
+    Parameters
+    ----------
+    `hour_offset` - offset from UTC time (to offset the time, initialize earlier than the rules)
+    """
+    ...
+
+
 class MatchRequirement(enum.Enum):
     r"""
 The structure that defines what action is required when finding regular expression matches.
