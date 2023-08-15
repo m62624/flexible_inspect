@@ -63,26 +63,25 @@ pub mod prelude {
 #[cfg(feature = "log_rust")]
 pub mod logs {
     use super::*;
-    use chrono::Local;
     use std::io::Write;
     use std::sync::Once;
+    use time::OffsetDateTime;
     // =====================================================================
     /// For one-time initialization to the logger
     static INIT: Once = Once::new();
     // =====================================================================
     /// Initialization of the logger
-    #[cfg(not(tarpaulin_include))]
-    pub(crate) fn init_logger() {
+    /// offset_time - offset from UTC time ( *to offset the time, initialize earlier than the rules* )
+    pub fn init_logger(offset_time: Option<i32>) {
         // env_logger is called only once
         INIT.call_once(|| {
             env_logger::Builder::from_env(
                 env_logger::Env::new().filter_or("FLEX_VALIDATOR_LOG", "OFF"),
             )
-            .format(|buf, record| {
+            .format(move |buf, record| {
                 writeln!(
                     buf,
                     "[{} {} {}]↴\n{}",
-                    Local::now().format("%Y-%m-%d %H:%M:%S"),
                     match record.level() {
                         log::Level::Error => "ERROR".red(),
                         log::Level::Warn => "WARN".yellow(),
@@ -90,6 +89,17 @@ pub mod logs {
                         log::Level::Debug => "DEBUG".cyan(),
                         log::Level::Trace => "TRACE".purple(),
                     },
+                    offset_time
+                        .map(|_| {
+                            OffsetDateTime::now_local().unwrap_or_else(|_| {
+                                offset_time
+                                    .map(|t| {
+                                        OffsetDateTime::now_utc() + time::Duration::hours(t as i64)
+                                    })
+                                    .unwrap_or_else(|| OffsetDateTime::now_utc())
+                            })
+                        })
+                        .unwrap_or_else(|| OffsetDateTime::now_utc()),
                     record.target().bright_black(),
                     record.args().to_string().bright_green()
                 )
