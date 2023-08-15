@@ -72,7 +72,13 @@ pub mod logs {
     static INIT: Once = Once::new();
     // =====================================================================
     /// Initialization with time zone offset.\
+    /// Function does not have to declare the logging work.
+    /// It is necessary for logging time offset.
     /// `hour_offset` - offset from UTC time ( *to offset the time, initialize earlier than the rules* )
+    /// To run logging, specify an environment variable with the desired logging level
+    /// ```bash
+    /// FLEX_VALIDATOR_LOG=DEBUG "command to run the code"
+    /// ```
     pub fn init_logger(hour_offset: i32) {
         INIT.call_once(|| {
             env_logger::Builder::from_env(
