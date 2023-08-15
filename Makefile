@@ -82,3 +82,9 @@ mac-arm-python:
 	mkdir -p $(ARTIFACTS_DIR_MACOS)
 	maturin build --release --target aarch64-apple-darwin --zig -o $(ARTIFACTS_DIR_MACOS) --manifest-path $(PROJECT_PATH);
 
+
+clean:
+	rm -rf $(ARTIFACTS_DIR_LINUX)
+	rm -rf $(ARTIFACTS_DIR_MACOS)
+	rm -rf $(ARTIFACTS_DIR_WINDOWS)
+	rm -rf $(ARTIFACTS_DIR_DIST)
