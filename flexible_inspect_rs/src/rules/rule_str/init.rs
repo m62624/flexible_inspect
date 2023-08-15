@@ -36,7 +36,7 @@ impl Rule {
     pub fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
         #[cfg(feature = "log_rust")]
         {
-            init_logger(None);
+            init_logger(0);
         }
         Self(Some(TakeRuleForExtend::new(pattern.into(), requirement)))
     }

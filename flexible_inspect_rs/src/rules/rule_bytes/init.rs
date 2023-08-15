@@ -36,7 +36,7 @@ impl RuleBytes {
     pub fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
         #[cfg(feature = "log_rust")]
         {
-            init_logger(None);
+            init_logger(0);
         }
         Self(Some(TakeRuleBytesForExtend::new(
             pattern.into(),

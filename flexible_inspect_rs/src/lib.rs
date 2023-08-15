@@ -65,15 +65,15 @@ pub mod logs {
     use super::*;
     use std::io::Write;
     use std::sync::Once;
-    use time::OffsetDateTime;
+    use time::{format_description, OffsetDateTime};
+    const DATE_FORMAT_STR: &'static str = "[year]-[month]-[day] [hour]:[minute]:[second]";
     // =====================================================================
     /// For one-time initialization to the logger
     static INIT: Once = Once::new();
     // =====================================================================
     /// Initialization of the logger
     /// offset_time - offset from UTC time ( *to offset the time, initialize earlier than the rules* )
-    pub fn init_logger(offset_time: Option<i32>) {
-        // env_logger is called only once
+    pub fn init_logger(hour_offset: i32) {
         INIT.call_once(|| {
             env_logger::Builder::from_env(
                 env_logger::Env::new().filter_or("FLEX_VALIDATOR_LOG", "OFF"),
@@ -81,7 +81,7 @@ pub mod logs {
             .format(move |buf, record| {
                 writeln!(
                     buf,
-                    "[{} {} {}]↴\n{}",
+                    "{} [{} {}]↴\n{}\n",
                     match record.level() {
                         log::Level::Error => "ERROR".red(),
                         log::Level::Warn => "WARN".yellow(),
@@ -89,17 +89,15 @@ pub mod logs {
                         log::Level::Debug => "DEBUG".cyan(),
                         log::Level::Trace => "TRACE".purple(),
                     },
-                    offset_time
-                        .map(|_| {
-                            OffsetDateTime::now_local().unwrap_or_else(|_| {
-                                offset_time
-                                    .map(|t| {
-                                        OffsetDateTime::now_utc() + time::Duration::hours(t as i64)
-                                    })
-                                    .unwrap_or_else(|| OffsetDateTime::now_utc())
-                            })
+                    OffsetDateTime::now_local()
+                        .unwrap_or_else(|_| {
+                            OffsetDateTime::now_utc() + time::Duration::hours(hour_offset as i64)
                         })
-                        .unwrap_or_else(|| OffsetDateTime::now_utc()),
+                        .format(
+                            &format_description::parse(DATE_FORMAT_STR)
+                                .expect("invalid time format")
+                        )
+                        .expect("invalid time format"),
                     record.target().bright_black(),
                     record.args().to_string().bright_green()
                 )

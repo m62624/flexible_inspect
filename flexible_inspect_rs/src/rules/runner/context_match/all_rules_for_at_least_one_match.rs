@@ -42,7 +42,7 @@ where
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
                             debug!(
-                                "found the rule `({}, {})` (root rule `({}, {})`) from the `RegexSet` category\nfor data`{:#?}`",
+                                "found the rule `({}, {})` (root rule `({}, {})`) from the `RegexSet` category\nfor data `{:#?}`",
                                 rule_from_regexset.get_str(),
                                 format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
                                 frame.0.get_str().yellow(),
