@@ -45,7 +45,7 @@ where
                             // ============================= LOG =============================
                             debug!(
                                 "found the rule `({}, {})` (root rule `({}, {})`) from the `RegexSet` category\nfor data `{:#?}`",
-                                rule_from_regexset.get_str(),
+                                rule_from_regexset.get_str().yellow(),
                                 format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
                                 frame.0.get_str().yellow(),
                                 format!("{:#?}", frame.0.get_requirement()).yellow(),
@@ -149,8 +149,8 @@ where
                             // ============================= LOG =============================
                             debug!(
                                 "found the rule `({}, {})` (root rule `({}, {})`) from the `Complex Rule` category\nfor data `{:#?}`",
-                                cmplx_rule.get_str(),format!("{:#?}", 
-                                cmplx_rule.get_requirement()).yellow(),
+                                cmplx_rule.get_str().yellow(),
+                                format!("{:#?}", cmplx_rule.get_requirement()).yellow(),
                                 frame.0.get_str().yellow(),
                                 format!("{:#?}", frame.0.get_requirement()).yellow(),
                                 data);

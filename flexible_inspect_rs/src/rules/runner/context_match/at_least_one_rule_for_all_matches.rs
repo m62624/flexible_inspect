@@ -42,7 +42,7 @@ where
                             // ============================= LOG =============================
                             debug!(
                                 "found the rule `({}, {})` (root rule `({}, {})`) from the `RegexSet` category\nfor data `{:#?}`",
-                                rule_from_regexset.get_str(),
+                                rule_from_regexset.get_str().yellow(),
                                 format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
                                 frame.0.get_str().yellow(),
                                 format!("{:#?}", frame.0.get_requirement()).yellow(),
@@ -59,7 +59,7 @@ where
                                     // ============================= LOG =============================
                                     debug!(
                                     "the rule `({}, {})` (root rule `({}, {})`) failed condition\nfor data (this rule is categorized as `not in RegexSet`) `{:#?}` ",
-                                    rule_from_regexset.get_str(),
+                                    rule_from_regexset.get_str().yellow(),
                                     format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),    
                                     frame.0.get_str().yellow(),
                                     format!("{:#?}", frame.0.get_requirement()).yellow(),
