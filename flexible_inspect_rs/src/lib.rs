@@ -79,7 +79,7 @@ pub mod logs {
     /// ```bash
     /// FLEX_VALIDATOR_LOG=DEBUG "command to run the code"
     /// ```
-    pub fn init_logger(hour_offset: i32) {
+    pub fn init_logger_with_offset(hour_offset: i32) {
         INIT.call_once(|| {
             env_logger::Builder::from_env(
                 env_logger::Env::new().filter_or("FLEX_VALIDATOR_LOG", "OFF"),

@@ -1,6 +1,6 @@
 use super::*;
 #[cfg(feature = "log_rust")]
-use crate::logs::init_logger;
+use crate::logs::init_logger_with_offset;
 use log::trace;
 
 impl RuleBytes {
@@ -36,7 +36,7 @@ impl RuleBytes {
     pub fn new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self {
         #[cfg(feature = "log_rust")]
         {
-            init_logger(0);
+            init_logger_with_offset(0);
         }
         Self(Some(TakeRuleBytesForExtend::new(
             pattern.into(),

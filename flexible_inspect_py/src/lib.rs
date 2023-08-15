@@ -17,8 +17,8 @@ pub use template_validator::validate_str::PyTemplateValidator;
 
 
 #[pyfunction]
-pub fn init_logger(hour_offset: i32) {
-    flexible_inspect_rs::logs::init_logger(hour_offset);
+pub fn init_logger_with_offset(hour_offset: i32) {
+    flexible_inspect_rs::logs::init_logger_with_offset(hour_offset);
 }
 
 #[cfg(not(tarpaulin_include))]
@@ -31,6 +31,6 @@ pub fn flexible_inspect_py(_py: Python<'_>, py_module: &PyModule) -> PyResult<()
     py_module.add_class::<PyCartridgeBytes>()?;
     py_module.add_class::<PyTemplateValidator>()?;
     py_module.add_class::<PyTemplateValidatorBytes>()?;
-    py_module.add_function(wrap_pyfunction!(init_logger, py_module)?)?;
+    py_module.add_function(wrap_pyfunction!(init_logger_with_offset, py_module)?)?;
     Ok(())
 }

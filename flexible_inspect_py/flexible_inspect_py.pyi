@@ -10,7 +10,7 @@ from typing import Optional, Type, List, Any, TypeVar, Union
 
 # ========================================================
 
-def init_logger(hour_offset: int):
+def init_logger_with_offset(hour_offset: int):
     """
     Initialization with time zone offset. 
     Function does not have to declare the logging work. 
