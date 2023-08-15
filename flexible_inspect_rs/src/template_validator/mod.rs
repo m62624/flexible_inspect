@@ -117,6 +117,8 @@ where
     /// A simple script file where we check that it is a `bash script`,
     /// check that there are only five `if` fragments, and also no `sudo` | `su` commands.
     /// ```rust
+    /// # #[async_std::main]
+    /// # async main() {
     /// # use flexible_inspect_rs::prelude::*;
     /// let bash_script = r###"
     /// #!/bin/bash
@@ -177,6 +179,7 @@ where
     ///         println!("{}", error);
     ///        }
     ///     }
+    /// # }
     /// ```
     /// # Output:
     /// > **0 - Scripts with increased access are forbidden : sudo rm 1234_important_file.txt**
