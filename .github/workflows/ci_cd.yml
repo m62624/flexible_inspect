@@ -25,5 +25,5 @@ jobs:
       - name: Build image docker (dependencies)
         run: |
           docker pull ${{ env.IMAGE_DOCKER }} || true
-          docker buildx build --cache-from ${{ env.IMAGE_DOCKER }} --build-arg BUILDKIT_INLINE_CACHE=1 -t ${{ env.IMAGE }} .
+          docker build --cache-from ${{ env.IMAGE_DOCKER }} --build-arg BUILDKIT_INLINE_CACHE=1 -t ${{ env.IMAGE }} .
           docker push ${{ env.IMAGE_DOCKER }}
