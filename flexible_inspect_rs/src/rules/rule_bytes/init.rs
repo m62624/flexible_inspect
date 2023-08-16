@@ -5,7 +5,7 @@ use log::trace;
 
 impl RuleBytes {
     /// Constructor for creating `RuleBytes`
-    /// 
+    ///
     /// # Notes
     /// * Please stick to *raw string literals* when creating regular expressions, without it your regular expression may behave differently
     /// ## Example
@@ -49,7 +49,10 @@ impl TakeRuleBytesForExtend {
     pub fn new(pattern: String, requirement: MatchRequirement) -> Self {
         Self {
             str_bytes: if regex::bytes::Regex::new(&pattern).is_ok() {
-                trace!("'{}' - regex category for byte validation is set", pattern);
+                trace!(
+                    "'{}' - regex category for byte validation is set",
+                    pattern.yellow()
+                );
                 pattern.into_boxed_str()
             } else {
                 let err_msg = format!("`{}` regular expression is incorrect", pattern);

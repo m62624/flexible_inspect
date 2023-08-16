@@ -54,10 +54,10 @@ impl TakeRuleForExtend {
 impl RegexRaw {
     fn new(pattern: String) -> Self {
         if regex::Regex::new(&pattern).is_ok() {
-            trace!("`{}` - `Default Regex` category is set\n* Lookahead and Lookbehind references - FALSE\n* Rust RegexSet - TRUE",pattern);
+            trace!("`{}` - `Default Regex` category is set\n* Lookahead and Lookbehind references - FALSE\n* Rust RegexSet - TRUE",pattern.yellow());
             RegexRaw::DefaultRegex(pattern.into_boxed_str())
         } else if fancy_regex::Regex::new(&pattern).is_ok() {
-            trace!("`{}` - `Fancy Regex` category is set\n* Lookahead and Lookbehind references - TRUE\n* Rust RegexSet - FALSE",pattern);
+            trace!("`{}` - `Fancy Regex` category is set\n* Lookahead and Lookbehind references - TRUE\n* Rust RegexSet - FALSE",pattern.yellow());
             RegexRaw::FancyRegex(pattern.into_boxed_str())
         } else {
             let err_msg = format!("`{}` regular expression is incorrect", pattern);
