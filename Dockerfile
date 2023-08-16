@@ -1,10 +1,5 @@
 # Base image
 FROM rust:1.71-alpine
-# Metadata
-LABEL maintainer="m62624"
-LABEL version_image="1.0.0"
-LABEL description="Docker image for rust projects (includes build support for js (wasm), python (pyo3))"
-LABEL repository="https://github.com/m62624/flexible_inspect"
  
 WORKDIR main_project
 
@@ -65,6 +60,13 @@ RUN ls -R
 RUN make all-python
 # delete dummy projects
 RUN rm -rf *
+
+# Metadata
+LABEL maintainer="m62624"
+LABEL org.opencontainers.image.source="https://github.com/m62624/flexible_inspect"
+LABEL version_image="1.0.0"
+LABEL description="Docker image for rust projects (includes build support for js (wasm), python (pyo3))"
+
 # Copy project
 COPY . .
 CMD ["echo","Welcome to the project build :D"]
