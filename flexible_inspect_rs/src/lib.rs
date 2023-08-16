@@ -62,11 +62,11 @@ pub mod prelude {
 
 #[cfg(feature = "log_rust")]
 pub mod logs {
+    const DATE_FORMAT_STR: &str = "[year]-[month]-[day] [hour]:[minute]:[second]";
     use super::*;
     use std::io::Write;
     use std::sync::Once;
     use time::{format_description, OffsetDateTime};
-    const DATE_FORMAT_STR: &'static str = "[year]-[month]-[day] [hour]:[minute]:[second]";
     // =====================================================================
     /// For one-time initialization to the logger
     static INIT: Once = Once::new();
