@@ -114,9 +114,51 @@ To do this, we'll create two cartridges
     ```
 
 === "JS/TS"
-    
+
     ``` js
-    
+    // Cartridge for checking incorrect tokens received
+    let found_broken_token = new Cartridge(
+      -10, // error code
+      "Found a broken token {bd_tkn}",
+      [
+        new Rule(
+          String.raw`(?<bd_tkn>#BAD.TOKEN.MESSAGE.+?#)`,
+          MatchRequirement.MustNotBeFound
+        ).finish_build(),
+      ]
+    );
+    /*
+      check under `Performance Testing` that the end time must be earlier than 11 o'clock,
+      check the time only if the result is successful
+    */
+    let long_performance_testing = new Cartridge(
+      1100, // error code
+      "The test did not pass within the given time (before 11:00 hours)",
+      [
+        // get the body of Performance Testing
+        new Rule(
+          String.raw`(?ms)"title":\s?"Performance Testing",\s.*\)`,
+          MatchRequirement.MustBeFound
+        )
+          // Get the result from the root to this rule, we got the Performance Testing body,
+          //  now check the result of the test
+          .extend([
+            new Rule(
+              String.raw`(?ms)"result":\s?"successful".+\)`,
+              MatchRequirement.MustNotBeFound
+            )
+              // the time must be no later than 11:00
+              .extend([
+                new Rule(
+                  String.raw`"end_time": "(?: (?: 0[0 - 9] | 1[0 - 1]): [0 - 5][0 - 9])"`,
+                  MatchRequirement.MustBeFound
+                ).finish_build(),
+              ])
+              .finish_build(),
+          ])
+          .finish_build(),
+      ]
+    );
     ```
 
 === "Python"
