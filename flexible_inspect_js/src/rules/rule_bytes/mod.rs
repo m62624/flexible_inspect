@@ -53,9 +53,9 @@ impl WasmRuleBytes {
     /// * Unicode support can be disabled, even if disabling it will result in a match with invalid `UTF-8` bytes. More info at [link](https://docs.rs/regex/latest/regex/bytes/index.html)
     /// * How is recursive structure checking performed without recursion?
     /// Each root rule creates one shared hidden stack at validation time ([VecDecue](https://doc.rust-lang.org/std/collections/struct.VecDeque.html)), regardless of large nesting, the queue traverses its own stack without recursion
-    pub fn new(pattern: js_sys::RegExp, requirement: WasmMatchRequirement) -> Self {
+    pub fn new(pattern: String, requirement: WasmMatchRequirement) -> Self {
         console_error_panic_hook::set_once();
-        Self(RuleBytes::new(pattern.source(), requirement.into()))
+        Self(RuleBytes::new(pattern, requirement.into()))
     }
     /// Preparing value for processing in `Rust`
     pub fn finish_build(&self) -> Result<JsValue, serde_wasm_bindgen::Error> {

@@ -63,9 +63,9 @@ impl WasmRule {
     /// * Basically use `Rule` instead of `RuleBytes` when working with text (not necessarily just text, it also includes `html` structures, code fragments from other languages, etc.) since it has support for [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
     /// * How is recursive structure checking performed without recursion?
     /// Each root rule creates one shared hidden stack at validation time ([VecDecue](https://doc.rust-lang.org/std/collections/struct.VecDeque.html)), regardless of large nesting, the queue traverses its own stack without recursion
-    pub fn new(pattern: js_sys::RegExp, requirement: WasmMatchRequirement) -> Self {
+    pub fn new(pattern: String, requirement: WasmMatchRequirement) -> Self {
         console_error_panic_hook::set_once();
-        Self(Rule::new(pattern.source(), requirement.into()))
+        Self(Rule::new(pattern, requirement.into()))
     }
 
     /// Preparing value for processing in `Rust`
