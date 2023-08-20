@@ -69,7 +69,7 @@ where
     ///      |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
     ///
     /// ```
-    /// 
+    ///
     /// ## Fill in messages
     /// * Each cartridge supports filling the message with unwanted data, when specifying a message,
     /// you can specify a variable in the message in the format : **`{variable}`**.

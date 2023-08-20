@@ -54,3 +54,6 @@ All versions are uploaded to official registries where libraries for languages a
     [![CI/CD](https://github.com/m62624/flexible_inspect/actions/workflows/ci_cd.yml/badge.svg)](https://github.com/m62624/flexible_inspect/actions/workflows/ci_cd.yml)
 
 {% include "./basic_concepts_and_terms.md" %}
+
+## The first run
+{% include "../first_run.md" %}

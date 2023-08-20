@@ -4,7 +4,7 @@ use super::*;
 impl WasmRule {
     /// # Arguments:
     /// * `nested_rules` - \[ `Rule`, `Rule`, `Rule` \] (collection)
-    /// 
+    ///
     /// modifier for extending the rule with nested rules
     ///
     /// ( **by default, all rules must pass every match check** )\

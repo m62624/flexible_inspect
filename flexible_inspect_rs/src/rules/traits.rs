@@ -51,7 +51,7 @@ pub trait RuleModifiers {
     type RuleType;
 
     /// modifier for extending the rule with nested rules
-    /// 
+    ///
     /// ( **by default, all rules must pass every match check** )\
     /// In this mode, to which all additional rules apply (default mode for everyone).
     /// We check that for each match (text) all the rules will work.

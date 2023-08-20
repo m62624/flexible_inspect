@@ -72,7 +72,7 @@ impl WasmValidationErrorIterator {
 
     /// Used instead of `hasNext()` & `next()`, execute the callback as many times as the number of errors in the pseudo iterator
     /// Uses reserved parameters,
-    /// * first - `error code`, 
+    /// * first - `error code`,
     /// * second - `error message`\
     /// and any other parameters in the `collection`
     pub fn for_each_2(

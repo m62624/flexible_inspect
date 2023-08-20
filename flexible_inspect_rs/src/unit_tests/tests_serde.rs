@@ -70,9 +70,9 @@ fn tests_serde_3() -> Result<(), serde_json::Error> {
     let validator_orig: TemplateValidator<Vec<Cartridge<RuleBytes>>, &[u8]> =
         TemplateValidator::new(vec![cartrdige]);
     let _result = validator_orig.validate("abc".as_bytes());
-    let validator_serde = serde_json::from_str::<TemplateValidator<Vec<Cartridge<RuleBytes>>, &[u8]>>(
-        serde_json::to_string(&validator_orig)?.as_str(),
-    )?;
+    let validator_serde = serde_json::from_str::<
+        TemplateValidator<Vec<Cartridge<RuleBytes>>, &[u8]>,
+    >(serde_json::to_string(&validator_orig)?.as_str())?;
     assert_eq!(validator_orig, validator_serde);
     Ok(())
 }

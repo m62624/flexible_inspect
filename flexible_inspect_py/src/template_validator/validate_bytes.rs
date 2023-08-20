@@ -26,11 +26,7 @@ impl PyTemplateValidatorBytes {
     }
 
     #[cfg(not(tarpaulin_include))]
-    pub fn async_validate<'py>(
-        &self,
-        py: Python<'py>,
-        data: &[u8],
-    ) -> PyResult<&'py PyAny> {
+    pub fn async_validate<'py>(&self, py: Python<'py>, data: &[u8]) -> PyResult<&'py PyAny> {
         let safety_self = Arc::clone(&self.0);
         let safety_data = Arc::from(data);
         pyo3_asyncio::async_std::future_into_py(py, async move {

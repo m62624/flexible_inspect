@@ -1,7 +1,7 @@
 mod modifiers;
 use super::*;
 
-#[pyclass(name="Rule")]
+#[pyclass(name = "Rule")]
 #[derive(Clone, Default)]
 pub struct PyRule(Rule);
 

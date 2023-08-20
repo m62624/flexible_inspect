@@ -14,14 +14,20 @@ fn fn_filling_message_t_0() {
 fn fn_filling_message_t_1() {
     let message_template = "Hello, {x}!".to_owned();
     let error_data = Some(HashMap::from([("y".to_owned(), "world".to_owned())]));
-    assert_eq!(filling_message(&message_template, error_data), "Hello, ___!");
+    assert_eq!(
+        filling_message(&message_template, error_data),
+        "Hello, ___!"
+    );
 }
 
 #[test]
 fn fn_filling_message_t_2() {
     let message_template = "Hello, {x}!".to_owned();
     let error_data = None;
-    assert_eq!(filling_message(&message_template, error_data), "Hello, ___!");
+    assert_eq!(
+        filling_message(&message_template, error_data),
+        "Hello, ___!"
+    );
 }
 
 #[test]

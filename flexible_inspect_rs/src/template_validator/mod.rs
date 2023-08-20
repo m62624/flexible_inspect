@@ -34,7 +34,7 @@ where
     /// ```
     fn new(cartridges: IC) -> Self;
     /// Method for validating data
-    /// 
+    ///
     /// **Notes:**
     /// * If possible, differentiate cartridges clearly by purpose,
     /// without making a common validator for different purposes
@@ -108,7 +108,7 @@ where
     /// > **0 - Scripts with increased access are forbidden : sudo rm 1234_important_file.txt**
     fn validate(&self, data: D) -> Result<(), Vec<ValidationError>>;
     /// Method for validating data. Runs validation of each cartridge asynchronously
-    /// 
+    ///
     /// **Notes:**
     /// * If possible, differentiate cartridges clearly by purpose,
     /// without making a common validator for different purposes
