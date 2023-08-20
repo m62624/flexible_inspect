@@ -228,6 +228,6 @@ jobs:
           # with permissions to create releases in the other repo
           token: ${{ secrets.PAT_GITHUB }}
           files: |
-            # npm-wasm.tgz
-            # dist/*
+            npm-wasm.tgz
+            dist/*
           #=====================
