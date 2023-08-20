@@ -14,21 +14,32 @@ Explore the documentation and create your own solutions with Flexible Inspect!
 All versions are uploaded to official registries where libraries for languages are stored. The project currently provides implementations for several languages:
 
 === "Rust"
-    
+
     ``` sh
     cargo add flexible_inspect_rs
     ```
 
+    !!! info "Rust version"
+        The core and most developed implementation that provides full functionality and high performance.
+
 === "JavaScript/TypeScript"
-    
+
     ``` sh
     npm install flexible_inspect_js
     ```
 
+    !!! info "JavaScript & TypeScript versions"
+         An implementation that allows the project to be used on the *JavaScript* platform, including *TypeScript* support for typing.
+
 === "Python"
+
     ``` sh
     pip install flexible_inspect_py
     ```
+
+    !!! info "Python version"
+        An implementation that provides accessibility and ease of integration for the Python platform.
+        
 
 ??? Failure "Package/Version not found"
 
