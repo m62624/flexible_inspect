@@ -6,7 +6,7 @@ fn test_new_t_0() {
         0,
         "message_0".into(),
         serde_wasm_bindgen::to_value(&vec![WasmRuleBytes::new(
-            js_sys::RegExp::new(r"\w+", ""),
+            String::from(r"\w+"),
             WasmMatchRequirement::MustBeFound,
         )])
         .unwrap(),
@@ -30,7 +30,7 @@ fn test_mode_match_t_0() {
         0,
         "message_0".into(),
         serde_wasm_bindgen::to_value(&vec![WasmRuleBytes::new(
-            js_sys::RegExp::new(r"\w+", ""),
+            String::from(r"\w+"),
             WasmMatchRequirement::MustBeFound,
         )])
         .unwrap(),

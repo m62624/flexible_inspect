@@ -6,7 +6,7 @@ fn test_validate_t_0() {
         1,
         "message_1".into(),
         serde_wasm_bindgen::to_value(&vec![WasmRule::new(
-            js_sys::RegExp::new(r"ABC", ""),
+            String::from(r"ABC"),
             WasmMatchRequirement::MustNotBeFound,
         )])
         .unwrap(),
@@ -16,7 +16,7 @@ fn test_validate_t_0() {
         2,
         "message_2".into(),
         serde_wasm_bindgen::to_value(&vec![WasmRule::new(
-            js_sys::RegExp::new(r"\d+", ""),
+            String::from(r"\d+"),
             WasmMatchRequirement::MustBeFound,
         )])
         .unwrap(),
@@ -37,7 +37,7 @@ fn test_validate_t_1() {
         1,
         "message_1".into(),
         serde_wasm_bindgen::to_value(&vec![WasmRuleBytes::new(
-            js_sys::RegExp::new(r"ABC", ""),
+            String::from(r"ABC"),
             WasmMatchRequirement::MustNotBeFound,
         )])
         .unwrap(),
@@ -47,7 +47,7 @@ fn test_validate_t_1() {
         2,
         "message_2".into(),
         serde_wasm_bindgen::to_value(&vec![WasmRuleBytes::new(
-            js_sys::RegExp::new(r"\d+", ""),
+            String::from(r"\d+"),
             WasmMatchRequirement::MustBeFound,
         )])
         .unwrap(),
