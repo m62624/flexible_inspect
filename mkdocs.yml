@@ -48,5 +48,6 @@ markdown_extensions:
 nav:
   - Home: index.md
   - Getting Started: getting-started/mod.md
+  - Changelog: CHANGELOG.md
   - Website materials: website-materials.md
   - Library license: LICENSE.md

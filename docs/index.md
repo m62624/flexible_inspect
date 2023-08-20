@@ -21,6 +21,3 @@ Rust version customized for validator implementations for other programming lang
 ## Ease of use
 Designed with an emphasis on ease of use. Offers a simple and intuitive `API` that makes it easy to define validation rules and validate data.
 With a higher level of abstraction and the use of finite automata, `flexible_inspect` simplifies the data validation process and reduces the amount of code required.
-
-## License
-[MIT License](./LICENSE).
