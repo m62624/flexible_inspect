@@ -38,8 +38,8 @@ we would change the internal values of the modifiers, but we would not return th
 Therefore, to avoid cloning the structure again, we borrow it via `mem::take`.
 */
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Debug, Clone, Default, PartialEq, Eq, Hash)]
-pub struct Rule(Option<TakeRuleForExtend>);
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Rule(pub(crate) TakeRuleForExtend);
 
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]

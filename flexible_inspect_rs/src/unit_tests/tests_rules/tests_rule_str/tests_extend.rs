@@ -1,5 +1,4 @@
 use super::*;
-use crate::rules::traits::RuleBase;
 use indexmap::IndexSet;
 
 /// Проверяем, что сортировка работает корректно
@@ -24,7 +23,7 @@ fn fn_extend_t_0() {
     ]);
 
     assert_eq!(
-        rule.content_unchecked()
+        rule.0
             .subrules
             .as_ref()
             .unwrap()
@@ -35,7 +34,7 @@ fn fn_extend_t_0() {
         simple_rules
     );
     assert_eq!(
-        rule.content_unchecked()
+        rule.0
             .subrules
             .as_ref()
             .unwrap()
@@ -50,5 +49,5 @@ fn fn_extend_t_0() {
 #[test]
 fn fn_extend_t_1() {
     let rule = Rule::new(r"some text (?=\.)", MatchRequirement::MustBeFound).extend([]);
-    assert_eq!(rule.content_unchecked().subrules, None);
+    assert_eq!(rule.0.subrules, None);
 }

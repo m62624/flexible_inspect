@@ -26,9 +26,9 @@ impl CartridgeBase<&str> for Cartridge<Rule> {
 impl CartridgeModifiers for Cartridge<Rule> {
     type CartridgeType = Cartridge<Rule>;
 
-    fn any_r_for_any_m(&mut self) -> Self {
+    fn any_r_for_any_m(mut self) -> Self {
         self.root_rule = self.root_rule.any_r_for_any_m();
-        std::mem::take(self)
+        self
     }
 }
 

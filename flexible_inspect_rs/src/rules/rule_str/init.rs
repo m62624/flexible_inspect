@@ -38,7 +38,7 @@ impl Rule {
         {
             init_logger_with_offset(0);
         }
-        Self(Some(TakeRuleForExtend::new(pattern.into(), requirement)))
+        Self(TakeRuleForExtend::new(pattern.into(), requirement))
     }
 }
 impl TakeRuleForExtend {

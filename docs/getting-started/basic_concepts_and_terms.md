@@ -50,8 +50,13 @@ The `regex` of rust provides us with [`RegexSet`](https://docs.rs/regex/latest/r
 
 The main advantage of using RegexSet is that it can be much faster than applying each regular expression to a string in sequence, especially if you have a large number of regular expressions.
 
-> **The text is taken from the official `rust regex` documentation**\
-> For example, consider regular expressions to match email addresses and domains: [a-z]+@[a-z]+\.(com|org|net) and [a-z]+\.(com|org|net). If a regex set is constructed from those regexes, then searching the haystack foo@example.com will report both regexes as matching. Of course, one could accomplish this by compiling each regex on its own and doing two searches over the haystack. The key advantage of using a regex set is that it will report the matching regexes using a single pass through the haystack. If one has hundreds or thousands of regexes to match repeatedly (like a URL router for a complex web application or a user agent matcher), then a regex set can realize huge performance gains. 
+> **The text is taken from the official `rust regex` documentation**
+
+> For example, consider regular expressions to match email addresses and domains: 
+
+> - `[a-z]+@[a-z]+\.(com|org|net)` and `[a-z]+\.(com|org|net)`. 
+
+> If a regex set is constructed from those regexes, then searching the haystack foo@example.com will report both regexes as matching. Of course, one could accomplish this by compiling each regex on its own and doing two searches over the haystack. The key advantage of using a regex set is that it will report the matching regexes using a single pass through the haystack. If one has hundreds or thousands of regexes to match repeatedly (like a URL router for a complex web application or a user agent matcher), then a regex set can realize huge performance gains. 
 
 #### Complex regex
 

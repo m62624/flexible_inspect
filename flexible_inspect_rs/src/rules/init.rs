@@ -1,4 +1,4 @@
-use super::{rule_str::RegexRaw, traits::RuleBase, *};
+use super::{rule_str::RegexRaw, *};
 use crate::prelude::Rule;
 
 impl GeneralModifiers {
@@ -18,7 +18,7 @@ impl SlisedRules {
         let mut o_complex_rules = IndexSet::new();
         all_rules
             .into_iter()
-            .for_each(|rule| match rule.content_unchecked().str_with_type {
+            .for_each(|rule| match rule.0.str_with_type {
                 RegexRaw::DefaultRegex(_) => {
                     o_simple_rules.insert(rule);
                 }

@@ -18,8 +18,6 @@ pub trait RuleBase {
     type RegexSet;
 
     fn _new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self;
-    fn content_unchecked(&self) -> &Self::TakeRuleType;
-    fn content_mut_unchecked(&mut self) -> &mut Self::TakeRuleType;
     fn get_subrules(&self) -> Option<&Self::SubRulesType>;
     fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)>;
     fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>>;
@@ -69,14 +67,13 @@ pub trait RuleModifiers {
     ///      |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
     ///
     /// ```
-    fn extend<R: IntoIterator<Item = Self::RuleType>>(&mut self, nested_rules: R)
-        -> Self::RuleType;
+    fn extend<R: IntoIterator<Item = Self::RuleType>>(self, nested_rules: R) -> Self::RuleType;
     /// modifier to set the match counter, condition `counter == match`
-    fn counter_is_equal(&mut self, count: usize) -> Self::RuleType;
+    fn counter_is_equal(self, count: usize) -> Self::RuleType;
     /// modifier to set the match counter, condition `counter >= match`
-    fn counter_more_than(&mut self, count: usize) -> Self::RuleType;
+    fn counter_more_than(self, count: usize) -> Self::RuleType;
     /// modifier to set the match counter, condition `counter <= match`
-    fn counter_less_than(&mut self, count: usize) -> Self::RuleType;
+    fn counter_less_than(self, count: usize) -> Self::RuleType;
     /// modifier to change the rule matching mode.
     ///
     /// In this mode, `all the sub-rule` should work for at least `one match`.
@@ -94,7 +91,7 @@ pub trait RuleModifiers {
     ///     |___ Subrule "\[\d+\]" (MustBeFound) __|
     ///     |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- ERROR
     /// ```
-    fn all_r_for_any_m(&mut self) -> Self::RuleType;
+    fn all_r_for_any_m(self) -> Self::RuleType;
     /// modifier to change the rule matching mode.
     ///
     /// In this mode, at least `one sub-rule` should work for `every match`. If no sub-rule works on one of the matches, an error will be returned.
@@ -111,7 +108,7 @@ pub trait RuleModifiers {
     ///     |___ Subrule "\[\d+\]" (MustBeFound) __|_______________|_________________|
     ///     |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched)
     /// ```
-    fn any_r_for_all_m(&mut self) -> Self::RuleType;
+    fn any_r_for_all_m(self) -> Self::RuleType;
     /// modifier to change the rule matching mode.
     ///
     /// In this mode, at least `one sub-rule` should work for at least `one match`. If no sub-rule works on one of the matches, an error will be returned.
@@ -128,5 +125,5 @@ pub trait RuleModifiers {
     ///     |___ Subrule "\[\d+\]" (MustBeFound) __|
     ///     |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
     /// ```
-    fn any_r_for_any_m(&mut self) -> Self::RuleType;
+    fn any_r_for_any_m(self) -> Self::RuleType;
 }

@@ -1,5 +1,4 @@
 use super::*;
-use crate::rules::traits::RuleBase;
 
 /// Here we implement a traite for comparing elements to use in `collections` and using `contains`.
 #[cfg(not(tarpaulin_include))]
@@ -26,7 +25,7 @@ mod as_ref_str_trait {
 
     impl AsRef<str> for RuleBytes {
         fn as_ref(&self) -> &str {
-            self.content_unchecked().str_bytes.as_ref()
+            self.0.str_bytes.as_ref()
         }
     }
 

@@ -34,5 +34,5 @@ pub trait CartridgeModifiers {
     ///     |___ Subrule "\[\d+\]" (MustBeFound) __|
     ///     |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
     /// ```
-    fn any_r_for_any_m(&mut self) -> Self::CartridgeType;
+    fn any_r_for_any_m(self) -> Self::CartridgeType;
 }

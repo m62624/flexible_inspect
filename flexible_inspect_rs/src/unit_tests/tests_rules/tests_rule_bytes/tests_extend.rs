@@ -17,5 +17,5 @@ pub fn fn_extend_t_0() {
 fn fn_extend_t_1() {
     let rule =
         RuleBytes::new(r"(?-u)(?<cstr>[^\x00]+)\x00", MatchRequirement::MustBeFound).extend([]);
-    assert_eq!(rule.content_unchecked().subrules_bytes, None);
+    assert_eq!(rule.0.subrules_bytes, None);
 }

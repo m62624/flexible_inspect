@@ -10,7 +10,7 @@ fn test_mode_t_0() {
     assert_eq!(
         cartridge
             .root_rule
-            .content_unchecked()
+            .0
             .general_modifiers
             .mod_match,
         ModeMatch::AllRulesForAtLeastOneMatch
@@ -28,7 +28,7 @@ fn test_mode_t_1() {
     assert_eq!(
         cartridge
             .root_rule
-            .content_unchecked()
+            .0
             .general_modifiers
             .mod_match,
         ModeMatch::AtLeastOneRuleForAtLeastOneMatch
@@ -45,7 +45,7 @@ fn test_mode_t_2() {
     assert_eq!(
         cartridge
             .root_rule
-            .content_unchecked()
+            .0
             .general_modifiers
             .mod_match,
         ModeMatch::AllRulesForAtLeastOneMatch
@@ -63,7 +63,7 @@ fn test_mode_t_5() {
     assert_eq!(
         cartridge
             .root_rule
-            .content_unchecked()
+            .0
             .general_modifiers
             .mod_match,
         ModeMatch::AtLeastOneRuleForAtLeastOneMatch

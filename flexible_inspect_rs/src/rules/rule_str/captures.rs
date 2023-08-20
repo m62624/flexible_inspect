@@ -12,9 +12,9 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<&'a str> 
     let mut text_for_capture: IndexSet<&str> = IndexSet::new();
     let mut counter_value: usize = 0;
     // flag to check `Counter`
-    let flag_check_counter = rule.content_unchecked().general_modifiers.counter.is_some();
+    let flag_check_counter = rule.0.general_modifiers.counter.is_some();
     // At first glance we see code duplication, but each `match` works with different structures
-    match &rule.content_unchecked().str_with_type {
+    match &rule.0.str_with_type {
         RegexRaw::DefaultRegex(pattern) => {
             let re = regex::Regex::new(pattern).unwrap();
             // get matches and increase `counter` as necessary

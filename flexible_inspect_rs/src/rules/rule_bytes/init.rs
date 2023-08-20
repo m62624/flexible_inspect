@@ -38,10 +38,7 @@ impl RuleBytes {
         {
             init_logger_with_offset(0);
         }
-        Self(Some(TakeRuleBytesForExtend::new(
-            pattern.into(),
-            requirement,
-        )))
+        Self(TakeRuleBytesForExtend::new(pattern.into(), requirement))
     }
 }
 
