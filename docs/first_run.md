@@ -1,24 +1,64 @@
 Now we can start writing the code. Let's start with importing
 
-```python
-from pystval import Rule, MatchRequirement, TemplateValidator, PystvalException
-```
+=== "Rust"
 
-Next, let's look at the text for which validation will take place 
+    ``` rust
+    use flexible_inspect_rs::prelude::*;
+    ```
 
-text :
+=== "JS/TS"
 
-``` python
-text = b"""
-Hi! 🌞
----
-This is an example of text with different nesting of characters. It has regular letters, numbers, punctuation marks, as well as special characters, emoji and even Unicode characters. Some characters can be nested within each other, such as quotation marks " " or parentheses ( ) [ [123] [123] [1234] ]. Special characters such as the tilde ~ or the dollar sign $ can also be used.
---- 
+    ``` js
+    import { Rule, MatchRequirement, Cartridge, TemplateValidator, init_logger, LogLevel } from "flexible_inspect_js";
+    ```
 
-Validation of text with different nesting of characters may include checking for the presence of paired characters (as in the case of quotes or brackets), correct use of special characters, and compliance with specified rules. For example, if there is an initial quotation mark in the text, there must be a corresponding final quotation mark.
+=== "Python"
 
-Such validation can be useful, for example, when processing user input, analyzing text, or checking formatting.
+    ``` python
+    from flexible_inspect_py import Cartridge, MatchRequirement, TemplateValidator, Rule
+    ```
+Next, let's look at the text for which validation will take place. It's just json-like pseudo-text mixed with plain text
 
-I hope this example has helped you visualize how text with different nesting of characters can be used for validation.
-"""
+``` json
+    { 
+        v1: 1,
+        SYSTEM DATA FOR TESTS
+        { "report": {
+            #BAD_TOKEN_MESSAGE-123312-🎃#
+          { "title": "Test Results",
+          { "date": "2023-08-20",
+          { "tests": [ ---------- MARK @@21 [secret-ket 111-222-333-GG]
+            {
+              "title": "Performance Testing",
+              STABLE AND UNCHANGED DATA = 1234567890 [
+                "result": "successful", 
+                { "details": (
+                    @@@@ MARK @@21 [secret-ket 111-222-333-GG]
+                    { "start_time": "9:56",
+                    { "end_time": "12:00",
+                    { "past_iterations": 1000,
+                    { "average_time_iteration": "0.03 sec"
+                )
+              ] #BAD_TOKEN-MESSAGE#
+              "result": "successful", 
+              { "details": { #BAD_TOKEN_MESSAGE--{}{][][123#
+                { "start_time": "10:00",
+                "end_time": "10:30",
+                "past_iterations": 1000,
+                "average_time_iteration": "0.03 sec"
+              } [Convert data to bytes] === === RESULT: [0x12, 0x34, 0x56, 0x78]
+              | | | | | |
+
+              | | | | | |
+            },
+            {
+              }, { "title": "Stability Testing",
+              { "result": "not_successful",
+              }, "details": {
+                "errors": 5, #BAD_TOKEN_MESSAGE-OQLWLQLW#
+                "important_warning": 2,
+                { "end_time": "12:45"
+              }
+            },
+      END OF SYSTEM DATA FOR TESTS
 ```
