@@ -67,7 +67,7 @@ Next, let's look at the text for which validation will take place. It's just jso
 We'll validate for two errors
 
 !!! abstract "Error 1"
-    Check incorrect tokens, and get the first incorrect *token*.
+    Check incorrect *tokens*, and get the first incorrect *token*.
 !!! abstract "Error 2"
     Check in the `"Performance Testing"` body that the test was completed no later than **11:00**, (check the time if the test was successful)
 
@@ -114,6 +114,13 @@ To do this, we'll create two cartridges
     ```
 
 === "JS/TS"
+
+    !!! warning "`finish_build()`"
+
+        One thing to remember in `JS/TS` is that the classes:
+        `Cartridge`, `CartridgeBytes`, `Rule`, `RuleBytes` before sending them to any methods that accept these structures, you must specify `finish_build()`, this method prepares the structure to work in `Rust`.
+
+        That is, you can initialize your variable, use various modifiers and at the end specify `finish_build()`, after that the structure cannot use its methods.
 
     ``` js
     // Cartridge for checking incorrect tokens received
@@ -167,7 +174,7 @@ To do this, we'll create two cartridges
     # Cartridge for checking incorrect tokens received
     found_broken_token = Cartridge(-10, "Found a broken token {bd_tkn}", [
         Rule(
-        "(?<bd_tkn>#BAD.TOKEN.MESSAGE.+?#)",
+        r"(?<bd_tkn>#BAD.TOKEN.MESSAGE.+?#)",
         MatchRequirement.MustNotBeFound,
         )]
     )
@@ -202,3 +209,4 @@ To do this, we'll create two cartridges
     ],
     )
     ```
+So we've created two cartridges, we've specified rules inside that store regular expressions with modifiers

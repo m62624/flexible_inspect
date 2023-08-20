@@ -25,8 +25,6 @@ The `subrule` is the rules that are below the first step of the cartridge, as we
 ### Cartridge
 A `cartridge` is a container for our rules. Use a container for a single object. Imagine that one container is one specific error: `NotFound`, `InvalidHeader`, `WrongCase`. 
 
-
-
 ### Syntax regex :D
 ***Since all calculations using regex take place in `Rust`, it is necessary to follow the format `rust regex`.***
 
