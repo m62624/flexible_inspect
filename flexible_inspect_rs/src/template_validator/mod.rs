@@ -118,7 +118,7 @@ where
     /// check that there are only five `if` fragments, and also no `sudo` | `su` commands.
     /// ```rust
     /// # #[async_std::main]
-    /// # async main() {
+    /// # async fn main() {
     /// # use flexible_inspect_rs::prelude::*;
     /// let bash_script = r###"
     /// #!/bin/bash
