@@ -17,7 +17,8 @@ Now we can start writing the code. Let's start with importing
     ``` python
     from flexible_inspect_py import Cartridge, MatchRequirement, TemplateValidator, Rule
     ```
-Next, let's look at the text for which validation will take place. It's just json-like pseudo-text mixed with plain text
+
+Next, let's look at the text for which validation will take place. It's just json-like pseudo-text mixed with plain text. Let's just say this is just a report on some kind of system test.
 
 ``` json
     { 
@@ -62,3 +63,100 @@ Next, let's look at the text for which validation will take place. It's just jso
             },
       END OF SYSTEM DATA FOR TESTS
 ```
+
+We'll validate for two errors
+
+!!! abstract "Error 1"
+    Check incorrect tokens, and get the first incorrect *token*.
+!!! abstract "Error 2"
+    Check in the `"Performance Testing"` body that the test was completed no later than **11:00**, (check the time if the test was successful)
+
+To do this, we'll create two cartridges
+
+=== "Rust"
+
+    ``` rust
+    // Cartridge for checking incorrect tokens received
+    let found_broken_token = Cartridge::new(
+        -10, // error code
+        "Found a broken token {bd_tkn}",
+        [Rule::new(
+            "(?<bd_tkn>#BAD.TOKEN.MESSAGE.+?#)",
+            MatchRequirement::MustNotBeFound,
+        )],
+    );
+    /*
+    check under `Performance Testing` that the end time must be earlier than 11 o'clock,
+    check the time only if the result is successful
+     */
+    let long_performance_testing = Cartridge::new(
+        1100, // error code
+        "The test did not pass within the given time (before 11:00 hours)",
+        [
+            // get the body of Performance Testing
+            Rule::new(
+                r#"(?ms)"title":\s?"Performance Testing",\s.*\)"#,
+                MatchRequirement::MustBeFound,
+            )
+            // Get the result from the root to this rule, we got the Performance Testing body,
+            //  now check the result of the test
+            .extend([Rule::new(
+                r#"(?ms)"result":\s?"successful".+\)"#,
+                MatchRequirement::MustNotBeFound,
+            )
+            // the time must be no later than 11:00
+            .extend([Rule::new(
+                r#""end_time": "(?:(?:0[0-9]|1[0-1]):[0-5][0-9])""#,
+                MatchRequirement::MustBeFound,
+            )])]),
+        ],
+    );
+    ```
+
+=== "JS/TS"
+    
+    ``` js
+    
+    ```
+
+=== "Python"
+
+    ``` python
+    # Cartridge for checking incorrect tokens received
+    found_broken_token = Cartridge(-10, "Found a broken token {bd_tkn}", [
+        Rule(
+        "(?<bd_tkn>#BAD.TOKEN.MESSAGE.+?#)",
+        MatchRequirement.MustNotBeFound,
+        )]
+    )
+
+    # check under `Performance Testing` that the end time must be earlier than 11 o'clock,
+    # check the time only if the result is successful
+    long_performance_testing = Cartridge(
+    1100,
+    "The test did not pass within the given time (before 11:00 hours)",
+    [
+        # get the body of Performance Testing
+        Rule(
+            r'(?ms)"title":\s?"Performance Testing",\s.*\)',
+            MatchRequirement.MustBeFound,
+        )
+        # Get the result from the root to this rule, we got the Performance Testing body,
+        #  now check the result of the test
+        .extend(
+            [
+                Rule(
+                    r'(?ms)"result":\s?"successful".+\)',
+                    MatchRequirement.MustNotBeFound,
+                )
+                # the time must be no later than 11:00
+                .extend([Rule(
+                        r'"end_time": "(?:(?:0[0-9]|1[0-1]):[0-5][0-9])"',
+                        MatchRequirement.MustBeFound,
+                        )
+                ])
+            ]
+        ),
+    ],
+    )
+    ```

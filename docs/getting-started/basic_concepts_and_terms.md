@@ -8,7 +8,7 @@ We have such concepts as :
     - [Root rule](#root-rule)
     - [Subrule](#subrule)
   - [Cartridge](#cartridge)
-  - [Syntax regex](#syntax-regex)
+  - [Syntax regex :D](#syntax-regex-d)
     - [Simple regex](#simple-regex)
     - [Complex regex](#complex-regex)
 
@@ -23,12 +23,21 @@ The `subrule` is the rules that are below the first step of the cartridge, as we
 > But then again, even if `subrule` (**A**) is created within extend, for all `subrule` (**B** of **A**), `subrule` A itself will be the `root` for them
 
 ### Cartridge
-A `cartridge` is a container for our rules. Use a container for a single object. Imagine that one container is one specific error: NotFound, InvalidHeader, WrongCase. 
+A `cartridge` is a container for our rules. Use a container for a single object. Imagine that one container is one specific error: `NotFound`, `InvalidHeader`, `WrongCase`. 
 
 
 
-### Syntax regex
+### Syntax regex :D
 ***Since all calculations using regex take place in `Rust`, it is necessary to follow the format `rust regex`.***
+
+!!! warning
+    Please stick to raw string literals when creating regular expressions, without it your regular expression may behave differently
+    **Example**:
+
+    | Regular expression |                                                   |
+    | ------------------ | ------------------------------------------------- |
+    | **r**"d{3}."       | is the correct conversion to a regular expression |
+    | "d{3}."            | possible incorrect behavior                       |
 
 More information on syntax :
 

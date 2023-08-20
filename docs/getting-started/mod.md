@@ -41,7 +41,7 @@ All versions are uploaded to official registries where libraries for languages a
         An implementation that provides accessibility and ease of integration for the Python platform.
         
 
-??? Failure "Package/Version not found"
+??? Failure "Package(version *x.y.z*) not found?"
 
     If your package manager currently gives the error : 
     
