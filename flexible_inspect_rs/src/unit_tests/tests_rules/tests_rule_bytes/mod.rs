@@ -2,7 +2,6 @@ mod tests_captures;
 mod tests_extend;
 use crate::prelude::*;
 use crate::rules::traits::CalculateValueRules;
-use crate::rules::traits::RuleBase;
 
 /// Проверка конструктора на корректное регулярное выражение байтов
 #[test]

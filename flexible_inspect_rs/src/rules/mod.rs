@@ -13,8 +13,6 @@ use log::error;
 use std::collections::HashMap;
 use std::hash::Hash;
 // =======================================================
-/// This is error message when `Rule|RuleBytes` is empty
-const ERR_OPTION: &str = "\nThe body of `Rule` is missing (inside Rule is the value None), you may have used modifiers separately from initializations, they take the value (ownership) of `Rule` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `Rule|RuleBytes`).\n";
 /// This is reserved standard value for error filling
 pub const DEFAULT_CAPTURE: &str = "main_capture";
 // =======================================================

@@ -1,4 +1,4 @@
-use crate::{prelude::*, rules::traits::RuleBase, rules::ModeMatch};
+use crate::{prelude::*, rules::ModeMatch};
 
 #[test]
 fn test_mode_t_0() {
@@ -8,11 +8,7 @@ fn test_mode_t_0() {
         [Rule::new(r".+", MatchRequirement::MustBeFound)],
     );
     assert_eq!(
-        cartridge
-            .root_rule
-            .0
-            .general_modifiers
-            .mod_match,
+        cartridge.root_rule.0.general_modifiers.mod_match,
         ModeMatch::AllRulesForAtLeastOneMatch
     );
 }
@@ -26,11 +22,7 @@ fn test_mode_t_1() {
     )
     .any_r_for_any_m();
     assert_eq!(
-        cartridge
-            .root_rule
-            .0
-            .general_modifiers
-            .mod_match,
+        cartridge.root_rule.0.general_modifiers.mod_match,
         ModeMatch::AtLeastOneRuleForAtLeastOneMatch
     );
 }
@@ -43,11 +35,7 @@ fn test_mode_t_2() {
         [RuleBytes::new(r".+", MatchRequirement::MustBeFound)],
     );
     assert_eq!(
-        cartridge
-            .root_rule
-            .0
-            .general_modifiers
-            .mod_match,
+        cartridge.root_rule.0.general_modifiers.mod_match,
         ModeMatch::AllRulesForAtLeastOneMatch
     );
 }
@@ -61,11 +49,7 @@ fn test_mode_t_5() {
     )
     .any_r_for_any_m();
     assert_eq!(
-        cartridge
-            .root_rule
-            .0
-            .general_modifiers
-            .mod_match,
+        cartridge.root_rule.0.general_modifiers.mod_match,
         ModeMatch::AtLeastOneRuleForAtLeastOneMatch
     );
 }
