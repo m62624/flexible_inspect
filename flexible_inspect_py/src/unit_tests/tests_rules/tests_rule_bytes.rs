@@ -19,93 +19,92 @@ fn test_new_t_1() {
 }
 
 #[test]
-fn test_extend_t_0() {
+fn test_extend_t_0() -> PyResult<()> {
     let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
         .extend(vec![
             PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound).into(),
             PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound).into(),
             PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound).into(),
-        ])
+        ])?
         .into();
-
-    assert_eq!(
+    Ok(assert_eq!(
         rule,
         RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound).extend(vec![
             RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound),
             RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound),
             RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound),
         ])
-    );
+    ))
 }
 
 #[test]
-fn test_mode_counter_t_0() {
+fn test_mode_counter_t_0() -> PyResult<()> {
     let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
-        .counter_is_equal(1)
+        .counter_is_equal(1)?
         .into();
 
-    assert_eq!(
+    Ok(assert_eq!(
         rule,
         RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound).counter_is_equal(1)
-    );
+    ))
 }
 
 #[test]
-fn test_mode_counter_t_1() {
+fn test_mode_counter_t_1() -> PyResult<()> {
     let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
-        .counter_less_than(1)
+        .counter_less_than(1)?
         .into();
 
-    assert_eq!(
+    Ok(assert_eq!(
         rule,
         RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound).counter_less_than(1)
-    );
+    ))
 }
 
 #[test]
-fn test_mode_counter_t_2() {
+fn test_mode_counter_t_2() -> PyResult<()> {
     let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
-        .counter_more_than(1)
+        .counter_more_than(1)?
         .into();
 
-    assert_eq!(
+    Ok(assert_eq!(
         rule,
         RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound).counter_more_than(1)
-    );
+    ))
 }
 
 #[test]
-fn test_mode_match_t_0() {
+fn test_mode_match_t_0() -> PyResult<()> {
     let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
-        .all_r_for_any_m()
+        .all_r_for_any_m()?
         .into();
 
-    assert_eq!(
+    Ok(assert_eq!(
         rule,
         RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound).all_r_for_any_m()
-    );
+    ))
 }
 
 #[test]
-fn test_mode_match_t_1() {
+fn test_mode_match_t_1() -> PyResult<()> {
     let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
-        .any_r_for_all_m()
+        .any_r_for_all_m()?
         .into();
 
-    assert_eq!(
+    Ok(assert_eq!(
         rule,
         RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound).any_r_for_all_m()
-    );
+    ))
 }
 
 #[test]
-fn test_mode_match_t_2() {
+fn test_mode_match_t_2() -> PyResult<()> {
     let rule: RuleBytes = PyRuleBytes::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
-        .any_r_for_any_m()
+        .any_r_for_any_m()?
         .into();
 
-    assert_eq!(
+    Ok(assert_eq!(
         rule,
         RuleBytes::new(r"\w+", MatchRequirement::MustNotBeFound).any_r_for_any_m()
-    );
+    ))
 }
