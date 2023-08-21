@@ -4,10 +4,7 @@ use log::debug;
 
 impl RuleModifiers for RuleBytes {
     type RuleType = RuleBytes;
-    fn extend<R: IntoIterator<Item = Self::RuleType>>(
-        mut self,
-        nested_rules: R,
-    ) -> Self::RuleType {
+    fn extend<R: IntoIterator<Item = Self::RuleType>>(mut self, nested_rules: R) -> Self::RuleType {
         let subrules: IndexSet<_> = nested_rules.into_iter().collect();
         self.0.subrules_bytes = if !subrules.is_empty() {
             Some(SimpleRulesBytes::new(subrules))
@@ -57,8 +54,7 @@ impl RuleModifiers for RuleBytes {
     }
 
     fn all_r_for_any_m(mut self) -> Self::RuleType {
-        self.0.general_modifiers.mod_match =
-            ModeMatch::AllRulesForAtLeastOneMatch;
+        self.0.general_modifiers.mod_match = ModeMatch::AllRulesForAtLeastOneMatch;
         debug!(
             "the `{}` modifier is applied to RuleBytes ({}, {})",
             "mode_all_rules_for_at_least_one_match".bright_yellow(),
@@ -69,8 +65,7 @@ impl RuleModifiers for RuleBytes {
     }
 
     fn any_r_for_all_m(mut self) -> Self::RuleType {
-        self.0.general_modifiers.mod_match =
-            ModeMatch::AtLeastOneRuleForAllMatches;
+        self.0.general_modifiers.mod_match = ModeMatch::AtLeastOneRuleForAllMatches;
         debug!(
             "the `{}` modifier is applied to RuleBytes ({}, {})",
             "mode_at_least_one_rule_for_all_matches".bright_yellow(),
@@ -81,8 +76,7 @@ impl RuleModifiers for RuleBytes {
     }
 
     fn any_r_for_any_m(mut self) -> Self::RuleType {
-        self.0.general_modifiers.mod_match =
-            ModeMatch::AtLeastOneRuleForAtLeastOneMatch;
+        self.0.general_modifiers.mod_match = ModeMatch::AtLeastOneRuleForAtLeastOneMatch;
         debug!(
             "the `{}` modifier is applied to RuleBytes ({}, {})",
             "mode_at_least_one_rule_for_at_least_one_match".bright_yellow(),

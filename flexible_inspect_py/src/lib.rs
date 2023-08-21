@@ -9,12 +9,12 @@ mod template_validator;
 mod unit_tests;
 pub use cartridges::{cartridges_bytes::PyCartridgeBytes, cartridges_str::PyCartridge};
 use flexible_inspect_rs::prelude::*;
+use pyo3::exceptions;
 use pyo3::prelude::*;
 pub use rules::PyMatchRequeriment;
 pub use rules::{rule_bytes::PyRuleBytes, rule_str::PyRule};
 pub use template_validator::validate_bytes::PyTemplateValidatorBytes;
 pub use template_validator::validate_str::PyTemplateValidator;
-
 #[pyfunction]
 pub fn init_logger_with_offset(hour_offset: i32) {
     flexible_inspect_rs::logs::init_logger_with_offset(hour_offset);

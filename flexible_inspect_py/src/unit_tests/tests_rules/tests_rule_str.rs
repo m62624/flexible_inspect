@@ -38,6 +38,7 @@ fn test_extend_t_0() {
 fn test_mode_counter_t_0() {
     let rule: Rule = PyRule::new(r"\w+".into(), PyMatchRequeriment::MustNotBeFound)
         .counter_is_equal(1)
+        .unwrap()
         .into();
 
     assert_eq!(

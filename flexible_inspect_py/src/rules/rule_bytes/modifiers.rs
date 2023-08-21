@@ -2,50 +2,80 @@ use super::*;
 
 #[pymethods]
 impl PyRuleBytes {
-    pub fn extend(&mut self, nested_rules: Vec<PyRuleBytes>) -> Self {
+    pub fn extend(&mut self, nested_rules: Vec<PyRuleBytes>) -> PyResult<Self> {
         let mut m_self = std::mem::take(self);
         m_self.0 = Some(
             m_self
                 .0
-                .expect(ERR_OPTION)
-                .extend(nested_rules.into_iter().map(|rule| rule.into())),
+                .map(|rule| rule.extend(nested_rules.into_iter().map(|rule| rule.into())))
+                .ok_or_else(|| PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION))?,
         );
-        std::mem::take(self)
+        Ok(m_self)
     }
 
-    pub fn counter_is_equal(&mut self, count: usize) -> Self {
+    pub fn counter_is_equal(&mut self, count: usize) -> PyResult<Self> {
         let mut m_self = std::mem::take(self);
-        m_self.0 = Some(m_self.0.expect(ERR_OPTION).counter_is_equal(count));
-        std::mem::take(self)
+        m_self.0 = Some(
+            m_self
+                .0
+                .map(|rule| rule.counter_is_equal(count))
+                .ok_or_else(|| PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION))?,
+        );
+        Ok(m_self)
     }
 
-    pub fn counter_more_than(&mut self, count: usize) -> Self {
+    pub fn counter_more_than(&mut self, count: usize) -> PyResult<Self> {
         let mut m_self = std::mem::take(self);
-        m_self.0 = Some(m_self.0.expect(ERR_OPTION).counter_more_than(count));
-        std::mem::take(self)
+        m_self.0 = Some(
+            m_self
+                .0
+                .map(|rule| rule.counter_more_than(count))
+                .ok_or_else(|| PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION))?,
+        );
+        Ok(m_self)
     }
 
-    pub fn counter_less_than(&mut self, count: usize) -> Self {
+    pub fn counter_less_than(&mut self, count: usize) -> PyResult<Self> {
         let mut m_self = std::mem::take(self);
-        m_self.0 = Some(m_self.0.expect(ERR_OPTION).counter_less_than(count));
-        std::mem::take(self)
+        m_self.0 = Some(
+            m_self
+                .0
+                .map(|rule| rule.counter_less_than(count))
+                .ok_or_else(|| PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION))?,
+        );
+        Ok(m_self)
     }
 
-    pub fn all_r_for_any_m(&mut self) -> Self {
+    pub fn all_r_for_any_m(&mut self) -> PyResult<Self> {
         let mut m_self = std::mem::take(self);
-        m_self.0 = Some(m_self.0.expect(ERR_OPTION).all_r_for_any_m());
-        std::mem::take(self)
+        m_self.0 = Some(
+            m_self
+                .0
+                .map(|rule| rule.all_r_for_any_m())
+                .ok_or_else(|| PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION))?,
+        );
+        Ok(m_self)
     }
 
-    pub fn any_r_for_all_m(&mut self) -> Self {
+    pub fn any_r_for_all_m(&mut self) -> PyResult<Self> {
         let mut m_self = std::mem::take(self);
-        m_self.0 = Some(m_self.0.expect(ERR_OPTION).any_r_for_all_m());
-        std::mem::take(self)
+        m_self.0 = Some(
+            m_self
+                .0
+                .map(|rule| rule.any_r_for_all_m())
+                .ok_or_else(|| PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION))?,
+        );
+        Ok(m_self)
     }
 
-    pub fn any_r_for_any_m(&mut self) -> Self {
+    pub fn any_r_for_any_m(&mut self) -> PyResult<Self> {
         let mut m_self = std::mem::take(self);
-        m_self.0 = Some(m_self.0.expect(ERR_OPTION).any_r_for_any_m());
-        std::mem::take(self)
+        m_self.0 = Some(
+            m_self
+                .0
+                .map(|rule| rule.any_r_for_any_m())
+                .ok_or_else(|| PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION))?,
+        );
+        Ok(m_self)
     }
 }

@@ -24,7 +24,7 @@ use super::*;
 /// * How is recursive structure checking performed without recursion?
 /// Each root rule creates one shared hidden stack at validation time ([VecDecue](https://doc.rust-lang.org/std/collections/struct.VecDeque.html)), regardless of large nesting, the queue traverses its own stack without recursion
 #[wasm_bindgen(js_name = "Rule")]
-#[derive(Debug,  Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WasmRule(Rule);
 #[wasm_bindgen(js_class = "Rule")]
 impl WasmRule {
