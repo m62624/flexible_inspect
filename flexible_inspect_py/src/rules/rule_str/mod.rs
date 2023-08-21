@@ -3,18 +3,18 @@ use super::*;
 
 #[pyclass(name = "Rule")]
 #[derive(Clone, Default)]
-pub struct PyRule(Rule);
+pub struct PyRule(Option<Rule>);
 
 #[pymethods]
 impl PyRule {
     #[new]
     pub fn new(pattern: String, requirement: PyMatchRequeriment) -> Self {
-        PyRule(Rule::new(pattern, requirement.into()))
+        PyRule(Some(Rule::new(pattern, requirement.into())))
     }
 }
 
 impl From<PyRule> for Rule {
     fn from(value: PyRule) -> Self {
-        value.0
+        value.0.expect(ERR_OPTION)
     }
 }

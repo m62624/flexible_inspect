@@ -2,7 +2,7 @@ mod modifiers;
 use super::*;
 
 #[wasm_bindgen(js_name = "CartridgeBytes")]
-#[derive(Debug, Default, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WasmCartridgeBytes(Cartridge<RuleBytes>);
 
 #[wasm_bindgen(js_class = "CartridgeBytes")]

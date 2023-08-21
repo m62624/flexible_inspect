@@ -73,13 +73,10 @@ fn main_rust() {
         0001,
         "Found a broken token {bd_tkn}",
         [
-            Rule::new(
-                r"(?+)Performance Testing.+",
+            Rule::new(r"Performance Testing.+", MatchRequirement::MustBeFound).extend([Rule::new(
+                r###""result":\s?"successful""###,
                 MatchRequirement::MustBeFound,
-            ), // .extend([Rule::new(
-               //     r###""result":\s?"successful""###,
-               //     MatchRequirement::MustBeFound,
-               // )])
+            )]),
         ],
     );
 

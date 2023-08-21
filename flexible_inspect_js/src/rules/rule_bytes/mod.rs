@@ -1,8 +1,6 @@
 mod modifiers;
 use super::*;
 
-#[wasm_bindgen(js_name = "RuleBytes")]
-#[derive(Debug, Default, Serialize, Deserialize)]
 /// A rule is the minimum unit of logic in a validator.
 ///
 /// The most important feature is that the rule is recursive (don't worry, recursion is not used here).
@@ -18,6 +16,8 @@ use super::*;
 /// * Unicode support can be disabled, even if disabling it will result in a match with invalid `UTF-8` bytes. More info at [link](https://docs.rs/regex/latest/regex/bytes/index.html)
 /// * How is recursive structure checking performed without recursion?
 /// Each root rule creates one shared hidden stack at validation time ([VecDecue](https://doc.rust-lang.org/std/collections/struct.VecDeque.html)), regardless of large nesting, the queue traverses its own stack without recursion
+#[wasm_bindgen(js_name = "RuleBytes")]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct WasmRuleBytes(RuleBytes);
 
 #[wasm_bindgen(js_class = "RuleBytes")]
