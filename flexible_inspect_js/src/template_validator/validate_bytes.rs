@@ -2,8 +2,8 @@ use super::*;
 use crate::error::WasmValidationErrorIterator;
 use std::sync::Arc;
 
-/// Constructor for creating a validator
-/// Load different `CartridgeBytes` into the `construcrtor` to create a validator for different situations
+/// The structure for creating unique validators, load different `cartridges` to validate data
+/// (recommendation to use the string version if possible. More information on `Rule`.)
 #[wasm_bindgen(js_name = "TemplateValidatorBytes")]
 pub struct WasmTemplateValidatorBytes(TemplateValidator<Vec<Cartridge<RuleBytes>>, Arc<[u8]>>);
 

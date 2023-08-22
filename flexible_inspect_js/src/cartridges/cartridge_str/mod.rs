@@ -1,6 +1,10 @@
 mod modifiers;
 use super::*;
 
+/// The cartridge is the container of the rules.
+///
+/// # Notes:
+/// * Use a container for one object if possible. Imagine that one container is one specific error `NotFound`, `InvalidHeader`, `WrongCase`.
 #[wasm_bindgen(js_name = "Cartridge")]
 #[derive(Debug, Serialize, Deserialize)]
 pub struct WasmCartridge(Cartridge<Rule>);
