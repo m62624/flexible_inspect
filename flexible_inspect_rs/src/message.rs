@@ -1,6 +1,9 @@
 use lazy_static::lazy_static;
 use std::collections::HashMap;
 
+lazy_static! {
+    static ref RE: regex::Regex = regex::Regex::new(r"\{(.+?)\}").unwrap();
+}
 /// This function replaces the data in the error message with the data from the `error_data` parameter
 
 // Get extra from the class, this is necessary if there are `extra` variables that are not in the
@@ -17,9 +20,6 @@ pub fn filling_message(
     message_template: &str,
     error_data: Option<HashMap<String, String>>,
 ) -> String {
-    lazy_static! {
-        static ref RE: regex::Regex = regex::Regex::new(r"\{(.+?)\}").unwrap();
-    }
     let result = RE.replace_all(message_template, |caps: &regex::Captures| {
         let key = caps.get(1).unwrap().as_str();
         if let Some(value) = error_data.as_ref().and_then(|data| data.get(key)) {
