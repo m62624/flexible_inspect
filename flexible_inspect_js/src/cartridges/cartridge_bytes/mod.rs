@@ -49,7 +49,8 @@ impl WasmCartridgeBytes {
         Ok(Self(Some(Cartridge::new(
             error_code,
             message,
-            serde_wasm_bindgen::from_value::<Vec<RuleBytes>>(root_rules)?,
+            serde_wasm_bindgen::from_value::<Vec<RuleBytes>>(root_rules)
+                .map_err(|_| JsValue::from_str(ERR_OPTION_RULE_BYTES))?,
         ))))
     }
 

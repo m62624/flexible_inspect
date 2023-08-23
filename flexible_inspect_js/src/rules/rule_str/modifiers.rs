@@ -26,10 +26,8 @@ impl WasmRule {
     /// ```
     pub fn extend(&mut self, nested_rules: JsValue) -> Result<WasmRule, JsValue> {
         let mut mem_self: WasmRule = self.try_into()?;
-        let nested_rules = serde_wasm_bindgen::from_value::<Vec<WasmRule>>(nested_rules)?
-            .into_iter()
-            .map(|rule| rule.try_into())
-            .collect::<Result<Vec<Rule>, JsValue>>()?;
+        let nested_rules = serde_wasm_bindgen::from_value::<Vec<Rule>>(nested_rules)
+            .map_err(|_| JsValue::from_str(ERR_OPTION_RULE))?;
         mem_self.0 = mem_self.0.map(|rule| rule.extend(nested_rules));
         Ok(mem_self)
     }

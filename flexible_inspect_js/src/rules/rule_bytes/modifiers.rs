@@ -26,10 +26,8 @@ impl WasmRuleBytes {
     /// ```
     pub fn extend(&mut self, nested_rules: JsValue) -> Result<WasmRuleBytes, JsValue> {
         let mut mem_self: WasmRuleBytes = self.try_into()?;
-        let nested_rules = serde_wasm_bindgen::from_value::<Vec<WasmRuleBytes>>(nested_rules)?
-            .into_iter()
-            .map(|rule| rule.try_into())
-            .collect::<Result<Vec<RuleBytes>, JsValue>>()?;
+        let nested_rules = serde_wasm_bindgen::from_value::<Vec<RuleBytes>>(nested_rules)
+            .map_err(|_| JsValue::from_str(ERR_OPTION_RULE_BYTES))?;
         mem_self.0 = mem_self.0.map(|rule| rule.extend(nested_rules));
         Ok(mem_self)
     }
@@ -75,7 +73,7 @@ impl WasmRuleBytes {
         mem_self.0 = mem_self.0.map(|rule| rule.all_r_for_any_m());
         Ok(mem_self)
     }
-    
+
     /// modifier to change the rule matching mode.
     ///
     /// In this mode, at least `one sub-rule` should work for `every match`. If no sub-rule works on one of the matches, an error will be returned.
