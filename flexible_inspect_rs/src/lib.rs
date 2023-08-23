@@ -43,16 +43,16 @@ pub mod prelude {
 #[cfg(feature = "export_to_other_languages")]
 pub mod error_messages {
     /// Error message when the body of `Rule` is missing
-    pub const ERR_OPTION_RULE: &str = "\nThe body of `Rule` is missing (inside `Rule` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `Rule` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `Rule`).\n";
+    pub const ERR_OPTION_RULE: &str = "\nThe body of `Rule` is missing (inside `Rule` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `Rule` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `Rule`).\nOr you have specified a nested `Rule` for `RuleBytes`\n";
 
     /// Error message when the body of `RuleBytes` is missing
-    pub const ERR_OPTION_RULE_BYTES: &str = "\nThe body of `RuleBytes` is missing (inside `RuleBytes` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `RuleBytes` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `RuleBytes`).\n";
+    pub const ERR_OPTION_RULE_BYTES: &str = "\nThe body of `RuleBytes` is missing (inside `RuleBytes` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `RuleBytes` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `RuleBytes`).\nOr you have specified a nested `RuleBytes` for `Rule`\n";
 
     /// Error message when the body of `Cartridge` is missing
-    pub const ERR_OPTION_CARTRIDGE: &str = "\nThe body of `Cartridge` is missing (inside `Cartridge` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `Cartridge` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `Cartridge`).\n";
+    pub const ERR_OPTION_CARTRIDGE: &str = "\nThe body of `Cartridge` is missing (inside `Cartridge` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `Cartridge` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `Cartridge`).\nOr you have specified a root `RuleBytes` for `Cartridge`";
 
     /// Error message when the body of `CartridgeBytes` is missing
-    pub const ERR_OPTION_CARTRIDGE_BYTES: &str = "\nThe body of `CartridgeBytes` is missing (inside `CartridgeBytes` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `CartridgeBytes` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `CartridgeBytes`).\n";
+    pub const ERR_OPTION_CARTRIDGE_BYTES: &str = "\nThe body of `CartridgeBytes` is missing (inside `CartridgeBytes` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `CartridgeBytes` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `CartridgeBytes`).\nOr you have specified a nested `Rule` for `CartridgeBytes`";
 }
 
 /// # Logs
