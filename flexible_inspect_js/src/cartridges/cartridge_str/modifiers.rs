@@ -2,8 +2,9 @@ use super::*;
 
 #[wasm_bindgen(js_class=Cartridge)]
 impl WasmCartridge {
-    pub fn any_r_for_any_m(mut self) -> Self {
-        self.0 = self.0.any_r_for_any_m();
-        self
+    pub fn any_r_for_any_m(&mut self) -> Result<WasmCartridge, JsValue> {
+        let mut mem_self: WasmCartridge = self.try_into()?;
+        mem_self.0 = mem_self.0.map(|rule| rule.any_r_for_any_m());
+        Ok(mem_self)
     }
 }

@@ -24,30 +24,33 @@ impl WasmRuleBytes {
     ///      |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
     ///
     /// ```
-    pub fn extend(mut self, nested_rules: JsValue) -> Result<WasmRuleBytes, JsValue> {
-        self.0 = self.0.extend(
-            serde_wasm_bindgen::from_value::<Vec<WasmRuleBytes>>(nested_rules)
-                .map_err(|_| JsValue::from_str("`RuleBytes` loading error, possible causes:\n1) You may have forgotten to specify `finish_build()` for completion.\n2) You can only use the `RuleBytes` ( [ RuleBytes, RuleBytes, RuleBytes ] )"))?
-                .into_iter()
-                .map(|rule| rule.into()),
-        );
-        Ok(self)
+    pub fn extend(&mut self, nested_rules: JsValue) -> Result<WasmRuleBytes, JsValue> {
+        let mut mem_self: WasmRuleBytes = self.try_into()?;
+        let nested_rules = serde_wasm_bindgen::from_value::<Vec<WasmRuleBytes>>(nested_rules)?
+            .into_iter()
+            .map(|rule| rule.try_into())
+            .collect::<Result<Vec<RuleBytes>, JsValue>>()?;
+        mem_self.0 = mem_self.0.map(|rule| rule.extend(nested_rules));
+        Ok(mem_self)
     }
 
     /// modifier to set the match counter, condition `counter == match`
-    pub fn counter_is_equal(mut self, count: usize) -> Self {
-        self.0 = self.0.counter_is_equal(count);
-        self
+    pub fn counter_is_equal(&mut self, count: usize) -> Result<WasmRuleBytes, JsValue> {
+        let mut mem_self: WasmRuleBytes = self.try_into()?;
+        mem_self.0 = mem_self.0.map(|rule| rule.counter_is_equal(count));
+        Ok(mem_self)
     }
     /// modifier to set the match counter, condition `counter >= match`
-    pub fn counter_more_than(mut self, count: usize) -> Self {
-        self.0 = self.0.counter_more_than(count);
-        self
+    pub fn counter_more_than(&mut self, count: usize) -> Result<WasmRuleBytes, JsValue> {
+        let mut mem_self: WasmRuleBytes = self.try_into()?;
+        mem_self.0 = mem_self.0.map(|rule| rule.counter_more_than(count));
+        Ok(mem_self)
     }
     /// modifier to set the match counter, condition `counter <= match`
-    pub fn counter_less_than(mut self, count: usize) -> Self {
-        self.0 = self.0.counter_less_than(count);
-        self
+    pub fn counter_less_than(&mut self, count: usize) -> Result<WasmRuleBytes, JsValue> {
+        let mut mem_self: WasmRuleBytes = self.try_into()?;
+        mem_self.0 = mem_self.0.map(|rule| rule.counter_less_than(count));
+        Ok(mem_self)
     }
 
     /// modifier to change the rule matching mode.
@@ -67,10 +70,12 @@ impl WasmRuleBytes {
     ///     |___ Subrule "\[\d+\]" (MustBeFound) __|
     ///     |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- ERROR
     /// ```
-    pub fn all_r_for_any_m(mut self) -> Self {
-        self.0 = self.0.all_r_for_any_m();
-        self
+    pub fn all_r_for_any_m(&mut self) -> Result<WasmRuleBytes, JsValue> {
+        let mut mem_self: WasmRuleBytes = self.try_into()?;
+        mem_self.0 = mem_self.0.map(|rule| rule.all_r_for_any_m());
+        Ok(mem_self)
     }
+    
     /// modifier to change the rule matching mode.
     ///
     /// In this mode, at least `one sub-rule` should work for `every match`. If no sub-rule works on one of the matches, an error will be returned.
@@ -87,9 +92,10 @@ impl WasmRuleBytes {
     ///     |___ Subrule "\[\d+\]" (MustBeFound) __|_______________|_________________|
     ///     |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched)
     /// ```
-    pub fn any_r_for_all_m(mut self) -> Self {
-        self.0 = self.0.any_r_for_all_m();
-        self
+    pub fn any_r_for_all_m(&mut self) -> Result<WasmRuleBytes, JsValue> {
+        let mut mem_self: WasmRuleBytes = self.try_into()?;
+        mem_self.0 = mem_self.0.map(|rule| rule.any_r_for_all_m());
+        Ok(mem_self)
     }
 
     /// modifier to change the rule matching mode.
@@ -108,8 +114,9 @@ impl WasmRuleBytes {
     ///     |___ Subrule "\[\d+\]" (MustBeFound) __|
     ///     |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
     /// ```
-    pub fn any_r_for_any_m(mut self) -> Self {
-        self.0 = self.0.any_r_for_any_m();
-        self
+    pub fn any_r_for_any_m(&mut self) -> Result<WasmRuleBytes, JsValue> {
+        let mut mem_self: WasmRuleBytes = self.try_into()?;
+        mem_self.0 = mem_self.0.map(|rule| rule.any_r_for_any_m());
+        Ok(mem_self)
     }
 }

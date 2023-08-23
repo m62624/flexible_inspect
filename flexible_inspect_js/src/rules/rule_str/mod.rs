@@ -24,11 +24,11 @@ use super::*;
 /// * How is recursive structure checking performed without recursion?
 /// Each root rule creates one shared hidden stack at validation time ([VecDecue](https://doc.rust-lang.org/std/collections/struct.VecDeque.html)), regardless of large nesting, the queue traverses its own stack without recursion
 #[wasm_bindgen(js_name = "Rule")]
-#[derive(Debug, Serialize, Deserialize)]
-pub struct WasmRule(Rule);
+#[derive(Debug, Default, Serialize, Deserialize)]
+pub struct WasmRule(pub(crate) Option<Rule>);
+
 #[wasm_bindgen(js_class = "Rule")]
 impl WasmRule {
-    #[wasm_bindgen(constructor)]
     /// Constructs a new `RuleBytes`
     /// # Arguments
     /// * `pattern` - a regular expression that will be used to search for matches
@@ -63,9 +63,10 @@ impl WasmRule {
     /// * Basically use `Rule` instead of `RuleBytes` when working with text (not necessarily just text, it also includes `html` structures, code fragments from other languages, etc.) since it has support for [**Regex**](https://crates.io/crates/regex) and [**FancyRegex**](https://crates.io/crates/fancy-regex).
     /// * How is recursive structure checking performed without recursion?
     /// Each root rule creates one shared hidden stack at validation time ([VecDecue](https://doc.rust-lang.org/std/collections/struct.VecDeque.html)), regardless of large nesting, the queue traverses its own stack without recursion
+    #[wasm_bindgen(constructor)]
     pub fn new(pattern: String, requirement: WasmMatchRequirement) -> Self {
         console_error_panic_hook::set_once();
-        Self(Rule::new(pattern, requirement.into()))
+        Self(Some(Rule::new(pattern, requirement.into())))
     }
 
     /// Preparing value for processing in `Rust`
@@ -74,8 +75,35 @@ impl WasmRule {
     }
 }
 
-impl From<WasmRule> for Rule {
-    fn from(value: WasmRule) -> Self {
-        value.0
+// In the validator, we always put the rules into cartridges and the cartridges themselves into template_validator.
+// This means that after applying modifiers, we need to get the same structure, but with different data.
+// But when exporting to other languages, there is no ownership check when using `self`. But most likely there is a check with `&mut self`.
+// To make changes safe, we use `std::mem::take`.
+// This approach allows us to temporarily take data from an object without compromising its integrity.
+// We then return the modified data back to the object.
+// Yes, if you double `std::mem::take` you will get `None`, but this way you can safely call `panic!`,
+// with your own warning why it happened and what to do about it
+// If you export to other languages, don't worry,
+// this is simply a way to safely change the state of objects passed to the &mut self method.
+// This ensures efficient data management and predictable behavior when working
+// with the library in different programming languages.
+impl TryFrom<&mut WasmRule> for WasmRule {
+    type Error = JsValue;
+
+    fn try_from(value: &mut WasmRule) -> Result<Self, Self::Error> {
+        let value = std::mem::take(value);
+        if value.0.is_some() {
+            Ok(value)
+        } else {
+            Err(JsValue::from_str(ERR_OPTION_RULE))
+        }
+    }
+}
+
+impl TryFrom<WasmRule> for Rule {
+    type Error = JsValue;
+
+    fn try_from(value: WasmRule) -> Result<Self, Self::Error> {
+        value.0.ok_or_else(|| JsValue::from_str(ERR_OPTION_RULE))
     }
 }

@@ -6,6 +6,7 @@ mod error;
 mod rules;
 mod template_validator;
 use chrono::prelude::*;
+use flexible_inspect_rs::error_messages::*;
 use flexible_inspect_rs::prelude::*;
 use log::LevelFilter;
 use serde::{Deserialize, Serialize};
