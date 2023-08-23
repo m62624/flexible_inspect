@@ -14,12 +14,13 @@ use wasm_bindgen::prelude::*;
 #[cfg(test)]
 mod unit_tests;
 
-pub use cartridges::{cartridge_bytes::WasmCartridgeBytes, cartridge_str::WasmCartridge};
+pub use cartridges::cartridge_bytes::WasmCartridgeBytes;
+pub use cartridges::cartridge_str::WasmCartridge;
 pub use error::*;
-pub use rules::{rule_bytes::WasmRuleBytes, rule_str::WasmRule, WasmMatchRequirement};
-pub use template_validator::{
-    validate_bytes::WasmTemplateValidatorBytes, validate_str::WasmTemplateValidator,
-};
+pub use rules::WasmMatchRequirement;
+pub use rules::{rule_bytes::WasmRuleBytes, rule_str::WasmRule};
+pub use template_validator::validate_bytes::WasmTemplateValidatorBytes;
+pub use template_validator::validate_str::WasmTemplateValidator;
 // =====================================================================
 static INIT: Once = Once::new();
 // =====================================================================

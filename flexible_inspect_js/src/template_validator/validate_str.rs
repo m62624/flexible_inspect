@@ -4,7 +4,7 @@ use super::*;
 use std::sync::Arc;
 
 /// The structure for creating unique validators, load different `cartridges` to validate data.
-   
+
 #[wasm_bindgen(js_name = "TemplateValidator")]
 pub struct WasmTemplateValidator(TemplateValidator<Vec<Cartridge<Rule>>, Arc<str>>);
 
