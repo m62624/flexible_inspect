@@ -8,6 +8,7 @@ mod template_validator;
 #[cfg(test)]
 mod unit_tests;
 pub use cartridges::{cartridges_bytes::PyCartridgeBytes, cartridges_str::PyCartridge};
+use flexible_inspect_rs::error_messages::*;
 use flexible_inspect_rs::prelude::*;
 use pyo3::exceptions;
 use pyo3::prelude::*;

@@ -39,6 +39,22 @@ pub mod prelude {
     pub use crate::template_validator::{TemplateValidator, ValidatorBase};
 }
 
+/// Module with error messages
+#[cfg(feature = "export_to_other_languages")]
+pub mod error_messages {
+    /// Error message when the body of `Rule` is missing
+    pub const ERR_OPTION_RULE: &str = "\nThe body of `Rule` is missing (inside `Rule` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `Rule` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `Rule`).\n";
+
+    /// Error message when the body of `RuleBytes` is missing
+    pub const ERR_OPTION_RULE_BYTES: &str = "\nThe body of `RuleBytes` is missing (inside `RuleBytes` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `RuleBytes` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `RuleBytes`).\n";
+
+    /// Error message when the body of `Cartridge` is missing
+    pub const ERR_OPTION_CARTRIDGE: &str = "\nThe body of `Cartridge` is missing (inside `Cartridge` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `Cartridge` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `Cartridge`).\n";
+
+    /// Error message when the body of `CartridgeBytes` is missing
+    pub const ERR_OPTION_CARTRIDGE_BYTES: &str = "\nThe body of `CartridgeBytes` is missing (inside `CartridgeBytes` is the value `None`), you may have used modifiers separately from initializations, they take the value (ownership) of `CartridgeBytes` (std::mem::take) and return the already modified version (specify the modifier in the same place where you initialize `CartridgeBytes`).\n";
+}
+
 /// # Logs
 /// Includes color-coded logging support (**do not need to be declared in the code**)
 ///

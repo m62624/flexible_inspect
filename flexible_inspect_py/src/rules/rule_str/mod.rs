@@ -33,7 +33,9 @@ impl TryFrom<&mut PyRule> for PyRule {
         if value.0.is_some() {
             Ok(value)
         } else {
-            Err(PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION))
+            Err(PyErr::new::<exceptions::PyUnboundLocalError, _>(
+                ERR_OPTION_RULE,
+            ))
         }
     }
 }
@@ -44,6 +46,6 @@ impl TryFrom<PyRule> for Rule {
     fn try_from(value: PyRule) -> Result<Self, Self::Error> {
         value
             .0
-            .ok_or_else(|| PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION))
+            .ok_or_else(|| PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION_RULE))
     }
 }

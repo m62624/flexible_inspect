@@ -32,9 +32,9 @@ impl TryFrom<PyCartridgeBytes> for Cartridge<RuleBytes> {
     type Error = PyErr;
 
     fn try_from(value: PyCartridgeBytes) -> Result<Self, Self::Error> {
-        value
-            .0
-            .ok_or_else(|| PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION))
+        value.0.ok_or_else(|| {
+            PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION_CARTRIDGE_BYTES)
+        })
     }
 }
 
@@ -58,7 +58,9 @@ impl TryFrom<&mut PyCartridgeBytes> for PyCartridgeBytes {
         if value.0.is_some() {
             Ok(value)
         } else {
-            Err(PyErr::new::<exceptions::PyUnboundLocalError, _>(ERR_OPTION))
+            Err(PyErr::new::<exceptions::PyUnboundLocalError, _>(
+                ERR_OPTION_CARTRIDGE_BYTES,
+            ))
         }
     }
 }
