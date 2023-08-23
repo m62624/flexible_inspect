@@ -15,7 +15,6 @@ pub use rules::PyMatchRequeriment;
 pub use rules::{rule_bytes::PyRuleBytes, rule_str::PyRule};
 pub use template_validator::validate_bytes::PyTemplateValidatorBytes;
 pub use template_validator::validate_str::PyTemplateValidator;
-use flexible_inspect_rs::check_mem_take;
 
 #[pyfunction]
 pub fn init_logger_with_offset(hour_offset: i32) {

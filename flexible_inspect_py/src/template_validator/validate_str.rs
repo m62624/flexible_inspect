@@ -9,13 +9,13 @@ pub struct PyTemplateValidator(Arc<TemplateValidator<Vec<Cartridge<Rule>>, Arc<s
 #[pymethods]
 impl PyTemplateValidator {
     #[new]
-    pub fn new(cartridges: Vec<PyCartridge>) -> Self {
-        Self(Arc::new(TemplateValidator::new(
+    pub fn new(cartridges: Vec<PyCartridge>) -> PyResult<Self> {
+        Ok(Self(Arc::new(TemplateValidator::new(
             cartridges
                 .into_iter()
-                .map(|cartridge| cartridge.into())
-                .collect(),
-        )))
+                .map(|cartridge| cartridge.try_into())
+                .collect::<PyResult<Vec<Cartridge<Rule>>>>()?,
+        ))))
     }
 
     pub fn validate(&self, data: String) -> Option<PyValidationErrorIterator> {
