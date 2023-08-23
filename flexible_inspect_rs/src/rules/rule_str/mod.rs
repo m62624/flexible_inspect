@@ -18,9 +18,6 @@ use super::*;
 /// Thus, when the root rule is triggered, all the results obtained are passed to the nested rules, so you can build complex structural rules to suit any taste
 ///
 /// # Notes
-/// * Remember any modifier takes the contents of the `Rule` body
-/// and returns a new one with a changed parameter (only `None` from the original Rule remains),
-/// so specify the modifier in the same place where you initialize `Rule`.
 /// * If you stick with the [**Regex**](https://crates.io/crates/regex) library features, all root and nested rules go into [**RegexSet**](https://docs.rs/regex/latest/regex/struct.RegexSet.html).
 /// Many expressions can be accommodated in a regular expression without *Lookahead* and *Lookbehind* references.
 /// But this is just a recommendation. If you need to use references, of course you can specify them.

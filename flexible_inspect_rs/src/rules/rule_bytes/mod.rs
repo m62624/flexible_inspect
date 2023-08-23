@@ -15,9 +15,6 @@ use super::*;
 /// Thus, when the root rule is triggered, all the results obtained are passed to the nested rules, so you can build complex structural rules to suit any taste
 ///
 /// # Notes
-/// * Remember any modifier takes the contents of the `RuleBytes` body
-/// and returns a new one with a changed parameter (only `None` from the original Rule remains),
-/// so specify the modifier in the same place where you initialize `RuleBytes`.
 /// * Use `&[u8]` when searching for regex matches in haystacks. ([**FancyRegex**](https://crates.io/crates/fancy-regex) capabilities are not available)
 /// * Unicode support can be disabled, even if disabling it will result in a match with invalid `UTF-8` bytes. More info at [link](https://docs.rs/regex/latest/regex/bytes/index.html)
 /// * How is recursive structure checking performed without recursion?
