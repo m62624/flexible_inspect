@@ -54,7 +54,7 @@ jobs:
       - name: Linter check (clippy)
         run: docker run ${{ env.IMAGE_DOCKER }}:latest cargo clippy -- -D warnings
 
-  core_rust-tests:
+  core-rust-tests:
     needs: linter-check-all-versions
     runs-on: ubuntu-latest
     steps:
@@ -82,7 +82,7 @@ jobs:
 
   # Job для тестирования кода
   coverage-tests:
-    needs: [core_rust-tests, docs-rust-tests]
+    needs: [core-rust-tests, docs-rust-tests]
     runs-on: ubuntu-latest
     steps:
       # Шаг для входа в Docker Registry
@@ -127,7 +127,7 @@ jobs:
           docker run ${{ env.IMAGE_DOCKER }}:latest wasm-pack test --node flexible_inspect_js
 
   packages-js:
-    needs: [core_rust-tests, only-wasm-tests]
+    needs: [core-rust-tests, only-wasm-tests]
     runs-on: ubuntu-latest
     if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
