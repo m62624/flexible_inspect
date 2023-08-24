@@ -390,3 +390,64 @@ As a result we get :
 
 !!! info
     Iterators can store errors in reverse order depending on the programming language
+
+Now let's take a look at our logs, what the rules caught when processing the data
+
+<details>
+<summary>show the log</summary>
+
+``` rust
+INFO [2023-08-25 01:22:08 flexible_inspect_rs::rules::rule_str::captures]↴
+(capture) the rule `((?<bd_tkn>#BAD.TOKEN.MESSAGE.+?#), MustNotBeFound)` found a match: 
+{
+    "#BAD_TOKEN_MESSAGE-123312-🎃#",
+    "#BAD_TOKEN_MESSAGE--{}{][][123#",
+    "#BAD_TOKEN_MESSAGE-OQLWLQLW#",
+    "#BAD_TOKEN_MESSAGE-ppp12003#",
+    "#BAD_TOKEN_MESSAGE-12031293193#",
+}
+
+ERROR [2023-08-25 01:22:08 flexible_inspect_rs::rules::runner::context_match::all_rules_for_at_least_one_match]↴
+all of the rules don't match any data
+
+INFO [2023-08-25 01:22:08 flexible_inspect_rs::rules::rule_str::captures]↴
+(capture) the rule `((?ms)"title":\s?"Performance Testing",\s.*\), MustBeFound)` found a match: 
+{
+    "\"title\": \"Performance Testing\",\n              STABLE AND UNCHANGED DATA = 1234567890 [\n                \"result\": \"successful\", \n                { \"details\": (\n                    @@@@ MARK @@21 [secret-ket 111-222-333-GG]\n                    { \"start_time\": \"9:56\",\n                    { \"end_time\": \"12:00\",\n                    { \"past_iterations\": 1000,\n                    { \"average_time_iteration\": \"0.03 sec\"\n                )",
+}
+
+INFO [2023-08-25 01:22:08 flexible_inspect_rs::rules::runner::context_match::all_rules_for_at_least_one_match]↴
+all rules passed successfully
+for the data `"\n    { \n        v1: 1,\n        SYSTEM DATA FOR TESTS\n        { \"report\": {\n            #BAD_TOKEN_MESSAGE-123312-🎃#\n          { \"title\": \"Test Results\",\n          { \"date\": \"2023-08-20\",\n          { \"tests\": [ ---------- MARK @@21 [secret-ket 111-222-333-GG]\n            {\n              \"title\": \"Performance Testing\",\n              STABLE AND UNCHANGED DATA = 1234567890 [\n                \"result\": \"successful\", \n                { \"details\": (\n                    @@@@ MARK @@21 [secret-ket 111-222-333-GG]\n                    { \"start_time\": \"9:56\",\n                    { \"end_time\": \"12:00\",\n                    { \"past_iterations\": 1000,\n                    { \"average_time_iteration\": \"0.03 sec\"\n                )\n              ] #BAD_TOKEN-MESSAGE#\n              \"result\": \"successful\", \n              { \"details\": { #BAD_TOKEN_MESSAGE--{}{][][123#\n                { \"start_time\": \"10:00\",\n                \"end_time\": \"10:30\",\n                \"past_iterations\": 1000,\n                \"average_time_iteration\": \"0.03 sec\"\n              } [Convert data to bytes] === === RESULT: [0x12, 0x34, 0x56, 0x78]\n              | | | | | |\n\n              | | | | | |\n            },\n            {\n              }, { \"title\": \"Stability Testing\",\n              { \"result\": \"not_successful\",\n              }, \"details\": {\n                \"errors\": 5, #BAD_TOKEN_MESSAGE-OQLWLQLW#\n                \"important_warning\": 2,\n                { \"end_time\": \"12:45\"\n              }\n            },\n            {\n              }, { \"title\": \"Compatibility Testing\",\n              \"result\": \"successful\" #BAD_TOKEN_MESSAGE-ppp12003#\n              }, \"details\": {\n                { \"supported_platforms\": [\"Windows\", \"Linux\", \"macOS\"],\n                }, \"end_time\": \"14:20\"\n              }\n            }\n          ] #BAD_TOKEN_MESSAGE-12031293193# ==== MARK @@20 [------]\n        }\n      }\n      END OF SYSTEM DATA FOR TESTS\n    "` 
+
+INFO [2023-08-25 01:22:08 flexible_inspect_rs::rules::rule_str::captures]↴
+(capture) the rule `((?ms)"result":\s?"successful".+\), MustNotBeFound)` found a match: 
+{
+    "\"result\": \"successful\", \n                { \"details\": (\n                    @@@@ MARK @@21 [secret-ket 111-222-333-GG]\n                    { \"start_time\": \"9:56\",\n                    { \"end_time\": \"12:00\",\n                    { \"past_iterations\": 1000,\n                    { \"average_time_iteration\": \"0.03 sec\"\n                )",
+}
+
+INFO [2023-08-25 01:22:08 flexible_inspect_rs::rules::runner::context_match::all_rules_for_all_matches]↴
+for all matches all rules worked successfully
+
+INFO [2023-08-25 01:22:08 flexible_inspect_rs::rules::rule_str::captures]↴
+(capture) the rule `("end_time": "(?:(?:0[0-9]|1[0-1]):[0-5][0-9])", MustBeFound)` didn't find a match
+
+ERROR [2023-08-25 01:22:08 flexible_inspect_rs::rules::runner::context_match::all_rules_for_all_matches]↴
+the rule `("end_time": "(?:(?:0[0-9]|1[0-1]):[0-5][0-9])", MustBeFound)` (root rule `((?ms)"result":\s?"successful".+\),MustNotBeFound)`)
+failed condition
+for data `"\"result\": \"successful\", \n                { \"details\": (\n                    @@@@ MARK @@21 [secret-ket 111-222-333-GG]\n                    { \"start_time\": \"9:56\",\n                    { \"end_time\": \"12:00\",\n                    { \"past_iterations\": 1000,\n                    { \"average_time_iteration\": \"0.03 sec\"\n                )"`
+```
+
+</details>
+
+So you can find out the rules didn't work and also find out what they caught in the validation process. For example, our rule sent the following log 
+
+```
+INFO [2023-08-25 01:22:08 flexible_inspect_rs::rules::rule_str::captures]↴
+(capture) the rule `((?<bd_tkn>#BAD.TOKEN.MESSAGE.+?#), MustNotBeFound)` found a match: ...
+```
+
+Here, we can see that we have received all erroneous tokens, if we wanted to specify additional checks, all received tokens would be sent to nested rules for processing. But in our case we have one root rule for tokens. We also specified `{bd_tkn}` and the name of the regular expression group in the message, + the `MustNotBeFound` modifier, in such a combination, the rule will write the first match received into the error message.
+
+!!! info "🎉🎉🎉"
+    Congratulations, you just created your first valdiator based on this library 😁. To learn more about the library's capabilities, study the documentation and stay tuned for updates
