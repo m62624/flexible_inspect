@@ -11,7 +11,7 @@
   - `Rust`
   - `Python`
   - `JavaScript` (including `TypeScript` using [WASM](https://webassembly.org) format).
-- Added serialization and deserialization support for Rust versions (use features = ["serde"]).
+- Added serialization and deserialization support for Rust versions (use `features = ["serde"]` in the `Cargo.toml` file).
 - Changed the return type of the validator to `Result<(), Vec<ValidationError>>` for both `validate` and `async_validate` functions. Both functions now return a collection of errors that did not pass validation.
 
 ### Removed
