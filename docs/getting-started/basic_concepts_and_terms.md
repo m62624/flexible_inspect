@@ -3,6 +3,7 @@
 Before explaining how the library works, let's understand the terminology.
 We have such concepts as : 
 
+---
 - [Basic concepts and terms](#basic-concepts-and-terms)
   - [Rule](#rule)
     - [Root rule](#root-rule)
@@ -12,8 +13,22 @@ We have such concepts as :
     - [Simple regex](#simple-regex)
     - [Complex regex](#complex-regex)
 
+---
+
 ### Rule
-The `rule` is a structure for storing a regular expression with modifiers. Structure is the basic minimum unit of the validation logic
+The `rule` is a structure for storing a regular expression with modifiers. Structure is the basic minimum unit of the validation logic.
+Each rule implicitly sorts regular expressions depending on which syntax you used (1). It automatically separates them between
+  { .annotate }
+
+  1. i.e. either the [**regex**](https://crates.io/crates/regex) library or the [**fancyRegex**](https://crates.io/crates/fancy-regex) library, when initializing a single regular expression, stick to the syntax of one of the listed libraries
+
+---
+
+- [Simple regex](#simple-regex)
+- [Complex regex](#complex-regex) (lookahead, lookbehind, etc.)
+
+---
+
 
 #### Root rule
 The `root rule` - all rules that are in the first step of the `cardridge`, and is also the root in relation to the `subrule`

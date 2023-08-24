@@ -358,16 +358,35 @@ After installing the logs, now let's run validation, load our validator with car
 
 
     let result = validator_for_pseudo_json.validate(text);
-    if (result !== undefined) {
+      if (result !== undefined) {
       result.for_each_1((error_code: number, error_message: string) => {
         console.log(error_code, error_message);
-      });
-    }
+        });
+      }
     },
     ```
 
 === "Python"
 
     ``` python
-    
+    validator_for_pseudo_json = TemplateValidator([
+      found_broken_token,
+      long_performance_testing,
+    ])
+
+
+    result = validator_for_pseudo_json.validate(text)
+    if result is not None: 
+    for error in result:
+        print(error.get_code(),error.get_message())
     ```
+
+As a result we get : 
+
+```
+-10 Found a broken token #BAD_TOKEN_MESSAGE-123312-🎃#
+1100 The test did not pass within the given time (before 11:00 hours)
+```
+
+!!! info
+    Iterators can store errors in reverse order depending on the programming language
