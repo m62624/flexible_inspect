@@ -58,7 +58,7 @@ where
                             {
                                 // ============================= LOG =============================
                                 error!(
-                                    "the rule `({}, {})` (root rule `({}, {})`) failed condition\nfor data `{:#?}`",
+                                    "the rule `({}, {})` (root rule `({}, {})`)\nfailed condition\nfor data `{:#?}`",
                                     rule_from_regexset.get_str().yellow(),
                                     format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
                                     frame.0.get_str().yellow(),
@@ -138,9 +138,11 @@ where
                             {
                                 // ============================= LOG =============================
                                 error!(
-                                    "the rule `({}, {})` failed condition\nfor data `{:#?}`",
+                                    "the rule `({}, {})` (root rule `({}, {})`) \nfailed condition\nfor data `{:#?}`",
                                     cmplx_rule.get_str().yellow(),
                                     format!("{:#?}", cmplx_rule.get_requirement()).yellow(),
+                                    frame.0.get_str().yellow(),
+                                    format!("{:#?}", frame.0.get_requirement()).yellow(),
                                     data
                                 );
                                 // ===============================================================
@@ -213,7 +215,7 @@ where
     if let NextStep::Error(error) = NextStep::next_or_finish_or_error(rule, captures) {
         // ============================= LOG =============================
         error!(
-            "the rule `({}, {})` (root rule `({},{})`) failed condition\nfor data `{:#?}`",
+            "the rule `({}, {})` (root rule `({},{})`)\nfailed condition\nfor data `{:#?}`",
             rule.get_str().yellow(),
             format!("{:#?}", rule.get_requirement()).yellow(),
             root_rule.get_str().yellow(),

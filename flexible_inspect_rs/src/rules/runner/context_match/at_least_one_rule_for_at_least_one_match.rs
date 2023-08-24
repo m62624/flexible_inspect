@@ -54,7 +54,7 @@ where
                             {
                                 // ============================= LOG =============================
                                 debug!(
-                                    "the rule `({}, {})` (root rule `({}, {})`) failed condition\nfor data `{:#?}`",
+                                    "the rule `({}, {})` (root rule `({}, {})`)\nfailed condition\nfor data `{:#?}`",
                                     rule_from_regexset.get_str().yellow(),
                                     format!("{:#?}", rule_from_regexset.get_requirement()).yellow(),
                                     frame.0.get_str().yellow(),
