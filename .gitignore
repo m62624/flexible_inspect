@@ -1,5 +1,6 @@
 /target
 /**/pkg
+/**/pkg*
 /**/.env
 /.vscode
 /**/coverage

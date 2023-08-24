@@ -5,3 +5,5 @@
 /target
 /.github
 /**/.env
+/**/pkg
+/**/pkg*
