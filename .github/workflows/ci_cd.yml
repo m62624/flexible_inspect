@@ -113,7 +113,9 @@ jobs:
         uses: codecov/codecov-action@v3
         with:
           token: ${{ secrets.CODECOV_TOKEN }}
-          file: cobertura.xml
+          files: cobertura.xml
+          flags: unittests
+          verbose: true
 
   only-wasm-tests:
     needs: linter-check-all-versions
