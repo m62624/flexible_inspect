@@ -69,6 +69,14 @@ fn main_rust() {
     check under `Performance Testing` that the end time must be earlier than 11 o'clock,
     check the time only if the result is successful
      */
+    let cartrdige_0 = Cartridge::new(
+        0,
+        "error message with value {INFO}",
+        [Rule::new(
+            r"(?P<INFO>\d+)",
+            MatchRequirement::MustNotBeFound,
+        )],
+    );
     let long_performance_testing = Cartridge::new(
         0001,
         "Found a broken token {bd_tkn}",

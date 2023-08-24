@@ -52,3 +52,7 @@ This is done so that if you should not find this, but you do find it, you can cr
 ## Matching mode
 
 {% include "./matching_mode.md" %}
+
+## Matching counter
+
+{% include "./counter.md" %}
