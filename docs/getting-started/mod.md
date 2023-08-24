@@ -19,9 +19,6 @@ All versions are uploaded to official registries where libraries for languages a
     cargo add flexible_inspect_rs
     ```
 
-    !!! info "Rust version"
-        The core and most developed implementation that provides full functionality and high performance.
-
 === "JavaScript/TypeScript"
 
     ``` sh
@@ -32,7 +29,7 @@ All versions are uploaded to official registries where libraries for languages a
     npm install flexible_inspect_js_node
     ```
     !!! warning "Importing the library"
-        The import differs depending on the version, see further in the documentation under `Import`.
+        The import differs depending on the version, see further in the documentation under `The first run`.
     
 
 === "Python"
@@ -48,7 +45,7 @@ All versions are uploaded to official registries where libraries for languages a
     
     > `that this package/version does not exist.` 
     
-    Perhaps a new version has been released at the moment, (after a new version is published, it takes **10-15** minutes to build for all languages, try again after this time).
+    Perhaps a new version has been released at the moment, (after a new version is published, it takes **20-25** minutes to build for all languages, try again after this time).
     
     Last build status : 
     
@@ -57,4 +54,4 @@ All versions are uploaded to official registries where libraries for languages a
 {% include "./basic_concepts_and_terms.md" %}
 
 ## The first run
-{% include "../first_run.md" %}
+{% include "./first_run.md" %}

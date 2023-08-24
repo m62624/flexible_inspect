@@ -11,13 +11,52 @@ Now we can start writing the code. Let's start with importing
     If you are using the **node** version
 
     ``` js
-    import { Rule, MatchRequirement, Cartridge, TemplateValidator, init_logger, LogLevel } from "flexible_inspect_js_node";
+    import {
+      Rule,
+      MatchRequirement,
+      Cartridge,
+      TemplateValidator,
+      init_logger,
+      LogLevel,
+    } from "flexible_inspect_js_node";
     ```
 
-    If you use the **web** version to work directly in the **browser** or using **webpack**. You must load the `wasm` file before using the library, using the `init()` function.
+    Or you use the **web** version to work directly in the **browser** or using **webpack**. You must load the `wasm` file before using the library, using the `init()` async function.
+
+    ??? info "if you use webpack "
+      
+        Don't forget to add the experimental option to the webpack config. 
+
+        ``` js
+        module.exports = {
+          experiments: {
+            asyncWebAssembly: true,
+          },
+        }
+        ```
 
     ``` js
-    import init {Rule, ...} from ...
+    //--------|
+    //        |
+    //        v
+    import init, {
+      Rule,
+      MatchRequirement,
+      Cartridge,
+      TemplateValidator,
+      init_logger,
+      LogLevel,
+    } from "@m62624/flexible_inspect_js_web";
+
+    init().then(
+      () => {
+        console.log("WASM module loaded");
+        // some code that uses the WASM module
+      },
+      (err) => {
+        console.log("Error loading WASM module:", err);
+      }
+    );
     ```
 
 === "Python"
@@ -26,7 +65,7 @@ Now we can start writing the code. Let's start with importing
     from flexible_inspect_py import Cartridge, MatchRequirement, TemplateValidator, Rule
     ```
 
-Next, let's look at the text for which validation will take place. It's just json-like pseudo-text mixed with plain text. Let's just say this is just a report on some kind of system test.
+Next, let's look at the text for which validation will take place. It's just json-like mixed with plain text. Let's just say this is just a report on some kind of system test.
 
 ``` json
     { 
@@ -74,10 +113,9 @@ Next, let's look at the text for which validation will take place. It's just jso
 
 We'll validate for two errors
 
-!!! abstract "Error 1"
-    Check incorrect *tokens*, and get the first incorrect *token*.
-!!! abstract "Error 2"
-    Check in the `"Performance Testing"` body that the test was completed no later than **11:00**, (check the time if the test was successful)
+!!! abstract "Error 1 & Error 2"
+    - Check incorrect *tokens*, and get the first incorrect *token*.
+    - Check in the `"Performance Testing"` body that the test was completed no later than **11:00**, (check the time if the test was successful)
 
 To do this, we'll create two cartridges
 

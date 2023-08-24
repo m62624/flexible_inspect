@@ -36,6 +36,7 @@ A `cartridge` is a container for our rules. Use a container for a single object.
     | ------------------ | ------------------------------------------------- |
     | **r**"d{3}."       | is the correct conversion to a regular expression |
     | "d{3}."            | possible incorrect behavior                       |
+    |  String.raw\`d{3}\`  |  (`JavaScript` version)                         |
 
 More information on syntax :
 
