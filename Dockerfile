@@ -12,7 +12,7 @@ RUN apt-get update && apt-get install -y libffi-dev \
                        g++;
 
 # Rust wasm
-RUN apt-get install -y nodejs && cargo install wasm-pack
+RUN apt-get install -y nodejs npm && cargo install wasm-pack
 # Rust tools
 RUN cargo install cargo-tarpaulin && rustup component add clippy-preview  
 
