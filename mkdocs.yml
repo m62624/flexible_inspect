@@ -54,6 +54,7 @@ nav:
   - Debug & logs: debug_and_logs.md
   - Modifiers: modifiers/mod.md
   - Formating messages: formatting_the_error_message.md
+  - Additional information: additional_information.md
   - Changelog: CHANGELOG.md
   - Website materials: website-materials.md
   - Library license: LICENSE.md
