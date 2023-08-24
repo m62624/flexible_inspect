@@ -25,20 +25,21 @@ All versions are uploaded to official registries where libraries for languages a
 === "JavaScript/TypeScript"
 
     ``` sh
-    npm install flexible_inspect_js
+    
+    # If you need to validate directly in the browser or using webpack use
+    npm install flexible_inspect_js_web
+    # or
+    npm install flexible_inspect_js_node
     ```
-
-    !!! info "JavaScript & TypeScript versions"
-         An implementation that allows the project to be used on the *JavaScript* platform, including *TypeScript* support for typing.
+    !!! warning "Importing the library"
+        The import differs depending on the version, see further in the documentation under `Import`.
+    
 
 === "Python"
 
     ``` sh
     pip install flexible_inspect_py
     ```
-
-    !!! info "Python version"
-        An implementation that provides accessibility and ease of integration for the Python platform.
         
 
 ??? Failure "Package(version *x.y.z*) not found?"

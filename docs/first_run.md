@@ -6,10 +6,18 @@ Now we can start writing the code. Let's start with importing
     use flexible_inspect_rs::prelude::*;
     ```
 
-=== "JS/TS"
+=== "JavaScript/TypeScript"
+
+    If you are using the **node** version
 
     ``` js
-    import { Rule, MatchRequirement, Cartridge, TemplateValidator, init_logger, LogLevel } from "flexible_inspect_js";
+    import { Rule, MatchRequirement, Cartridge, TemplateValidator, init_logger, LogLevel } from "flexible_inspect_js_node";
+    ```
+
+    If you use the **web** version to work directly in the **browser** or using **webpack**. You must load the `wasm` file before using the library, using the `init()` function.
+
+    ``` js
+    import init {Rule, ...} from ...
     ```
 
 === "Python"
@@ -113,11 +121,11 @@ To do this, we'll create two cartridges
     );
     ```
 
-=== "JS/TS"
+=== "JavaScript/TypeScript"
 
     !!! warning "`finish_build()`"
 
-        One thing to remember in `JS/TS` is that the classes:
+        One thing to remember in `JavaScript/TypeScript` is that the classes:
         `Cartridge`, `CartridgeBytes`, `Rule`, `RuleBytes` before sending them to any methods that accept these structures, you must specify `finish_build()`, this method prepares the structure to work in `Rust`.
 
         That is, you can initialize your variable, use various modifiers and at the end specify `finish_build()`, after that the structure cannot use its methods.
