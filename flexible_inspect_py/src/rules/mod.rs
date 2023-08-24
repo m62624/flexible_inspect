@@ -2,8 +2,6 @@ pub mod rule_bytes;
 pub mod rule_str;
 use super::*;
 
-
-
 #[pyclass(name = "MatchRequirement")]
 #[derive(Clone)]
 pub enum PyMatchRequeriment {
