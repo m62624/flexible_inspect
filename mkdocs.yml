@@ -52,8 +52,8 @@ nav:
   - Home: index.md
   - Getting Started: getting-started/mod.md
   - Debug & logs: debug_and_logs.md
-  - Modifiers: modifiers.md
-  - Formating messages: formatting_the_error_message.md
+  - Modifiers: modifiers/mod.md
+  # - Formating messages: formatting_the_error_message.md
   - Changelog: CHANGELOG.md
   - Website materials: website-materials.md
   - Library license: LICENSE.md
