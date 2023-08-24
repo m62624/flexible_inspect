@@ -290,8 +290,6 @@ Let's now add a logging mode before we initialize our cartridges to see how the 
         If you call the `init_logger_with_offset` function to shift the time in the logs, the declaration of the environment variable through the code must be before the `init_logger_with_offset` functions are called. 
 
 === "JavaScript/TypeScript"
-
-    Don't forget to add to the import `init_logger`, `LogLevel`. 
   
     !!! info
         Unlike other languages, reading environment variables is not supported in this library. Therefore, a call to `init_logger()` is required to enable logging.
