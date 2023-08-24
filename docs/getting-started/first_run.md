@@ -255,4 +255,119 @@ To do this, we'll create two cartridges
     ],
     )
     ```
-So we've created two cartridges, we've specified rules inside that store regular expressions with modifiers
+So, we have created two cartridges, within which we have defined rules that store regular expressions with modifiers. 
+Each cartridge has a default validation mode `all root rules must be successfully validated`, the same applies to nested rules. You may notice in the second cartridge we used `extend` for the rule, when you use this modifier, you create a nested rule, the nested rules get the results from the root rule and start checking them.
+Here is an example of how the standard mode of nested rules works : `all root rules must be successfully validated`
+
+``` bash
+     #=======================================
+     text = "txt [123] txt [456] txt [789]"
+     #=======================================
+     CustomError
+     |
+     |__ Rule "\[[^\[\]]+\]" (MustBeFound) 
+          |   [123], [456], [789] # this is the result of the root rule
+          |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
+          |                                      |       |        |
+          |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
+```
+Let's now add a logging mode before we initialize our cartridges to see how the rules worked out
+
+=== "Rust"
+
+    ``` bash
+    FLEX_VALIDATOR_LOG=INFO cargo run
+    ```
+    or
+    ``` rust
+    use std::env;
+    // ERROR, INFO, DEBUG, TRACE
+    env::set_var("FLEX_VALIDATOR_LOG", "INFO");
+    // some code
+    ```
+
+    !!! info 
+        If you call the `init_logger_with_offset` function to shift the time in the logs, the declaration of the environment variable through the code must be before the `init_logger_with_offset` functions are called. 
+
+=== "JavaScript/TypeScript"
+
+    Don't forget to add to the import `init_logger`, `LogLevel`. 
+  
+    !!! info
+        Unlike other languages, reading environment variables is not supported in this library. Therefore, a call to `init_logger()` is required to enable logging.
+
+    ``` js
+     init_logger(LogLevel.INFO);
+    ```
+
+=== "Python"
+
+    ``` bash
+    FLEX_VALIDATOR_LOG=INFO file.py
+    ```
+    or
+    ``` python
+    import os
+    # ERROR, INFO, DEBUG, TRACE
+    os.environ["FLEX_VALIDATOR_LOG"] = "INFO"
+    # some code
+    ```
+    
+    !!! info 
+        If you call the `init_logger_with_offset` function to shift the time in the logs, the declaration of the environment variable through the code must be before the `init_logger_with_offset` functions are called. 
+
+After installing the logs, now let's run validation, load our validator with cartridges, and then, if something does not pass the check, we will get an iterator, which stores the object with an error code and a error message
+
+=== "Rust"
+
+    ``` rust
+    let validator_for_pseudo_format = TemplateValidator::new([found_broken_token, long_performance_testing]);
+    if let Err(errors) = validator_for_pseudo_format.validate(text) {
+        for err in errors {
+            println!("{}", err);
+        }
+    }
+    ```
+
+=== "JavaScript"
+
+    ``` js
+    let validator_for_pseudo_json = new TemplateValidator([
+        found_broken_token,
+        long_performance_testing,
+    ]);
+  
+  
+    let result = validator_for_pseudo_json.validate(text);
+      if (result !== undefined) {
+        result.for_each_1((error_code, error_message) => {
+          console.log(error_code, error_message);
+        });
+      }
+    } 
+    ```
+
+=== "TypeScript"
+
+    ``` ts
+
+    let validator_for_pseudo_json = new TemplateValidator([
+      found_broken_token,
+      long_performance_testing,
+    ]);
+
+
+    let result = validator_for_pseudo_json.validate(text);
+    if (result !== undefined) {
+      result.for_each_1((error_code: number, error_message: string) => {
+        console.log(error_code, error_message);
+      });
+    }
+    },
+    ```
+
+=== "Python"
+
+    ``` python
+    
+    ```
