@@ -1,7 +1,7 @@
 site_name: Flexible Inspect Docs
 repo_url: https://github.com/m62624/flexible_inspect
 site_author: m62624
-theme:
+theme: 
   language: en
   name: material
   logo: logo/png/icon-mini.png
@@ -42,9 +42,11 @@ markdown_extensions:
   - pymdownx.snippets
   - admonition
   - pymdownx.details
-  - pymdownx.superfences
   - pymdownx.tabbed:
       alternate_style: true
+  - attr_list
+  - md_in_html
+  - pymdownx.superfences
 
 nav:
   - Home: index.md
