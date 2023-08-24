@@ -46,7 +46,6 @@ CustomError
 ```
 
 ### at_least_one_rule_for_all_matches (any_r_for_all_m)
----
 
 In this mode, at least one rule must pass the test for all matches.
 
