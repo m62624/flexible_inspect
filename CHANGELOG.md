@@ -1,6 +1,6 @@
 # Changelog
 
-## [2.0.0] - 2023.08.xx
+## [2.0.0] - 2023.08.25
 ### Fixed
 - Fixes for mode switching in nested rule matches.
 ### Changed
