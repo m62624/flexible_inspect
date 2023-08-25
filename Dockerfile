@@ -17,8 +17,12 @@ RUN apt-get install -y nodejs npm && cargo install wasm-pack
 RUN cargo install cargo-tarpaulin && rustup component add clippy-preview  
 
 # Python
-RUN apt-get install -y python3-dev python3-pip && pip3 install --upgrade pip
-RUN pip install maturin[zig] && pip3 install twine
+RUN apt-get install -y python3-dev python3-pip python3-venv;
+ENV VIRTUAL_ENV=/opt/venv
+RUN python3 -m venv $VIRTUAL_ENV
+ENV PATH="$VIRTUAL_ENV/bin:$PATH"
+RUN pip3 install --upgrade pip; \
+    pip3 install maturin[zig] && pip3 install twine
 
 # Targets for rust
 RUN rustup target add x86_64-unknown-linux-gnu; \
@@ -53,4 +57,4 @@ RUN rm -rf *
 
 # Copy project
 COPY . .
-CMD ["echo","Welcome to the project build :D"]
+# ENTRYPOINT ["source", "/.pyvenv/bin/activate"]
