@@ -24,9 +24,9 @@ All versions are uploaded to official registries where libraries for languages a
     ``` sh
     
     # If you need to validate directly in the browser or using webpack use
-    npm install flexible_inspect_js_web
+    npm install @m62624/flexible_inspect_js_web
     # or
-    npm install flexible_inspect_js_node
+    npm install @m62624/flexible_inspect_js_node
     ```
     !!! warning "Importing the library"
         The import differs depending on the version, see further in the documentation under `The first run`.
