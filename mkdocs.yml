@@ -34,7 +34,6 @@ theme:
 plugins:
   - social:
       cards_layout: default/variant
-      site_url: http://flexible-inspect.readthedocs.io/
   - search:
       separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
   - include-markdown
