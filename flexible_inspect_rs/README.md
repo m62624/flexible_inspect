@@ -1,6 +1,6 @@
 <p align="center">
     <kbd>
-        <img src="../docs/logo/png/Color logo with background.png" alt="Logo" width="700" />
+        <img src="https://github.com/m62624/flexible_inspect/blob/main/docs/logo/png/Color%20logo%20with%20background.png" alt="Logo" width="700" />
     </kbd>
 </p>
 
@@ -19,4 +19,4 @@ Rust version customized for validator implementations for other programming lang
 For more information on how the library works, including a detailed description of the API, practical examples and instructions, please go to the [documentation](http://flexible-inspect.readthedocs.io/)
 
 ## License
-[MIT License](../LICENSE).
+[MIT License](https://github.com/m62624/flexible_inspect/blob/main/LICENSE).
