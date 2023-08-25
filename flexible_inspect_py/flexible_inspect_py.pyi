@@ -95,29 +95,16 @@ class Rule:
      * Please stick to *raw string literals* when creating regular expressions, without it your regular expression may behave differently\
          > `r"d{3}."` - is the correct conversion to a regular expression\
          > `"d{3}."` - possible incorrect behavior
-     * By default, all rules must pass every match check
-     In this mode, to which all additional rules apply (default mode for everyone).
-     We check that for each match (text) all the rules will work.
-     ## Operation scheme of the mode
 
-    ```bash
-     #=======================================
-     text = "txt [123] txt [456] txt [789]"
-     #=======================================
-     CustomError
-     |
-     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-          |   [123], [456], [789]
-          |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
-          |                                      |       |        |
-          |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
-    ```
+    by default, `all_rules_for_all_matches`. In this mode, all rules must be tested for all matches
         """
         ...
 
     def extend(self, nested_rules: List[Rule]) -> Rule:
         """
     Extend the rule with nested rules.
+
+    By default, `all_rules_for_all_matches`. In this mode, all rules must be tested for all matches
 
     Parameters
     ----------
@@ -151,67 +138,26 @@ class Rule:
     ...
 
     def all_r_for_any_m(self) -> Rule:
-        r"""
-     modifier to change the rule matching mode.
+        """
+        modifier to change the rule matching mode.
 
-     In this mode, `all the sub-rules` should work for at least `one match`.
-     If at least one sub-rule does not work on one of the matches, an error will be returned.
-
-     ```bash
-     #=======================================
-     text = "txt [123] txt [456] txt [789]"
-     #=======================================
-     CustomError (Cartridge)
-     |
-     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-         |   [123], [456], [789]
-         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
-         |                                      |
-         |___ Subrule "\[\d+\]" (MustBeFound) __|
-         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- ERROR 
-      ```
+        In this mode, all rules must pass the test for at least one match
          """
     ...
 
     def any_r_for_all_m(self) -> Rule:
-        r"""
-    modifier to change the rule matching mode,
+        """
+        modifier to change the rule matching mode.
 
-    In this mode, at least `one sub-rule` should work for `every match`. If no sub-rule works on one of the matches, an error will be returned.
-    ```bash
-     #=======================================
-     text = "txt [123] txt [456] txt [789]"
-     #=======================================
-     CustomError (Cartridge)
-     |
-     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-         |   [123], [456], [789]
-         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE -- [456] -- TRUE -- [789] -- TRUE
-         |                                      |               |                 |
-         |___ Subrule "\[\d+\]" (MustBeFound) __|_______________|_________________|
-         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched)
-    ```
+        In this mode, at least one rule must pass the test for all matches.
         """
     ...
 
     def any_r_for_any_m(self) -> Rule:
-        r"""
-    modifier to change the rule matching mode
+        """
+        modifier to change the rule matching mode.
 
-    In this mode, at least `one sub-rule` should work for at least `one match`. If no sub-rule works on one of the matches, an error will be returned.
-    ```bash
-    #=======================================
-    text = "txt [123] txt [456] txt [789]"
-    #=======================================
-    CustomError (Cartridge)
-    |
-    |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-        |   [123], [456], [789]
-        |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
-        |                                      |
-        |___ Subrule "\[\d+\]" (MustBeFound) __|
-        |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
-    ```
+        In this mode, at least one rule must pass at least one match check
         """
     ...
 # ========================================================
@@ -245,30 +191,16 @@ class RuleBytes:
      ## Example
         > `r"d{3}."` - is the correct conversion to a regular expression\
         >  `"d{3}."` - possible incorrect behavior
-     * By default, all rules must pass every match check
-     In this mode, to which all additional rules apply (default mode for everyone).
-     We check that for each match (text) all the rules will work.
-     ## Operation scheme of the mode
 
-     ```bash
-     #=======================================
-     text = "txt [123] txt [456] txt [789]"
-     #=======================================
-     CustomError
-     |
-     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-          |   [123], [456], [789]
-          |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
-          |                                      |       |        |
-          |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
-     ```
-
+        by default, `all_rules_for_all_matches`. In this mode, all rules must be tested for all matches
         """
         ...
 
     def extend(self, nested_rules: List[RuleBytes]) -> RuleBytes:
         """
     Extend the rule with nested rules.
+
+    By default, `all_rules_for_all_matches`. In this mode, all rules must be tested for all matches
 
     Parameters
     ----------
@@ -301,68 +233,27 @@ class RuleBytes:
         """
     ...
 
-    def all_r_for_any_m(self) -> RuleBytes:
-        r"""
-     modifier to change the rule matching mode.
+    def all_r_for_any_m(self) -> Rule:
+        """
+        modifier to change the rule matching mode.
 
-     In this mode, `all the sub-rules` should work for at least `one match`.
-     If at least one sub-rule does not work on one of the matches, an error will be returned.
-
-     ```bash
-     #=======================================
-     text = "txt [123] txt [456] txt [789]"
-     #=======================================
-     CustomError (Cartridge)
-     |
-     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-         |   [123], [456], [789]
-         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
-         |                                      |
-         |___ Subrule "\[\d+\]" (MustBeFound) __|
-         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- ERROR 
-      ```
+        In this mode, all rules must pass the test for at least one match
          """
     ...
 
-    def any_r_for_all_m(self) -> RuleBytes:
-        r"""
-    modifier to change the rule matching mode,
+    def any_r_for_all_m(self) -> Rule:
+        """
+        modifier to change the rule matching mode.
 
-    In this mode, at least `one sub-rule` should work for `every match`. If no sub-rule works on one of the matches, an error will be returned.
-    ```bash
-     #=======================================
-     text = "txt [123] txt [456] txt [789]"
-     #=======================================
-     CustomError (Cartridge)
-     |
-     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-         |   [123], [456], [789]
-         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE -- [456] -- TRUE -- [789] -- TRUE
-         |                                      |               |                 |
-         |___ Subrule "\[\d+\]" (MustBeFound) __|_______________|_________________|
-         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched)
-    ```
+        In this mode, at least one rule must pass the test for all matches.
         """
     ...
 
-    def any_r_for_any_m(self) -> RuleBytes:
-        r"""
-    modifier to change the rule matching mode
+    def any_r_for_any_m(self) -> Rule:
+        """
+        modifier to change the rule matching mode.
 
-    In this mode, at least `one sub-rule` should work for at least `one match`. If no sub-rule works on one of the matches, an error will be returned.
-    ```bash
-    #=======================================
-    text = "txt [123] txt [456] txt [789]"
-    #=======================================
-    CustomError (Cartridge)
-    |
-    |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-        |   [123], [456], [789]
-        |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
-        |                                      |
-        |___ Subrule "\[\d+\]" (MustBeFound) __|
-        |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
-    ```
+        In this mode, at least one rule must pass at least one match check
         """
     ...
 # ========================================================
@@ -392,24 +283,8 @@ class Cartridge:
     Constructor for `Cartridge`
 
     # Notes
-     * by default, all rules must pass every match check
-     In this mode, to which all additional rules apply (default mode for everyone).
-     We check that for each match (text) all the rules will work.
-     ## Operation scheme of the mode
 
-     ```bash
-     #=======================================
-     text = "txt [123] txt [456] txt [789]"
-     #=======================================
-     CustomError
-     |
-     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-          |   [123], [456], [789]
-          |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
-          |                                      |       |        |
-          |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
-
-     ```
+    By default, `all_rules_for_all_matches`. In this mode, all rules must be tested for all matches
 
     ## Fill in messages
      * Each cartridge supports filling the message with unwanted data, when specifying a message,
@@ -419,23 +294,10 @@ class Cartridge:
         ...
 
     def any_r_for_any_m(self) -> Cartridge:
-        r"""
-     modifier to change the root rule matching mode,
+        """
+         modifier to change the rule matching mode.
 
-     In this mode, at least one sub-rule should work for at least one match. If no sub-rule works on one of the matches, an error will be returned.
-     ```bash
-     #=======================================
-     text = "txt [123] txt [456] txt [789]"
-     #=======================================
-     CustomError (Cartridge)
-     |
-     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-         |   [123], [456], [789]
-         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
-         |                                      |
-         |___ Subrule "\[\d+\]" (MustBeFound) __|
-         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
-     ```
+         In this mode, at least one rule must pass at least one match check
         """
         ...
 
@@ -466,24 +328,8 @@ class CartridgeBytes:
     Constructor for `CartridgeBytes`
 
     # Notes
-     * by default, all rules must pass every match check
-     In this mode, to which all additional rules apply (default mode for everyone).
-     We check that for each match (text) all the rules will work.
-     ## Operation scheme of the mode
 
-     ```bash
-     #=======================================
-     text = "txt [123] txt [456] txt [789]"
-     #=======================================
-     CustomError
-     |
-     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-          |   [123], [456], [789]
-          |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
-          |                                      |       |        |
-          |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
-
-     ```
+    By default, `all_rules_for_all_matches`. In this mode, all rules must be tested for all matches
 
     ## Fill in messages
      * Each cartridge supports filling the message with unwanted data, when specifying a message,
@@ -493,23 +339,10 @@ class CartridgeBytes:
         ...
 
     def any_r_for_any_m(self) -> CartridgeBytes:
-        r"""
-     modifier to change the root rule matching mode,
+        """
+         modifier to change the rule matching mode.
 
-     In this mode, at least one sub-rule should work for at least one match. If no sub-rule works on one of the matches, an error will be returned.
-     ```bash
-     #=======================================
-     text = "txt [123] txt [456] txt [789]"
-     #=======================================
-     CustomError (Cartridge)
-     |
-     |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-         |   [123], [456], [789]
-         |___ Subrule ".+" (MustBeFound) ---> [123] -- TRUE
-         |                                      |
-         |___ Subrule "\[\d+\]" (MustBeFound) __|
-         |___ Subrule "[a-z]+" (MustBeFound) ---> No Match -- TRUE (since other rules matched for at least one match)
-     ```
+         In this mode, at least one rule must pass at least one match check
         """
         ...
 # ========================================================
