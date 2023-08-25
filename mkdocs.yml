@@ -7,6 +7,8 @@ theme:
   name: material
   logo: logo/png/icon-mini.png
   features:
+    - navigation.path
+    - navigation.tracking
     - header.autohide
     - navigation.instant
     - navigation.top
@@ -34,8 +36,7 @@ theme:
 plugins:
   - social:
       cards_layout: default/variant
-  - search:
-      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
+  - search
   - include-markdown
 
 markdown_extensions:
