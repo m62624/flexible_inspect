@@ -179,7 +179,7 @@ To do this, we'll create two cartridges
           MatchRequirement.MustNotBeFound
         ).finish_build(),
       ]
-    );
+    ).finish_build();
     /*
       check under `Performance Testing` that the end time must be earlier than 11 o'clock,
       check the time only if the result is successful
@@ -211,7 +211,7 @@ To do this, we'll create two cartridges
           ])
           .finish_build(),
       ]
-    );
+    ).finish_build();
     ```
 
 === "Python"
