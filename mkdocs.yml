@@ -1,11 +1,15 @@
 site_name: Flexible Inspect Docs
 repo_url: https://github.com/m62624/flexible_inspect
 site_author: m62624
-theme: 
+theme:
+  favicon: logo/png/icon-mini.png
   language: en
   name: material
   logo: logo/png/icon-mini.png
   features:
+    - header.autohide
+    - navigation.instant
+    - navigation.top
     - content.code.copy
     - content.tabs.link
   palette:
@@ -28,7 +32,10 @@ theme:
         name: Switch to light mode
 
 plugins:
-  - search
+  - social:
+    site_url: http://flexible-inspect.readthedocs.io/
+  - search:
+      separator: '[\s\-,:!=\[\]()"/]+|(?!\b)(?=[A-Z][a-z])|\.(?!\d)|&[lg]t;'
   - include-markdown
 
 markdown_extensions:

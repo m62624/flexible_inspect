@@ -1,3 +1,5 @@
 mkdocs-include-markdown-plugin
 mkdocs-exclude
 mkdocs-material
+pillow 
+cairosvg
