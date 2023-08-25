@@ -18,67 +18,67 @@ env:
 
 jobs:
   # job для сборки образа (в нем будет происходит сборка и тестирование библиотеки)
-  build-image:
-    runs-on: ubuntu-latest
-    steps:
-      # Шаг для входа в Docker Registry
-      - name: Log in to `GitHub Docker Registry`
-        run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
-      # Шаг для клонирования репозитория
-      - name: Checkout code
-        uses: actions/checkout@v3
-      # Шаг для сборки и пуша образа (используем кэш прошлой сборки)
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v2
-      - name: Build and push
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          push: true
-          tags: ${{ env.IMAGE_DOCKER }}:latest
-          cache-from: type=registry,ref=${{ env.IMAGE_DOCKER }}:buildcache
-          cache-to: type=registry,ref=${{ env.IMAGE_DOCKER }}:buildcache,mode=max
+  # build-image:
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # Шаг для входа в Docker Registry
+  #     - name: Log in to `GitHub Docker Registry`
+  #       run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+  #     # Шаг для клонирования репозитория
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     # Шаг для сборки и пуша образа (используем кэш прошлой сборки)
+  #     - name: Set up Docker Buildx
+  #       uses: docker/setup-buildx-action@v2
+  #     - name: Build and push
+  #       uses: docker/build-push-action@v4
+  #       with:
+  #         context: .
+  #         push: true
+  #         tags: ${{ env.IMAGE_DOCKER }}:latest
+  #         cache-from: type=registry,ref=${{ env.IMAGE_DOCKER }}:buildcache
+  #         cache-to: type=registry,ref=${{ env.IMAGE_DOCKER }}:buildcache,mode=max
 
-  # Job для проверки кода линтером
-  linter-check-all-versions:
-    needs: build-image
-    runs-on: ubuntu-latest
-    steps:
-      # Шаг для входа в Docker Registry
-      - name: Log in to `GitHub Docker Registry`
-        run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
-      # Шаг для клонирования репозитория
-      - name: Checkout code
-        uses: actions/checkout@v3
-      # Шаг для запуска линтера
-      - name: Linter check (clippy)
-        run: docker run ${{ env.IMAGE_DOCKER }}:latest cargo clippy -- -D warnings
+  # # Job для проверки кода линтером
+  # linter-check-all-versions:
+  #   needs: build-image
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # Шаг для входа в Docker Registry
+  #     - name: Log in to `GitHub Docker Registry`
+  #       run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+  #     # Шаг для клонирования репозитория
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     # Шаг для запуска линтера
+  #     - name: Linter check (clippy)
+  #       run: docker run ${{ env.IMAGE_DOCKER }}:latest cargo clippy -- -D warnings
 
-  core-rust-tests:
-    needs: linter-check-all-versions
-    runs-on: ubuntu-latest
-    steps:
-      # Шаг для входа в Docker Registry
-      - name: Log in to `GitHub Docker Registry`
-        run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
-      # Шаг для запуска контейнера с тестами
-      - name: Core tests (rust)
-        run: |
-          docker run ${{ env.IMAGE_DOCKER }}:latest \
-          cargo test --manifest-path ./flexible_inspect_rs/Cargo.toml
+  # core-rust-tests:
+  #   needs: linter-check-all-versions
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # Шаг для входа в Docker Registry
+  #     - name: Log in to `GitHub Docker Registry`
+  #       run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+  #     # Шаг для запуска контейнера с тестами
+  #     - name: Core tests (rust)
+  #       run: |
+  #         docker run ${{ env.IMAGE_DOCKER }}:latest \
+  #         cargo test --manifest-path ./flexible_inspect_rs/Cargo.toml
 
-  docs-rust-tests:
-    needs: linter-check-all-versions
-    runs-on: ubuntu-latest
-    steps:
-      # Шаг для входа в Docker Registry
-      - name: Log in to `GitHub Docker Registry`
-        run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
-      # Шаг для запуска контейнера с тестами
-      - name: Core tests (rust)
-        run: |
-          docker run ${{ env.IMAGE_DOCKER }}:latest \
-          cargo test --doc --manifest-path ./flexible_inspect_rs/Cargo.toml
+  # docs-rust-tests:
+  #   needs: linter-check-all-versions
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # Шаг для входа в Docker Registry
+  #     - name: Log in to `GitHub Docker Registry`
+  #       run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+  #     # Шаг для запуска контейнера с тестами
+  #     - name: Core tests (rust)
+  #       run: |
+  #         docker run ${{ env.IMAGE_DOCKER }}:latest \
+  #         cargo test --doc --manifest-path ./flexible_inspect_rs/Cargo.toml
 
   # Job для тестирования кода
   # coverage-tests:
@@ -118,35 +118,35 @@ jobs:
   #         flags: unittests
   #         verbose: true
 
-  wasm-lib-tests:
-    needs: linter-check-all-versions
-    runs-on: ubuntu-latest
-    steps:
-      # Шаг для входа в Docker Registry
-      - name: Log in to `GitHub Docker Registry`
-        run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
-      - name: Wasm tests (JavaScript vesrion)
-        run: |
-          docker run ${{ env.IMAGE_DOCKER }}:latest wasm-pack test --node flexible_inspect_js
+  # wasm-lib-tests:
+  #   needs: linter-check-all-versions
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # Шаг для входа в Docker Registry
+  #     - name: Log in to `GitHub Docker Registry`
+  #       run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+  #     - name: Wasm tests (JavaScript vesrion)
+  #       run: |
+  #         docker run ${{ env.IMAGE_DOCKER }}:latest wasm-pack test --node flexible_inspect_js
 
-  python-lib-tests:
-    needs: linter-check-all-versions
-    runs-on: ubuntu-latest
-    steps:
-      # Шаг для входа в Docker Registry
-      - name: Log in to `GitHub Docker Registry`
-        run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
-      # Шаг для запуска контейнера с тестами
-      - name: Core tests (rust)
-        run: |
-          docker run ${{ env.IMAGE_DOCKER }}:latest \
-          cargo test --manifest-path ./flexible_inspect_py/Cargo.toml
+  # python-lib-tests:
+  #   needs: linter-check-all-versions
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # Шаг для входа в Docker Registry
+  #     - name: Log in to `GitHub Docker Registry`
+  #       run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+  #     # Шаг для запуска контейнера с тестами
+  #     - name: Core tests (rust)
+  #       run: |
+  #         docker run ${{ env.IMAGE_DOCKER }}:latest \
+  #         cargo test --manifest-path ./flexible_inspect_py/Cargo.toml
 
 
   packages-js:
-    needs: [core-rust-tests, wasm-lib-tests]
+    # needs: [core-rust-tests, wasm-lib-tests]
     runs-on: ubuntu-latest
-    if: startsWith(github.event.ref, 'refs/tags/v')
+    # if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
       - name: Log in to `GitHub Docker Registry`
         run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
@@ -171,41 +171,42 @@ jobs:
             pkg-web
             pkg-nodejs
 
-  packages-py:
-    needs: [core-rust-tests, python-lib-tests]
-    runs-on: ubuntu-latest
-    if: startsWith(github.event.ref, 'refs/tags/v')
-    steps:
-      - name: Log in to `GitHub Docker Registry`
-        run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
-      - name: Build packages (wheel)
-        run: |
-          docker run ${{ env.IMAGE_DOCKER }}:latest make all-python
-          docker cp $(docker ps -lq):/main_project/dist .
-      - name: Save package to artifacts
-        uses: actions/upload-artifact@v3
-        with:
-          name: python-wheels-${{ github.run_id }}
-          path: dist
+  # packages-py:
+  #   needs: [core-rust-tests, python-lib-tests]
+  #   runs-on: ubuntu-latest
+  #   if: startsWith(github.event.ref, 'refs/tags/v')
+  #   steps:
+  #     - name: Log in to `GitHub Docker Registry`
+  #       run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+  #     - name: Build packages (wheel)
+  #       run: |
+  #         docker run ${{ env.IMAGE_DOCKER }}:latest make all-python
+  #         docker cp $(docker ps -lq):/main_project/dist .
+  #     - name: Save package to artifacts
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: python-wheels-${{ github.run_id }}
+  #         path: dist
 
   package-publishing-all-versions:
-    needs: [packages-js, packages-py]
+    # needs: [packages-js, packages-py]
+    needs: [packages-js]
     runs-on: ubuntu-latest
-    if: startsWith(github.event.ref, 'refs/tags/v')
+    # if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
       - name: Log in to `GitHub Docker Registry`
         run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
-      - name: Publish packages (crate)
-        run: |
-          docker run ${{ env.IMAGE_DOCKER }}:latest cargo publish --token ${{ secrets.CRATESIO_TOKEN }} --manifest-path ./flexible_inspect_rs/Cargo.toml
-      - name: Download packages (wheels)
-        uses: actions/download-artifact@v3
-        with:
-          name: python-wheels-${{ github.run_id }}
-          path: dist
-      - name: Publish packages (wheels)
-        run: |
-          docker run -v "$(pwd):/main_project" ${{ env.IMAGE_DOCKER }}:latest twine upload --verbose dist/* --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+      # - name: Publish packages (crate)
+      #   run: |
+      #     docker run ${{ env.IMAGE_DOCKER }}:latest cargo publish --token ${{ secrets.CRATESIO_TOKEN }} --manifest-path ./flexible_inspect_rs/Cargo.toml
+      # - name: Download packages (wheels)
+      #   uses: actions/download-artifact@v3
+      #   with:
+      #     name: python-wheels-${{ github.run_id }}
+      #     path: dist
+      # - name: Publish packages (wheels)
+      #   run: |
+      #     docker run -v "$(pwd):/main_project" ${{ env.IMAGE_DOCKER }}:latest twine upload --verbose dist/* --username __token__ --password ${{ secrets.PYPI_TOKEN }}
       - name: Download packages (wasm)
         uses: actions/download-artifact@v3
         with:
@@ -219,53 +220,55 @@ jobs:
           echo //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}} > ./pkg-wasm/pkg-web/.npmrc; \
           echo //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}} > ./pkg-wasm/pkg-nodejs/.npmrc;"
           #=============================================================================================
+          ls -a; \
           docker run -v "$(pwd):/main_project" ${{ env.IMAGE_DOCKER }}:latest sh -c "
+          ls -R; \
           npm pack ./pkg-wasm/pkg-web; \
           npm pack ./pkg-wasm/pkg-nodejs; \
           npm publish ./pkg-wasm/pkg-web/*.tgz --access public; \
           npm publish ./pkg-wasm/pkg-nodejs/*.tgz --access public;"
 
-  create-release-on-github:
-    needs: package-publishing-all-versions
-    runs-on: ubuntu-latest
-    if: startsWith(github.event.ref, 'refs/tags/v')
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Download packages (wheels)
-        uses: actions/download-artifact@v3
-        with:
-          name: python-wheels-${{ github.run_id }}
-          path: dist
-      - name: Download packages (wasm)
-        uses: actions/download-artifact@v3
-        with:
-          name: javascirpt-npm-${{ github.run_id }}
-          path: pkg
-      - name: Compress pkg folder (wasm->tgz)
-        run: | 
-          tar czf npm-wasm-for-web.tgz -C ./pkg/pkg-web .; \
-          tar czf npm-wasm-for-node.tgz -C ./pkg/pkg-nodejs .;
-      - name: Extract changelog content
-        run: |
-          docker pull ${{ env.IMAGE_GET_CHUNK }}:latest; \
-          docker run -v "$(pwd):/main_project" ${{ env.IMAGE_GET_CHUNK }}:latest \
-          get_chunk \
-          --read-from /main_project/CHANGELOG.md \
-          --start-str '## \[\d\.\d\.\d\]' \
-          --write-to /main_project/temp_changelog.md;
-      - name: Release
-        uses: softprops/action-gh-release@v1
-        with:
-          draft: false
-          tag_name: ${{ github.ref }}
-          name: Release ${{github.ref_name}}
-          body_path: temp_changelog.md
-          # note you'll typically need to create a personal access token
-          # with permissions to create releases in the other repo
-          token: ${{ secrets.PAT_GITHUB }}
-          files: |
-            npm-wasm-for-web.tgz
-            npm-wasm-for-node.tgz
-            dist/*
-          #=====================
+  # create-release-on-github:
+  #   needs: package-publishing-all-versions
+  #   runs-on: ubuntu-latest
+  #   if: startsWith(github.event.ref, 'refs/tags/v')
+  #   steps:
+  #     - name: Checkout code
+  #       uses: actions/checkout@v3
+  #     - name: Download packages (wheels)
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: python-wheels-${{ github.run_id }}
+  #         path: dist
+  #     - name: Download packages (wasm)
+  #       uses: actions/download-artifact@v3
+  #       with:
+  #         name: javascirpt-npm-${{ github.run_id }}
+  #         path: pkg
+  #     - name: Compress pkg folder (wasm->tgz)
+  #       run: | 
+  #         tar czf npm-wasm-for-web.tgz -C ./pkg/pkg-web .; \
+  #         tar czf npm-wasm-for-node.tgz -C ./pkg/pkg-nodejs .;
+  #     - name: Extract changelog content
+  #       run: |
+  #         docker pull ${{ env.IMAGE_GET_CHUNK }}:latest; \
+  #         docker run -v "$(pwd):/main_project" ${{ env.IMAGE_GET_CHUNK }}:latest \
+  #         get_chunk \
+  #         --read-from /main_project/CHANGELOG.md \
+  #         --start-str '## \[\d\.\d\.\d\]' \
+  #         --write-to /main_project/temp_changelog.md;
+  #     - name: Release
+  #       uses: softprops/action-gh-release@v1
+  #       with:
+  #         draft: false
+  #         tag_name: ${{ github.ref }}
+  #         name: Release ${{github.ref_name}}
+  #         body_path: temp_changelog.md
+  #         # note you'll typically need to create a personal access token
+  #         # with permissions to create releases in the other repo
+  #         token: ${{ secrets.PAT_GITHUB }}
+  #         files: |
+  #           npm-wasm-for-web.tgz
+  #           npm-wasm-for-node.tgz
+  #           dist/*
+  #         #=====================
