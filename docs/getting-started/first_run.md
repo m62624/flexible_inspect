@@ -18,7 +18,7 @@ Now we can start writing the code. Let's start with importing
       TemplateValidator,
       init_logger,
       LogLevel,
-    } from "flexible_inspect_js_node";
+    } from "@m62624/flexible_inspect_js_node";
     ```
 
     Or you use the **web** version to work directly in the **browser** or using **webpack**. You must load the `wasm` file before using the library, using the `init()` async function.
