@@ -54,9 +54,8 @@ impl TryFrom<&mut PyCartridge> for PyCartridge {
     type Error = PyErr;
 
     fn try_from(value: &mut PyCartridge) -> Result<Self, Self::Error> {
-        let value = std::mem::take(value);
         if value.0.is_some() {
-            Ok(value)
+            Ok(std::mem::take(value))
         } else {
             Err(PyErr::new::<exceptions::PyUnboundLocalError, _>(
                 ERR_OPTION_CARTRIDGE,

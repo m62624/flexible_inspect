@@ -85,9 +85,8 @@ impl TryFrom<&mut WasmCartridge> for WasmCartridge {
     type Error = JsValue;
 
     fn try_from(value: &mut WasmCartridge) -> Result<Self, Self::Error> {
-        let value = std::mem::take(value);
         if value.0.is_some() {
-            Ok(value)
+            Ok(std::mem::take(value))
         } else {
             Err(JsValue::from_str(ERR_OPTION_CARTRIDGE))
         }

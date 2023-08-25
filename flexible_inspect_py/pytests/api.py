@@ -3,10 +3,10 @@ import asyncio
 from flexible_inspect_py import Cartridge, MatchRequirement, TemplateValidator, Rule
 
 root_rule = Rule(r"/.+/.+/file.txt", MatchRequirement.MustBeFound)
-root_rule.all_r_for_any_m()
+# root_rule.all_r_for_any_m()
 
 cartrdige_0 = Cartridge(0, "Not Found", [
-    # root_rule
+    root_rule
 ])
 
 # cartrdige_0 = Cartridge(0, "Not Found", [Rule(
