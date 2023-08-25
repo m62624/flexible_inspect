@@ -17,23 +17,8 @@ impl WasmCartridgeBytes {
     /// * `message` - error message
     /// * `root_rules` - \[ `RuleBytes`, `RuleBytes`, `RuleBytes` \] (collection)
     /// # Notes:
-    /// * **by default, all rules must pass every match check**
-    /// In this mode, to which all additional rules apply (default mode for everyone).
-    /// We check that for each match (text) all the rules will work.
-    /// ## Operation scheme of the mode
-    /// ```bash
-    /// #=======================================
-    /// text = "txt [123] txt [456] txt [789]"
-    /// #=======================================
-    /// CustomError
-    /// |
-    /// |__ Rule "\[[^\[\]]+\]" (MustBeFound)
-    ///      |   [123], [456], [789]
-    ///      |___ Subrule ".+" (MustBeFound) ---> [123] -> [456] -> [789] -- TRUE
-    ///      |                                      |       |        |
-    ///      |___ Subrule "\[\d+\]" (MustBeFound) __|_______|________|
-    ///
-    /// ```
+    /// **by default, `all_rules_for_all_matches`**
+    /// In this mode, all rules must be tested for all matches
     ///
     /// ## Fill in messages
     /// * Each cartridge supports filling the message with unwanted data, when specifying a message,

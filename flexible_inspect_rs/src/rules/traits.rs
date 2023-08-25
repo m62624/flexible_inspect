@@ -49,7 +49,7 @@ pub trait RuleModifiers {
     type RuleType;
 
     /// modifier for extending the rule with nested rules
-
+    /// 
     /// ( **by default, `all_rules_for_all_matches`** )\
     /// In this mode, all rules must be tested for all matches
     fn extend<R: IntoIterator<Item = Self::RuleType>>(self, nested_rules: R) -> Self::RuleType;
