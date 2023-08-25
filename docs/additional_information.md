@@ -1,3 +1,9 @@
+## Perhaps a flexible, but not the most convenient validator
+
+Native solutions such as parsers for different data formats (e.g., HTML, JSON, and XML) provide a more structured and flexible way of validation. These tools not only provide tools for syntax validation, but also allow you to address data components at a deeper level.
+
+The bottom line is that despite the flexibility of regular expressions, there are many benefits to using native solutions for data validation, from improving code readability and maintainability to providing more robust and structured validation. Consider implementing native tools into your data validation process and experience the difference for yourself.
+
 ## Realizing ownership in other languages
 
 While in Rust [ownership](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html#what-is-ownership) works out of the box, using `self` to absorb and after applying modifiers, we get a modified value, in implementations of other languages, when we absorbed a value, we don't get a proper warning from the compiler that the value is already absorbed (since all implementations of the library in other languages are based on `Rust`). That's why we made an implementation on [borrowing](https://doc.rust-lang.org/book/ch04-02-references-and-borrowing.html) after which [ownership](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html#what-is-ownership) occurs, without expensive cloning and checking [ownership](https://doc.rust-lang.org/book/ch04-01-what-is-ownership.html#what-is-ownership).
