@@ -188,42 +188,41 @@ jobs:
           name: python-wheels-${{ github.run_id }}
           path: dist
 
-  # package-publishing-all-versions:
-  #   needs: [packages-js, packages-py]
-  #   runs-on: ubuntu-latest
-  #   if: startsWith(github.event.ref, 'refs/tags/v')
-  #   steps:
-  #     - name: Log in to `GitHub Docker Registry`
-  #       run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
-  #     # - name: Publish packages (crate)
-  #     #   run: |
-  #     #     docker run ${{ env.IMAGE_DOCKER }}:latest cargo publish --token ${{ secrets.CRATESIO_TOKEN }} --manifest-path ./flexible_inspect_rs/Cargo.toml
-  #     # - name: Download packages (wheels)
-  #     #   uses: actions/download-artifact@v3
-  #     #   with:
-  #     #     name: python-wheels-${{ github.run_id }}
-  #     #     path: dist
-  #     # - name: Publish packages (wheels)
-  #     #   run: |
-  #     #     docker run -v "$(pwd):/main_project" ${{ env.IMAGE_DOCKER }}:latest twine upload --verbose dist/* --username __token__ --password ${{ secrets.PYPI_TOKEN }}
-  #     - name: Download packages (wasm)
-  #       uses: actions/download-artifact@v3
-  #       with:
-  #         name: javascirpt-npm-${{ github.run_id }}
-  #         path: pkg-wasm
-  #     - name: Publish packages (wasm)
-  #       run: |
-  #         #=============================================================================================
-  #         docker run -v "$(pwd):/main_project" ${{ env.IMAGE_DOCKER }}:latest sh -c "
-  #         npm pack ./pkg-wasm/pkg-web; \
-  #         npm pack ./pkg-wasm/pkg-nodejs; \
-  #         echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}' > .npmrc; \
-  #         npm publish ${{ secrets.NAME_LOGIN }}-flexible_inspect_js_web*.tgz --access public; \
-  #         npm publish ${{ secrets.NAME_LOGIN }}-flexible_inspect_js_node*.tgz --access public;"
+  package-publishing-all-versions:
+    needs: [packages-js, packages-py]
+    runs-on: ubuntu-latest
+    if: startsWith(github.event.ref, 'refs/tags/v')
+    steps:
+      - name: Log in to `GitHub Docker Registry`
+        run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+      - name: Publish packages (crate)
+        run: |
+          docker run ${{ env.IMAGE_DOCKER }}:latest cargo publish --token ${{ secrets.CRATESIO_TOKEN }} --manifest-path ./flexible_inspect_rs/Cargo.toml
+      - name: Download packages (wheels)
+        uses: actions/download-artifact@v3
+        with:
+          name: python-wheels-${{ github.run_id }}
+          path: dist
+      - name: Publish packages (wheels)
+        run: |
+          docker run -v "$(pwd):/main_project" ${{ env.IMAGE_DOCKER }}:latest twine upload --verbose dist/* --username __token__ --password ${{ secrets.PYPI_TOKEN }}
+      - name: Download packages (wasm)
+        uses: actions/download-artifact@v3
+        with:
+          name: javascirpt-npm-${{ github.run_id }}
+          path: pkg-wasm
+      - name: Publish packages (wasm)
+        run: |
+          #=============================================================================================
+          docker run -v "$(pwd):/main_project" ${{ env.IMAGE_DOCKER }}:latest sh -c "
+          npm pack ./pkg-wasm/pkg-web; \
+          npm pack ./pkg-wasm/pkg-nodejs; \
+          echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}' > .npmrc; \
+          npm publish ${{ secrets.NAME_LOGIN }}-flexible_inspect_js_web*.tgz --access public; \
+          npm publish ${{ secrets.NAME_LOGIN }}-flexible_inspect_js_node*.tgz --access public;"
 
   create-release-on-github:
-    # needs: package-publishing-all-versions
-    needs: [packages-js, packages-py]
+    needs: package-publishing-all-versions
     runs-on: ubuntu-latest
     if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
