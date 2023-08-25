@@ -11,8 +11,11 @@
   - `Rust`
   - `Python`
   - `JavaScript` (including `TypeScript` using [WASM](https://webassembly.org) format).
+
+### Added
 - Added serialization and deserialization support for Rust versions (use `features = ["serde"]` in the `Cargo.toml` file).
 - Changed the return type of the validator to `Result<(), Vec<ValidationError>>` for both `validate` and `async_validate` functions. Both functions now return a collection of errors that did not pass validation.
+- Revamped documentation to support code samples for different programming languages, and future branching between them. The advanced theme [**mkdocs-material**](https://github.com/squidfunk/mkdocs-material) is now used.
 
 ### Removed
 - Removed auto-generation of regular expressions within `Rule` and `RuleBytes` structures. This feature may return in the future.
