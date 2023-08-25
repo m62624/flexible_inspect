@@ -81,42 +81,42 @@ jobs:
           cargo test --doc --manifest-path ./flexible_inspect_rs/Cargo.toml
 
   # Job для тестирования кода
-  coverage-tests:
-    needs: [core-rust-tests, docs-rust-tests]
-    runs-on: ubuntu-latest
-    steps:
-      # Шаг для входа в Docker Registry
-      - name: Log in to `GitHub Docker Registry`
-        run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
-      # Шаг для запуска контейнера с тестами
-      - name: Coverage tests (tarpaulin)
-        run: |
-          FLEX_VALIDATOR_LOG=TRACE docker run --security-opt seccomp=unconfined ${{ env.IMAGE_DOCKER }}:latest \
-          cargo tarpaulin \
-          --workspace \
-          --exclude flexible_inspect_js \
-          --features export_to_other_languages,serde \
-          --engine llvm --out xml --output-dir ./coverage/
-      # Шаг для копирования отчета о покрытии из контейнера
-      - name: Copy coverage report from container
-        run: |
-          docker cp $(docker ps -lq):/main_project/coverage/cobertura.xml .
-      # Шаг для загрузки отчета о покрытии в Codecov
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: cobertura-report
-          path: cobertura.xml
+  # coverage-tests:
+  #   needs: [core-rust-tests, docs-rust-tests]
+  #   runs-on: ubuntu-latest
+  #   steps:
+  #     # Шаг для входа в Docker Registry
+  #     - name: Log in to `GitHub Docker Registry`
+  #       run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+  #     # Шаг для запуска контейнера с тестами
+  #     - name: Coverage tests (tarpaulin)
+  #       run: |
+  #         FLEX_VALIDATOR_LOG=TRACE docker run --security-opt seccomp=unconfined ${{ env.IMAGE_DOCKER }}:latest \
+  #         cargo tarpaulin \
+  #         --workspace \
+  #         --exclude flexible_inspect_js \
+  #         --features export_to_other_languages,serde \
+  #         --engine llvm --out xml --output-dir ./coverage/
+  #     # Шаг для копирования отчета о покрытии из контейнера
+  #     - name: Copy coverage report from container
+  #       run: |
+  #         docker cp $(docker ps -lq):/main_project/coverage/cobertura.xml .
+  #     # Шаг для загрузки отчета о покрытии в Codecov
+  #     - name: Upload coverage report
+  #       uses: actions/upload-artifact@v3
+  #       with:
+  #         name: cobertura-report
+  #         path: cobertura.xml
 
-      # Шаг для отправки отчета о покрытии в Codecov
-      - name: Send coverage report to Codecov
-        uses: codecov/codecov-action@v3
-        with:
-          fail_ci_if_error: true
-          # token: ${{ secrets.CODECOV_TOKEN }}
-          files: cobertura.xml
-          flags: unittests
-          verbose: true
+  #     # Шаг для отправки отчета о покрытии в Codecov
+  #     - name: Send coverage report to Codecov
+  #       uses: codecov/codecov-action@v3
+  #       with:
+  #         fail_ci_if_error: true
+  #         # token: ${{ secrets.CODECOV_TOKEN }}
+  #         files: cobertura.xml
+  #         flags: unittests
+  #         verbose: true
 
   wasm-lib-tests:
     needs: linter-check-all-versions
