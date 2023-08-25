@@ -218,7 +218,7 @@ jobs:
           docker run -v "$(pwd):/main_project" ${{ env.IMAGE_DOCKER }}:latest sh -c "
           npm pack ./pkg-wasm/pkg-web; \
           npm pack ./pkg-wasm/pkg-nodejs; \
-          echo //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}} > ./pkg-wasm/pkg-web/.npmrc; \
+          echo '//registry.npmjs.org/:_authToken=${{ secrets.NPM_TOKEN }}' > .npmrc; \
           npm publish ${{ secrets.NAME_LOGIN }}-flexible_inspect_js_web*.tgz --access public; \
           npm publish ${{ secrets.NAME_LOGIN }}-flexible_inspect_js_node*.tgz --access public;"
 
