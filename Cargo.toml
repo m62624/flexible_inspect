@@ -1,5 +1,6 @@
 [workspace]
 members = ["flexible_inspect_rs", "flexible_inspect_py", "flexible_inspect_js"]
+resolver = "2"
 
 [workspace.package]
 edition = "2021"
