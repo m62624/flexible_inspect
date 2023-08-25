@@ -11,5 +11,4 @@ repository = "https://github.com/m62624/flexible_inspect"
 
 [profile.release]
 lto = true
-strip = true
 codegen-units = 1

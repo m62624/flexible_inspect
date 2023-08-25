@@ -57,4 +57,3 @@ RUN rm -rf *
 
 # Copy project
 COPY . .
-# ENTRYPOINT ["source", "/.pyvenv/bin/activate"]
