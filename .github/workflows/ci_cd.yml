@@ -118,7 +118,7 @@ jobs:
           flags: unittests
           verbose: true
 
-  only-wasm-tests:
+  wasm-lib-tests:
     needs: linter-check-all-versions
     runs-on: ubuntu-latest
     steps:
@@ -129,8 +129,22 @@ jobs:
         run: |
           docker run ${{ env.IMAGE_DOCKER }}:latest wasm-pack test --node flexible_inspect_js
 
+  python-lib-tests:
+    needs: linter-check-all-versions
+    runs-on: ubuntu-latest
+    steps:
+      # Шаг для входа в Docker Registry
+      - name: Log in to `GitHub Docker Registry`
+        run: echo ${{ secrets.PAT_GITHUB }} | docker login ghcr.io -u ${{ secrets.NAME_LOGIN }} --password-stdin
+      # Шаг для запуска контейнера с тестами
+      - name: Core tests (rust)
+        run: |
+          docker run ${{ env.IMAGE_DOCKER }}:latest \
+          cargo test --manifest-path ./flexible_inspect_py/Cargo.toml
+
+
   packages-js:
-    needs: [core-rust-tests, only-wasm-tests]
+    needs: [core-rust-tests, wasm-lib-tests]
     runs-on: ubuntu-latest
     if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
@@ -158,7 +172,7 @@ jobs:
             pkg-nodejs
 
   packages-py:
-    needs: coverage-tests
+    needs: [core-rust-tests, python-lib-tests]
     runs-on: ubuntu-latest
     if: startsWith(github.event.ref, 'refs/tags/v')
     steps:
