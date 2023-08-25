@@ -214,14 +214,23 @@ jobs:
           path: pkg-wasm
       - name: Publish packages (wasm)
         run: |
+          echo 'до первого контейнера, файлы:'
           ls -a; \
+          ls -a ./pkg-wasm/pkg-web/; \
+          ls -a ./pkg-wasm/pkg-nodejs/; \
           #=============================================================================================
           docker run -v "$(pwd):/main_project" ${{ env.IMAGE_DOCKER }}:latest sh -c " \
+          echo 'запуск в первом контейнере, идет загрузка токенов для пакетов.'; \
           echo //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}} > ./pkg-wasm/pkg-web/.npmrc; \
-          echo //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}} > ./pkg-wasm/pkg-nodejs/.npmrc;"
+          echo //registry.npmjs.org/:_authToken=${{secrets.NPM_TOKEN}} > ./pkg-wasm/pkg-nodejs/.npmrc; \
+          echo 'Результат после токенов, всё ещё первый контейнер'; \
+          ls -R; \"
           #=============================================================================================
+          echo 'Результат после первого контейнера:'; \
           ls -a; \
+          ls -R; \
           docker run -v "$(pwd):/main_project" ${{ env.IMAGE_DOCKER }}:latest sh -c "
+          echo 'запуск во втором контейнере, идет публикация пакетов, сами файлы:'; \
           ls -R; \
           npm pack ./pkg-wasm/pkg-web; \
           npm pack ./pkg-wasm/pkg-nodejs; \
