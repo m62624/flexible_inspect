@@ -4,10 +4,10 @@ They are necessary to avoid code duplicates. Especially in context_match, where 
 */
 
 // =======================================================
-use super::{CaptureData, Counter, ModeMatch, Range};
+use super::common_elements::range::RangeChecker;
+use super::{CaptureData, Counter, ModeMatch};
 use crate::prelude::MatchRequirement;
 use indexmap::IndexSet;
-use std::hash::Hasher;
 use std::{fmt::Debug, hash::Hash};
 // =======================================================
 
@@ -81,48 +81,9 @@ pub trait RuleModifiers {
     ///
     /// # Notes
     /// Each signed variant can store numbers from `-(2^n - 1) to 2^(n - 1) - 1` inclusive, where n is the number of bits that variant uses. So an `i32` can store numbers from `-(2^31)` to `2^31 - 1`, which equals `-2147483648` to `2147483647`.
-    fn number_range<T: PartialOrd>(self, range: std::ops::RangeInclusive<T>) -> Self::RuleType;
-}
-
-mod for_Range {
-    use super::*;
-
-    impl Hash for Range {
-        fn hash<H: Hasher>(&self, state: &mut H) {
-            match self {
-                Range::I32(range) => range.hash(state),
-                Range::I64(range) => range.hash(state),
-                Range::I128(range) => range.hash(state),
-                Range::F32(range) => {
-                    range.start().to_bits().hash(state);
-                    range.end().to_bits().hash(state);
-                }
-                Range::F64(range) => {
-                    range.start().to_bits().hash(state);
-                    range.end().to_bits().hash(state);
-                }
-            }
-        }
-    }
-
-    impl PartialEq for Range {
-        fn eq(&self, other: &Self) -> bool {
-            match (self, other) {
-                (Range::I32(range1), Range::I32(range2)) => range1 == range2,
-                (Range::I64(range1), Range::I64(range2)) => range1 == range2,
-                (Range::I128(range1), Range::I128(range2)) => range1 == range2,
-                (Range::F32(range1), Range::F32(range2)) => {
-                    range1.start().to_bits() == range2.start().to_bits()
-                        && range1.end().to_bits() == range2.end().to_bits()
-                }
-                (Range::F64(range1), Range::F64(range2)) => {
-                    range1.start().to_bits() == range2.start().to_bits()
-                        && range1.end().to_bits() == range2.end().to_bits()
-                }
-                _ => false,
-            }
-        }
-    }
-
-    impl Eq for Range {}
+    fn number_range<T: PartialOrd>(
+        self,
+        range: std::ops::RangeInclusive<T>,
+        mode: RangeChecker,
+    ) -> Self::RuleType;
 }
