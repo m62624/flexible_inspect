@@ -4,9 +4,10 @@ They are necessary to avoid code duplicates. Especially in context_match, where 
 */
 
 // =======================================================
-use super::{CaptureData, Counter, ModeMatch};
+use super::{CaptureData, Counter, ModeMatch, Range};
 use crate::prelude::MatchRequirement;
 use indexmap::IndexSet;
+use std::hash::Hasher;
 use std::{fmt::Debug, hash::Hash};
 // =======================================================
 
@@ -49,7 +50,7 @@ pub trait RuleModifiers {
     type RuleType;
 
     /// modifier for extending the rule with nested rules
-    /// 
+    ///
     /// ( **by default, `all_rules_for_all_matches`** )\
     /// In this mode, all rules must be tested for all matches
     fn extend<R: IntoIterator<Item = Self::RuleType>>(self, nested_rules: R) -> Self::RuleType;
@@ -71,4 +72,49 @@ pub trait RuleModifiers {
     ///
     /// In this mode, at least one rule must pass at least one match check
     fn any_r_for_any_m(self) -> Self::RuleType;
+
+    fn number_range<T: PartialOrd>(self, range: std::ops::RangeInclusive<T>) -> Self::RuleType;
+}
+
+mod for_Range {
+    use super::*;
+
+    impl Hash for Range {
+        fn hash<H: Hasher>(&self, state: &mut H) {
+            match self {
+                Range::I32(range) => range.hash(state),
+                Range::I64(range) => range.hash(state),
+                Range::I128(range) => range.hash(state),
+                Range::F32(range) => {
+                    range.start().to_bits().hash(state);
+                    range.end().to_bits().hash(state);
+                }
+                Range::F64(range) => {
+                    range.start().to_bits().hash(state);
+                    range.end().to_bits().hash(state);
+                }
+            }
+        }
+    }
+
+    impl PartialEq for Range {
+        fn eq(&self, other: &Self) -> bool {
+            match (self, other) {
+                (Range::I32(range1), Range::I32(range2)) => range1 == range2,
+                (Range::I64(range1), Range::I64(range2)) => range1 == range2,
+                (Range::I128(range1), Range::I128(range2)) => range1 == range2,
+                (Range::F32(range1), Range::F32(range2)) => {
+                    range1.start().to_bits() == range2.start().to_bits()
+                        && range1.end().to_bits() == range2.end().to_bits()
+                }
+                (Range::F64(range1), Range::F64(range2)) => {
+                    range1.start().to_bits() == range2.start().to_bits()
+                        && range1.end().to_bits() == range2.end().to_bits()
+                }
+                _ => false,
+            }
+        }
+    }
+
+    impl Eq for Range {}
 }

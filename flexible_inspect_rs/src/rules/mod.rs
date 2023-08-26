@@ -33,6 +33,7 @@ pub struct GeneralModifiers {
     pub requirement: MatchRequirement,
     pub counter: Option<Counter>,
     pub mod_match: ModeMatch,
+    pub range: Option<Range>,
 }
 
 /// The structure that defines what action is required when finding regular expression matches.
@@ -85,6 +86,16 @@ pub enum Counter {
     MoreThan(usize),
     /// counter <= match
     LessThan(usize),
+}
+
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone)]
+pub enum Range {
+    I32(std::ops::RangeInclusive<i32>),
+    I64(std::ops::RangeInclusive<i64>),
+    I128(std::ops::RangeInclusive<i128>),
+    F32(std::ops::RangeInclusive<f32>),
+    F64(std::ops::RangeInclusive<f64>),
 }
 
 /// A structure that stores all the data for processing the capture
