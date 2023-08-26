@@ -9,6 +9,7 @@ authors = ["Mansur Azatbek <mansur62624@gmail.com>"]
 license = "MIT"
 description = "Library for creating a custom validator"
 repository = "https://github.com/m62624/flexible_inspect"
+documentation = "https://flexible-inspect.readthedocs.io/"
 
 [profile.release]
 lto = true
