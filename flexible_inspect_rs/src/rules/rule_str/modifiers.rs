@@ -87,12 +87,12 @@ impl RuleModifiers for Rule {
         self
     }
 
-    fn number_range<N: PartialOrd, T: RangeType<N>>(
+    fn number_range<RNG: RangeType>(
         mut self,
-        range: T,
+        range: RNG,
         mode: range::RangeMode,
     ) -> Self::RuleType {
-        self.0.general_modifiers.range = Some(range.get_range());
+        self.0.general_modifiers.range = Some(range::Range::new(range, mode));
         self
     }
 }
