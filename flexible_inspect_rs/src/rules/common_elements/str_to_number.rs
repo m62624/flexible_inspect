@@ -1,0 +1,35 @@
+use log::{info, warn};
+use std::{fmt::Debug, str::FromStr};
+
+pub fn convert_and_filter_collection<'a, C, T>(words: C) -> Vec<T>
+where
+    C: IntoIterator<Item = &'a str>,
+    T: PartialOrd + FromStr + Copy + Debug,
+{
+    let result = words
+        .into_iter()
+        .filter_map(|word| {
+            if let Ok(parsed_value) = word.parse::<T>() {
+                info!("сonverted '{}' to {:?}.", word, parsed_value);
+                Some(parsed_value)
+            } else {
+                warn!("skipped '{}' due to conversion error.", word);
+                None
+            }
+        })
+        .collect();
+    result
+}
+
+pub fn convert_and_filter<T>(word: &str) -> Option<T>
+where
+    T: PartialOrd + FromStr + Copy + Debug,
+{
+    if let Ok(parsed_value) = word.parse::<T>() {
+        info!("converted '{}' to {:?}.", word, parsed_value);
+        Some(parsed_value)
+    } else {
+        warn!("skipped '{}' due to conversion error.", word);
+        None
+    }
+}
