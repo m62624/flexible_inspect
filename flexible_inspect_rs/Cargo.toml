@@ -42,6 +42,7 @@ export_to_other_languages = []
 # (On by default)
 default = ["log_rust"]
 log_rust = []
+in_development = []
 
 
 [dev-dependencies]
