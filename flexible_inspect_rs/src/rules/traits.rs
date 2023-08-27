@@ -4,7 +4,7 @@ They are necessary to avoid code duplicates. Especially in context_match, where 
 */
 
 // =======================================================
-use super::common_elements::range::{RangeBoundaries, RangeMode};
+use super::common_elements::range::*;
 use super::{CaptureData, Counter, ModeMatch};
 use crate::prelude::MatchRequirement;
 use indexmap::IndexSet;
@@ -26,6 +26,7 @@ pub trait RuleBase {
     fn get_counter(&self) -> Option<Counter>;
     fn get_mode_match(&self) -> &ModeMatch;
     fn get_str(&self) -> &str;
+    fn get_range(&self) -> Option<&Range>;
 }
 
 /// The main trait for `context_match`, that is,

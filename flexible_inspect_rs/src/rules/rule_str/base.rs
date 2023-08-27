@@ -1,3 +1,4 @@
+use super::range::Range;
 use super::*;
 use crate::rules::traits::RuleBase;
 
@@ -46,5 +47,9 @@ impl RuleBase for Rule {
             }
         }
         None
+    }
+
+    fn get_range(&self) -> Option<&Range> {
+        self.0.general_modifiers.range.as_ref()
     }
 }
