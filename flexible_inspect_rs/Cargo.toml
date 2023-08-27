@@ -14,6 +14,7 @@ name = "flexible_inspect_rs"
 
 # Core library dependencies
 [dependencies]
+# num-traits = { version = "0.2.16", features = ["i128"] }
 serde = { version = "1.0.180", features = ["derive"], optional = true }
 env_logger = "0.10.0"
 futures = "0.3.28"
@@ -25,7 +26,6 @@ regex = "1.9.1"
 indexmap = "2.0.0"
 colored = "2.0.4"
 time = { version = "0.3.25", features = ["local-offset", "formatting"] }
-
 # 
 [features]
 # Support for validator serializations and desyarilizations, includes

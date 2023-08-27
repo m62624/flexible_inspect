@@ -1,5 +1,5 @@
 use super::*;
-use crate::rules::traits::{RuleBase, RuleModifiers};
+use crate::rules::traits::{RangeType, RuleBase, RuleModifiers};
 use log::debug;
 
 impl RuleModifiers for Rule {
@@ -84,6 +84,15 @@ impl RuleModifiers for Rule {
             self.get_str().yellow(),
             format!("{:#?}", self.get_requirement()).yellow()
         );
+        self
+    }
+
+    fn number_range<N: PartialOrd, T: RangeType<N>>(
+        mut self,
+        range: T,
+        mode: range::RangeMode,
+    ) -> Self::RuleType {
+        self.0.general_modifiers.range = Some(range.get_range());
         self
     }
 }

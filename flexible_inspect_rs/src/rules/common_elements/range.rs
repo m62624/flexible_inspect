@@ -1,41 +1,60 @@
+use super::traits::RangeType;
 use super::*;
+use std::ops::RangeInclusive;
 
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]
 pub enum Range {
-    I32(std::ops::RangeInclusive<i32>),
-    I64(std::ops::RangeInclusive<i64>),
-    I128(std::ops::RangeInclusive<i128>),
-    F32(std::ops::RangeInclusive<f32>),
-    F64(std::ops::RangeInclusive<f64>),
+    I32(RangeInclusive<i32>),
+    I64(RangeInclusive<i64>),
+    I128(RangeInclusive<i128>),
+    F32(RangeInclusive<f32>),
+    F64(RangeInclusive<f64>),
 }
 
-enum RangeCheckMode {
+impl RangeType<i32> for RangeInclusive<i32> {
+    fn get_range(self) -> Range {
+        Range::I32(self)
+    }
+}
+
+impl RangeType<i64> for RangeInclusive<i64> {
+    fn get_range(self) -> Range {
+        Range::I64(self)
+    }
+}
+
+impl RangeType<i128> for RangeInclusive<i128> {
+    fn get_range(self) -> Range {
+        Range::I128(self)
+    }
+}
+
+impl RangeType<f32> for RangeInclusive<f32> {
+    fn get_range(self) -> Range {
+        Range::F32(self)
+    }
+}
+
+impl RangeType<f64> for RangeInclusive<f64> {
+    fn get_range(self) -> Range {
+        Range::F64(self)
+    }
+}
+
+// fn set_range<T>(range: RangeInclusive<T>) -> Range
+// where
+//     T: PartialOrd + Copy,
+//     RangeInclusive<T>: RangeType<T>,
+// {
+//     range.get_range()
+// }
+
+#[derive(Debug)]
+pub enum RangeMode {
     Any,
     All,
     Exactly(usize),
-}
-
-pub struct RangeChecker {
-    mode: RangeCheckMode,
-}
-
-impl RangeChecker {
-    fn new(mode: RangeCheckMode) -> Self {
-        Self { mode }
-    }
-
-    pub fn any() -> Self {
-        Self::new(RangeCheckMode::Any)
-    }
-
-    pub fn all() -> Self {
-        Self::new(RangeCheckMode::All)
-    }
-
-    pub fn exactly(count: usize) -> Self {
-        Self::new(RangeCheckMode::Exactly(count))
-    }
 }
 
 impl Hash for Range {

@@ -1,5 +1,6 @@
 mod counter_status;
 mod modifier_arena;
+mod number_range_status;
 use super::{traits::RuleBase, *};
 
 /// All optional modifiers `NextStep` to have a unified type

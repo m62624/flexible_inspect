@@ -4,7 +4,7 @@ They are necessary to avoid code duplicates. Especially in context_match, where 
 */
 
 // =======================================================
-use super::common_elements::range::RangeChecker;
+use super::common_elements::range::{Range, RangeMode};
 use super::{CaptureData, Counter, ModeMatch};
 use crate::prelude::MatchRequirement;
 use indexmap::IndexSet;
@@ -81,9 +81,13 @@ pub trait RuleModifiers {
     ///
     /// # Notes
     /// Each signed variant can store numbers from `-(2^n - 1) to 2^(n - 1) - 1` inclusive, where n is the number of bits that variant uses. So an `i32` can store numbers from `-(2^31)` to `2^31 - 1`, which equals `-2147483648` to `2147483647`.
-    fn number_range<T: PartialOrd>(
+    fn number_range<N: PartialOrd, T: RangeType<N>>(
         self,
-        range: std::ops::RangeInclusive<T>,
-        mode: RangeChecker,
+        range: T,
+        mode: RangeMode,
     ) -> Self::RuleType;
+}
+
+pub trait RangeType<T> {
+    fn get_range(self) -> Range;
 }
