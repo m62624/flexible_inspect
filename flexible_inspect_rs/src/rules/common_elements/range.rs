@@ -1,5 +1,6 @@
 use super::traits::RangeType;
 use super::*;
+use std::fmt::Debug;
 use std::ops::RangeInclusive;
 
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
