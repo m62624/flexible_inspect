@@ -2,6 +2,7 @@
 mod another_traits;
 mod base;
 mod captures;
+mod convert;
 mod init;
 mod modifiers;
 mod utils;

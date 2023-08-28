@@ -1,7 +1,6 @@
 use self::range::RangeFormat;
 use super::*;
 pub mod range;
-pub mod str_to_number;
 // =======================================================
 /// This is reserved standard value for error filling
 pub const DEFAULT_CAPTURE: &str = "main_capture";
