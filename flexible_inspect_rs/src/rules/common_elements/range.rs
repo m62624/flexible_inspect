@@ -3,22 +3,7 @@ use super::*;
 use std::fmt::Debug;
 use std::ops::RangeInclusive;
 
-#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
 
-pub struct Range {
-    pub range: RangeBoundaries,
-    pub mode: RangeMode,
-}
-
-impl Range {
-    pub fn new<T: RangeType>(range: T, mode: RangeMode) -> Self {
-        Self {
-            range: range.get_range(),
-            mode,
-        }
-    }
-}
 
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]

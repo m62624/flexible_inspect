@@ -6,7 +6,10 @@ mod init;
 mod modifiers;
 mod utils;
 // =======================================================
-use super::*;
+use super::{
+    range::{RangeBoundaries, RangeMode},
+    *,
+};
 
 /// A rule is the minimum unit of logic in a validator.
 ///
@@ -36,6 +39,7 @@ pub struct RuleBytes(pub(crate) TakeRuleBytesForExtend);
 pub struct TakeRuleBytesForExtend {
     pub str_bytes: Box<str>,
     pub general_modifiers: GeneralModifiers,
+    pub range_bytes: Option<RangeBytes>,
     pub subrules_bytes: Option<SimpleRulesBytes>,
 }
 
@@ -53,4 +57,24 @@ pub struct SimpleRulesBytes {
 #[derive(Debug, Clone)]
 pub struct RegexSetContainer {
     pub regex_set: regex::bytes::RegexSet,
+}
+
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+
+pub struct RangeBytes {
+    pub range: RangeBoundaries,
+    pub read_mod: ReadMode,
+    pub range_mode: RangeMode,
+}
+/// Byte reading modes
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum ReadMode {
+    /// Create a native endian integer value from its representation as a byte array in big endian
+    FromBeBytes,
+    /// Create a native endian integer value from its representation as a byte array in little endian
+    FromLeBytes,
+    /// Converts a slice of bytes to a string slice.
+    FromUtf8,
 }

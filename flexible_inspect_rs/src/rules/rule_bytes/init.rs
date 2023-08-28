@@ -42,6 +42,7 @@ impl TakeRuleBytesForExtend {
             },
             subrules_bytes: None,
             general_modifiers: GeneralModifiers::new(requirement),
+            range_bytes: None,
         }
     }
 }

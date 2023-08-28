@@ -1,4 +1,3 @@
-use super::range::Range;
 use super::SimpleRulesBytes;
 use super::*;
 use crate::rules::traits::RuleBase;
@@ -42,9 +41,5 @@ impl RuleBase for RuleBytes {
 
     fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>> {
         None
-    }
-
-    fn get_range(&self) -> Option<&Range> {
-        self.0.general_modifiers.range.as_ref()
     }
 }

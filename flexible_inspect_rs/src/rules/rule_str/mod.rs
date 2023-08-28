@@ -6,7 +6,10 @@ mod init;
 mod modifiers;
 mod utils;
 // ======================================================
-use super::*;
+use super::{
+    range::{RangeBoundaries, RangeMode},
+    *,
+};
 
 /// A rule is the minimum unit of logic in a validator.
 /// The rule supports two regular expression crates:
@@ -44,6 +47,7 @@ pub struct TakeRuleForExtend {
     pub str_with_type: RegexRaw,
     pub general_modifiers: GeneralModifiers,
     pub subrules: Option<Subrules>,
+    pub range: Option<Range>,
 }
 
 /// A structure for storing regular expressions
@@ -76,4 +80,12 @@ pub struct SimpleRules {
 #[derive(Debug, Clone)]
 pub struct RegexSetContainer {
     pub regex_set: regex::RegexSet,
+}
+
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+
+pub struct Range {
+    pub range: RangeBoundaries,
+    pub range_mode: RangeMode,
 }

@@ -31,6 +31,7 @@ impl TakeRuleForExtend {
             str_with_type: RegexRaw::new(pattern),
             subrules: None,
             general_modifiers: GeneralModifiers::new(requirement),
+            range: None,
         }
     }
 }
