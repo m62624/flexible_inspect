@@ -20,7 +20,7 @@ impl RuleBase for Rule {
     }
 
     fn get_mode_match(&self) -> &ModeMatch {
-        &self.0.general_modifiers.mod_match
+        &self.0.general_modifiers.mode_match
     }
 
     fn get_str(&self) -> &str {

@@ -6,7 +6,7 @@ impl GeneralModifiers {
         Self {
             requirement,
             counter: None,
-            mod_match: ModeMatch::AllRulesForAllMatches,
+            mode_match: ModeMatch::AllRulesForAllMatches,
             range: None,
         }
     }

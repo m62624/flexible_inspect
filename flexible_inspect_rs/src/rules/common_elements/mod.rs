@@ -21,7 +21,7 @@ pub struct SlisedRules {
 pub struct GeneralModifiers {
     pub requirement: MatchRequirement,
     pub counter: Option<Counter>,
-    pub mod_match: ModeMatch,
+    pub mode_match: ModeMatch,
     pub range: Option<RangeFormat>,
 }
 
