@@ -80,3 +80,9 @@ impl SimpleRules {
         }
     }
 }
+
+impl RangeStr {
+    pub fn new(range: range::RangeBoundaries, range_mode: RangeMode) -> Self {
+        Self { range, range_mode }
+    }
+}

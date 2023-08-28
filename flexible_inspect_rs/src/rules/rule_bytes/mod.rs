@@ -63,9 +63,10 @@ pub struct RegexSetContainer {
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct RangeBytes {
     pub range: RangeBoundaries,
-    pub read_mod: ReadMode,
+    pub read_mode: ReadMode,
     pub range_mode: RangeMode,
 }
+
 /// Byte reading modes
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]

@@ -1,5 +1,6 @@
+use super::range::RangeFormat;
+use super::rules::traits::{CalculateValueRules, RangeType};
 use super::*;
-use crate::rules::traits::CalculateValueRules;
 
 impl CalculateValueRules<'_, &[u8]> for RuleBytes {
     type RegexSet = regex::bytes::RegexSet;
@@ -10,5 +11,21 @@ impl CalculateValueRules<'_, &[u8]> for RuleBytes {
 
     fn find_captures<'a>(rule: &Self::RuleType, capture: &&'a [u8]) -> CaptureData<&'a [u8]> {
         captures::find_captures(rule, capture)
+    }
+}
+
+impl RuleBytes {
+    pub fn number_range<RNG: RangeType>(
+        mut self,
+        range: RNG,
+        read_bytes_mode: ReadMode,
+        range_mode: RangeMode,
+    ) -> RuleBytes {
+        self.0.general_modifiers.range = Some(RangeFormat::Bytes(RangeBytes::new(
+            range.get_range(),
+            read_bytes_mode,
+            range_mode,
+        )));
+        self
     }
 }

@@ -60,3 +60,13 @@ impl SimpleRulesBytes {
         }
     }
 }
+
+impl RangeBytes {
+    pub fn new(range: range::RangeBoundaries, read_mode: ReadMode, range_mode: RangeMode) -> Self {
+        Self {
+            range,
+            read_mode,
+            range_mode,
+        }
+    }
+}

@@ -1,5 +1,4 @@
 use self::range::RangeFormat;
-
 use super::*;
 pub mod range;
 pub mod str_to_number;
