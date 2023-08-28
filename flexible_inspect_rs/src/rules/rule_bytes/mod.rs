@@ -39,7 +39,6 @@ pub struct RuleBytes(pub(crate) TakeRuleBytesForExtend);
 pub struct TakeRuleBytesForExtend {
     pub str_bytes: Box<str>,
     pub general_modifiers: GeneralModifiers,
-    pub range_bytes: Option<RangeBytes>,
     pub subrules_bytes: Option<SimpleRulesBytes>,
 }
 
@@ -59,9 +58,9 @@ pub struct RegexSetContainer {
     pub regex_set: regex::bytes::RegexSet,
 }
 
+/// A structure for range checking (bytes -> number)
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-
 pub struct RangeBytes {
     pub range: RangeBoundaries,
     pub read_mod: ReadMode,

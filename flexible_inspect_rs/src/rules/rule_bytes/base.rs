@@ -12,8 +12,8 @@ impl RuleBase for RuleBytes {
         RuleBytes::new(pattern, requirement)
     }
 
-    fn get_requirement(&self) -> &MatchRequirement {
-        &self.0.general_modifiers.requirement
+    fn get_requirement(&self) -> MatchRequirement {
+        self.0.general_modifiers.requirement
     }
 
     fn get_counter(&self) -> Option<Counter> {
@@ -41,5 +41,9 @@ impl RuleBase for RuleBytes {
 
     fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>> {
         None
+    }
+
+    fn get_range(&self) -> Option<&range::RangeFormat> {
+        self.0.general_modifiers.range.as_ref()
     }
 }

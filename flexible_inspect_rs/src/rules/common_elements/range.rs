@@ -1,9 +1,17 @@
+use super::rules::rule_bytes::RangeBytes;
+use super::rules::rule_str::RangeStr;
 use super::traits::RangeType;
 use super::*;
 use std::fmt::Debug;
 use std::ops::RangeInclusive;
 
-
+/// The `Range` type is used to specify the range of values ​​that the rule will match.
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum RangeFormat {
+    Str(RangeStr),
+    Bytes(RangeBytes),
+}
 
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone)]
@@ -45,6 +53,7 @@ impl RangeType for RangeInclusive<f64> {
     }
 }
 
+/// Check mode for received data (similar to the nested rules check mode)
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum RangeMode {

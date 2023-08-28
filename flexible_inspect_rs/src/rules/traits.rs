@@ -22,10 +22,13 @@ pub trait RuleBase {
     fn get_subrules(&self) -> Option<&Self::SubRulesType>;
     fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)>;
     fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>>;
-    fn get_requirement(&self) -> &MatchRequirement;
+    /// We do not specify a reference, since it implements `Copy`
+    fn get_requirement(&self) -> MatchRequirement;
+    /// We do not specify a reference, since it implements `Copy`
     fn get_counter(&self) -> Option<Counter>;
     fn get_mode_match(&self) -> &ModeMatch;
     fn get_str(&self) -> &str;
+    fn get_range(&self) -> Option<&RangeFormat>;
 }
 
 /// The main trait for `context_match`, that is,
@@ -72,7 +75,6 @@ pub trait RuleModifiers {
     ///
     /// In this mode, at least one rule must pass at least one match check
     fn any_r_for_any_m(self) -> Self::RuleType;
-
 }
 pub trait RangeType {
     fn get_range(self) -> RangeBoundaries;

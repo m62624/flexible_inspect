@@ -1,3 +1,5 @@
+use self::range::RangeFormat;
+
 use super::*;
 pub mod range;
 pub mod str_to_number;
@@ -22,6 +24,7 @@ pub struct GeneralModifiers {
     pub requirement: MatchRequirement,
     pub counter: Option<Counter>,
     pub mod_match: ModeMatch,
+    pub range: Option<RangeFormat>,
 }
 
 /// The structure that defines what action is required when finding regular expression matches.

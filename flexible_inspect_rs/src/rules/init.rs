@@ -7,6 +7,7 @@ impl GeneralModifiers {
             requirement,
             counter: None,
             mod_match: ModeMatch::AllRulesForAllMatches,
+            range: None,
         }
     }
 }

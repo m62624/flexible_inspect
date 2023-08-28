@@ -47,7 +47,6 @@ pub struct TakeRuleForExtend {
     pub str_with_type: RegexRaw,
     pub general_modifiers: GeneralModifiers,
     pub subrules: Option<Subrules>,
-    pub range: Option<Range>,
 }
 
 /// A structure for storing regular expressions
@@ -82,10 +81,10 @@ pub struct RegexSetContainer {
     pub regex_set: regex::RegexSet,
 }
 
+/// A structure for range checking (str -> number)
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
-
-pub struct Range {
+pub struct RangeStr {
     pub range: RangeBoundaries,
     pub range_mode: RangeMode,
 }
