@@ -6,8 +6,8 @@ pub fn at_least_one_rule_for_all_matches<'a, R, C>(
     stack: &mut VecDeque<(&'a R::RuleType, CaptureData<'a, C>)>,
 ) -> NextStep
 where
-    R: CalculateValueRules<'a, C> + Debug,
-    C: IntoConcreteType<'a>
+    R: CalculateValueRules<'a, C>,
+    C: IntoSpecificCaptureType<'a>,
 {
     let mut temp_stack = Some(VecDeque::new());
     if let Some(mut frame) = stack.pop_front() {

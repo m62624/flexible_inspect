@@ -4,14 +4,14 @@ use std::{
     str::FromStr,
 };
 
-use super::rules::{next::NextStep, traits::IntoConcreteType};
+use super::rules::{next::NextStep, traits::IntoSpecificCaptureType};
 
 use super::{convert::FromBytes, *};
 
 fn single_range_bytes_check<
     'a,
     T: FromStr + Copy + Debug + Display + PartialOrd + FromBytes<T>,
-    C: IntoConcreteType<'a>,
+    C: IntoSpecificCaptureType<'a>,
 >(
     numbers: &mut CaptureData<'a, C>,
     range: &RangeInclusive<T>,
@@ -26,12 +26,12 @@ fn single_range_bytes_check<
                 .filter(|&num| {
                     let num = match read_mode {
                         ReadMode::FromBeBytes => {
-                            T::from_be_bytes_non_const(num.into_bytes().unwrap())
+                            T::from_be_bytes_non_const(num.as_bytes().unwrap())
                         }
                         ReadMode::FromLeBytes => {
-                            T::from_le_bytes_non_const(num.into_bytes().unwrap())
+                            T::from_le_bytes_non_const(num.as_bytes().unwrap())
                         }
-                        ReadMode::FromUtf8 => T::from_utf8(num.into_bytes().unwrap()),
+                        ReadMode::FromUtf8 => T::from_utf8(num.as_bytes().unwrap()),
                     };
                     num.map(|num| range.contains(&num)).unwrap_or(false)
                 })
@@ -45,12 +45,12 @@ fn single_range_bytes_check<
                 .filter(|&num| {
                     let num = match read_mode {
                         ReadMode::FromBeBytes => {
-                            T::from_be_bytes_non_const(num.into_bytes().unwrap())
+                            T::from_be_bytes_non_const(num.as_bytes().unwrap())
                         }
                         ReadMode::FromLeBytes => {
-                            T::from_le_bytes_non_const(num.into_bytes().unwrap())
+                            T::from_le_bytes_non_const(num.as_bytes().unwrap())
                         }
-                        ReadMode::FromUtf8 => T::from_utf8(num.into_bytes().unwrap()),
+                        ReadMode::FromUtf8 => T::from_utf8(num.as_bytes().unwrap()),
                     };
                     num.map(|num| range.contains(&num)).unwrap_or(false)
                 })
@@ -65,12 +65,12 @@ fn single_range_bytes_check<
                 .filter(|&num| {
                     let num = match read_mode {
                         ReadMode::FromBeBytes => {
-                            T::from_be_bytes_non_const(num.into_bytes().unwrap())
+                            T::from_be_bytes_non_const(num.as_bytes().unwrap())
                         }
                         ReadMode::FromLeBytes => {
-                            T::from_le_bytes_non_const(num.into_bytes().unwrap())
+                            T::from_le_bytes_non_const(num.as_bytes().unwrap())
                         }
-                        ReadMode::FromUtf8 => T::from_utf8(num.into_bytes().unwrap()),
+                        ReadMode::FromUtf8 => T::from_utf8(num.as_bytes().unwrap()),
                     };
                     num.map(|num| range.contains(&num)).unwrap_or(false)
                 })
@@ -84,7 +84,7 @@ fn single_range_bytes_check<
 pub fn single_bytes_result<
     'a,
     T: Debug + FromStr + Copy + Display + PartialOrd + FromBytes<T>,
-    C: IntoConcreteType<'a>,
+    C: IntoSpecificCaptureType<'a>,
 >(
     range_bytes: &RangeBytes,
     captures: &mut CaptureData<'a, C>,
@@ -96,8 +96,8 @@ pub fn single_bytes_result<
         range_bytes.range_mode,
         &range_bytes.read_mode,
     ) {
-        return NextStep::Finish;
+        NextStep::Finish
     } else {
-        return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
+        NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)))
     }
 }

@@ -1,4 +1,4 @@
-use super::{rule_str::RegexRaw, traits::IntoConcreteType, *};
+use super::{rule_str::RegexRaw, traits::IntoSpecificCaptureType, *};
 use crate::prelude::Rule;
 
 impl GeneralModifiers {
@@ -39,7 +39,7 @@ impl SlisedRules {
     }
 }
 
-impl<'a, T: IntoConcreteType<'a>> CaptureData<'a, T> {
+impl<'a, T: IntoSpecificCaptureType<'a>> CaptureData<'a, T> {
     pub fn is_some(&self) -> bool {
         !self.text_for_capture.is_empty()
     }

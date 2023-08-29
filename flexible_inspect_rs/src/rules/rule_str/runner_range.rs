@@ -1,4 +1,4 @@
-use super::rules::{next::NextStep, traits::IntoConcreteType};
+use super::rules::{next::NextStep, traits::IntoSpecificCaptureType};
 use super::{convert::convert_and_filter, *};
 use std::{
     fmt::{Debug, Display},
@@ -9,7 +9,7 @@ use std::{
 fn single_range_str_check<
     'a,
     T: FromStr + Copy + Debug + Display + PartialOrd,
-    C: IntoConcreteType<'a>,
+    C: IntoSpecificCaptureType<'a>,
 >(
     captures: &mut CaptureData<'a, C>,
     range: &RangeInclusive<T>,
@@ -21,7 +21,7 @@ fn single_range_str_check<
                 .text_for_capture
                 .iter()
                 .filter(|&num| {
-                    convert_and_filter(num.into_str().unwrap())
+                    convert_and_filter(num.as_str().unwrap())
                         .map(|num| range.contains(&num))
                         .unwrap_or(false)
                 })
@@ -33,7 +33,7 @@ fn single_range_str_check<
                 .text_for_capture
                 .iter()
                 .filter(|&num| {
-                    convert_and_filter(num.into_str().unwrap())
+                    convert_and_filter(num.as_str().unwrap())
                         .map(|num| range.contains(&num))
                         .unwrap_or(false)
                 })
@@ -46,7 +46,7 @@ fn single_range_str_check<
                 .text_for_capture
                 .iter()
                 .filter(|&num| {
-                    convert_and_filter(num.into_str().unwrap())
+                    convert_and_filter(num.as_str().unwrap())
                         .map(|num| range.contains(&num))
                         .unwrap_or(false)
                 })
@@ -60,15 +60,15 @@ fn single_range_str_check<
 pub fn single_str_result<
     'a,
     T: Debug + FromStr + Copy + Display + PartialOrd,
-    C: IntoConcreteType<'a>,
+    C: IntoSpecificCaptureType<'a>,
 >(
     range_str: &RangeStr,
     captures: &mut CaptureData<'a, C>,
     value: &RangeInclusive<T>,
 ) -> NextStep {
     if single_range_str_check(captures, value, range_str.range_mode) {
-        return NextStep::Finish;
+        NextStep::Finish
     } else {
-        return NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)));
+        NextStep::Error(Some(std::mem::take(&mut captures.hashmap_for_error)))
     }
 }

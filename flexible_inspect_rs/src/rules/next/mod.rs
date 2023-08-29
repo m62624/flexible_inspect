@@ -2,7 +2,7 @@ mod counter_status;
 mod modifier_arena;
 pub mod number_range_status;
 use super::{
-    traits::{IntoConcreteType, RuleBase},
+    traits::{IntoSpecificCaptureType, RuleBase},
     *,
 };
 
@@ -19,7 +19,7 @@ pub enum NextStep {
 
 impl NextStep {
     /// Mechanism with final variant, depending on modifiers we get the result
-    pub fn next_or_finish_or_error<'a, R: RuleBase, C: IntoConcreteType<'a>>(
+    pub fn next_or_finish_or_error<'a, R: RuleBase, C: IntoSpecificCaptureType<'a>>(
         rule: &R,
         captures: &mut CaptureData<'a, C>,
     ) -> NextStep {

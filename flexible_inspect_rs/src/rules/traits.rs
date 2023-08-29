@@ -15,7 +15,7 @@ use std::{fmt::Debug, hash::Hash};
 pub trait RuleBase {
     type TakeRuleType;
     type SubRulesType;
-    type RuleType: Debug;
+    type RuleType;
     type RegexSet;
 
     fn _new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self;
@@ -37,7 +37,7 @@ pub trait RuleBase {
 /// The main thing is to implement separately `Captures` for `&str` and `&[u8]`
 /// the rest will be the same
 
-pub trait CalculateValueRules<'a, C: IntoConcreteType<'a>> {
+pub trait CalculateValueRules<'a, C: IntoSpecificCaptureType<'a>>: Debug {
     type RuleType: RuleBase<RuleType = Self::RuleType, RegexSet = Self::RegexSet>
         + Hash
         + Eq
@@ -80,7 +80,7 @@ pub trait RangeType {
     fn get_range(self) -> RangeBoundaries;
 }
 
-pub trait IntoConcreteType<'a>: Hash + PartialEq + Eq + Debug {
-    fn into_str(&self) -> Option<&'a str>;
-    fn into_bytes(&self) -> Option<&'a [u8]>;
+pub trait IntoSpecificCaptureType<'a>: Hash + PartialEq + Eq + Debug {
+    fn as_str(&self) -> Option<&'a str>;
+    fn as_bytes(&self) -> Option<&'a [u8]>;
 }

@@ -62,7 +62,7 @@ impl FromBytes<i8> for i8 {
     fn from_be_bytes_non_const(bytes: &[u8]) -> Option<i8> {
         if bytes.len() == I8_LEN {
             let mut array_bytes: [u8; I8_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(i8::from_be_bytes(array_bytes));
         } else {
             warn!(
@@ -81,7 +81,7 @@ impl FromBytes<i8> for i8 {
     fn from_le_bytes_non_const(bytes: &[u8]) -> Option<i8> {
         if bytes.len() == I8_LEN {
             let mut array_bytes: [u8; I8_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(i8::from_le_bytes(array_bytes));
         } else {
             warn!(
@@ -102,7 +102,7 @@ impl FromBytes<i16> for i16 {
     fn from_be_bytes_non_const(bytes: &[u8]) -> Option<i16> {
         if bytes.len() == I16_LEN {
             let mut array_bytes: [u8; I16_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(i16::from_be_bytes(array_bytes));
         } else {
             warn!(
@@ -121,7 +121,7 @@ impl FromBytes<i16> for i16 {
     fn from_le_bytes_non_const(bytes: &[u8]) -> Option<i16> {
         if bytes.len() == I16_LEN {
             let mut array_bytes: [u8; I16_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(i16::from_le_bytes(array_bytes));
         } else {
             warn!(
@@ -142,7 +142,7 @@ impl FromBytes<i32> for i32 {
     fn from_be_bytes_non_const(bytes: &[u8]) -> Option<i32> {
         if bytes.len() == I32_LEN {
             let mut array_bytes: [u8; I32_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(i32::from_be_bytes(array_bytes));
         } else {
             warn!(
@@ -161,7 +161,7 @@ impl FromBytes<i32> for i32 {
     fn from_le_bytes_non_const(bytes: &[u8]) -> Option<i32> {
         if bytes.len() == I32_LEN {
             let mut array_bytes: [u8; I32_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(i32::from_le_bytes(array_bytes));
         } else {
             warn!(
@@ -182,7 +182,7 @@ impl FromBytes<i64> for i64 {
     fn from_be_bytes_non_const(bytes: &[u8]) -> Option<i64> {
         if bytes.len() == I64_LEN {
             let mut array_bytes: [u8; I64_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(i64::from_be_bytes(array_bytes));
         } else {
             warn!(
@@ -201,7 +201,7 @@ impl FromBytes<i64> for i64 {
     fn from_le_bytes_non_const(bytes: &[u8]) -> Option<i64> {
         if bytes.len() == I64_LEN {
             let mut array_bytes: [u8; I64_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(i64::from_le_bytes(array_bytes));
         } else {
             warn!(
@@ -222,7 +222,7 @@ impl FromBytes<i128> for i128 {
     fn from_be_bytes_non_const(bytes: &[u8]) -> Option<i128> {
         if bytes.len() == I128_LEN {
             let mut array_bytes: [u8; I128_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(i128::from_be_bytes(array_bytes));
         } else {
             warn!(
@@ -241,7 +241,7 @@ impl FromBytes<i128> for i128 {
     fn from_le_bytes_non_const(bytes: &[u8]) -> Option<i128> {
         if bytes.len() == I128_LEN {
             let mut array_bytes: [u8; I128_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(i128::from_le_bytes(array_bytes));
         } else {
             warn!(
@@ -262,7 +262,7 @@ impl FromBytes<f32> for f32 {
     fn from_be_bytes_non_const(bytes: &[u8]) -> Option<f32> {
         if bytes.len() == F32_LEN {
             let mut array_bytes: [u8; F32_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(f32::from_be_bytes(array_bytes));
         } else {
             warn!(
@@ -281,7 +281,7 @@ impl FromBytes<f32> for f32 {
     fn from_le_bytes_non_const(bytes: &[u8]) -> Option<f32> {
         if bytes.len() == F32_LEN {
             let mut array_bytes: [u8; F32_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(f32::from_le_bytes(array_bytes));
         } else {
             warn!(
@@ -302,7 +302,7 @@ impl FromBytes<f64> for f64 {
     fn from_be_bytes_non_const(bytes: &[u8]) -> Option<f64> {
         if bytes.len() == F64_LEN {
             let mut array_bytes: [u8; F64_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(f64::from_be_bytes(array_bytes));
         } else {
             warn!(
@@ -321,7 +321,7 @@ impl FromBytes<f64> for f64 {
     fn from_le_bytes_non_const(bytes: &[u8]) -> Option<f64> {
         if bytes.len() == F64_LEN {
             let mut array_bytes: [u8; F64_LEN] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
+            array_bytes.copy_from_slice(bytes);
             return Some(f64::from_le_bytes(array_bytes));
         } else {
             warn!(

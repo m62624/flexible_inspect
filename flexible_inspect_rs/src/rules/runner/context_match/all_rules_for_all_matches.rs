@@ -6,8 +6,8 @@ pub fn all_rules_for_all_matches<'a, R, C>(
     stack: &mut VecDeque<(&'a R::RuleType, CaptureData<'a, C>)>,
 ) -> NextStep
 where
-    R: CalculateValueRules<'a, C> + Debug,
-    C: IntoConcreteType<'a>,
+    R: CalculateValueRules<'a, C>,
+    C: IntoSpecificCaptureType<'a>,
 {
     let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
     if let Some(mut frame) = stack.pop_front() {
@@ -199,7 +199,7 @@ fn not_in_regexset<'a, R, C>(
 ) -> NextStep
 where
     R: CalculateValueRules<'a, C> + Debug,
-    C: IntoConcreteType<'a>,
+    C: IntoSpecificCaptureType<'a>,
 {
     // ============================= LOG =============================
     debug!(

@@ -2,7 +2,7 @@ use super::*;
 use crate::rules::rule_bytes::runner_range::single_bytes_result;
 use crate::rules::rule_str::runner_range::single_str_result;
 
-pub fn number_range_status<'a, R: RuleBase, C: IntoConcreteType<'a>>(
+pub fn number_range_status<'a, R: RuleBase, C: IntoSpecificCaptureType<'a>>(
     rule: &R,
     captures: &mut CaptureData<'a, C>,
 ) -> NextStep {

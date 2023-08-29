@@ -14,4 +14,3 @@ pub use at_least_one_rule_for_at_least_one_match::at_least_one_rule_for_at_least
 use log::{debug, error, info, trace};
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::Debug;
-use std::hash::Hash;

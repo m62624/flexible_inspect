@@ -5,7 +5,7 @@ use super::*;
 /// Additional checks of modifiers are performed here
 /// ( if there will be more of them and they will take a long time to calculate,
 /// we will switch to checking via `async_task` for each modifier )
-pub fn modifier_runner<'a, R: RuleBase, C: IntoConcreteType<'a>>(
+pub fn modifier_runner<'a, R: RuleBase, C: IntoSpecificCaptureType<'a>>(
     rule: &R,
     captures: &mut CaptureData<'a, C>,
 ) -> NextStep {

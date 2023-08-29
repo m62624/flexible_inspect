@@ -2,13 +2,13 @@ use log::error;
 
 use super::*;
 use crate::rules::{
-    traits::{IntoConcreteType, RuleBase},
+    traits::{IntoSpecificCaptureType, RuleBase},
     Counter,
 };
 
 /// The counter implementation
 impl Counter {
-    pub fn counter_status<'a, R: RuleBase, C: IntoConcreteType<'a>>(
+    pub fn counter_status<'a, R: RuleBase, C: IntoSpecificCaptureType<'a>>(
         rule: &R,
         captures: &mut CaptureData<'a, C>,
     ) -> NextStep {

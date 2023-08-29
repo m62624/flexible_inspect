@@ -1,11 +1,11 @@
 mod context_match;
-use super::traits::IntoConcreteType;
+use super::traits::IntoSpecificCaptureType;
 use super::*;
 use crate::rules::next::NextStep;
 use crate::rules::traits::{CalculateValueRules, RuleBase};
 use colored::*;
 use log::debug;
-use std::{collections::VecDeque, fmt::Debug};
+use std::collections::VecDeque;
 
 /// Main method for iteratively running a rule
 /// Goes through all subrules, and so on to the end for each `Rule`.
@@ -31,8 +31,8 @@ Step 3
 */
 pub fn run<'a, R, C>(rule: &'a R::RuleType, data: CaptureData<'a, C>) -> NextStep
 where
-    R: CalculateValueRules<'a, C> + Debug,
-    C: IntoConcreteType<'a>,
+    R: CalculateValueRules<'a, C>,
+    C: IntoSpecificCaptureType<'a>,
 {
     // ============================= LOG =============================
     debug!(
