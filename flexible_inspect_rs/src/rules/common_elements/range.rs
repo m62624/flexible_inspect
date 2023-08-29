@@ -17,6 +17,7 @@ pub enum RangeFormat {
 #[derive(Debug, Clone)]
 pub enum RangeBoundaries {
     I8(RangeInclusive<i8>),
+    I16(RangeInclusive<i16>),
     I32(RangeInclusive<i32>),
     I64(RangeInclusive<i64>),
     I128(RangeInclusive<i128>),
@@ -73,6 +74,7 @@ impl Hash for RangeBoundaries {
     fn hash<H: Hasher>(&self, state: &mut H) {
         match self {
             RangeBoundaries::I8(range) => range.hash(state),
+            RangeBoundaries::I16(range) => range.hash(state),
             RangeBoundaries::I32(range) => range.hash(state),
             RangeBoundaries::I64(range) => range.hash(state),
             RangeBoundaries::I128(range) => range.hash(state),
@@ -92,6 +94,7 @@ impl PartialEq for RangeBoundaries {
     fn eq(&self, other: &Self) -> bool {
         match (self, other) {
             (RangeBoundaries::I8(range1), RangeBoundaries::I8(range2)) => range1 == range2,
+            (RangeBoundaries::I16(range1), RangeBoundaries::I16(range2)) => range1 == range2,
             (RangeBoundaries::I32(range1), RangeBoundaries::I32(range2)) => range1 == range2,
             (RangeBoundaries::I64(range1), RangeBoundaries::I64(range2)) => range1 == range2,
             (RangeBoundaries::I128(range1), RangeBoundaries::I128(range2)) => range1 == range2,
