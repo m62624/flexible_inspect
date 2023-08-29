@@ -1,7 +1,10 @@
 mod counter_status;
 mod modifier_arena;
-mod number_range_status;
-use super::{traits::RuleBase, *};
+pub mod number_range_status;
+use super::{
+    traits::{IntoConcreteType, RuleBase},
+    *,
+};
 
 /// All optional modifiers `NextStep` to have a unified type
 #[derive(Debug, PartialEq, Eq)]
@@ -16,9 +19,9 @@ pub enum NextStep {
 
 impl NextStep {
     /// Mechanism with final variant, depending on modifiers we get the result
-    pub fn next_or_finish_or_error<R: RuleBase, C: PartialEq + Eq + Hash>(
+    pub fn next_or_finish_or_error<'a, R: RuleBase, C: IntoConcreteType<'a>>(
         rule: &R,
-        captures: &mut CaptureData<C>,
+        captures: &mut CaptureData<'a, C>,
     ) -> NextStep {
         match rule.get_requirement() {
             MatchRequirement::MustBeFound => {

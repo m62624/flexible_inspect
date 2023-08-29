@@ -1,13 +1,16 @@
 use log::error;
 
 use super::*;
-use crate::rules::{traits::RuleBase, Counter};
+use crate::rules::{
+    traits::{IntoConcreteType, RuleBase},
+    Counter,
+};
 
 /// The counter implementation
 impl Counter {
-    pub fn counter_status<R: RuleBase, C: PartialEq + Eq + Hash>(
+    pub fn counter_status<'a, R: RuleBase, C: IntoConcreteType<'a>>(
         rule: &R,
-        captures: &mut CaptureData<C>,
+        captures: &mut CaptureData<'a, C>,
     ) -> NextStep {
         if let Some(counter) = rule.get_counter() {
             match counter {

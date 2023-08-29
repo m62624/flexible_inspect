@@ -5,6 +5,7 @@ mod captures;
 mod convert;
 mod init;
 mod modifiers;
+pub mod runner_range;
 mod utils;
 // ======================================================
 use super::{

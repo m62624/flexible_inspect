@@ -6,8 +6,9 @@ use crate::rules::{traits::RuleBase, CaptureData};
 use indexmap::IndexSet;
 use log::info;
 use std::collections::HashMap;
+use std::marker::PhantomData;
 
-pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<&'a str> {
+pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<'a, &'a str> {
     let mut hashmap_for_error = HashMap::new();
     let mut text_for_capture: IndexSet<&str> = IndexSet::new();
     let mut counter_value: usize = 0;
@@ -96,5 +97,6 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<&'a str> 
         text_for_capture,
         hashmap_for_error,
         counter_value,
+        phantom: PhantomData,
     }
 }

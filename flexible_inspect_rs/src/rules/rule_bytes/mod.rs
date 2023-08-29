@@ -2,9 +2,10 @@
 mod another_traits;
 mod base;
 mod captures;
-mod convert;
+pub mod convert;
 mod init;
 mod modifiers;
+pub mod runner_range;
 mod utils;
 // =======================================================
 use super::{

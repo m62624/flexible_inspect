@@ -37,14 +37,14 @@ pub trait RuleBase {
 /// The main thing is to implement separately `Captures` for `&str` and `&[u8]`
 /// the rest will be the same
 
-pub trait CalculateValueRules<'a, C: PartialEq + Eq + Hash> {
+pub trait CalculateValueRules<'a, C: IntoConcreteType<'a>> {
     type RuleType: RuleBase<RuleType = Self::RuleType, RegexSet = Self::RegexSet>
         + Hash
         + Eq
         + PartialEq;
     type RegexSet: 'a;
     fn get_selected_rules(regex_set: &Self::RegexSet, text: &C) -> Vec<usize>;
-    fn find_captures(rule: &Self::RuleType, capture: &C) -> CaptureData<C>;
+    fn find_captures(rule: &Self::RuleType, capture: &C) -> CaptureData<'a, C>;
 }
 
 /// This trait requires modifier implementations for any `Rules`
@@ -78,4 +78,9 @@ pub trait RuleModifiers {
 }
 pub trait RangeType {
     fn get_range(self) -> RangeBoundaries;
+}
+
+pub trait IntoConcreteType<'a>: Hash + PartialEq + Eq + Debug {
+    fn into_str(&self) -> Option<&'a str>;
+    fn into_bytes(&self) -> Option<&'a [u8]>;
 }

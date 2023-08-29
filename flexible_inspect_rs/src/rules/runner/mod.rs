@@ -1,5 +1,5 @@
 mod context_match;
-mod runner_range;
+use super::traits::IntoConcreteType;
 use super::*;
 use crate::rules::next::NextStep;
 use crate::rules::traits::{CalculateValueRules, RuleBase};
@@ -29,10 +29,10 @@ Step 3
  Of course, it depends on the pattern itself, but in general, they can be longer than regular rules.
  That's why we leave them at the end to try to weed out long calculations at the beginning of the queue
 */
-pub fn run<'a, R, C>(rule: &'a R::RuleType, data: CaptureData<C>) -> NextStep
+pub fn run<'a, R, C>(rule: &'a R::RuleType, data: CaptureData<'a, C>) -> NextStep
 where
     R: CalculateValueRules<'a, C> + Debug,
-    C: PartialEq + Eq + Hash + Debug,
+    C: IntoConcreteType<'a>,
 {
     // ============================= LOG =============================
     debug!(

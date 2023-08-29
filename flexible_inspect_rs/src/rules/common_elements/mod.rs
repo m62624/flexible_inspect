@@ -1,5 +1,7 @@
+use std::marker::PhantomData;
+
 use self::range::RangeFormat;
-use super::*;
+use super::{traits::IntoConcreteType, *};
 pub mod range;
 // =======================================================
 /// This is reserved standard value for error filling
@@ -79,8 +81,29 @@ pub enum Counter {
 
 /// A structure that stores all the data for processing the capture
 #[derive(Debug)]
-pub struct CaptureData<T: PartialEq + Eq + Hash> {
+pub struct CaptureData<'a, T: IntoConcreteType<'a>> {
     pub text_for_capture: IndexSet<T>,
     pub hashmap_for_error: HashMap<String, String>,
     pub counter_value: usize,
+    pub phantom: PhantomData<&'a T>,
+}
+
+impl<'a> IntoConcreteType<'a> for &'a str {
+    fn into_str(&self) -> Option<&'a str> {
+        Some(self)
+    }
+
+    fn into_bytes(&self) -> Option<&'a [u8]> {
+        None
+    }
+}
+
+impl<'a> IntoConcreteType<'a> for &'a [u8] {
+    fn into_str(&self) -> Option<&'a str> {
+        None
+    }
+
+    fn into_bytes(&self) -> Option<&'a [u8]> {
+        Some(self)
+    }
 }

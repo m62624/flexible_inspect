@@ -31,6 +31,12 @@ impl RangeType for RangeInclusive<i8> {
     }
 }
 
+impl RangeType for RangeInclusive<i16> {
+    fn get_range(self) -> RangeBoundaries {
+        RangeBoundaries::I16(self)
+    }
+}
+
 impl RangeType for RangeInclusive<i32> {
     fn get_range(self) -> RangeBoundaries {
         RangeBoundaries::I32(self)
@@ -65,8 +71,11 @@ impl RangeType for RangeInclusive<f64> {
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub enum RangeMode {
+    /// Any match is enough
     Any,
+    /// All matches are required
     All,
+    /// Exactly the specified number of matches
     Exactly(usize),
 }
 
