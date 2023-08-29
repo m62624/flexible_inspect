@@ -2,54 +2,21 @@ use colored::*;
 use log::{info, warn};
 use std::{fmt::Debug, str::FromStr};
 
-pub trait FromBytes<T> {
+// ======================================================================================================
+const I8_LEN: usize = 1;
+const I16_LEN: usize = 2;
+const I32_LEN: usize = 4;
+const I64_LEN: usize = 8;
+const I128_LEN: usize = 16;
+const F32_LEN: usize = 4;
+const F64_LEN: usize = 8;
+// ======================================================================================================
+
+// ======================================================================================================
+pub trait FromBytes<T: FromStr + Copy + Debug + ToString> {
     fn from_be_bytes_non_const(bytes: &[u8]) -> Option<T>;
     fn from_le_bytes_non_const(bytes: &[u8]) -> Option<T>;
-}
-
-impl FromBytes<i32> for i32 {
-    fn from_be_bytes_non_const(bytes: &[u8]) -> Option<i32> {
-        if bytes.len() == 4 {
-            let mut array_bytes: [u8; 4] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
-            return Some(i32::from_be_bytes(array_bytes));
-        } else {
-            warn!(
-                "{}",
-                format!(
-                    "length of array `{}`, for conversions must be `16`, value {}",
-                    bytes.len(),
-                    format!("{:?}", bytes).yellow()
-                )
-            );
-        }
-        None
-    }
-
-    fn from_le_bytes_non_const(bytes: &[u8]) -> Option<i32> {
-        if bytes.len() == 4 {
-            let mut array_bytes: [u8; 4] = Default::default();
-            array_bytes.copy_from_slice(&bytes);
-            return Some(i32::from_le_bytes(array_bytes));
-        } else {
-            warn!(
-                "{}",
-                format!(
-                    "length of array `{}`, for conversions must be `16`, value {}",
-                    bytes.len(),
-                    format!("{:?}", bytes).yellow()
-                )
-            );
-        }
-        None
-    }
-}
-
-pub mod bytes_to_number {
-    use super::*;
-
-    /// Convert a collection of bytes to numbers and filter out errors
-    pub fn from_utf8<T: FromStr + Copy + Debug + ToString>(bytes: &[u8]) -> Option<T> {
+    fn from_utf8(bytes: &[u8]) -> Option<T> {
         if let Ok(value) = String::from_utf8(bytes.to_vec()) {
             info!(
                 "{}",
@@ -88,34 +55,285 @@ pub mod bytes_to_number {
             None
         }
     }
+}
+// ======================================================================================================
 
-    // /// Create a native endian integer value from its representation as a byte array in big endian
-    // pub fn from_be_bytes<T: FromStr + Debug>(bytes: &[u8]) -> Option<T> {
-    //     info!(
-    //         "(mode from_be_bytes) bytes converted to a string, value {}",
-    //         format!("{:?}", bytes).yellow()
-    //     );
-    //     Some(T::from_be_bytes(*bytes))
-    // }
+impl FromBytes<i8> for i8 {
+    fn from_be_bytes_non_const(bytes: &[u8]) -> Option<i8> {
+        if bytes.len() == I8_LEN {
+            let mut array_bytes: [u8; I8_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(i8::from_be_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    I8_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
 
-    // /// Create a native endian integer value from its representation as a byte array in little endian
-    // pub fn from_le_bytes<T: FromStr + Debug>(bytes: &[u8]) -> Option<u32> {
-    //     info!(
-    //         "(mode from_le_bytes) bytes converted to a string, value {}",
-    //         format!("{:?}", bytes).yellow()
-    //     );
-    //     Some(T::from_le_bytes(*bytes))
-    // }
+    fn from_le_bytes_non_const(bytes: &[u8]) -> Option<i8> {
+        if bytes.len() == I8_LEN {
+            let mut array_bytes: [u8; I8_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(i8::from_le_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    I8_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
 }
 
-#[test]
-fn check_boundary_raw_array() {
-    let bytes: [u8; 16] = [
-        0x78, 0x56, 0x34, 0x12, 0xAB, 0xCD, 0xEF, 0x01, 0x23, 0x45, 0x67, 0x89, 0x9A, 0xBC, 0xDE,
-        0xF0,
-    ];
-    let invalid_bytes: [u8; 4] = [0xFF, 0xFF, 0xFF, 0xFF];
+impl FromBytes<i16> for i16 {
+    fn from_be_bytes_non_const(bytes: &[u8]) -> Option<i16> {
+        if bytes.len() == I16_LEN {
+            let mut array_bytes: [u8; I16_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(i16::from_be_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    I16_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
 
-    let value = i32::from_be_bytes_non_const(&invalid_bytes);
-    dbg!(value);
+    fn from_le_bytes_non_const(bytes: &[u8]) -> Option<i16> {
+        if bytes.len() == I16_LEN {
+            let mut array_bytes: [u8; I16_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(i16::from_le_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    I16_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
+}
+
+impl FromBytes<i32> for i32 {
+    fn from_be_bytes_non_const(bytes: &[u8]) -> Option<i32> {
+        if bytes.len() == I32_LEN {
+            let mut array_bytes: [u8; I32_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(i32::from_be_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    I32_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
+
+    fn from_le_bytes_non_const(bytes: &[u8]) -> Option<i32> {
+        if bytes.len() == I32_LEN {
+            let mut array_bytes: [u8; I32_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(i32::from_le_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    I32_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
+}
+
+impl FromBytes<i64> for i64 {
+    fn from_be_bytes_non_const(bytes: &[u8]) -> Option<i64> {
+        if bytes.len() == I64_LEN {
+            let mut array_bytes: [u8; I64_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(i64::from_be_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    I64_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
+
+    fn from_le_bytes_non_const(bytes: &[u8]) -> Option<i64> {
+        if bytes.len() == I64_LEN {
+            let mut array_bytes: [u8; I64_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(i64::from_le_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    I64_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
+}
+
+impl FromBytes<i128> for i128 {
+    fn from_be_bytes_non_const(bytes: &[u8]) -> Option<i128> {
+        if bytes.len() == I128_LEN {
+            let mut array_bytes: [u8; I128_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(i128::from_be_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    I128_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
+
+    fn from_le_bytes_non_const(bytes: &[u8]) -> Option<i128> {
+        if bytes.len() == I128_LEN {
+            let mut array_bytes: [u8; I128_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(i128::from_le_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    I128_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
+}
+
+impl FromBytes<f32> for f32 {
+    fn from_be_bytes_non_const(bytes: &[u8]) -> Option<f32> {
+        if bytes.len() == F32_LEN {
+            let mut array_bytes: [u8; F32_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(f32::from_be_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    F32_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
+
+    fn from_le_bytes_non_const(bytes: &[u8]) -> Option<f32> {
+        if bytes.len() == F32_LEN {
+            let mut array_bytes: [u8; F32_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(f32::from_le_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    F32_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
+}
+
+impl FromBytes<f64> for f64 {
+    fn from_be_bytes_non_const(bytes: &[u8]) -> Option<f64> {
+        if bytes.len() == F64_LEN {
+            let mut array_bytes: [u8; F64_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(f64::from_be_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    F64_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
+
+    fn from_le_bytes_non_const(bytes: &[u8]) -> Option<f64> {
+        if bytes.len() == F64_LEN {
+            let mut array_bytes: [u8; F64_LEN] = Default::default();
+            array_bytes.copy_from_slice(&bytes);
+            return Some(f64::from_le_bytes(array_bytes));
+        } else {
+            warn!(
+                "{}",
+                format!(
+                    "length of array `{}`, for conversions must be `{}`, value {}",
+                    bytes.len(),
+                    F64_LEN,
+                    format!("{:?}", bytes).yellow()
+                )
+            );
+        }
+        None
+    }
 }
