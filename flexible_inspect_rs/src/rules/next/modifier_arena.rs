@@ -13,6 +13,6 @@ pub fn modifier_runner<R: RuleBase, C: PartialEq + Eq + Hash>(
         return NextStep::Error(value);
     }
     // ====================================================
-
+    
     NextStep::Finish
 }
