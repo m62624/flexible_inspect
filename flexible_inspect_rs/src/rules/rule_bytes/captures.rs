@@ -1,6 +1,6 @@
 use crate::prelude::RuleBytes;
-use crate::rules::DEFAULT_CAPTURE;
 use crate::rules::{traits::RuleBase, CaptureData};
+use crate::rules::{TypeStorageFormat, DEFAULT_CAPTURE};
 use colored::Colorize;
 use indexmap::IndexSet;
 use log::info;
@@ -10,6 +10,7 @@ use std::marker::PhantomData;
 pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<'a, &'a [u8]> {
     let mut hashmap_for_error: HashMap<String, String> = HashMap::new();
     let mut text_for_capture: IndexSet<&[u8]> = IndexSet::new();
+    let mut text_for_capture_duplicate: Vec<&[u8]> = Vec::new();
     let mut counter_value: usize = 0;
     // flag to check `Counter`
     let flag_check_counter = rule.0.general_modifiers.counter.is_some();
@@ -20,7 +21,11 @@ pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<'a,
             hashmap_for_error
                 .entry(DEFAULT_CAPTURE.into())
                 .or_insert_with(|| format!("{:?}", value.as_bytes()));
-            text_for_capture.insert(value.as_bytes());
+            if rule.get_save_duplicates() {
+                text_for_capture_duplicate.push(value.as_bytes());
+            } else {
+                text_for_capture.insert(value.as_bytes());
+            }
             // there can be several groups in one `regex`, but all of them
             // they are needed to get the main match, so
             // the increment is only in `main capture`.
@@ -57,7 +62,11 @@ pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<'a,
         }
     }
     CaptureData {
-        text_for_capture,
+        text_for_capture: if rule.get_save_duplicates() {
+            TypeStorageFormat::Multiple((text_for_capture_duplicate, PhantomData))
+        } else {
+            TypeStorageFormat::Single((text_for_capture, PhantomData))
+        },
         hashmap_for_error,
         counter_value,
     }

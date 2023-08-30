@@ -29,6 +29,7 @@ pub trait RuleBase {
     fn get_mode_match(&self) -> &ModeMatch;
     fn get_str(&self) -> &str;
     fn get_range(&self) -> Option<&RangeFormat>;
+    fn get_save_duplicates(&self) -> bool;
 }
 
 /// The main trait for `context_match`, that is,

@@ -9,8 +9,9 @@ use std::collections::HashMap;
 use std::marker::PhantomData;
 
 pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<'a, &'a str> {
-    let mut hashmap_for_error = HashMap::default();
-    let mut text_for_capture: IndexSet<&str> = IndexSet::default();
+    let mut hashmap_for_error: HashMap<String, String> = HashMap::new();
+    let mut text_for_capture: IndexSet<&str> = IndexSet::new();
+    let mut text_for_capture_duplicate: Vec<&str> = Vec::new();
     let mut counter_value: usize = 0;
     // flag to check `Counter`
     let flag_check_counter = rule.0.general_modifiers.counter.is_some();
@@ -24,7 +25,11 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<'a, &'a s
                     hashmap_for_error
                         .entry(DEFAULT_CAPTURE.into())
                         .or_insert_with(|| value.as_str().into());
-                    text_for_capture.insert(value.as_str());
+                    if rule.get_save_duplicates() {
+                        text_for_capture_duplicate.push(value.as_str());
+                    } else {
+                        text_for_capture.insert(value.as_str());
+                    }
                     // there can be several groups in one `regex`, but all of them
                     // they are needed to get the main match, so
                     // the increment is only in `main capture`.
@@ -53,7 +58,11 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<'a, &'a s
                         hashmap_for_error
                             .entry(DEFAULT_CAPTURE.into())
                             .or_insert_with(|| value.as_str().into());
-                        text_for_capture.insert(value.as_str());
+                        if rule.get_save_duplicates() {
+                            text_for_capture_duplicate.push(value.as_str());
+                        } else {
+                            text_for_capture.insert(value.as_str());
+                        }
                         // there can be several groups in one `regex`, but all of them
                         // they are needed to get the main match, so
                         // the increment is only in `main capture`.
@@ -94,7 +103,11 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<'a, &'a s
     }
 
     CaptureData {
-        text_for_capture,
+        text_for_capture: if rule.get_save_duplicates() {
+            TypeStorageFormat::Multiple((text_for_capture_duplicate, PhantomData))
+        } else {
+            TypeStorageFormat::Single((text_for_capture, PhantomData))
+        },
         hashmap_for_error,
         counter_value,
     }

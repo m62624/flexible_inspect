@@ -46,4 +46,8 @@ impl RuleBase for RuleBytes {
     fn get_range(&self) -> Option<&range::RangeFormat> {
         self.0.general_modifiers.range.as_ref()
     }
+
+    fn get_save_duplicates(&self) -> bool {
+        self.0.general_modifiers.save_duplicates
+    }
 }
