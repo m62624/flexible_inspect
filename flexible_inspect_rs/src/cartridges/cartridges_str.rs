@@ -9,10 +9,12 @@ impl CartridgeBase<&str> for Cartridge<Rule> {
         rules::runner::run::<Rule, &str>(
             &self.root_rule,
             CaptureData {
-                text_for_capture: IndexSet::from([data]),
+                text_for_capture: rules::TypeStorageFormat::Single((
+                    IndexSet::from([data]),
+                    PhantomData,
+                )),
                 hashmap_for_error: Default::default(),
                 counter_value: Default::default(),
-                phantom: PhantomData,
             },
         )
     }
@@ -41,10 +43,12 @@ impl CartridgeBase<Arc<str>> for Cartridge<Rule> {
         rules::runner::run::<Rule, &str>(
             &self.root_rule,
             CaptureData {
-                text_for_capture: IndexSet::from([data.as_ref()]),
+                text_for_capture: rules::TypeStorageFormat::Single((
+                    IndexSet::from([data.as_ref()]),
+                    PhantomData,
+                )),
                 hashmap_for_error: Default::default(),
                 counter_value: Default::default(),
-                phantom: PhantomData,
             },
         )
     }
