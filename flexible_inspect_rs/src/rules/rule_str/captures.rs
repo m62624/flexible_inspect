@@ -9,8 +9,8 @@ use std::collections::HashMap;
 use std::marker::PhantomData;
 
 pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<'a, &'a str> {
-    let mut hashmap_for_error = HashMap::new();
-    let mut text_for_capture: IndexSet<&str> = IndexSet::new();
+    let mut hashmap_for_error = HashMap::default();
+    let mut text_for_capture: IndexSet<&str> = IndexSet::default();
     let mut counter_value: usize = 0;
     // flag to check `Counter`
     let flag_check_counter = rule.0.general_modifiers.counter.is_some();
@@ -97,6 +97,5 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<'a, &'a s
         text_for_capture,
         hashmap_for_error,
         counter_value,
-        phantom: PhantomData,
     }
 }

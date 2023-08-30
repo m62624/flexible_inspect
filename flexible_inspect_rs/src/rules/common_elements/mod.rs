@@ -25,6 +25,7 @@ pub struct GeneralModifiers {
     pub counter: Option<Counter>,
     pub mode_match: ModeMatch,
     pub range: Option<RangeFormat>,
+    pub save_duplicates: bool,
 }
 
 /// The structure that defines what action is required when finding regular expression matches.
@@ -79,13 +80,22 @@ pub enum Counter {
     LessThan(usize),
 }
 
+/// Data storage modes, mainly needed for `RuleBytes` when using `Range`
+/// with byte reading modes `FromLeBytes` | `FromBeBytes` to store duplicates
+#[derive(Debug)]
+pub enum TypeStorageFormat<'a, T: IntoSpecificCaptureType<'a>> {
+    /// A structure that stores a single value
+    Single((IndexSet<T>, PhantomData<&'a T>)),
+    /// A structure that stores multiple values
+    Multiple((Vec<T>, PhantomData<&'a T>)),
+}
+
 /// A structure that stores all the data for processing the capture
 #[derive(Debug)]
 pub struct CaptureData<'a, T: IntoSpecificCaptureType<'a>> {
-    pub text_for_capture: IndexSet<T>,
+    pub text_for_capture: TypeStorageFormat<'a, T>,
     pub hashmap_for_error: HashMap<String, String>,
     pub counter_value: usize,
-    pub phantom: PhantomData<&'a T>,
 }
 
 impl<'a> IntoSpecificCaptureType<'a> for &'a str {

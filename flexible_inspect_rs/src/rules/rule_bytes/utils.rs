@@ -1,3 +1,5 @@
+use traits::RuleModifiers;
+
 use super::range::RangeFormat;
 use super::rules::traits::{CalculateValueRules, RangeType};
 use super::*;
@@ -29,11 +31,12 @@ impl RuleBytes {
         read_bytes_mode: ReadMode,
         range_mode: RangeMode,
     ) -> RuleBytes {
-        self.0.general_modifiers.range = Some(RangeFormat::Bytes(RangeBytes::new(
+        let mut modified_self = self.save_duplicates();
+        modified_self.0.general_modifiers.range = Some(RangeFormat::Bytes(RangeBytes::new(
             range.get_range(),
             read_bytes_mode,
             range_mode,
         )));
-        self
+        modified_self
     }
 }

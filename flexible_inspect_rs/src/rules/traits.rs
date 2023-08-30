@@ -75,6 +75,13 @@ pub trait RuleModifiers {
     ///
     /// In this mode, at least one rule must pass at least one match check
     fn any_r_for_any_m(self) -> Self::RuleType;
+    /// modifier to change the rule matching mode.
+    ///
+    /// Save all matches even if they are duplicates
+    /// # Notes
+    /// - By default, duplicates are not saved, but duplicate counting for `counter_*` methods is always kept regardless of the duplicate saving mode
+    /// - Automatic activated if `number_range` for `RuleBytes` is used
+    fn save_duplicates(self) -> Self::RuleType;
 }
 pub trait RangeType {
     fn get_range(self) -> RangeBoundaries;

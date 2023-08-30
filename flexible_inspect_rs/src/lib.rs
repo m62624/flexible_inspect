@@ -36,7 +36,11 @@ pub mod prelude {
     pub use crate::error::ValidationError;
     pub use crate::rules::range::RangeMode;
     pub use crate::rules::MatchRequirement;
-    pub use crate::rules::{rule_bytes::RuleBytes, rule_str::Rule, traits::RuleModifiers};
+    pub use crate::rules::{
+        rule_bytes::{ReadMode, RuleBytes},
+        rule_str::Rule,
+        traits::RuleModifiers,
+    };
     pub use crate::template_validator::{TemplateValidator, ValidatorBase};
 }
 

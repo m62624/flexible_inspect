@@ -8,6 +8,7 @@ impl GeneralModifiers {
             counter: None,
             mode_match: ModeMatch::AllRulesForAllMatches,
             range: None,
+            save_duplicates: false,
         }
     }
 }
@@ -41,6 +42,9 @@ impl SlisedRules {
 
 impl<'a, T: IntoSpecificCaptureType<'a>> CaptureData<'a, T> {
     pub fn is_some(&self) -> bool {
-        !self.text_for_capture.is_empty()
+        match &self.text_for_capture {
+            TypeStorageFormat::Single(value) => !value.0.is_empty(),
+            TypeStorageFormat::Multiple(value) => !value.0.is_empty(),
+        }
     }
 }

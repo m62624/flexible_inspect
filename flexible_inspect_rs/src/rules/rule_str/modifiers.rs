@@ -86,4 +86,15 @@ impl RuleModifiers for Rule {
         );
         self
     }
+
+    fn save_duplicates(self) -> Self::RuleType {
+        self.0.general_modifiers.save_duplicates = true;
+        debug!(
+            "the `{}` modifier is applied to Rule ({}, {})",
+            "save_duplicates".bright_yellow(),
+            self.get_str().yellow(),
+            format!("{:#?}", self.get_requirement()).yellow()
+        );
+        self
+    }
 }

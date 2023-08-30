@@ -60,6 +60,5 @@ pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<'a,
         text_for_capture,
         hashmap_for_error,
         counter_value,
-        phantom: PhantomData,
     }
 }
