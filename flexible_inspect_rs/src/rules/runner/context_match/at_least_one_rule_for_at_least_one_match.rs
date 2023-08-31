@@ -33,7 +33,7 @@ where
                 The first step is to get a RegexSet for each match, based on it,
                 we get those rules that will definitely work, then check their modifiers
                  */
-                'skip_data: for data in &mut frame.1.text_for_capture.iter() {
+                'skip_data: for data in frame.1.text_for_capture.iter() {
                     if let Some(simple_rules) = frame.0.get_simple_rules() {
                         let mut selected_rules = HashSet::new();
                         'skip_this_rule: for index in R::get_selected_rules(simple_rules.1, &data) {

@@ -13,8 +13,7 @@ fn fn_find_captures_t_0() {
     let captures_2 = IndexSet::from([&b"foo\0"[..], &b"qu\xFFux\0"[..], &b"baz\0"[..]]);
     if let TypeStorageFormat::Single(value) = captures_1.text_for_capture {
         assert!(value.0.is_subset(&captures_2));
-    }
-    else {
+    } else {
         panic!("error");
     }
 }

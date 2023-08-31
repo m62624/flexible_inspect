@@ -25,7 +25,6 @@ where
                     format!("{:#?}", frame.0.get_requirement()).yellow()
                 );
                 // ===============================================================
-                let mut data_iter = frame.1.text_for_capture.iter();
                 if let Some(simple_rules) = &frame.0.get_simple_rules() {
                     // count of how many times one rule has worked for different matches
                     let mut counter_of_each_rule = HashMap::new();
@@ -38,7 +37,7 @@ where
                     The first step is to get a RegexSet for each match, based on it,
                     we get those rules that will definitely work, then check their modifiers
                      */
-                    for data in &mut data_iter {
+                    for data in frame.1.text_for_capture.iter() {
                         // we get the indexes of the rules that are in the RegexSet
                         for index in R::get_selected_rules(simple_rules.1, &data) {
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
@@ -89,7 +88,7 @@ where
                         }
                     }
                     // The second step, in this stage we go through those rules and matches that are not in `RegexSet`.
-                    for data in &mut data_iter {
+                    for data in frame.1.text_for_capture.iter() {
                         // we go through all the simple rules
                         for rule in simple_rules.0 {
                             // So the first condition is that we exclude those rules
@@ -130,7 +129,7 @@ where
                 }
                 // The hird step, bypass the rules with the Lookahead and Lookbehind regex.
                 if let Some(complex_rules) = frame.0.get_complex_rules() {
-                    for data in &mut data_iter {
+                    for data in frame.1.text_for_capture.iter() {
                         for cmplx_rule in complex_rules {
                             let mut captures = R::find_captures(cmplx_rule, &data);
                             if let NextStep::Error(err) =

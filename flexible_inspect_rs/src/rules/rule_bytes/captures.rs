@@ -46,19 +46,33 @@ pub fn find_captures<'a>(rule: &RuleBytes, capture: &'a [u8]) -> CaptureData<'a,
     });
 
     if log::log_enabled!(log::Level::Info) {
-        if text_for_capture.is_empty() {
-            info!(
-                "(capture) the rule `({}, {})` didn't find a match",
-                rule.get_str().yellow(),
-                format!("{:#?}", rule.get_requirement()).yellow()
-            );
-        } else {
-            info!(
-                " (capture) the rule `({}, {})` found a match: \n{:#?}",
-                rule.get_str().yellow(),
-                format!("{:#?}", rule.get_requirement()).yellow(),
-                text_for_capture
-            )
+        match (
+            text_for_capture.is_empty(),
+            text_for_capture_duplicate.is_empty(),
+        ) {
+            (true, true) | (false, false) => {
+                info!(
+                    "(capture) the rule `({}, {})` didn't find a match",
+                    rule.get_str().yellow(),
+                    format!("{:#?}", rule.get_requirement()).yellow()
+                );
+            }
+            (true, false) => {
+                info!(
+                    "(capture) the rule `({}, {})` found a match: \n{:?}",
+                    rule.get_str().yellow(),
+                    format!("{:#?}", rule.get_requirement()).yellow(),
+                    text_for_capture_duplicate
+                );
+            }
+            (false, true) => {
+                info!(
+                    "(capture) the rule `({}, {})` found a match: \n{:?}",
+                    rule.get_str().yellow(),
+                    format!("{:#?}", rule.get_requirement()).yellow(),
+                    text_for_capture
+                );
+            }
         }
     }
     CaptureData {

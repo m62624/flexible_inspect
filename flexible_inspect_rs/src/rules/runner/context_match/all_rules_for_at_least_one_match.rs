@@ -30,7 +30,7 @@ where
                 let mut err_value: Option<HashMap<String, String>> = None;
                 // Status that we found one match for which all the rules worked
                 let mut rule_matched_for_any_text = false;
-                'skip_data: for data in &mut frame.1.text_for_capture.iter() {
+                'skip_data: for data in frame.1.text_for_capture.iter() {
                     if let Some(simple_rules) = frame.0.get_simple_rules() {
                         // rules that have passed the selections for all matches
                         let mut selected_rules = HashSet::new();
