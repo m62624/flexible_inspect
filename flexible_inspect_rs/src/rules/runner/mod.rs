@@ -45,7 +45,7 @@ where
     let mut stack = VecDeque::from([(rule, data)]);
     while let Some(frame) = stack.front() {
         debug!(
-            ":: going through the `({}, {})` rule stack with `{}` mode",
+            "-> going through the `({}, {})` rule stack with `{}` mode",
             frame.0.get_str().yellow(),
             format!("{:#?}", frame.0.get_requirement()).yellow(),
             format!("{:#?}", frame.0.get_mode_match()).bright_yellow()

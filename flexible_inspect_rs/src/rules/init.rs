@@ -16,27 +16,52 @@ impl GeneralModifiers {
 impl SlisedRules {
     /// The method for sorting all nested rules
     pub fn new<T: IntoIterator<Item = Rule>>(all_rules: T) -> SlisedRules {
-        let mut o_simple_rules = IndexSet::new();
-        let mut o_complex_rules = IndexSet::new();
+        // smr - simple rules
+        // cmr - complex rules
+
+        // Based on this, we validate through `RegexSet` items,
+        // if we found less items than there are in the collections, then the validation failed
+        let mut smr_must_be_found = IndexSet::new();
+        // Based on this, we simply check with `RegexSet`.
+        let mut smr_must_not_be_found_with_subrules = IndexSet::new();
+        // Based on this, we validate through `RegexSet` items, if we found even one item from this collection, then the validation failed
+        let mut smr_must_not_be_found_without_subrules = IndexSet::new();
+        let mut cmr = IndexSet::new();
         all_rules
             .into_iter()
             .for_each(|rule| match rule.0.str_with_type {
-                RegexRaw::DefaultRegex(_) => {
-                    o_simple_rules.insert(rule);
-                }
+                RegexRaw::DefaultRegex(_) => match rule.0.general_modifiers.requirement {
+                    MatchRequirement::MustBeFound => {
+                        smr_must_be_found.insert(rule);
+                    }
+                    MatchRequirement::MustNotBeFound => match rule.0.subrules {
+                        Some(subrules) => {
+                            smr_must_not_be_found_with_subrules.insert(rule);
+                        }
+                        None => {
+                            smr_must_not_be_found_without_subrules.insert(rule);
+                        }
+                    },
+                },
                 RegexRaw::FancyRegex(_) => {
-                    o_complex_rules.insert(rule);
+                    cmr.insert(rule);
                 }
             });
+
         SlisedRules {
-            simple_rules: o_simple_rules,
-            complex_rules: o_complex_rules,
+            smr_must_be_found,
+            smr_must_not_be_found_with_subrules,
+            smr_must_not_be_found_without_subrules,
+            cmr,
         }
     }
 
     /// A method for checking if there are any rules
     pub fn is_some(&self) -> bool {
-        !self.simple_rules.is_empty() || !self.complex_rules.is_empty()
+        !self.smr_must_be_found.is_empty()
+            || !self.smr_must_not_be_found_with_subrules.is_empty()
+            || !self.smr_must_not_be_found_without_subrules.is_empty()
+            || !self.cmr.is_empty()
     }
 }
 

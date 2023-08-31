@@ -8,13 +8,15 @@ pub mod range;
 pub const DEFAULT_CAPTURE: &str = "main_capture";
 // =======================================================
 
-/// The struct for sorting all nested rules
+/// The struct for sorting all nested rulesz
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 pub struct SlisedRules {
     /// The rules are in the `IndexSet` collection to preserve
     /// the order of the rules during index retrieval from the `RegexSet` and to avoid duplicate rules
-    pub simple_rules: IndexSet<Rule>,
-    pub complex_rules: IndexSet<Rule>,
+    pub smr_must_be_found: IndexSet<Rule>,
+    pub smr_must_not_be_found_with_subrules: IndexSet<Rule>,
+    pub smr_must_not_be_found_without_subrules: IndexSet<Rule>,
+    pub cmr: IndexSet<Rule>,
 }
 
 /// A Structure for common `Rule` modifiers

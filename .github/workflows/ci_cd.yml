@@ -142,7 +142,6 @@ jobs:
           docker run ${{ env.IMAGE_DOCKER }}:latest \
           cargo test --manifest-path ./flexible_inspect_py/Cargo.toml
 
-
   packages-js:
     needs: [core-rust-tests, wasm-lib-tests]
     runs-on: ubuntu-latest
@@ -239,7 +238,7 @@ jobs:
           name: javascirpt-npm-${{ github.run_id }}
           path: pkg
       - name: Compress pkg folder (wasm->tgz)
-        run: | 
+        run: |
           tar czf npm-wasm-for-web.tgz -C ./pkg/pkg-web .; \
           tar czf npm-wasm-for-node.tgz -C ./pkg/pkg-nodejs .;
       - name: Extract changelog content

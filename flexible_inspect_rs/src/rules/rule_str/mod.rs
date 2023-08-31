@@ -73,7 +73,9 @@ pub struct Subrules {
 pub struct SimpleRules {
     /// The rules are in the `IndexSet` collection to preserve
     /// the order of the rules during index retrieval from the `RegexSet` and to avoid duplicate rules
-    pub all_rules: IndexSet<Rule>,
+    pub smr_must_be_found: IndexSet<Rule>,
+    pub smr_must_not_be_found_with_subrules: IndexSet<Rule>,
+    pub smr_must_not_be_found_without_subrules: IndexSet<Rule>,
     /// `RegexSet` Match multiple, possibly overlapping, regexes in a single search.
     pub regex_set: RegexSetContainer,
 }
