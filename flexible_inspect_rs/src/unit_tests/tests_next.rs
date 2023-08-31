@@ -1,3 +1,4 @@
+use crate::rules::TypeStorageFormat;
 use indexmap::IndexSet;
 use std::{collections::HashMap, marker::PhantomData};
 
@@ -12,10 +13,9 @@ fn test_next_runner_t_0() {
     let rule = Rule::new(r".+", MatchRequirement::MustBeFound)
         .extend([Rule::new(r"x", MatchRequirement::MustBeFound)]);
     let mut capture: CaptureData<&str> = CaptureData {
-        text_for_capture: IndexSet::from(["x"]),
+        text_for_capture: TypeStorageFormat::Single((IndexSet::from(["x"]), PhantomData)),
         hashmap_for_error: Default::default(),
         counter_value: Default::default(),
-        phantom: PhantomData,
     };
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut capture),
@@ -28,10 +28,9 @@ fn test_next_runner_t_0() {
 fn test_next_runner_t_1() {
     let rule = Rule::new(r".+", MatchRequirement::MustBeFound);
     let mut capture: CaptureData<&str> = CaptureData {
-        text_for_capture: IndexSet::from(["x"]),
+        text_for_capture: TypeStorageFormat::Single((IndexSet::from(["x"]), PhantomData)),
         hashmap_for_error: Default::default(),
         counter_value: Default::default(),
-        phantom: PhantomData,
     };
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut capture),
@@ -45,10 +44,9 @@ fn test_next_runner_t_2() {
     let rule = Rule::new(r".+", MatchRequirement::MustBeFound)
         .extend([Rule::new(r"x", MatchRequirement::MustBeFound)]);
     let mut capture: CaptureData<&str> = CaptureData {
-        text_for_capture: IndexSet::new(),
+        text_for_capture: TypeStorageFormat::Single((IndexSet::new(), PhantomData)),
         hashmap_for_error: Default::default(),
         counter_value: Default::default(),
-        phantom: PhantomData,
     };
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut capture),
@@ -61,10 +59,9 @@ fn test_next_runner_t_2() {
 fn test_next_runner_t_3() {
     let rule = Rule::new(r".+", MatchRequirement::MustBeFound);
     let mut capture: CaptureData<&str> = CaptureData {
-        text_for_capture: IndexSet::new(),
+        text_for_capture: TypeStorageFormat::Single((IndexSet::new(), PhantomData)),
         hashmap_for_error: Default::default(),
         counter_value: Default::default(),
-        phantom: PhantomData,
     };
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut capture),
@@ -78,10 +75,9 @@ fn test_next_runner_t_4() {
     let rule = Rule::new(r".+", MatchRequirement::MustNotBeFound)
         .extend([Rule::new(r"x", MatchRequirement::MustNotBeFound)]);
     let mut capture: CaptureData<&str> = CaptureData {
-        text_for_capture: IndexSet::from(["x"]),
+        text_for_capture: TypeStorageFormat::Single((IndexSet::from(["x"]), PhantomData)),
         hashmap_for_error: Default::default(),
         counter_value: Default::default(),
-        phantom: PhantomData,
     };
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut capture),
@@ -94,14 +90,16 @@ fn test_next_runner_t_4() {
 fn test_next_runner_t_5() {
     let rule = Rule::new(r".+", MatchRequirement::MustNotBeFound);
     let mut capture: CaptureData<&str> = CaptureData {
-        text_for_capture: IndexSet::from(["x"]),
+        text_for_capture: TypeStorageFormat::Single((IndexSet::from(["x"]), PhantomData)),
         hashmap_for_error: HashMap::from([(String::from("x"), String::from("Y"))]),
         counter_value: Default::default(),
-        phantom: PhantomData,
     };
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut capture),
-        NextStep::Error(Some(HashMap::from([(String::from("x"), String::from("Y"))])))
+        NextStep::Error(Some(HashMap::from([(
+            String::from("x"),
+            String::from("Y")
+        )])))
     );
 }
 
@@ -111,10 +109,9 @@ fn test_next_runner_t_6() {
     let rule = Rule::new(r".+", MatchRequirement::MustNotBeFound)
         .extend([Rule::new(r"x", MatchRequirement::MustNotBeFound)]);
     let mut capture: CaptureData<&str> = CaptureData {
-        text_for_capture: IndexSet::new(),
+        text_for_capture: TypeStorageFormat::Single((IndexSet::new(), PhantomData)),
         hashmap_for_error: HashMap::from([(String::from("x"), String::from("Y"))]),
         counter_value: Default::default(),
-        phantom: PhantomData,
     };
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut capture),
@@ -127,10 +124,9 @@ fn test_next_runner_t_6() {
 fn test_next_runner_t_7() {
     let rule = Rule::new(r".+", MatchRequirement::MustNotBeFound);
     let mut capture: CaptureData<&str> = CaptureData {
-        text_for_capture: IndexSet::new(),
+        text_for_capture: TypeStorageFormat::Single((IndexSet::new(), PhantomData)),
         hashmap_for_error: HashMap::from([(String::from("x"), String::from("Y"))]),
         counter_value: Default::default(),
-        phantom: PhantomData,
     };
     assert_eq!(
         NextStep::next_or_finish_or_error(&rule, &mut capture),
