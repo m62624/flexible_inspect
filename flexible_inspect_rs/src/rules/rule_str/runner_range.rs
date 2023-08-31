@@ -1,3 +1,5 @@
+use log::info;
+
 use super::rules::{next::NextStep, traits::IntoSpecificCaptureType};
 use super::{convert::convert_and_filter, *};
 use std::{
@@ -17,6 +19,11 @@ fn single_range_str_check<
 ) -> bool {
     match range_mode {
         RangeMode::Any => {
+            info!(
+                "(range mode {}) for data {:?}",
+                "`any`".yellow(),
+                captures.text_for_capture
+            );
             captures
                 .text_for_capture
                 .iter()
@@ -29,6 +36,11 @@ fn single_range_str_check<
                 > 0
         }
         RangeMode::All => {
+            info!(
+                "(range mode {}) for data {:?}",
+                "`all`".yellow(),
+                captures.text_for_capture
+            );
             captures
                 .text_for_capture
                 .iter()
@@ -41,6 +53,11 @@ fn single_range_str_check<
                 == captures.text_for_capture.len()
         }
         RangeMode::Exactly(target_count) => {
+            info!(
+                "(range mode {}) for data {:?}",
+                "`exactly`".yellow(),
+                captures.text_for_capture
+            );
             let required_count = target_count.min(captures.text_for_capture.len());
             captures
                 .text_for_capture

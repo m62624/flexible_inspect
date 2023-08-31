@@ -4,6 +4,8 @@ use std::{
     str::FromStr,
 };
 
+use log::info;
+
 use super::rules::{next::NextStep, traits::IntoSpecificCaptureType};
 
 use super::{convert::FromBytes, *};
@@ -26,12 +28,32 @@ fn single_range_bytes_check<
                 .filter(|&num| {
                     let num = match read_mode {
                         ReadMode::FromBeBytes => {
+                            info!(
+                                "(range mode {}) mode {} for data {:?}",
+                                "`any`".yellow(),
+                                "`be bytes`".yellow(),
+                                num
+                            );
                             T::from_be_bytes_non_const(num.as_bytes().unwrap())
                         }
                         ReadMode::FromLeBytes => {
+                            info!(
+                                "(range mode {}) mode {} for data {:?}",
+                                "`any`".yellow(),
+                                "`le bytes`".yellow(),
+                                num
+                            );
                             T::from_le_bytes_non_const(num.as_bytes().unwrap())
                         }
-                        ReadMode::FromUtf8 => T::from_utf8(num.as_bytes().unwrap()),
+                        ReadMode::FromUtf8 => {
+                            info!(
+                                "(range mode {}) mode {} for data {:?}",
+                                "`any`".yellow(),
+                                "`utf8`".yellow(),
+                                num
+                            );
+                            T::from_utf8(num.as_bytes().unwrap())
+                        }
                     };
                     num.map(|num| range.contains(&num)).unwrap_or(false)
                 })
@@ -45,12 +67,32 @@ fn single_range_bytes_check<
                 .filter(|&num| {
                     let num = match read_mode {
                         ReadMode::FromBeBytes => {
+                            info!(
+                                "(range mode {}) mode {} for data {:?}",
+                                "`all`".yellow(),
+                                "`be bytes`".yellow(),
+                                num
+                            );
                             T::from_be_bytes_non_const(num.as_bytes().unwrap())
                         }
                         ReadMode::FromLeBytes => {
+                            info!(
+                                "(range mode {}) mode {} for data {:?}",
+                                "`all`".yellow(),
+                                "`le bytes`".yellow(),
+                                num
+                            );
                             T::from_le_bytes_non_const(num.as_bytes().unwrap())
                         }
-                        ReadMode::FromUtf8 => T::from_utf8(num.as_bytes().unwrap()),
+                        ReadMode::FromUtf8 => {
+                            info!(
+                                "(range mode {}) mode {} for data {:?}",
+                                "`all`".yellow(),
+                                "`utf8`".yellow(),
+                                num
+                            );
+                            T::from_utf8(num.as_bytes().unwrap())
+                        }
                     };
                     num.map(|num| range.contains(&num)).unwrap_or(false)
                 })
@@ -65,12 +107,32 @@ fn single_range_bytes_check<
                 .filter(|&num| {
                     let num = match read_mode {
                         ReadMode::FromBeBytes => {
+                            info!(
+                                "(range mode {}) mode {} for data {:?}",
+                                "`exactly`".yellow(),
+                                "`be bytes`".yellow(),
+                                num
+                            );
                             T::from_be_bytes_non_const(num.as_bytes().unwrap())
                         }
                         ReadMode::FromLeBytes => {
+                            info!(
+                                "(range mode {}) mode {} for data {:?}",
+                                "`exactly`".yellow(),
+                                "`le bytes`".yellow(),
+                                num
+                            );
                             T::from_le_bytes_non_const(num.as_bytes().unwrap())
                         }
-                        ReadMode::FromUtf8 => T::from_utf8(num.as_bytes().unwrap()),
+                        ReadMode::FromUtf8 => {
+                            info!(
+                                "(range mode {}) mode {} for data {:?}",
+                                "`exactly`".yellow(),
+                                "`utf8`".yellow(),
+                                num
+                            );
+                            T::from_utf8(num.as_bytes().unwrap())
+                        }
                     };
                     num.map(|num| range.contains(&num)).unwrap_or(false)
                 })
