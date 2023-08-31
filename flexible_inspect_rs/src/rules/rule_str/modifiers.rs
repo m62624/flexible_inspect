@@ -87,7 +87,7 @@ impl RuleModifiers for Rule {
         self
     }
 
-    fn save_duplicates(self) -> Self::RuleType {
+    fn save_duplicates(mut self) -> Self::RuleType {
         self.0.general_modifiers.save_duplicates = true;
         debug!(
             "the `{}` modifier is applied to Rule ({}, {})",

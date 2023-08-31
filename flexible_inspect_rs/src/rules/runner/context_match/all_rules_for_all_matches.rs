@@ -25,7 +25,7 @@ where
                     format!("{:#?}", frame.0.get_requirement()).yellow()
                 );
                 // ===============================================================
-
+                let mut data_iter = frame.1.text_for_capture.iter();
                 if let Some(simple_rules) = &frame.0.get_simple_rules() {
                     // count of how many times one rule has worked for different matches
                     let mut counter_of_each_rule = HashMap::new();
@@ -38,9 +38,9 @@ where
                     The first step is to get a RegexSet for each match, based on it,
                     we get those rules that will definitely work, then check their modifiers
                      */
-                    for data in &frame.1.text_for_capture {
+                    for data in &mut data_iter {
                         // we get the indexes of the rules that are in the RegexSet
-                        for index in R::get_selected_rules(simple_rules.1, data) {
+                        for index in R::get_selected_rules(simple_rules.1, &data) {
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
                             debug!(
@@ -52,7 +52,7 @@ where
                                 data
                             );
                             // ===============================================================
-                            let mut captures = R::find_captures(rule_from_regexset, data);
+                            let mut captures = R::find_captures(rule_from_regexset, &data);
                             if let NextStep::Error(error) =
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
@@ -89,7 +89,7 @@ where
                         }
                     }
                     // The second step, in this stage we go through those rules and matches that are not in `RegexSet`.
-                    for data in &frame.1.text_for_capture {
+                    for data in &mut data_iter {
                         // we go through all the simple rules
                         for rule in simple_rules.0 {
                             // So the first condition is that we exclude those rules
@@ -100,12 +100,12 @@ where
                                 // but not for all of them, then we get those values that have already been processed
                                 // and exclude them
                                 if let Some(value) = selected_text.get(rule) {
-                                    if !value.contains(data) {
-                                        let mut captures = R::find_captures(rule, data);
+                                    if !value.contains(&data) {
+                                        let mut captures = R::find_captures(rule, &data);
                                         if let NextStep::Error(err) = not_in_regexset::<R, C>(
                                             frame.0,
                                             rule,
-                                            data,
+                                            &data,
                                             &mut captures,
                                         ) {
                                             return NextStep::Error(err);
@@ -113,12 +113,12 @@ where
                                         temp_stack.push_back((rule, captures));
                                     }
                                 } else {
-                                    let mut captures = R::find_captures(rule, data);
+                                    let mut captures = R::find_captures(rule, &data);
                                     // If there were no successful matches in this rule,
                                     // it means that this is the first time
                                     // this rule has been run for validation
                                     if let NextStep::Error(err) =
-                                        not_in_regexset::<R, C>(frame.0, rule, data, &mut captures)
+                                        not_in_regexset::<R, C>(frame.0, rule, &data, &mut captures)
                                     {
                                         return NextStep::Error(err);
                                     }
@@ -130,9 +130,9 @@ where
                 }
                 // The hird step, bypass the rules with the Lookahead and Lookbehind regex.
                 if let Some(complex_rules) = frame.0.get_complex_rules() {
-                    for data in &frame.1.text_for_capture {
+                    for data in &mut data_iter {
                         for cmplx_rule in complex_rules {
-                            let mut captures = R::find_captures(cmplx_rule, data);
+                            let mut captures = R::find_captures(cmplx_rule, &data);
                             if let NextStep::Error(err) =
                                 NextStep::next_or_finish_or_error(cmplx_rule, &mut captures)
                             {

@@ -7,7 +7,7 @@ fn main_rust() {
         0,
         "x",
         [
-            RuleBytes::new(r".+", MatchRequirement::MustBeFound).number_range(
+            RuleBytes::new(r"0x", MatchRequirement::MustBeFound).number_range(
                 0..=255,
                 ReadMode::FromLeBytes,
                 RangeMode::Any,

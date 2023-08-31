@@ -88,7 +88,7 @@ pub trait RangeType {
     fn get_range(self) -> RangeBoundaries;
 }
 
-pub trait IntoSpecificCaptureType<'a>: Hash + PartialEq + Eq + Debug {
+pub trait IntoSpecificCaptureType<'a>: Copy + Hash + PartialEq + Eq + Debug {
     fn as_str(&self) -> Option<&'a str>;
     fn as_bytes(&self) -> Option<&'a [u8]>;
 }

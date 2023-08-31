@@ -30,7 +30,7 @@ where
                 let mut err_value: Option<HashMap<String, String>> = None;
                 // Status that we found one match for which all the rules worked
                 let mut rule_matched_for_any_text = false;
-                'skip_data: for data in &frame.1.text_for_capture {
+                'skip_data: for data in &mut frame.1.text_for_capture.iter() {
                     if let Some(simple_rules) = frame.0.get_simple_rules() {
                         // rules that have passed the selections for all matches
                         let mut selected_rules = HashSet::new();
@@ -38,7 +38,7 @@ where
                         The first step is to get a RegexSet for each match, based on it,
                         we get those rules that will definitely work, then check their modifiers
                          */
-                        for index in R::get_selected_rules(simple_rules.1, data) {
+                        for index in R::get_selected_rules(simple_rules.1, &data) {
                             let rule_from_regexset = simple_rules.0.get_index(index).unwrap();
                             // ============================= LOG =============================
                             debug!(
@@ -50,7 +50,7 @@ where
                                 data
                             );
                             // ===============================================================
-                            let mut captures = R::find_captures(rule_from_regexset, data);
+                            let mut captures = R::find_captures(rule_from_regexset, &data);
                             if let NextStep::Error(error) =
                                 NextStep::next_or_finish_or_error(rule_from_regexset, &mut captures)
                             {
@@ -73,7 +73,7 @@ where
                         // The second step, in this stage we go through those rules and matches that are not in `RegexSet`.
                         for rule in simple_rules.0 {
                             if !selected_rules.contains(rule) {
-                                let mut captures = R::find_captures(rule, data);
+                                let mut captures = R::find_captures(rule, &data);
                                 if let NextStep::Error(error) =
                                     NextStep::next_or_finish_or_error(rule, &mut captures)
                                 {
@@ -96,7 +96,7 @@ where
                                 format!("{:#?}", frame.0.get_requirement()).yellow(),
                                 data);
                             // ===============================================================
-                            let mut captures = R::find_captures(cmplx_rule, data);
+                            let mut captures = R::find_captures(cmplx_rule, &data);
                             if let NextStep::Error(error) =
                                 NextStep::next_or_finish_or_error(cmplx_rule, &mut captures)
                             {

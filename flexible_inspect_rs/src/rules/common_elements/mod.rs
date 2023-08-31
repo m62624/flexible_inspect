@@ -90,6 +90,22 @@ pub enum TypeStorageFormat<'a, T: IntoSpecificCaptureType<'a>> {
     Multiple((Vec<T>, PhantomData<&'a T>)),
 }
 
+impl<'a, T: IntoSpecificCaptureType<'a>> TypeStorageFormat<'a, T> {
+    pub fn len(&self) -> usize {
+        match self {
+            Self::Single((set, _)) => set.len(),
+            Self::Multiple((vec, _)) => vec.len(),
+        }
+    }
+
+    pub fn iter(&self) -> Box<dyn Iterator<Item = T> + '_> {
+        match self {
+            Self::Single((set, _)) => Box::new(set.iter().copied()),
+            Self::Multiple((vec, _)) => Box::new(vec.iter().copied()),
+        }
+    }
+}
+
 /// A structure that stores all the data for processing the capture
 #[derive(Debug)]
 pub struct CaptureData<'a, T: IntoSpecificCaptureType<'a>> {
