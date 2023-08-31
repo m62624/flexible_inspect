@@ -1,7 +1,6 @@
-use log::info;
-
 use super::rules::{next::NextStep, traits::IntoSpecificCaptureType};
 use super::{convert::convert_and_filter, *};
+use log::info;
 use std::{
     fmt::{Debug, Display},
     ops::RangeInclusive,
@@ -29,7 +28,15 @@ fn single_range_str_check<
                 .iter()
                 .filter(|&num| {
                     convert_and_filter(num.as_str().unwrap())
-                        .map(|num| range.contains(&num))
+                        .map(|num| {
+                            if range.contains(&num) {
+                                info!("range contains {:?}", num);
+                                true
+                            } else {
+                                info!("range does not contain {:?}", num);
+                                false
+                            }
+                        })
                         .unwrap_or(false)
                 })
                 .count()
@@ -46,7 +53,15 @@ fn single_range_str_check<
                 .iter()
                 .filter(|&num| {
                     convert_and_filter(num.as_str().unwrap())
-                        .map(|num| range.contains(&num))
+                        .map(|num| {
+                            if range.contains(&num) {
+                                info!("range contains {:?}", num);
+                                true
+                            } else {
+                                info!("range does not contain {:?}", num);
+                                false
+                            }
+                        })
                         .unwrap_or(false)
                 })
                 .count()
@@ -64,7 +79,15 @@ fn single_range_str_check<
                 .iter()
                 .filter(|&num| {
                     convert_and_filter(num.as_str().unwrap())
-                        .map(|num| range.contains(&num))
+                        .map(|num| {
+                            if range.contains(&num) {
+                                info!("range contains {:?}", num);
+                                true
+                            } else {
+                                info!("range does not contain {:?}", num);
+                                false
+                            }
+                        })
                         .unwrap_or(false)
                 })
                 .take(required_count)

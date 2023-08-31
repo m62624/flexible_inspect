@@ -94,7 +94,16 @@ fn single_range_bytes_check<
                             T::from_utf8(num.as_bytes().unwrap())
                         }
                     };
-                    num.map(|num| range.contains(&num)).unwrap_or(false)
+                    num.map(|num| {
+                        if range.contains(&num) {
+                            info!("range contains {:?}", num);
+                            true
+                        } else {
+                            info!("range does not contain {:?}", num);
+                            false
+                        }
+                    })
+                    .unwrap_or(false)
                 })
                 .count()
                 == numbers.text_for_capture.len()
@@ -134,7 +143,16 @@ fn single_range_bytes_check<
                             T::from_utf8(num.as_bytes().unwrap())
                         }
                     };
-                    num.map(|num| range.contains(&num)).unwrap_or(false)
+                    num.map(|num| {
+                        if range.contains(&num) {
+                            info!("range contains {:?}", num);
+                            true
+                        } else {
+                            info!("range does not contain {:?}", num);
+                            false
+                        }
+                    })
+                    .unwrap_or(false)
                 })
                 .take(required_count)
                 .count()
