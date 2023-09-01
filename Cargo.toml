@@ -13,4 +13,3 @@ documentation = "https://flexible-inspect.readthedocs.io/"
 
 [profile.release]
 lto = true
-codegen-units = 1
