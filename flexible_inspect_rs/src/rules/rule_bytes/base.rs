@@ -32,12 +32,12 @@ impl RuleBase for RuleBytes {
         self.0.subrules_bytes.as_ref()
     }
 
-    fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
-        if let Some(value) = self.get_subrules() {
-            return Some((&value.all_rules, &value.regex_set.regex_set));
-        }
-        None
-    }
+    // fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
+    //     if let Some(value) = self.get_subrules() {
+    //         return Some((&value.all_rules, &value.regex_set.regex_set));
+    //     }
+    //     None
+    // }
 
     fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>> {
         None

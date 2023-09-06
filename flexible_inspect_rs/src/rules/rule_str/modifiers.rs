@@ -8,8 +8,12 @@ impl RuleModifiers for Rule {
         let sliced_rules = SlisedRules::new(nested_rules);
         if sliced_rules.is_some() {
             self.0.subrules = Some(Subrules::new(
-                SimpleRules::new(sliced_rules.simple_rules),
-                sliced_rules.complex_rules,
+                SimpleRules::new(
+                    sliced_rules.smr_must_be_found,
+                    sliced_rules.smr_must_not_be_found_with_subrules,
+                    sliced_rules.smr_must_not_be_found_without_subrules,
+                ),
+                sliced_rules.cmr,
             ));
         }
         debug!(

@@ -51,13 +51,32 @@ impl SimpleRulesBytes {
     /*
     We use `unwrap` instead of `?` because we guarantee that if there are `Rule` that are in this constructor, they have already passed regular expression validity checks
      */
-    pub fn new(all_rules: IndexSet<RuleBytes>) -> Self {
+    pub fn new(
+        smr_must_be_found: IndexSet<RuleBytes>,
+        smr_must_not_be_found_with_subrules: IndexSet<RuleBytes>,
+        smr_must_not_be_found_without_subrules: IndexSet<RuleBytes>,
+    ) -> Self {
         Self {
+            smr_must_be_found,
+            smr_must_not_be_found_with_subrules,
+            smr_must_not_be_found_without_subrules,
             regex_set: RegexSetContainer {
-                regex_set: regex::bytes::RegexSet::new(&all_rules).unwrap(),
+                regex_set: regex::bytes::RegexSet::new(
+                    &smr_must_be_found
+                        .iter()
+                        .chain(smr_must_not_be_found_with_subrules.iter())
+                        .chain(smr_must_not_be_found_without_subrules.iter())
+                        .collect::<Vec<_>>(),
+                )
+                .unwrap(),
             },
-            all_rules,
         }
+    }
+
+    pub fn is_empty(&self) -> bool {
+        self.smr_must_be_found.is_empty()
+            || self.smr_must_not_be_found_with_subrules.is_empty()
+            || self.smr_must_not_be_found_without_subrules.is_empty()
     }
 }
 

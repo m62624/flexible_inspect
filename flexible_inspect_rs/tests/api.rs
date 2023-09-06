@@ -2,18 +2,66 @@ use flexible_inspect_rs::prelude::*;
 #[test]
 fn test_range_from_le_bytes() {
     // number is 10
-    let text = [10, 0, 0, 0];
+    let text = "hello INCORRECT TOKEN 32103301230";
 
-    let cartr_1 = Cartridge::new(
-        0,
-        "not converted to number",
-        [RuleBytes::new(
-            r"\x0A\x00\x00\x00|\x0C\x00\x00\x00|\x50\x00\x00\x00|\x5A\x00\x00\x00",
-            MatchRequirement::MustBeFound,
-        )
-        .number_range(0..=2500, ReadMode::FromLeBytes, RangeMode::Any)],
+    let test_valid = Cartridge::new(
+        -500,
+        "Error? not good",
+        [Rule::new(r"I*\d+", MatchRequirement::MustBeFound)
+            .all_r_for_any_m()
+            .extend([
+                Rule::new(r"\d+(?=€)", MatchRequirement::MustBeFound),
+                Rule::new(r"I*\d+", MatchRequirement::MustBeFound)
+                    .any_r_for_any_m()
+                    .extend([]),
+            ])],
+    );
+    let test_valid0 = Cartridge::new(
+        -500,
+        "Error? not good",
+        [Rule::new(r"I*\d+", MatchRequirement::MustBeFound)
+            .all_r_for_any_m()
+            .extend([
+                Rule::new(r"\d+(?=€)", MatchRequirement::MustBeFound),
+                Rule::new(r"I*\d+", MatchRequirement::MustBeFound)
+                    .any_r_for_any_m()
+                    .extend([]),
+            ])],
+    );
+    let test_valid1 = Cartridge::new(
+        -500,
+        "Error? not good",
+        [Rule::new(r"I*\d+", MatchRequirement::MustBeFound)
+            .all_r_for_any_m()
+            .extend([
+                Rule::new(r"\d+(?=€)", MatchRequirement::MustBeFound),
+                Rule::new(r"I*\d+", MatchRequirement::MustBeFound)
+                    .any_r_for_any_m()
+                    .extend([]),
+            ])],
+    );
+    let test_valid2 = Cartridge::new(
+        -500,
+        "Error? not good",
+        [Rule::new(r"I*\d+", MatchRequirement::MustBeFound)
+            .all_r_for_any_m()
+            .extend([
+                Rule::new(r"\d+(?=€)", MatchRequirement::MustBeFound),
+                Rule::new(r"I*\d+", MatchRequirement::MustBeFound)
+                    .any_r_for_any_m()
+                    .extend([]),
+            ])],
     );
 
-    let validator = TemplateValidator::new([cartr_1]);
-    dbg!(validator.validate(text.as_ref()));
+    let validator_for_simple_text = TemplateValidator::new([test_valid, test_valid0]);
+    validator_for_simple_text.validate("DASDASDS");
+
+    validator_for_simple_text.validate("DASDASDS");
+
+    validator_for_simple_text.validate("DASDASDS");
+
+    validator_for_simple_text.validate("DASDASDS");
+
+    let validator_for_CAT = TemplateValidator::new([test_valid1, test_valid2]);
+    // dbg!(test_valid);
 }

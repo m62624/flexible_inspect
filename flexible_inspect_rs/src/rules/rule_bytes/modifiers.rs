@@ -7,7 +7,7 @@ impl RuleModifiers for RuleBytes {
     fn extend<R: IntoIterator<Item = Self::RuleType>>(mut self, nested_rules: R) -> Self::RuleType {
         let subrules: IndexSet<_> = nested_rules.into_iter().collect();
         self.0.subrules_bytes = if !subrules.is_empty() {
-            Some(SimpleRulesBytes::new(subrules))
+            Some(SimpleRulesBytes::new())
         } else {
             None
         };

@@ -20,7 +20,7 @@ pub trait RuleBase {
 
     fn _new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self;
     fn get_subrules(&self) -> Option<&Self::SubRulesType>;
-    fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)>;
+    // fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)>;
     fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>>;
     /// We do not specify a reference, since it implements `Copy`
     fn get_requirement(&self) -> MatchRequirement;

@@ -11,7 +11,11 @@ mod partial_eq_eq_trait {
      */
     impl PartialEq for SimpleRulesBytes {
         fn eq(&self, other: &Self) -> bool {
-            self.all_rules == other.all_rules
+            self.smr_must_be_found == other.smr_must_be_found
+                && self.smr_must_not_be_found_with_subrules
+                    == other.smr_must_not_be_found_with_subrules
+                && self.smr_must_not_be_found_without_subrules
+                    == other.smr_must_not_be_found_without_subrules
         }
     }
 
@@ -47,7 +51,9 @@ mod hash_trait {
      */
     impl Hash for SimpleRulesBytes {
         fn hash<H: std::hash::Hasher>(&self, _: &mut H) {
-            self.all_rules.hasher();
+            self.smr_must_be_found.hasher();
+            self.smr_must_not_be_found_with_subrules.hasher();
+            self.smr_must_not_be_found_without_subrules.hasher();
         }
     }
 }

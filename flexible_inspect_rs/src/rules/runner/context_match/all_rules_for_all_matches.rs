@@ -10,12 +10,6 @@ where
     C: IntoSpecificCaptureType<'a>,
 {
     let mut temp_stack: VecDeque<(&R::RuleType, CaptureData<C>)> = VecDeque::new();
-    if let Some(mut frame) = stack.pop_front() {
-        
-
-    }
+    if let Some(mut frame) = stack.pop_front() {}
     NextStep::Finish
 }
-
-
-
