@@ -12,7 +12,9 @@ impl RuleBase for RuleBytes {
         RuleBytes::new(pattern, requirement)
     }
 
-    
+    fn get_str(&self) -> &str {
+        self.0.str_bytes.as_ref()
+    }
 
     fn get_requirement(&self) -> MatchRequirement {
         self.0.general_modifiers.requirement
@@ -26,20 +28,9 @@ impl RuleBase for RuleBytes {
         &self.0.general_modifiers.mode_match
     }
 
-    fn get_str(&self) -> &str {
-        self.0.str_bytes.as_ref()
-    }
-
     fn get_subrules(&self) -> Option<&Self::SubRulesType> {
         self.0.subrules_bytes.as_ref()
     }
-
-    // fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
-    //     if let Some(value) = self.get_subrules() {
-    //         return Some((&value.all_rules, &value.regex_set.regex_set));
-    //     }
-    //     None
-    // }
 
     fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>> {
         None
@@ -55,5 +46,36 @@ impl RuleBase for RuleBytes {
 
     fn get_str_type(&self) -> &RegexRaw {
         &self.0.str_bytes
+    }
+
+    fn get_smr_must_be_found(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
+        if let Some(value) = self.get_subrules() {
+            return Some((&value.smr_must_be_found, &value.regex_set.regex_set));
+        }
+        None
+    }
+
+    fn get_smr_must_not_be_found_with_subrules(
+        &self,
+    ) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
+        if let Some(value) = self.get_subrules() {
+            return Some((
+                &value.smr_must_not_be_found_with_subrules,
+                &value.regex_set.regex_set,
+            ));
+        }
+        None
+    }
+
+    fn get_smr_must_not_be_found_without_subrules(
+        &self,
+    ) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
+        if let Some(value) = self.get_subrules() {
+            return Some((
+                &value.smr_must_not_be_found_without_subrules,
+                &value.regex_set.regex_set,
+            ));
+        }
+        None
     }
 }

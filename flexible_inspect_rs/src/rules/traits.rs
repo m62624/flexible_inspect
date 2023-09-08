@@ -21,7 +21,13 @@ pub trait RuleBase: Hash + PartialEq + Eq {
     fn _new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self;
     fn get_str_type(&self) -> &RegexRaw;
     fn get_subrules(&self) -> Option<&Self::SubRulesType>;
-    // fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)>;
+    fn get_smr_must_be_found(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)>;
+    fn get_smr_must_not_be_found_with_subrules(
+        &self,
+    ) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)>;
+    fn get_smr_must_not_be_found_without_subrules(
+        &self,
+    ) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)>;
     fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>>;
     /// We do not specify a reference, since it implements `Copy`
     fn get_requirement(&self) -> MatchRequirement;

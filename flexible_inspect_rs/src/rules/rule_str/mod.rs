@@ -51,7 +51,6 @@ pub struct TakeRuleForExtend {
     pub subrules: Option<Subrules>,
 }
 
-
 /// A structure that stores a set of regular expressions.
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone, PartialEq, Eq)]

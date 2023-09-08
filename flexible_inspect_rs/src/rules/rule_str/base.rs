@@ -11,6 +11,10 @@ impl RuleBase for Rule {
         Rule::new(pattern, requirement)
     }
 
+    fn get_str_type(&self) -> &RegexRaw {
+        &self.0.str_with_type
+    }
+
     fn get_requirement(&self) -> MatchRequirement {
         self.0.general_modifiers.requirement
     }
@@ -26,6 +30,7 @@ impl RuleBase for Rule {
     fn get_str(&self) -> &str {
         self.0.str_with_type.as_ref()
     }
+
     fn get_subrules(&self) -> Option<&Self::SubRulesType> {
         self.0.subrules.as_ref()
     }
@@ -47,7 +52,43 @@ impl RuleBase for Rule {
         self.0.general_modifiers.save_duplicates
     }
 
-    fn get_str_type(&self) -> &RegexRaw {
-        &self.0.str_with_type
+    fn get_smr_must_be_found(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
+        if let Some(subrules) = self.get_subrules() {
+            if let Some(simple_rules) = &subrules.simple_rules {
+                return Some((
+                    &simple_rules.smr_must_be_found,
+                    &simple_rules.regex_set.regex_set,
+                ));
+            }
+        }
+        None
+    }
+
+    fn get_smr_must_not_be_found_with_subrules(
+        &self,
+    ) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
+        if let Some(subrules) = self.get_subrules() {
+            if let Some(simple_rules) = &subrules.simple_rules {
+                return Some((
+                    &simple_rules.smr_must_not_be_found_with_subrules,
+                    &simple_rules.regex_set.regex_set,
+                ));
+            }
+        }
+        None
+    }
+
+    fn get_smr_must_not_be_found_without_subrules(
+        &self,
+    ) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)> {
+        if let Some(subrules) = self.get_subrules() {
+            if let Some(simple_rules) = &subrules.simple_rules {
+                return Some((
+                    &simple_rules.smr_must_not_be_found_without_subrules,
+                    &simple_rules.regex_set.regex_set,
+                ));
+            }
+        }
+        None
     }
 }
