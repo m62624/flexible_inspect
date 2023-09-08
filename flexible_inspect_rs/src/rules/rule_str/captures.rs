@@ -83,6 +83,7 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<'a, &'a s
                 }
             });
         }
+        RegexRaw::BytesRegex(_) => (),
     }
 
     if log::log_enabled!(log::Level::Info) {

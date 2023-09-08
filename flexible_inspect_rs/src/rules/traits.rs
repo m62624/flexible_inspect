@@ -5,20 +5,21 @@ They are necessary to avoid code duplicates. Especially in context_match, where 
 
 // =======================================================
 use super::common_elements::range::*;
-use super::{CaptureData, Counter, ModeMatch};
+use super::{CaptureData, Counter, ModeMatch, RegexRaw};
 use crate::prelude::MatchRequirement;
 use indexmap::IndexSet;
 use std::{fmt::Debug, hash::Hash};
 // =======================================================
 
 /// This trait requires implementations of the most basic methods for any `Rule`.
-pub trait RuleBase {
+pub trait RuleBase: Hash + PartialEq + Eq {
     type TakeRuleType;
     type SubRulesType;
     type RuleType;
     type RegexSet;
 
     fn _new<T: Into<String>>(pattern: T, requirement: MatchRequirement) -> Self;
+    fn get_str_type(&self) -> &RegexRaw;
     fn get_subrules(&self) -> Option<&Self::SubRulesType>;
     // fn get_simple_rules(&self) -> Option<(&IndexSet<Self::RuleType>, &Self::RegexSet)>;
     fn get_complex_rules(&self) -> Option<&IndexSet<Self::RuleType>>;
@@ -39,10 +40,7 @@ pub trait RuleBase {
 /// the rest will be the same
 
 pub trait CalculateValueRules<'a, C: IntoSpecificCaptureType<'a>>: Debug {
-    type RuleType: RuleBase<RuleType = Self::RuleType, RegexSet = Self::RegexSet>
-        + Hash
-        + Eq
-        + PartialEq;
+    type RuleType: RuleBase<RuleType = Self::RuleType, RegexSet = Self::RegexSet>;
     type RegexSet: 'a;
     fn get_selected_rules(regex_set: &Self::RegexSet, text: &C) -> Vec<usize>;
     fn find_captures(rule: &Self::RuleType, capture: &C) -> CaptureData<'a, C>;

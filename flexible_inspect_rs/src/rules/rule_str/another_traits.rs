@@ -27,15 +27,6 @@ mod partial_eq_eq_trait {
 mod as_ref_str_trait {
     use super::*;
 
-    impl AsRef<str> for RegexRaw {
-        fn as_ref(&self) -> &str {
-            match self {
-                RegexRaw::DefaultRegex(value) => value,
-                RegexRaw::FancyRegex(value) => value,
-            }
-        }
-    }
-
     impl AsRef<str> for Rule {
         fn as_ref(&self) -> &str {
             self.0.str_with_type.as_ref()

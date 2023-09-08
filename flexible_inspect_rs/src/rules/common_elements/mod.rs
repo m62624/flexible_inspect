@@ -1,22 +1,44 @@
 use std::marker::PhantomData;
 
 use self::range::RangeFormat;
-use super::{traits::IntoSpecificCaptureType, *};
+use super::{
+    traits::{IntoSpecificCaptureType, RuleBase},
+    *,
+};
 pub mod range;
 // =======================================================
 /// This is reserved standard value for error filling
 pub const DEFAULT_CAPTURE: &str = "main_capture";
 // =======================================================
 
+/// A structure for storing regular expressions
+#[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum RegexRaw {
+    DefaultRegex(Box<str>),
+    FancyRegex(Box<str>),
+    BytesRegex(Box<str>),
+}
+
 /// The struct for sorting all nested rulesz
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
-pub struct SlisedRules {
+pub struct SlisedRules<R: RuleBase> {
     /// The rules are in the `IndexSet` collection to preserve
     /// the order of the rules during index retrieval from the `RegexSet` and to avoid duplicate rules
-    pub smr_must_be_found: IndexSet<Rule>,
-    pub smr_must_not_be_found_with_subrules: IndexSet<Rule>,
-    pub smr_must_not_be_found_without_subrules: IndexSet<Rule>,
-    pub cmr: IndexSet<Rule>,
+    pub smr_must_be_found: IndexSet<R>,
+    pub smr_must_not_be_found_with_subrules: IndexSet<R>,
+    pub smr_must_not_be_found_without_subrules: IndexSet<R>,
+    pub cmr: IndexSet<R>,
+}
+
+impl<R: RuleBase> SlisedRules<R> {
+    /// A method for checking if there are any rules
+    pub fn is_some(&self) -> bool {
+        !self.smr_must_be_found.is_empty()
+            || !self.smr_must_not_be_found_with_subrules.is_empty()
+            || !self.smr_must_not_be_found_without_subrules.is_empty()
+            || !self.cmr.is_empty()
+    }
 }
 
 /// A Structure for common `Rule` modifiers

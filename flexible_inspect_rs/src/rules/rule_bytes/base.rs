@@ -12,6 +12,8 @@ impl RuleBase for RuleBytes {
         RuleBytes::new(pattern, requirement)
     }
 
+    
+
     fn get_requirement(&self) -> MatchRequirement {
         self.0.general_modifiers.requirement
     }
@@ -49,5 +51,9 @@ impl RuleBase for RuleBytes {
 
     fn get_save_duplicates(&self) -> bool {
         self.0.general_modifiers.save_duplicates
+    }
+
+    fn get_str_type(&self) -> &RegexRaw {
+        &self.0.str_bytes
     }
 }

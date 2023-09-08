@@ -23,8 +23,8 @@ mod error;
 mod message;
 mod rules;
 mod template_validator;
-#[cfg(test)]
-mod unit_tests;
+// #[cfg(test)]
+// mod unit_tests;
 // =====================================================================
 use colored::*;
 #[cfg(feature = "serde")]

@@ -5,9 +5,13 @@ use log::debug;
 impl RuleModifiers for RuleBytes {
     type RuleType = RuleBytes;
     fn extend<R: IntoIterator<Item = Self::RuleType>>(mut self, nested_rules: R) -> Self::RuleType {
-        let subrules: IndexSet<_> = nested_rules.into_iter().collect();
-        self.0.subrules_bytes = if !subrules.is_empty() {
-            Some(SimpleRulesBytes::new())
+        let sliced_rules = SlisedRules::new(nested_rules);
+        self.0.subrules_bytes = if sliced_rules.is_some() {
+            Some(SimpleRulesBytes::new(
+                sliced_rules.smr_must_be_found,
+                sliced_rules.smr_must_not_be_found_with_subrules,
+                sliced_rules.smr_must_not_be_found_without_subrules,
+            ))
         } else {
             None
         };

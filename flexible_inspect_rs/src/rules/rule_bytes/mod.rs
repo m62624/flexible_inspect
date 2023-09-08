@@ -39,7 +39,7 @@ pub struct RuleBytes(pub(crate) TakeRuleBytesForExtend);
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct TakeRuleBytesForExtend {
-    pub str_bytes: Box<str>,
+    pub str_bytes: RegexRaw,
     pub general_modifiers: GeneralModifiers,
     pub subrules_bytes: Option<SimpleRulesBytes>,
 }

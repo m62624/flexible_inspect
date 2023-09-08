@@ -34,7 +34,7 @@ impl TakeRuleBytesForExtend {
                     "'{}' - regex category for byte validation is set",
                     pattern.yellow()
                 );
-                pattern.into_boxed_str()
+                RegexRaw::BytesRegex(pattern.into_boxed_str())
             } else {
                 let err_msg = format!("`{}` regular expression is incorrect", pattern);
                 error!("{}", err_msg);
@@ -56,20 +56,19 @@ impl SimpleRulesBytes {
         smr_must_not_be_found_with_subrules: IndexSet<RuleBytes>,
         smr_must_not_be_found_without_subrules: IndexSet<RuleBytes>,
     ) -> Self {
+        let rgxst = regex::bytes::RegexSet::new(
+            &smr_must_be_found
+                .iter()
+                .chain(smr_must_not_be_found_with_subrules.iter())
+                .chain(smr_must_not_be_found_without_subrules.iter())
+                .collect::<Vec<_>>(),
+        )
+        .unwrap();
         Self {
             smr_must_be_found,
             smr_must_not_be_found_with_subrules,
             smr_must_not_be_found_without_subrules,
-            regex_set: RegexSetContainer {
-                regex_set: regex::bytes::RegexSet::new(
-                    &smr_must_be_found
-                        .iter()
-                        .chain(smr_must_not_be_found_with_subrules.iter())
-                        .chain(smr_must_not_be_found_without_subrules.iter())
-                        .collect::<Vec<_>>(),
-                )
-                .unwrap(),
-            },
+            regex_set: RegexSetContainer { regex_set: rgxst },
         }
     }
 

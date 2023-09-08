@@ -1,5 +1,7 @@
-use super::{rule_str::RegexRaw, traits::IntoSpecificCaptureType, *};
-use crate::prelude::Rule;
+use super::{
+    traits::{IntoSpecificCaptureType, RuleBase},
+    RegexRaw, *,
+};
 
 impl GeneralModifiers {
     pub fn new(requirement: MatchRequirement) -> Self {
@@ -13,9 +15,9 @@ impl GeneralModifiers {
     }
 }
 
-impl SlisedRules {
+impl<R: RuleBase> SlisedRules<R> {
     /// The method for sorting all nested rules
-    pub fn new<T: IntoIterator<Item = Rule>>(all_rules: T) -> SlisedRules {
+    pub fn new<T: IntoIterator<Item = R>>(all_rules: T) -> SlisedRules<R> {
         // smr - simple rules
         // cmr - complex rules
 
@@ -29,12 +31,12 @@ impl SlisedRules {
         let mut cmr = IndexSet::new();
         all_rules
             .into_iter()
-            .for_each(|rule| match rule.0.str_with_type {
-                RegexRaw::DefaultRegex(_) => match rule.0.general_modifiers.requirement {
+            .for_each(|rule| match rule.get_str_type() {
+                RegexRaw::DefaultRegex(_) => match rule.get_requirement() {
                     MatchRequirement::MustBeFound => {
                         smr_must_be_found.insert(rule);
                     }
-                    MatchRequirement::MustNotBeFound => match rule.0.subrules {
+                    MatchRequirement::MustNotBeFound => match rule.get_subrules() {
                         Some(subrules) => {
                             smr_must_not_be_found_with_subrules.insert(rule);
                         }
@@ -46,6 +48,19 @@ impl SlisedRules {
                 RegexRaw::FancyRegex(_) => {
                     cmr.insert(rule);
                 }
+                RegexRaw::BytesRegex(_) => match rule.get_requirement() {
+                    MatchRequirement::MustBeFound => {
+                        smr_must_be_found.insert(rule);
+                    }
+                    MatchRequirement::MustNotBeFound => match rule.get_subrules() {
+                        Some(subrules) => {
+                            smr_must_not_be_found_with_subrules.insert(rule);
+                        }
+                        None => {
+                            smr_must_not_be_found_without_subrules.insert(rule);
+                        }
+                    },
+                },
             });
 
         SlisedRules {
@@ -54,14 +69,6 @@ impl SlisedRules {
             smr_must_not_be_found_without_subrules,
             cmr,
         }
-    }
-
-    /// A method for checking if there are any rules
-    pub fn is_some(&self) -> bool {
-        !self.smr_must_be_found.is_empty()
-            || !self.smr_must_not_be_found_with_subrules.is_empty()
-            || !self.smr_must_not_be_found_without_subrules.is_empty()
-            || !self.cmr.is_empty()
     }
 }
 

@@ -46,4 +46,8 @@ impl RuleBase for Rule {
     fn get_save_duplicates(&self) -> bool {
         self.0.general_modifiers.save_duplicates
     }
+
+    fn get_str_type(&self) -> &RegexRaw {
+        &self.0.str_with_type
+    }
 }
