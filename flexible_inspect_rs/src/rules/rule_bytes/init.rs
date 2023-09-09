@@ -34,7 +34,7 @@ impl TakeRuleBytesForExtend {
                     "'{}' - regex category for byte validation is set",
                     pattern.yellow()
                 );
-                RegexRaw::BytesRegex(pattern.into_boxed_str())
+                RegexRaw::Bytes(pattern.into_boxed_str())
             } else {
                 let err_msg = format!("`{}` regular expression is incorrect", pattern);
                 error!("{}", err_msg);

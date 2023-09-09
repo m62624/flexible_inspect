@@ -17,7 +17,7 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<'a, &'a s
     let flag_check_counter = rule.0.general_modifiers.counter.is_some();
     // At first glance we see code duplication, but each `match` works with different structures
     match &rule.0.str_with_type {
-        RegexRaw::DefaultRegex(pattern) => {
+        RegexRaw::Standard(pattern) => {
             let re = regex::Regex::new(pattern).unwrap();
             // get matches and increase `counter` as necessary
             re.captures_iter(capture).for_each(|capture| {
@@ -49,7 +49,7 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<'a, &'a s
                 })
             });
         }
-        RegexRaw::FancyRegex(pattern) => {
+        RegexRaw::Fancy(pattern) => {
             let re = fancy_regex::Regex::new(pattern).unwrap();
             // get matches and increase `counter` as necessary
             re.captures_iter(capture).for_each(|capture| {
@@ -83,7 +83,7 @@ pub fn find_captures<'a>(rule: &Rule, capture: &'a str) -> CaptureData<'a, &'a s
                 }
             });
         }
-        RegexRaw::BytesRegex(_) => (),
+        RegexRaw::Bytes(_) => (),
     }
 
     if log::log_enabled!(log::Level::Info) {

@@ -32,7 +32,7 @@ impl<R: RuleBase> SlisedRules<R> {
         all_rules
             .into_iter()
             .for_each(|rule| match rule.get_str_type() {
-                RegexRaw::DefaultRegex(_) => match rule.get_requirement() {
+                RegexRaw::Standard(_) => match rule.get_requirement() {
                     MatchRequirement::MustBeFound => {
                         smr_must_be_found.insert(rule);
                     }
@@ -45,10 +45,10 @@ impl<R: RuleBase> SlisedRules<R> {
                         }
                     },
                 },
-                RegexRaw::FancyRegex(_) => {
+                RegexRaw::Fancy(_) => {
                     cmr.insert(rule);
                 }
-                RegexRaw::BytesRegex(_) => match rule.get_requirement() {
+                RegexRaw::Bytes(_) => match rule.get_requirement() {
                     MatchRequirement::MustBeFound => {
                         smr_must_be_found.insert(rule);
                     }

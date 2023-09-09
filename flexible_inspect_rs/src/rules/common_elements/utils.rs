@@ -60,9 +60,9 @@ mod impl_traits {
     impl AsRef<str> for RegexRaw {
         fn as_ref(&self) -> &str {
             match self {
-                RegexRaw::DefaultRegex(value) => value,
-                RegexRaw::FancyRegex(value) => value,
-                RegexRaw::BytesRegex(value) => value,
+                RegexRaw::Standard(value) => value,
+                RegexRaw::Fancy(value) => value,
+                RegexRaw::Bytes(value) => value,
             }
         }
     }

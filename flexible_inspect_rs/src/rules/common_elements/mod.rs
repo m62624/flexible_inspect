@@ -14,9 +14,9 @@ pub const DEFAULT_CAPTURE: &str = "main_capture";
 #[cfg_attr(feature = "serde", derive(Serialize, Deserialize))]
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub enum RegexRaw {
-    DefaultRegex(Box<str>),
-    FancyRegex(Box<str>),
-    BytesRegex(Box<str>),
+    Standard(Box<str>),
+    Fancy(Box<str>),
+    Bytes(Box<str>),
 }
 
 /// The struct for sorting all nested rulesz
