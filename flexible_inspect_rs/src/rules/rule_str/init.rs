@@ -78,11 +78,10 @@ impl SimpleRules {
         smr_must_not_be_found_without_subrules: IndexSet<Rule>,
     ) -> Self {
         let rgxst = regex::RegexSet::new(
-            &smr_must_be_found
+            smr_must_be_found
                 .iter()
                 .chain(&smr_must_not_be_found_with_subrules)
-                .chain(&smr_must_not_be_found_without_subrules)
-                .collect::<Vec<_>>(),
+                .chain(&smr_must_not_be_found_without_subrules),
         )
         .unwrap();
         Self {
