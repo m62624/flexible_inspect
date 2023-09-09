@@ -5,7 +5,6 @@ mod at_least_one_rule_for_all_matches;
 mod at_least_one_rule_for_at_least_one_match;
 // =======================================================
 use super::*;
-use crate::rules::traits::RuleBase;
 use crate::rules::{next::NextStep, traits::CalculateValueRules, CaptureData};
 pub use all_rules_for_all_matches::all_rules_for_all_matches;
 pub use all_rules_for_at_least_one_match::all_rules_for_at_least_one_match;
@@ -15,38 +14,32 @@ use log::{debug, error, info, trace};
 use std::collections::{HashMap, HashSet, VecDeque};
 use std::fmt::Debug;
 
-#[derive(Debug)]
-pub struct FrameStack<'a, R, C>
+pub type Stack<'a, R: CalculateValueRules<'a, C>, C: IntoSpecificCaptureType<'a>> =
+    VecDeque<(R::RuleType, CaptureData<'a, C>)>;
+
+pub fn part_one<'a, R, C, F>(func: F, temp_stack: Option<Stack<'a, R, C>>) -> NextStep
 where
     R: CalculateValueRules<'a, C>,
-    C: IntoSpecificCaptureType<'a>,
+    C: IntoSpecificCaptureType<'a> + 'a,
+    F: FnMut(Stack<'a, R, C>) -> NextStep,
 {
-    rule: &'a R::RuleType,
-    capture: CaptureData<'a, C>,
+    NextStep::Finish
 }
 
-impl<'a, R, C> FrameStack<'a, R, C>
+pub fn part_two<'a, R, C, F>(func: F, temp_stack: Option<Stack<'a, R, C>>) -> NextStep
 where
     R: CalculateValueRules<'a, C>,
-    C: IntoSpecificCaptureType<'a>,
+    C: IntoSpecificCaptureType<'a> + 'a,
+    F: FnMut(Stack<'a, R, C>) -> NextStep,
 {
-    pub fn new(rule: &'a R::RuleType, capture: CaptureData<'a, C>) -> Self {
-        Self { rule, capture }
-    }
+    NextStep::Finish
 }
 
-// pub fn rules_in_category_regexset<'a, R, C, F>(
-//     // get a unique stack of one root rule, necessary to bypass the recursion constraint
-//     frame: FrameStack<'a, R, C>,
-//     callback: F,
-// ) -> NextStep
-// where
-//     R: CalculateValueRules<'a, C>,
-//     C: IntoSpecificCaptureType<'a>,
-//     F: FnOnce(FrameStack<'a, R, C>) -> NextStep,
-// {
-//     if let Some(simple_rules) = frame.rule.get_simple_rules() {
-//         return callback(frame);
-//     }
-//     NextStep::Finish
-// }
+pub fn part_three<'a, R, C, F>(func: F, temp_stack: Option<Stack<'a, R, C>>) -> NextStep
+where
+    R: CalculateValueRules<'a, C>,
+    C: IntoSpecificCaptureType<'a> + 'a,
+    F: FnMut(Stack<'a, R, C>) -> NextStep,
+{
+    NextStep::Finish
+}

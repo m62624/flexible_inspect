@@ -9,6 +9,7 @@ where
     R: CalculateValueRules<'a, C>,
     C: IntoSpecificCaptureType<'a>,
 {
-    if let Some(mut frame) = stack.pop_front() {}
+    
+    // if let Some(mut frame) = stack.pop_front() {}
     NextStep::Finish
 }

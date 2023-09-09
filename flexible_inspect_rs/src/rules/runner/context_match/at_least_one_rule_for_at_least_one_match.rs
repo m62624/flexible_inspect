@@ -9,7 +9,7 @@ where
     R: CalculateValueRules<'a, C>,
     C: IntoSpecificCaptureType<'a>,
 {
-    let mut temp_stack: Option<VecDeque<(&R::RuleType, CaptureData<C>)>> = Some(VecDeque::new());
-    if let Some(mut frame) = stack.pop_front() {}
+    // let mut temp_stack: Option<Stack<'a, R, C>> = Some(VecDeque::new());
+    // if let Some(mut frame) = stack.pop_front() {}
     NextStep::Finish
 }
