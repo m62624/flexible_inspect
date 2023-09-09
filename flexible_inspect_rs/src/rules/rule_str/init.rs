@@ -80,8 +80,8 @@ impl SimpleRules {
         let rgxst = regex::RegexSet::new(
             &smr_must_be_found
                 .iter()
-                .chain(smr_must_not_be_found_with_subrules.iter())
-                .chain(smr_must_not_be_found_without_subrules.iter())
+                .chain(&smr_must_not_be_found_with_subrules)
+                .chain(&smr_must_not_be_found_without_subrules)
                 .collect::<Vec<_>>(),
         )
         .unwrap();
