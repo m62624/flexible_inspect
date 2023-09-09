@@ -83,7 +83,11 @@ impl SimpleRules {
                 .chain(&smr_must_not_be_found_with_subrules)
                 .chain(&smr_must_not_be_found_without_subrules),
         )
-        .unwrap();
+        .unwrap_or_else(|err| {
+            let err_msg = format!("`{}` regular expression is incorrect", err);
+            error!("{}", err_msg);
+            panic!("{}", err_msg);
+        });
         Self {
             smr_must_be_found,
             smr_must_not_be_found_with_subrules,
