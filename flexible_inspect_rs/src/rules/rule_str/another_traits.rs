@@ -51,12 +51,11 @@ mod hash_trait {
      */
     impl Hash for SimpleRules {
         fn hash<H: std::hash::Hasher>(&self, state: &mut H) {
-            let all_items = self
-                .smr_must_be_found
+            self.smr_must_be_found
                 .iter()
                 .chain(&self.smr_must_not_be_found_with_subrules)
-                .chain(&self.smr_must_not_be_found_without_subrules);
-            all_items.for_each(|item| item.hash(state));
+                .chain(&self.smr_must_not_be_found_without_subrules)
+                .for_each(|item| item.hash(state));
         }
     }
 
