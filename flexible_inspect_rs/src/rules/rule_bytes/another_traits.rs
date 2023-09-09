@@ -50,10 +50,14 @@ mod hash_trait {
     which means that they are identical anyway, so we only need to hash `all_rules`
      */
     impl Hash for SimpleRulesBytes {
-        fn hash<H: std::hash::Hasher>(&self, _: &mut H) {
-            self.smr_must_be_found.hasher();
-            self.smr_must_not_be_found_with_subrules.hasher();
-            self.smr_must_not_be_found_without_subrules.hasher();
+        fn hash<H: Hasher>(&self, state: &mut H) {
+            // Create a hasher
+            let all_items = self
+                .smr_must_be_found
+                .iter()
+                .chain(&self.smr_must_not_be_found_with_subrules)
+                .chain(&self.smr_must_not_be_found_without_subrules);
+            all_items.for_each(|item| item.hash(state));
         }
     }
 }
