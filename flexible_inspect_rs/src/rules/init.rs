@@ -37,7 +37,7 @@ impl<R: RuleBase> SlisedRules<R> {
                         smr_must_be_found.insert(rule);
                     }
                     MatchRequirement::MustNotBeFound => match rule.get_subrules() {
-                        Some(subrules) => {
+                        Some(_) => {
                             smr_must_not_be_found_with_subrules.insert(rule);
                         }
                         None => {
@@ -53,7 +53,7 @@ impl<R: RuleBase> SlisedRules<R> {
                         smr_must_be_found.insert(rule);
                     }
                     MatchRequirement::MustNotBeFound => match rule.get_subrules() {
-                        Some(subrules) => {
+                        Some(_) => {
                             smr_must_not_be_found_with_subrules.insert(rule);
                         }
                         None => {

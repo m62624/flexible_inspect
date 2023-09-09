@@ -1,10 +1,9 @@
-use std::marker::PhantomData;
+mod utils;
 
 use self::range::RangeFormat;
-use super::{
-    traits::{IntoSpecificCaptureType, RuleBase},
-    *,
-};
+use super::traits::{IntoSpecificCaptureType, RuleBase};
+use super::*;
+use std::marker::PhantomData;
 pub mod range;
 // =======================================================
 /// This is reserved standard value for error filling
@@ -29,16 +28,6 @@ pub struct SlisedRules<R: RuleBase> {
     pub smr_must_not_be_found_with_subrules: IndexSet<R>,
     pub smr_must_not_be_found_without_subrules: IndexSet<R>,
     pub cmr: IndexSet<R>,
-}
-
-impl<R: RuleBase> SlisedRules<R> {
-    /// A method for checking if there are any rules
-    pub fn is_some(&self) -> bool {
-        !self.smr_must_be_found.is_empty()
-            || !self.smr_must_not_be_found_with_subrules.is_empty()
-            || !self.smr_must_not_be_found_without_subrules.is_empty()
-            || !self.cmr.is_empty()
-    }
 }
 
 /// A Structure for common `Rule` modifiers
@@ -114,46 +103,10 @@ pub enum TypeStorageFormat<'a, T: IntoSpecificCaptureType<'a>> {
     Multiple((Vec<T>, PhantomData<&'a T>)),
 }
 
-impl<'a, T: IntoSpecificCaptureType<'a>> TypeStorageFormat<'a, T> {
-    pub fn len(&self) -> usize {
-        match self {
-            Self::Single((set, _)) => set.len(),
-            Self::Multiple((vec, _)) => vec.len(),
-        }
-    }
-
-    pub fn iter(&self) -> Box<dyn Iterator<Item = T> + '_> {
-        match self {
-            Self::Single((set, _)) => Box::new(set.iter().copied()),
-            Self::Multiple((vec, _)) => Box::new(vec.iter().copied()),
-        }
-    }
-}
-
 /// A structure that stores all the data for processing the capture
 #[derive(Debug)]
 pub struct CaptureData<'a, T: IntoSpecificCaptureType<'a>> {
     pub text_for_capture: TypeStorageFormat<'a, T>,
     pub hashmap_for_error: HashMap<String, String>,
     pub counter_value: usize,
-}
-
-impl<'a> IntoSpecificCaptureType<'a> for &'a str {
-    fn as_str(&self) -> Option<&'a str> {
-        Some(self)
-    }
-
-    fn as_bytes(&self) -> Option<&'a [u8]> {
-        None
-    }
-}
-
-impl<'a> IntoSpecificCaptureType<'a> for &'a [u8] {
-    fn as_str(&self) -> Option<&'a str> {
-        None
-    }
-
-    fn as_bytes(&self) -> Option<&'a [u8]> {
-        Some(self)
-    }
 }
