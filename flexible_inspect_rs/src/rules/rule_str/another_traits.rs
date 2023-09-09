@@ -81,10 +81,8 @@ mod serde_trait {
         where
             S: Serializer,
         {
-            // Get a vector of patterns
-            let patterns = self.regex_set.patterns();
             // Serialize the vector
-            patterns.serialize(serializer)
+            self.regex_set.patterns().serialize(serializer)
         }
     }
 
@@ -96,7 +94,7 @@ mod serde_trait {
             // Get a vector of patterns
             let patterns: Vec<String> = Deserialize::deserialize(deserializer)?;
             // Serialize the vector
-            let regex_set = regex::RegexSet::new(patterns).unwrap();
+            let regex_set = regex::RegexSet::new(patterns).map_err(serde::de::Error::custom)?;
             Ok(Self { regex_set })
         }
     }
