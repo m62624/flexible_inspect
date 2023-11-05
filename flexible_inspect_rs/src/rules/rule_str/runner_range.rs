@@ -73,7 +73,7 @@ fn single_range_str_check<
                 "`exactly`".yellow(),
                 captures.text_for_capture
             );
-            let required_count = target_count.min(captures.text_for_capture.len());
+            // let required_count = target_count.min(captures.text_for_capture.len());
             captures
                 .text_for_capture
                 .iter()
@@ -82,17 +82,16 @@ fn single_range_str_check<
                         .map(|num| {
                             if range.contains(&num) {
                                 info!("range contains {:?}", num);
-                                true
+                                return true
                             } else {
                                 info!("range does not contain {:?}", num);
-                                false
+                                return false
                             }
                         })
                         .unwrap_or(false)
                 })
-                .take(required_count)
                 .count()
-                == required_count
+                == target_count
         }
     }
 }

@@ -109,7 +109,6 @@ fn single_range_bytes_check<
                 == numbers.text_for_capture.len()
         }
         RangeMode::Exactly(target_count) => {
-            let required_count = target_count.min(numbers.text_for_capture.len());
             numbers
                 .text_for_capture
                 .iter()
@@ -154,9 +153,8 @@ fn single_range_bytes_check<
                     })
                     .unwrap_or(false)
                 })
-                .take(required_count)
                 .count()
-                == required_count
+                == target_count
         }
     }
 }
