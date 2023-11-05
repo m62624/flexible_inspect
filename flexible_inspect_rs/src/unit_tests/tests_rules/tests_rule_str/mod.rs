@@ -1,5 +1,6 @@
 mod tests_captures;
 mod tests_extend;
+mod tests_range;
 use crate::prelude::*;
 use crate::rules::traits::CalculateValueRules;
 use crate::rules::DEFAULT_CAPTURE;
