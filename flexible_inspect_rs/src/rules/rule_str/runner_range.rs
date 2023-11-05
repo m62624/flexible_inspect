@@ -82,10 +82,10 @@ fn single_range_str_check<
                         .map(|num| {
                             if range.contains(&num) {
                                 info!("range contains {:?}", num);
-                                return true
+                                true
                             } else {
                                 info!("range does not contain {:?}", num);
-                                return false
+                                false
                             }
                         })
                         .unwrap_or(false)
