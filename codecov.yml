@@ -1,0 +1,8 @@
+coverage:
+  range: 60..80
+  round: down
+  precision: 2
+  fixes:
+  - "before/::after/"  # move path   e.g., "before/path" => "after/path"
+  - "::after/"         # move root   e.g., "path/" => "after/path/"
+  - "before/::"        # reduce root e.g., "before/path/" => "path/"
