@@ -96,17 +96,17 @@ jobs:
           --workspace \
           --exclude flexible_inspect_js \
           --features export_to_other_languages,serde \
-          --engine llvm --out xml --output-dir ./coverage/
+          --engine llvm --out lcov --output-dir ./coverage/
       # Шаг для копирования отчета о покрытии из контейнера
       - name: Copy coverage report from container
         run: |
-          docker cp $(docker ps -lq):/main_project/coverage/cobertura.xml .
+          docker cp $(docker ps -lq):/main_project/coverage/lcov.info .
       # Шаг для загрузки отчета о покрытии в Codecov
       - name: Upload coverage report
         uses: actions/upload-artifact@v3
         with:
-          name: cobertura-report
-          path: cobertura.xml
+          name: lcov-report
+          path: lcov.info
 
       # Шаг для отправки отчета о покрытии в Codecov
       - name: Send coverage report to Codecov
@@ -114,7 +114,7 @@ jobs:
         with:
           fail_ci_if_error: true
           # token: ${{ secrets.CODECOV_TOKEN }}
-          files: cobertura.xml
+          files: lcov.info
           flags: unittests
           verbose: true
 
