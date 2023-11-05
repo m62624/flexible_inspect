@@ -112,3 +112,19 @@ pub fn test_number_range_t_6() {
 
     assert!(validator_numbers.validate(text.as_slice()).is_ok());
 }
+
+#[test]
+pub fn test_number_range_t_7() {
+    let text = [1, 0, 0, 0, 4, 0, 0, 0, 3, 0, 0, 0];
+    let validator_numbers = TemplateValidator::new([Cartridge::new(
+        0,
+        "error message from cartridge 1",
+        [RuleBytes::new(
+            r"\x01\x00\x00\x00|\x02\x01\x00\x00|\x03\x00\x00\x00",
+            MatchRequirement::MustBeFound,
+        )
+        .number_range(1..=3, ReadMode::FromLeBytes, RangeMode::Exactly(1))],
+    )]);
+
+    assert!(validator_numbers.validate(text.as_slice()).is_err());
+}

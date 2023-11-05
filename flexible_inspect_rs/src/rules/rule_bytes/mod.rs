@@ -2,6 +2,7 @@
 mod another_traits;
 mod base;
 mod captures;
+#[cfg(not(tarpaulin_include))]
 pub mod convert;
 mod init;
 mod modifiers;

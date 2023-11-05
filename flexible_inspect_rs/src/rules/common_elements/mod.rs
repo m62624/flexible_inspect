@@ -1,5 +1,4 @@
 use std::marker::PhantomData;
-
 use self::range::RangeFormat;
 use super::{traits::IntoSpecificCaptureType, *};
 pub mod range;
